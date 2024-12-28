@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  height="390"
+  width="850">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5,.cls-110 {
+        fill: #fff;
+      }
+
+      .cls-1, .cls-2, .cls-5, .cls-6, .cls-100, .cls-44,.cls-101,.cls-106,.cls-105,.cls-144,.cls-46, .cls-110, .cls-120, .cls-130 ,.cls-150 {
+        font-family: Torus-Regular, Torus;
+      }
+      .cls-101{
+        fill: #000000;
+        opacity: 0.3;
+      }
+      .cls-110{
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .cls-120{
+        font-size: 9.5px;
+        font-weight: 600;
+        fill: #000000;
+        letter-spacing: .05em;
+      }
+      .cls-130{
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .cls-1, .cls-4,.cls-101,.cls-104  {
+        font-size: 11px;
+      }
+
+      .cls-2, .cls-100 {
+        font-size: 10px;
+      }
+
+      .cls-7 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-8 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-9 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-10 {
+        letter-spacing: 0em;
+      }
+
+      .cls-11 {
+        letter-spacing: 0em;
+      }
+
+      .cls-12 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-13 {
+        letter-spacing: 0em;
+      }
+
+      .cls-14 {
+        fill: #272727;
+      }
+
+      .cls-15 {
+        fill: #1f1e26;
+      }
+
+      .cls-16 {
+        mask: url(#mask);
+      }
+
+      .cls-17 {
+        fill: #1e1e1e;
+      }
+
+      .cls-18 {
+        fill: none;
+      }
+
+      .cls-19 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-20 {
+        fill: #1c1c1c;
+      }
+
+      .cls-21 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-4, .cls-104 {
+        font-family: Torus-SemiBold, Torus;
+        
+      }
+
+      .cls-22 {
+        fill: url(#linear-gradient-3);
+      }
+
+      .cls-23 {
+        fill: url(#linear-gradient-5);
+      }
+
+      .cls-24 {
+        fill: #0fa;
+      }
+
+      .cls-25 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-26 {
+        fill: #1f1f1f;
+      }
+
+      .cls-27 {
+        letter-spacing: 0em;
+      }
+
+      .cls-28 {
+        fill: #202020;
+      }
+
+      .cls-29 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-30 {
+        letter-spacing: 0em;
+      }
+
+      .cls-31 {
+        fill: #2a2933;
+      }
+      .cls-131 {
+        fill: #d5d6cc;
+      }
+
+      .cls-5,.cls-105 {
+        font-size: 21px;
+      }
+
+      .cls-32 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-6 {
+        font-size: 35px;
+        fill: #fd8bb6;
+        font-weight: 600;
+      }
+
+      .cls-33 {
+        fill: #1b1b1b;
+      }
+
+      .cls-34 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-35 {
+        fill: #191919;
+      }
+
+      .cls-36 {
+        fill: url(#linear-gradient-6);
+      }
+
+      .cls-37 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-38 {
+        fill: #242424;
+      }
+
+      .cls-39 {
+        letter-spacing: -.02em;
+      }
+
+  
+
+      .cls-41 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-42 {
+        fill: #e6e6e6;
+      }
+      .cls-44 {
+        fill: #e6e6e6;
+        font-size: 13px;
+      }
+      .cls-100{
+        fill: #b66e85;
+        font-size:11px;
+      }
+      .cls-106 {
+        font-size: 50px;
+        fill: #000000;
+        font-weight: 600;
+        opacity: 0.3;
+      }
+      .cls-105{
+        fill:#000000;
+        opacity: 0.3;
+      }
+      .cls-104{
+        fill:#000000;
+        opacity:0.3;
+      }
+      .cls-144 {
+        fill: #000000;
+        font-size: 20px;
+        opacity:0.3;
+      }
+      .cls-46{
+        font-size:8px;
+        font-weight:800;
+      }
+      .cls-122{
+        font-family: Gilroy-Bold, Gilroy;
+        font-weight: 700;
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        font-size:37px;
+        opacity:0.2;
+        stroke-width: 1px;
+      }
+      .cls-123{
+        font-family: Gilroy-Bold, Gilroy;
+        font-weight: 700;
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        font-size:15px;
+        opacity:0.2;
+        stroke-width: 1px;
+      }
+       .cls-124{
+        font-family: Rubik-Bold, Rubik;
+        font-weight: 700;
+        font-size:8px;
+        fill: #302e38;
+      }
+      .cls-150{
+      
+        font-size:20px;
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+      }
+    </style>
+    <mask id="mask" x="-1320" y="-301.33" width="1580" height="421.33" maskUnits="userSpaceOnUse"/>
+    <clipPath id="clippath">
+      <rect class="cls-18" x="900" y="0" width="240" height="60"/>
+    </clipPath>
+
+    <rect transform="translate(70 5)" width="50" height="50" rx="5" ry="5" id="avatar-path" />
+    <clipPath
+        id="avatarBorder">
+        <use
+          xlink:href="#avatar-path"
+          id="use1" />
+    </clipPath>
+
+    <rect class="cls-31" x="90" y="90" width="320" height="320" id="card-background"/>
+    <clipPath id="cardClip">
+          <rect x="40" y="80" width="240" height="240"/>
+    </clipPath>
+    
+    <linearGradient id="linear-gradient" x1="40" y1="320" x2="280" y2="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0fa"/>
+      <stop offset="0.77" stop-color="#0fa"/>
+      <stop offset="0.87" stop-color="#4946b6"/>
+    </linearGradient>
+
+  
+  </defs>
+  <g id="BG">
+    <rect class="cls-15" width="850" height="380" id="background"/>
+    <rect class="cls-35" x="0" y="0" width="850" height="60"/>
+
+    <g transform="translate(-300,0)">
+        <g class="cls-41">
+      <g>
+        <polygon class="cls-28" points="1097.05 -36.67 1068.08 13.33 1126.02 13.33 1097.05 -36.67"/>
+        <polygon class="cls-38" points="1063 -20 1005.07 80 1120.94 80 1063 -20"/>
+        <polygon class="cls-33" points="1019.2 -70 976.1 4.4 1062.31 4.4 1019.2 -70"/>
+        <polygon class="cls-14" points="1072.57 -20 1043.6 30 1101.53 30 1072.57 -20"/>
+        <polygon class="cls-33" points="1102.48 13.33 1078.34 55 1126.62 55 1102.48 13.33"/>
+        <polygon class="cls-35" points="1006.36 -3.33 963.26 71.07 1049.47 71.07 1006.36 -3.33"/>
+        <polygon class="cls-26" points="971.62 -20 938.17 37.74 1005.07 37.74 971.62 -20"/>
+        <polygon class="cls-20" points="1013.43 55 1003.77 71.67 1023.09 71.67 1013.43 55"/>
+        <polygon class="cls-17" points="945.24 -20 892.48 71.07 998 71.07 945.24 -20"/>
+        <polygon class="cls-28" points="1138.86 -10 1109.9 40 1167.83 40 1138.86 -10"/>
+        <polygon class="cls-14" points="908.07 -20 879.1 30 937.03 30 908.07 -20"/>
+      </g>
+    </g>
+    <path id="osu" class="cls-24" d="M945,17.5c6.89,0,12.5,5.61,12.5,12.5s-5.61,12.5-12.5,12.5-12.5-5.61-12.5-12.5,5.61-12.5,12.5-12.5M945,15c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM945,20c-5.52,0-10,4.48-10,10s4.48,10,10,10,10-4.48,10-10-4.48-10-10-10Z"/>
+    <path id="taiko" class="cls-42" d="M995,17.5c6.89,0,12.5,5.61,12.5,12.5s-5.61,12.5-12.5,12.5-12.5-5.61-12.5-12.5,5.61-12.5,12.5-12.5M995,15c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM995,22.5c4.14,0,7.5,3.36,7.5,7.5s-3.36,7.5-7.5,7.5-7.5-3.36-7.5-7.5,3.36-7.5,7.5-7.5M995,20c-5.52,0-10,4.48-10,10s4.48,10,10,10,10-4.48,10-10-4.48-10-10-10h0ZM996.25,20.5h-2.5v19h2.5v-19Z"/>
+    <path id="fruits" class="cls-42" d="M1045,17.5c6.89,0,12.5,5.61,12.5,12.5s-5.61,12.5-12.5,12.5-12.5-5.61-12.5-12.5,5.61-12.5,12.5-12.5M1045,15c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1046.25,25c0,1.38-1.12,2.5-2.5,2.5s-2.5-1.12-2.5-2.5,1.12-2.5,2.5-2.5,2.5,1.12,2.5,2.5ZM1043.75,32.5c-1.38,0-2.5,1.12-2.5,2.5s1.12,2.5,2.5,2.5,2.5-1.12,2.5-2.5-1.12-2.5-2.5-2.5ZM1048.75,27.5c-1.38,0-2.5,1.12-2.5,2.5s1.12,2.5,2.5,2.5,2.5-1.12,2.5-2.5-1.12-2.5-2.5-2.5Z"/>
+    <path id="mania" class="cls-42" d="M1095,17.5c6.89,0,12.5,5.61,12.5,12.5s-5.61,12.5-12.5,12.5-12.5-5.61-12.5-12.5,5.61-12.5,12.5-12.5M1095,15c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1096.25,40v-20c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25,1.25v20c0,.69.56,1.25,1.25,1.25s1.25-.56,1.25-1.25ZM1101.25,35v-10c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25,1.25v10c0,.69.56,1.25,1.25,1.25s1.25-.56,1.25-1.25ZM1091.25,35v-10c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25,1.25v10c0,.69.56,1.25,1.25,1.25s1.25-.56,1.25-1.25Z"/>
+    
+    </g>
+  </g>
+  <g id="Structs">
+  <g transform="translate(-30,0)">
+      <text class="cls-110" transform="translate(130 44)" id="playername">Playername</text>
+    <text class="cls-100" transform="translate(130 23)">Playername</text>
+    <rect class="cls-3" transform="translate(70 5)" width="50" height="50" rx="5" ry="5"/>
+    <image
+            xlink:href="assets/guestAvatar.png"
+            x="70" y="5" width="50" height="50" id="avatar" clip-path="url(#avatarBorder)"/>
+    <text class="cls-110" transform="translate(320 44)" id="totalPp">5678 pp</text>
+    <text class="cls-100" transform="translate(320 23)">Performance</text>
+  </g>
+
+
+  </g>
+</svg>

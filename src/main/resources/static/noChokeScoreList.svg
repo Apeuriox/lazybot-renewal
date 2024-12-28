@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1250"
+     height="11200">
+    <defs>
+        <style>
+            .cls-1 {
+            letter-spacing: -.03em;
+            }
+
+            .cls-2 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-3 {
+            letter-spacing: 0em;
+            }
+
+            .cls-4 {
+            fill: #2a2933;
+            }
+
+            .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11 {
+            stroke-width: 0px;
+            }
+
+            .cls-12 {
+            letter-spacing: 0em;
+            }
+
+            .cls-13, .cls-5, .cls-14, .cls-15, .cls-16, .cls-17, .cls-18, .cls-19 {
+            fill: #e6e6e6;
+            }
+
+            .cls-13, .cls-14 {
+            font-size: 15px;
+            }
+
+            .cls-13, .cls-20 {
+            font-family: Rubik-Regular, Rubik;
+            font-variation-settings: 'wght' 400;
+            }
+
+            .cls-21, .cls-22, .cls-15,.cls-131, .cls-23, .cls-16, .cls-24, .cls-17, .cls-18, .cls-19, .cls-25, .cls-26, .cls-27 {
+            font-family: GlowSansSC-Normal-Book;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+            }
+
+            .cls-21, .cls-16 {
+            font-size: 30px;
+            }
+
+            .cls-21, .cls-26 {
+            fill: #f3b814;
+            }
+
+            .cls-6 {
+            fill: #1f1e26;
+            }
+
+            .cls-7 {
+            fill: #988fcc;
+            }
+
+            .cls-28 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-22, .cls-29 {
+            letter-spacing: 0em;
+            }
+
+            .cls-30 {
+            letter-spacing: -.01em;
+            }
+
+            .cls-8 {
+            fill: gray;
+            }
+
+            .cls-31, .cls-18 {
+            letter-spacing: -.03em;
+            }
+
+            .cls-32 {
+            letter-spacing: 0em;
+            }
+
+            .cls-33 {
+            letter-spacing: 0em;
+            }
+
+            .cls-15, .cls-18, .cls-20, .cls-26 {
+            font-size: 20px;
+            }
+
+            .cls-34 {
+            letter-spacing: 0em;
+            }
+
+            .cls-35 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-36 {
+            letter-spacing: 0em;
+            }
+
+            .cls-37 {
+            opacity: .75;
+            }
+
+            .cls-23,.cls-131 {
+            font-size: 40px;
+
+            }
+
+            .cls-23{
+            fill: #ff4080;
+            }
+
+            .cls-38 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-39 {
+            letter-spacing: 0em;
+            }
+
+            .cls-40 {
+            font-family: GlowSansSC-Normal-Heavy-GBpc-EUC-H, 'Glow Sans SC';
+            }
+
+            .cls-41 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-42 {
+            letter-spacing: 0em;
+            }
+
+            .cls-43 {
+            letter-spacing: 0em;
+            }
+
+            .cls-44 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-45 {
+            letter-spacing: 0em;
+            }
+
+            .cls-17 {
+            font-size: 60px;
+            }
+
+            .cls-46 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-9 {
+            fill: #39b54a;
+            }
+
+            .cls-19 {
+            font-size: 45px;
+            }
+
+            .cls-47 {
+            fill: none;
+            stroke: #a394d1;
+            stroke-linecap: round;
+            stroke-miterlimit: 10;
+            stroke-width: 5px;
+            }
+
+            .cls-10 {
+            fill: #191919;
+            }
+
+            .cls-48 {
+            letter-spacing: 0em;
+            }
+
+            .cls-20 {
+            fill: #a394d1;
+            }
+
+            .cls-49 {
+            letter-spacing: 0em;
+            }
+
+            .cls-50 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-51 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-27 {
+            letter-spacing: -.02em;
+            }
+
+            .cls-11 {
+            fill: #35323f;
+            }
+            .cls-124{
+            font-size:28px;
+            font-family: Rubik-Bold, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+            }
+            .cls-125{
+            font-size:20px;
+            font-family: Rubik-Bold, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 800;
+            }
+            .cls-130{
+            fill: #ffee18;
+            font-family: Rubik-Bold, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+            font-size:15px;
+            }
+
+            .cls-131{
+            fill: #75ffb4;
+            }
+            .cls-132{
+            fill:#ff4080;
+            font-size:35px;
+            font-family: Rubik-Bold, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 800;
+            letter-spacing: -.1em;
+            }
+            .cls-25{
+            font-size:30px;
+            letter-spacing: -.03em;
+            }
+            .cls-133{
+            fill:#ffffff;
+            font-size:25px;
+            font-family: Rubik-Bold, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 800;
+            letter-spacing: -.1em;
+            }
+            .cls-134{
+            font-size: 20px;
+            font-family: GlowSansSC-Normal-Book;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+            }
+        </style>
+
+        <rect rx="5" ry="5" x="10" y="75" height="60" width="60" fill="#ffffff" id="avatarBorderRect"/>
+        <rect class="cls-8" x="60" y="265" width="250" height="140.62" rx="5" ry="5" id="sectionBorder" />
+        <clipPath
+                id="imageBorder">
+            <use
+                    xlink:href="#avatarBorderRect"
+                    id="use1" />
+        </clipPath>
+        <clipPath
+                id="imageBorderForSection">
+            <use
+                    xlink:href="#sectionBorder"
+                    id="use2" />
+        </clipPath>
+    </defs>
+    <g transform="translate(0 -65)" id="totalSvg">
+        <g id="Background">
+            <rect class="cls-6" id="totalBackground"  y="65" width="1250" height="11200"/>
+            <!-- <rect class="cls-11" x="40" y="165" width="300" height="60" rx="10" ry="10"/> -->
+<!--            <path class="cls-4" d="M636.14,1985H138.06l249.04-431.35,249.04,431.35ZM636.14,1430.54h-241.6l120.8,209.24,120.8-209.24ZM932.05,1689.1h-241.6l120.8,209.24,120.8-209.24ZM583.69,1689.1l-95.5,165.42h191.01l-95.5-165.42ZM866.45,1615.12l-213.55,369.88h427.1l-213.55-369.88ZM885.86,1326.41l-95.5,165.42h191.01l-95.5-165.42ZM833.41,1491.83h-129.55l64.77,112.19,64.77-112.19ZM120.8,1775.76L0,1985h241.6l-120.8-209.24ZM340.24,1343.87l-42.71,73.98h85.42l-42.71-73.98ZM1051.64,1688.9l28.36-49.12h-56.72l28.36,49.12ZM272.52,1590.46h-129.55l64.77,112.19,64.77-112.19ZM42.71,1498.53L0,1572.5h85.42l-42.71-73.98Z"/>-->
+        </g>
+        <g id="Text">
+            <rect class="cls-10" y="65" width="1250" height="80"/>
+            <rect class="cls-10" y="11200" width="1250" height="60"/>
+            <text class="cls-13" y="11240" x="10">Generated By LazyBot  (Aloic ver 1.1)</text>
+            <text class="cls-13" y="11240" x="1100" id="time">2020-01-01</text>
+            <g>
+                <path class="cls-8" d="M35.55,81.94h-1.85v3.18h1.85c.44,0,.8-.15,1.1-.46.29-.31.43-.68.43-1.13s-.15-.84-.43-1.14-.65-.45-1.1-.45h0Z"/>
+                <path class="cls-8" d="M18.91,81.94h-1.85v3.18h1.85c.44,0,.8-.15,1.1-.46.29-.31.43-.68.43-1.13s-.15-.84-.43-1.14-.65-.45-1.1-.45h0Z"/>
+                <rect rx="5" ry="5" x="10" y="75" height="60" width="60" fill="#ffffff" />
+                <image
+                        xlink:href="assets/guestAvatar.png"
+                        x="10"
+                        y="75"
+                        width="60"
+                        height="60"
+                        id="avatar"
+                        style="stroke:none;stroke-opacity:1;stroke-linejoin:round;"
+                        clip-path="url(#imageBorder)" />
+            </g>
+                <text class="cls-16" transform="translate(80 125)" id="playerName">Player Name</text>
+                <text class="cls-13" transform="translate(80 95)">Player Name</text>
+            <g>
+                <text class="cls-16" text-anchor="middle" transform="translate(440 125)" id="ppValue">1343</text>
+                <text class="cls-133" transform="translate(490 120)">-&gt;</text>
+                <text class="cls-16" text-anchor="middle" transform="translate(565 125)" id="ppValue-fix">2343</text>
+                <text class="cls-16" transform="translate(620 125)" id="ppValue-diff">(+1000)</text>
+            </g>
+            <g>
+                <text class="cls-13" transform="translate(400 95)">PP</text>
+            </g>
+
+            <!-- <text class="cls-16" transform="translate(60 205)" id="type">NoChoke BP list</text> -->
+
+        </g>
+
+        <g id="modes" transform="translate(170 0)">
+            <path class="cls-7" d="M815,86.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M815,82.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM815,90c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15Z"/>
+            <path class="cls-5" d="M882.5,86.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M882.5,82.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM882.5,93.75c6.2,0,11.25,5.05,11.25,11.25s-5.05,11.25-11.25,11.25-11.25-5.05-11.25-11.25,5.05-11.25,11.25-11.25M882.5,90c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM884.38,90.75h-3.75v28.5h3.75v-28.5Z"/>
+            <path class="cls-5" d="M950,86.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M950,82.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM951.88,97.5c0,2.07-1.68,3.75-3.75,3.75s-3.75-1.68-3.75-3.75,1.68-3.75,3.75-3.75,3.75,1.68,3.75,3.75ZM948.12,108.75c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75ZM955.62,101.25c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75Z"/>
+            <path class="cls-5" d="M1017.5,86.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1017.5,82.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1019.38,120v-30c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v30c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1026.88,112.5v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1011.88,112.5v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88Z"/>
+        </g>
+    </g>
+</svg>

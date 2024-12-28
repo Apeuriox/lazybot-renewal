@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+ viewBox="0 0 1080 1985">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-2 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-3 {
+        letter-spacing: 0em;
+      }
+
+      .cls-4 {
+        fill: #2a2933;
+      }
+
+      .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11 {
+        stroke-width: 0px;
+      }
+
+      .cls-12 {
+        letter-spacing: 0em;
+      }
+
+      .cls-13, .cls-5, .cls-14, .cls-15, .cls-16, .cls-17, .cls-18, .cls-19 {
+        fill: #e6e6e6;
+      }
+
+      .cls-13, .cls-14 {
+        font-size: 15px;
+      }
+
+      .cls-13, .cls-20 {
+        font-family: Rubik-Regular, Rubik;
+        font-variation-settings: 'wght' 400;
+      }
+
+      .cls-21, .cls-22, .cls-15, .cls-23, .cls-16, .cls-24, .cls-17, .cls-18, .cls-19, .cls-25, .cls-26, .cls-27 {
+        font-family: Rubik-Bold, Rubik;
+        font-variation-settings: 'wght' 700;
+        font-weight: 700;
+      }
+
+      .cls-21, .cls-16 {
+        font-size: 30px;
+      }
+
+      .cls-21, .cls-26 {
+        fill: #f3b814;
+      }
+
+      .cls-6 {
+        fill: #1f1e26;
+      }
+
+      .cls-7 {
+        fill: #988fcc;
+      }
+
+      .cls-28 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-22, .cls-29 {
+        letter-spacing: 0em;
+      }
+
+      .cls-30 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-8 {
+        fill: gray;
+      }
+
+      .cls-31, .cls-18 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-32 {
+        letter-spacing: 0em;
+      }
+
+      .cls-33 {
+        letter-spacing: 0em;
+      }
+
+      .cls-15, .cls-18, .cls-25, .cls-20, .cls-26 {
+        font-size: 20px;
+      }
+
+      .cls-34 {
+        letter-spacing: 0em;
+      }
+
+      .cls-35 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-36 {
+        letter-spacing: 0em;
+      }
+
+      .cls-37 {
+        opacity: .75;
+      }
+
+      .cls-23 {
+        font-size: 60px;
+      }
+
+      .cls-23, .cls-25 {
+        fill: #ff4080;
+      }
+
+      .cls-38 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-39 {
+        letter-spacing: 0em;
+      }
+
+      .cls-40 {
+        font-family: GlowSansSC-Normal-Heavy-GBpc-EUC-H, 'Glow Sans SC';
+      }
+
+      .cls-41 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-42 {
+        letter-spacing: 0em;
+      }
+
+      .cls-43 {
+        letter-spacing: 0em;
+      }
+
+      .cls-44 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-45 {
+        letter-spacing: 0em;
+      }
+
+      .cls-17 {
+        font-size: 60px;
+      }
+
+      .cls-46 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-9 {
+        fill: #39b54a;
+      }
+
+      .cls-19 {
+        font-size: 45px;
+      }
+
+      .cls-47 {
+        fill: none;
+        stroke: #a394d1;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 5px;
+      }
+
+      .cls-10 {
+        fill: #191919;
+      }
+
+      .cls-48 {
+        letter-spacing: 0em;
+      }
+
+      .cls-20 {
+        fill: #a394d1;
+      }
+
+      .cls-49 {
+        letter-spacing: 0em;
+      }
+
+      .cls-50 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-51 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-27 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-11 {
+        fill: #35323f;
+      }
+    </style>
+  </defs>
+  <g id="Background">
+    <rect class="cls-6" y="65" width="1080" height="1920"/>
+    <rect class="cls-11" x="40" y="185" width="1000" height="180" rx="10" ry="10"/>
+    <rect class="cls-4" x="40" y="245" width="1000" height="180" rx="10" ry="10"/>
+    <path class="cls-4" d="M636.14,1985H138.06l249.04-431.35,249.04,431.35ZM636.14,1430.54h-241.6l120.8,209.24,120.8-209.24ZM932.05,1689.1h-241.6l120.8,209.24,120.8-209.24ZM583.69,1689.1l-95.5,165.42h191.01l-95.5-165.42ZM866.45,1615.12l-213.55,369.88h427.1l-213.55-369.88ZM885.86,1326.41l-95.5,165.42h191.01l-95.5-165.42ZM833.41,1491.83h-129.55l64.77,112.19,64.77-112.19ZM120.8,1775.76L0,1985h241.6l-120.8-209.24ZM340.24,1343.87l-42.71,73.98h85.42l-42.71-73.98ZM1051.64,1688.9l28.36-49.12h-56.72l28.36,49.12ZM272.52,1590.46h-129.55l64.77,112.19,64.77-112.19ZM42.71,1498.53L0,1572.5h85.42l-42.71-73.98Z"/>
+  </g>
+  <g id="Text">
+    <rect class="cls-10" y="65" width="1080" height="80"/>
+    <g>
+      <path class="cls-8" d="M35.55,81.94h-1.85v3.18h1.85c.44,0,.8-.15,1.1-.46.29-.31.43-.68.43-1.13s-.15-.84-.43-1.14-.65-.45-1.1-.45h0Z"/>
+      <path class="cls-8" d="M18.91,81.94h-1.85v3.18h1.85c.44,0,.8-.15,1.1-.46.29-.31.43-.68.43-1.13s-.15-.84-.43-1.14-.65-.45-1.1-.45h0Z"/>
+      <path class="cls-8" d="M10,80v50c0,2.76,2.24,5,5,5h50c2.76,0,5-2.24,5-5v-50c0-2.76-2.24-5-5-5H15c-2.76,0-5,2.24-5,5ZM21.46,86.03c-.7.68-1.55,1.02-2.55,1.02h-1.85v3.45h-2.07v-10.5h3.91c1,0,1.85.34,2.55,1.02.69.68,1.04,1.51,1.04,2.51s-.35,1.83-1.04,2.51h0ZM30.12,81.98h-4.2v2.49h4.08v1.98h-4.08v4.05h-2.07v-10.5h6.27v1.98ZM38.1,86.03c-.7.68-1.55,1.02-2.55,1.02h-1.85v3.45h-2.07v-10.5h3.91c1,0,1.85.34,2.55,1.02.69.68,1.04,1.51,1.04,2.51s-.35,1.83-1.04,2.51h0Z"/>
+    </g>
+    <g>
+      <text class="cls-16" transform="translate(80 125)">*Player Name</text>
+    </g>
+    <g>
+      <text class="cls-13" transform="translate(80 95)" id="playerName">Player Name</text>
+    </g>
+    <g>
+      <text class="cls-16" transform="translate(400 125)" id="ppValue">0000</text>
+    </g>
+    <g>
+      <text class="cls-13" transform="translate(400 95)">PP</text>
+    </g>
+
+    <g id="section-main">
+    <g>
+      <text class="cls-16" transform="translate(60 225)" id="type">BP list</text>
+    </g>
+    <rect class="cls-8" x="60" y="265" width="250" height="140.62" rx="5" ry="5"/>
+    <g>
+      <text class="cls-17" transform="translate(330 315)" id="title-1">*Title</text>
+    </g>
+    <g>
+      <text class="cls-20" transform="translate(350 365)">Artist</text>
+    </g>
+    <g>
+      <text class="cls-15" transform="translate(350 345)" id="artist-1">*Artist</text>
+    </g>
+    <line class="cls-47" x1="340" y1="335" x2="340" y2="365"/>
+    <g >
+      <text class="cls-20" transform="translate(350 405)"><tspan x="0" y="0">Mapper</tspan></text>
+    </g>
+    <g>
+      <text class="cls-15" transform="translate(350 385)" id="mapper-1">*Mapper</text>
+    </g>
+    <line class="cls-47" x1="340" y1="375" x2="340" y2="405"/>
+    <g>
+      <text class="cls-20" transform="translate(730 365)"><tspan class="cls-42" x="0" y="0">Acc</tspan></text>
+    </g>
+    <g>
+      <text class="cls-15" transform="translate(730 345)" id="acc-1">00.00%</text>
+    </g>
+    <line class="cls-47" x1="720" y1="335" x2="720" y2="365"/>
+    <g>
+      <text class="cls-20" transform="translate(730 405)"><tspan x="0" y="0">Rank</tspan></text>
+    </g>
+    <g>
+      <text class="cls-18" transform="translate(730 385)" id="grade-1">A</text>
+    </g>
+    <line class="cls-47" x1="720" y1="375" x2="720" y2="405"/>
+    <g>
+      <text class="cls-20" transform="translate(550 365)"><tspan x="0" y="0">BID</tspan></text>
+    </g>
+    <g>
+      <text class="cls-15" transform="translate(550 345)" id="bid-1">1234578</text>
+    </g>
+    <line class="cls-47" x1="540" y1="335" x2="540" y2="365"/>
+    <g>
+      <text class="cls-20" transform="translate(550 405)"><tspan x="0" y="0">Stars</tspan></text>
+    </g>
+    <g id="songTitle1-19">
+      <text class="cls-15" transform="translate(550 385)" id="star-1">0.00*</text>
+    </g>
+    <line class="cls-47" x1="540" y1="375" x2="540" y2="405"/>
+    <g>
+      <text class="cls-19" transform="translate(860 385)" id="pp-1">0000</text>
+    </g>
+    <g class="cls-37">
+      <text class="cls-16" transform="translate(960 285)" id="index-1">#00</text>
+    </g>
+    <g>
+      <text class="cls-15" transform="translate(955 345)"><tspan x="0" y="0">PP</tspan></text>
+    </g>
+
+  </g>
+
+  <g id="section-2">
+    <rect class="cls-4" x="40" y="455" width="1000" height="90" rx="10" ry="10"/>
+      <text class="cls-16" transform="translate(140 495)" id="title-2">Song Title</text>
+    <text id="version-2" class="cls-26" transform="translate(218 525)">Difficulty</text>
+      <text class="cls-15" transform="translate(140 525)" id="star-2">00.00*</text>
+    <text class="cls-21" transform="translate(660 495)" id="acc-2">00.00%</text>
+    <text class="cls-23" transform="translate(850 525)" id="ppValue-2">0000</text>
+    <text class="cls-25" transform="translate(980 478)">PP</text>
+    <text class="cls-15" transform="translate(660 525)" id="combo-2">0000x</text>
+    <rect class="cls-9" x="60" y="485" width="60" height="30" rx="15" ry="15" id="grade-2-placeHolder"/>
+    <image
+          xlink:href="assets/osuResources/GradeSmall-A.svg"
+          x="60"
+          y="485"
+          width="60"
+          height="30"
+          preserveAspectRatio="xMidYMid slice"
+          id="grade-1"/>
+  </g>
+
+    <g id="section-3" transform="translate(0 120)">
+      <rect class="cls-4" x="40" y="455" width="1000" height="90" rx="10" ry="10"/>
+      <g>
+        <text class="cls-16" transform="translate(140 495)" id="title-2">Song Title</text>
+      </g>
+      <text id="version-2" class="cls-26" transform="translate(218 525)">Diffculty</text>
+      <g>
+        <text class="cls-15" transform="translate(140 525)" id="star-2">00.00*</text>
+      </g>
+      <text class="cls-21" transform="translate(660 495)" id="acc-2">00.00%</text>
+      <text class="cls-23" transform="translate(850 525)" id="ppValue-2">0000</text>
+      <text class="cls-25" transform="translate(980 478)">PP</text>
+      <text class="cls-15" transform="translate(660 525)" id="combo-2">0000x</text>
+      <rect class="cls-9" x="60" y="485" width="60" height="30" rx="15" ry="15" id="grade-2-placeHolder"/>
+      <image
+              xlink:href="assets/osuResources/GradeSmall-A.svg"
+              x="60"
+              y="485"
+              width="60"
+              height="30"
+              preserveAspectRatio="xMidYMid slice"
+              id="grade-1"/>
+    </g>
+
+  <g id="modes">
+    <path class="cls-5" d="M815,86.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M815,82.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM815,90c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15Z"/>
+    <path class="cls-5" d="M882.5,86.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M882.5,82.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM882.5,93.75c6.2,0,11.25,5.05,11.25,11.25s-5.05,11.25-11.25,11.25-11.25-5.05-11.25-11.25,5.05-11.25,11.25-11.25M882.5,90c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM884.38,90.75h-3.75v28.5h3.75v-28.5Z"/>
+    <path class="cls-5" d="M950,86.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M950,82.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM951.88,97.5c0,2.07-1.68,3.75-3.75,3.75s-3.75-1.68-3.75-3.75,1.68-3.75,3.75-3.75,3.75,1.68,3.75,3.75ZM948.12,108.75c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75ZM955.62,101.25c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75Z"/>
+    <path class="cls-5" d="M1017.5,86.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1017.5,82.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1019.38,120v-30c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v30c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1026.88,112.5v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1011.88,112.5v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88Z"/>
+  </g>
+  </g>
+</svg>

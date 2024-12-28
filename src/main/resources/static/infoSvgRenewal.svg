@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+   width="800"
+   height="1050"
+   version="1.1"
+   id="svg7"
+   sodipodi:docname="infoSvgRenewal.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xml:space="preserve"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <defs>
+      <rect
+   id="avatar"
+   x="50"
+   y="300"
+   width="345"
+   height="345"
+   rx="20"
+   ry="20" />
+      <clipPath
+   id="imageBorder">
+     <use
+   xlink:href="#avatar"
+   id="use1" />
+      </clipPath>
+      <style>
+         .cls-1 {
+          font-family: Gilroy-Bolder, Gilroy;
+      }
+       .cls-2 {
+            font-family: Gilroy-Regular, Gilroy;
+         }
+      </style>
+   </defs>
+
+   
+   
+   <rect
+   x="0"
+   y="0"
+   rx="55"
+   ry="55"
+   width="800"
+   height="1200"
+   style="fill:black;opacity:1"
+   id="baseLayer" />
+
+<rect
+   x="0"
+   y="140"
+   rx="50"
+   ry="50"
+   width="800"
+   height="1200"
+   style="fill:#e4e8ec;opacity:1"
+   id="baseLayer2" />
+
+   <rect
+   x="0"
+   y="40"
+   rx="50"
+   ry="50"
+   width="800"
+   height="200"
+   style="fill:#e4e8ec;opacity:1"
+   id="baseLayer3" />
+
+
+   <image
+   xlink:href="assets/bg-0.png"
+   x="0"
+   y="100"
+   width="800"
+   height="1000"
+   id="mainBG"/>
+   
+
+   <rect
+   x="0"
+   y="930"
+   rx="50"
+   ry="50"
+   width="800"
+   height="70"
+   style="fill:#5b7cca;opacity:1"
+   id="bottomLayer" />
+
+
+   
+
+   <!--player name-->
+   <text
+   x="50"
+   y="110"
+   class="cls-1" 
+   fill="#3c455a"
+   style="font-size:70px;font-weight:bolder;font-style:normal;"
+   id="playerName">*PlayerName</text>
+
+
+   <rect
+   x="50"
+   y="150"
+   rx="10"
+   ry="10"
+   width="200"
+   height="70"
+   style="fill:#fc3d49;opacity:0.7"
+   id="baseLayerForHeader" />/
+   <text
+   x="85"
+   y="200"
+   class="cls-1" 
+   fill="#e4e8ec"
+   style="font-size:40px;font-weight:bolder;font-style:normal;"
+   id="country">*China</text>
+
+   <rect
+   x="50"
+   y="300"
+   rx="20"
+   ry="20"
+   width="345"
+   height="420"
+   style="fill:#000000;opacity:0.2"
+   id="baseLayer3" />
+   <!-- replaced the xlink via avatarUrl -->
+   <rect
+   x="50"
+   y="300"
+   rx="20"
+   ry="20"
+   width="345"
+   height="345"
+   style="stroke:black;stroke-width:1;opacity:0.5;"
+   id="avatarPlaceholder" />
+
+   <image
+   xlink:href="assets/guestAvatar.png"
+   x="50"
+   y="300"
+   width="345"
+   height="345"
+   id="imageForAvatar"
+   style="stroke:none;
+   stroke-opacity:1;
+   stroke-linejoin:round;
+   clip-path:url(#imageBorder)"
+   clip-path="url(#imageBorder)" />
+
+
+
+   <text
+   class="cls-2" 
+   fill="#ffffff"
+   style="font-size:27px"
+   x="65"
+   y="675"
+   id="globalRank">Global</text>
+
+     <text
+   class="cls-1" 
+   style="font-style:normal;font-variant:normal;
+   font-weight:bold;font-stretch:normal;
+   font-size:27px;-inkscape-font-specification:'Poppins, Medium';
+   font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+   font-variant-east-asian:normal;fill:#ffffff;"
+   x="65"
+   y="705"
+   id="globalRankNumber">#*para</text>
+
+   <text
+   xml:space="preserve"
+   fill="white"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;
+   font-size:24px;font-variant-ligatures:normal;
+   font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;
+   fill:#ffffff;
+   fill-opacity:1;stroke-width:0.783066;stroke-linejoin:round"
+   x="250"
+   y="675"
+   class="cls-2" 
+   id="countryRank">Country</text>
+
+   <text
+   x="250"
+   y="705"
+   fill="white"
+   class="cls-1" 
+   style="font-style:normal;font-variant:normal;
+   font-weight:bold;font-stretch:normal;
+   font-size:27px;
+   font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+   font-variant-east-asian:normal;fill:#ffffff;"
+   id="countryRankNumber">#*para
+</text>
+
+
+
+
+<rect
+x="405"
+y="300"
+rx="15"
+ry="15"
+width="345"
+height="420"
+style="fill:#000000;opacity:0.2"
+id="baseLayer5" />
+
+<rect
+x="425"
+y="320"
+rx="2"
+ry="2"
+width="4"
+height="35"
+style="fill:#f5f1f4;opacity:1"
+id="side1" />
+
+<text
+x="450"
+y="350"
+fill="white"
+class="cls-2" 
+style="font-style:italic;font-variant:normal;
+font-size:35px;opacity:0.8;
+font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+font-variant-east-asian:normal;fill:#ffffff;"
+id="PPtext">Performance
+</text>
+
+<text
+x="450"
+y="410"
+fill="white"
+class="cls-1" 
+style="font-style:normal;font-variant:normal;
+font-weight:bold;font-stretch:normal;
+font-size:50px;
+font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+font-variant-east-asian:normal;fill:#ffffff;"
+id="PP">*PPcount
+</text>
+
+
+
+
+<rect
+x="425"
+y="450"
+rx="2"
+ry="2"
+width="4"
+height="35"
+style="fill:#f5f1f4;opacity:1"
+id="side2" />
+
+
+<text
+x="450"
+y="478"
+fill="white"
+class="cls-2" 
+style="font-style:italic;font-variant:normal;
+font-size:35px;opacity:0.8;
+font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+font-variant-east-asian:normal;fill:#ffffff;"
+id="Accuracytext">Accuracy
+</text>
+
+<text
+x="450"
+y="538"
+fill="white"
+class="cls-1" 
+style="font-style:normal;font-variant:normal;
+font-weight:bold;font-stretch:normal;
+font-size:50px;
+font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+font-variant-east-asian:normal;fill:#ffffff;"
+id="accuracy">*Acc%
+</text>
+
+
+<rect
+x="425"
+y="590"
+rx="2"
+ry="2"
+width="5"
+height="40"
+style="fill:#f5f1f4;opacity:1"
+id="side3" />
+
+<text
+x="450"
+y="620"
+fill="white"
+class="cls-2" 
+style="font-style:italic;font-variant:normal;
+font-size:35px;opacity:0.8;
+font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+font-variant-east-asian:normal;fill:#ffffff;"
+id="Playtimetext">PlayTime
+</text>
+
+<text
+x="450"
+y="680"
+fill="white"
+class="cls-1" 
+style="font-style:normal;font-variant:normal;
+font-weight:bold;font-stretch:normal;
+font-size:50px;
+font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+font-variant-east-asian:normal;fill:#ffffff;"
+id="Playtime">*para H
+</text>
+
+<rect
+x="50"
+y="730"
+rx="15"
+ry="15"
+width="700"
+height="200"
+style="fill:#000000;opacity:0.2"
+id="baseLayer6" />
+
+<!-- bottom part -->
+<text
+x="70"
+y="770"
+fill="white"
+class="cls-2" 
+style="font-style:italic;font-variant:normal;
+font-size:30px;
+font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+font-variant-east-asian:normal;fill:#ffffff;"
+id="playcounttext">Playcount
+</text>
+
+<text
+x="270"
+y="770"
+fill="white"
+class="cls-1" 
+style="font-style:italic;
+font-weight:bold;font-stretch:normal;
+font-size:30px;
+font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+font-variant-east-asian:normal;fill:#ffffff;"
+id="Playcount">*pc count
+</text>
+
+
+<text
+x="70"
+y="840"
+fill="white"
+class="cls-2" 
+style="font-style:italic;
+font-size:30px;fill:#ffffff;"
+id="tthtext">Total Hit
+</text>
+
+<text
+x="270"
+y="840"
+fill="white"
+class="cls-1" 
+style="font-style:italic;
+font-weight:bold;font-stretch:normal;
+font-size:30px;fill:#ffffff;"
+id="tth">*tth count
+</text>
+
+<text
+x="70"
+y="910"
+fill="white"
+class="cls-2" 
+style="font-style:italic;font-variant:normal;
+font-weight:300;
+font-size:30px;
+fill:#ffffff;"
+id="Hitsperplaytext">Hits per Play
+</text>
+
+<text
+x="270"
+y="910"
+fill="white"
+class="cls-1" 
+style="font-style:italic;font-variant:normal;
+font-weight:bold;font-stretch:normal;
+font-size:30px;
+font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;
+font-variant-east-asian:normal;fill:#ffffff;"
+id="Hitsperplay">* args
+</text>
+
+
+ <rect
+x="680"
+y="730"
+rx="15"
+ry="15"
+width="70"
+height="200"
+style="fill:#e4e8ec;opacity:1"
+id="modes" />
+
+
+<g transform="scale(0.9) translate(75,85)" >
+<path id="osu" opacity="0.8" transform="translate(-935,535)" fill="#516064" d="M1655,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1655,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1655,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15Z"/>
+<path id="taiko" opacity="0.8" transform="translate(-1002,585)" fill="#516064" d="M1722.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1722.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1722.5,217.34c6.2,0,11.25,5.05,11.25,11.25s-5.05,11.25-11.25,11.25-11.25-5.05-11.25-11.25,5.05-11.25,11.25-11.25M1722.5,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1724.38,214.34h-3.75v28.5h3.75v-28.5Z"/>
+<path id="ctb" class="cls-31" opacity="0.8" transform="translate(-1069,635)" fill="#516064" d="M1790,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1790,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1791.88,221.09c0,2.07-1.68,3.75-3.75,3.75s-3.75-1.68-3.75-3.75,1.68-3.75,3.75-3.75,3.75,1.68,3.75,3.75ZM1788.12,232.34c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75ZM1795.62,224.84c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75Z"/>
+<path id="mania" class="cls-31" opacity="0.8" transform="translate(-1136,685)" fill="#516064" d="M1857.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1857.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1859.38,243.59v-30c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v30c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1866.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1851.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88Z"/>
+    
+
+</g>
+
+
+
+
+<text
+x="50"
+y="1030"
+fill="#516064"
+class="cls-2" 
+style="font-style:italic;font-size:20px;
+font-weight:500;
+font-stretch:normal;font-variant:normal;
+font-variant-ligatures:normal;font-variant-caps:normal;
+font-variant-numeric:normal;font-variant-east-asian:normal;"
+id="timeStamp">*timeStamp</text>
+
+</svg>

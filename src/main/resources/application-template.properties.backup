@@ -1,0 +1,40 @@
+spring.application.name=lazybot-jda
+server.port=9001
+
+
+spring.data.redis.port=
+spring.data.redis.host=
+spring.data.redis.database=
+spring.data.redis.password=
+
+spring.data.redis.timeout=5000ms
+
+discord.bot.key =
+discord.bot.id = 
+discord.bot.token =
+
+#osu-api
+lazybot.client_id=
+lazybot.responseType=code
+lazybot.scopes=friends.read identify public
+lazybot.client_secret=
+lazybot.redirect_uri=
+lazybot.grant_type=authorization_code
+
+async.executor.thread.core_pool_size=5
+async.executor.thread.max_pool_size=5
+async.executor.thread.queue_capacity=1000
+async.executor.thread.name.prefix=api_request_pool-
+
+
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url:
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.hikari.max-lifetime=120000
+
+spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+spring.jackson.time-zone=GMT+8
+
+
+

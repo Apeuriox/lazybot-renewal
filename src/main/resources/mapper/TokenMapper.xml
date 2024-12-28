@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.TokenMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.osu.dao.entity.po.UserTokenPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="discord_code" jdbcType="BIGINT" property="discord_code"/>
+        <result column="qq_code" jdbcType="BIGINT" property="qq_code"/>
+        <result column="player_id" jdbcType="INTEGER" property="player_id"/>
+        <result column="access_token" jdbcType="VARCHAR" property="access_token"/>
+        <result column="refresh_token" jdbcType="VARCHAR" property="refresh_token"/>
+        <result column="player_name" jdbcType="VARCHAR" property="player_name"/>
+        <result column="default_mode" jdbcType="INTEGER" property="default_mode"/>
+    </resultMap>
+    <sql id = "Base_Column_List">
+        id, discord_code, qq_code, player_id, access_token, refresh_token, player_name, default_mode
+    </sql>
+
+    <select id="selectByQQ" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from user_token
+        where qq_code =#{qq_code,jdbcType=BIGINT}
+    </select>
+    <select id="selectByDiscord" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from user_token
+        where discord_code =#{discord_code,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByPlayername" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from user_token
+        where player_name =#{player_name}
+    </select>
+
+    <select id="selectDefaultModeByQq_code" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select default_mode
+        from user_token
+        where qq_code =#{qq_code,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateByToken" parameterType="me.aloic.lazybot.osu.dao.entity.po.UserTokenPO">
+        update user_token
+        <set>
+            access_token=#{access_token},
+        </set>
+        where discord_code =#{discord_code,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateClientToken" parameterType="java.lang.String">
+        update user_token
+        <set>
+            access_token=#{access_token},
+        </set>
+        where qq_code = 0
+    </update>
+
+    <delete id="deleteByQQ" parameterType="java.lang.Long">
+        DELETE FROM user_token WHERE qq_code = #{qq_code}
+    </delete>
+
+</mapper>

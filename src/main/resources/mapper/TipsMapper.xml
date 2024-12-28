@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.TipsMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.osu.dao.entity.po.TipsPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="created_by" jdbcType="VARCHAR" property="created_by"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="last_updated" jdbcType="DATE" property="last_updated"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updated_by"/>
+    </resultMap>
+    <sql id = "Base_Column_List">
+        id, content, created_by, last_updated, updated_by
+    </sql>
+
+    <select id="selectRandom" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from tips
+        ORDER BY RAND()
+        LIMIT 1
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from tips
+       where id=#{id}
+    </select>
+
+
+    <update id="updateTips" parameterType="me.aloic.lazybot.osu.dao.entity.po.TipsPO">
+        update tips
+        <set>
+            content=#{content},
+            updated_by=#{updated_by},
+            last_updated=#{last_updated}
+        </set>
+        where id =#{id,jdbcType=BIGINT}
+    </update>
+
+
+</mapper>

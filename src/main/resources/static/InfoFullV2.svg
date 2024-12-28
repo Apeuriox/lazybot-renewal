@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fbb03b;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14, .cls-15, .cls-16, .cls-17, .cls-18 {
+        stroke-width: 0px;
+      }
+
+      .cls-2, .cls-19 {
+        fill: #ccc;
+      }
+
+      .cls-20 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-21 {
+        letter-spacing: 0em;
+      }
+
+      .cls-19, .cls-22, .cls-23, .cls-24, .cls-25 {
+        font-size: 20px;
+      }
+
+      .cls-19, .cls-26, .cls-23, .cls-27, .cls-28, .cls-29, .cls-30, .cls-31, .cls-32, .cls-33, .cls-34, .cls-35, .cls-36, .cls-37, .cls-38, .cls-25 {
+        font-family: Gilroy-Bold, Gilroy;
+        font-weight: 700;
+      }
+
+      .cls-3 {
+        fill: #242424;
+      }
+
+      .cls-22, .cls-28, .cls-39, .cls-23, .cls-33, .cls-35, .cls-40, .cls-37, .cls-24, .cls-25 {
+        fill: #f2f2f2;
+      }
+
+      .cls-26, .cls-34, .cls-38 {
+        font-size: 13.33px;
+      }
+
+      .cls-26, .cls-36 {
+        fill: #f3b814;
+      }
+
+      .cls-4 {
+        fill: #1e1e1e;
+      }
+
+      .cls-28 {
+        font-size: 15px;
+      }
+
+      .cls-41 {
+        letter-spacing: 0em;
+      }
+
+      .cls-5 {
+        fill: #1c1c1c;
+      }
+
+      .cls-42 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-6 {
+        fill: #0fa;
+      }
+
+      .cls-39 {
+        font-size: 27px;
+        
+      }
+
+      .cls-39, .cls-43, .cls-24 {
+        font-family: Torus-SemiBold, Torus;
+      }
+
+      .cls-29, .cls-44 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-23, .cls-45, .cls-46, .cls-47, .cls-48, .cls-40, .cls-49 {
+        font-family: Gilroy-Regular, Gilroy;
+      }
+
+      .cls-7, .cls-31, .cls-38 {
+        fill: #ff78cf;
+      }
+
+      .cls-50 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-30, .cls-9, .cls-34 {
+        fill: #e6e6e6;
+      }
+
+      .cls-30, .cls-36 {
+        font-size: 20px;
+      }
+
+      .cls-31 {
+        font-size: 46.67px;
+      }
+
+      .cls-45 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-32 {
+        fill: #c0729a;
+        font-size: 10px;
+      }
+
+      .cls-51 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-52 {
+        letter-spacing: 0em;
+      }
+
+      .cls-53 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-8 {
+        fill: none;
+      }
+
+      .cls-46 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-54 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-33 {
+        font-size: 45px;
+      }
+
+      .cls-55 {
+        letter-spacing: .01em;
+      }
+
+      .cls-56 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-57 {
+        letter-spacing: 0em;
+      }
+
+      .cls-47 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-10 {
+        fill: gray;
+      }
+
+      .cls-35 {
+        font-size: 15px;
+      }
+
+      .cls-58 {
+        font-family: Torus-SemiBold, Torus;
+      }
+
+      .cls-59 {
+        letter-spacing: 0em;
+      }
+
+      .cls-60 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-61 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-40, .cls-37 {
+        font-size: 30px;
+      }
+
+      .cls-11 {
+        fill: #272727;
+      }
+
+      .cls-62 {
+        letter-spacing: 0em;
+      }
+
+      .cls-12 {
+        fill: #333;
+      }
+
+      .cls-63 {
+        letter-spacing: 0em;
+      }
+
+      .cls-13 {
+        fill: #fff;
+      }
+
+      .cls-64 {
+        letter-spacing: 0em;
+      }
+
+      .cls-65 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-14 {
+        fill: #202020;
+      }
+
+      .cls-66 {
+        letter-spacing: 0em;
+      }
+
+      .cls-15 {
+        fill: #1f1f1f;
+      }
+
+      .cls-16 {
+        fill: #1b1b1b;
+      }
+
+      .cls-67 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-68 {
+        letter-spacing: 0em;
+      }
+
+      .cls-69 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-70 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-17 {
+        fill: #191919;
+      }
+
+      .cls-49 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-71 {
+        letter-spacing: 0em;
+      }
+
+      .cls-18 {
+        fill: #4d4d4d;
+      }
+      .cls-100{
+        font-family: Torus-SemiBold, Torus;
+        fill:#fff;
+        font-weight: 600;
+      }
+    </style>
+  
+    <clipPath id="avatarClip">
+      <rect class="cls-10" id="avatarBorder" x="60" y="110" width="50" height="50" rx="5" ry="5"/>
+    </clipPath>
+
+    <clipPath id="clippath">
+      <rect class="cls-8" x="1620" width="240" height="60"/>
+    </clipPath>
+
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0"/>
+
+    </filter>
+
+  </defs>
+  <g id="Background">
+      <image
+              xlink:href="assets/2108981.jpg"
+              x="0"
+              y="0"
+              width="1920"
+              height="1080"
+              preserveAspectRatio="xMidYMid slice"
+              filter="url(#blur)"
+              id="mapBg-right"/>
+              
+    <rect fill="black" opacity="0.4" width="1920" height="1080"/>
+    <rect class="cls-12" width="1920" height="100" />
+    <rect class="cls-17" width="1920" height="60"/>
+
+    <rect class="cls-18" width="1035" height="270" rx="20" ry="20" transform="skewX(-10)" y="80"/>
+    <path class="cls-12" d="M882.68,500H0V230h925c9.33,0,16.39,8.42,14.77,17.6l-42.32,240c-1.26,7.17-7.49,12.4-14.77,12.4Z"/>
+
+
+    <rect class="cls-12" transform="translate(-10,520) skewX(-11)" width="240" height="345" rx="10"/>
+
+    <path class="cls-12" d="M851.61,1060H0v-179.15h879.67c6.22,0,10.93,5.61,9.85,11.74l-28.06,159.15c-.84,4.78-5,8.26-9.85,8.26Z"/>
+    <rect class="cls-15" x="1620" width="240" height="60"/>
+    <g class="cls-60">
+      <g>
+        <polygon class="cls-14" points="1817.05 -36.67 1788.08 13.33 1846.02 13.33 1817.05 -36.67"/>
+        <polygon class="cls-3" points="1783 -20 1725.07 80 1840.94 80 1783 -20"/>
+        <polygon class="cls-16" points="1739.2 -70 1696.1 4.4 1782.31 4.4 1739.2 -70"/>
+        <polygon class="cls-11" points="1792.57 -20 1763.6 30 1821.53 30 1792.57 -20"/>
+        <polygon class="cls-16" points="1822.48 13.33 1798.34 55 1846.62 55 1822.48 13.33"/>
+        <polygon class="cls-17" points="1726.36 -3.33 1683.26 71.07 1769.47 71.07 1726.36 -3.33"/>
+        <polygon class="cls-15" points="1691.62 -20 1658.17 37.74 1725.07 37.74 1691.62 -20"/>
+        <polygon class="cls-5" points="1733.43 55 1723.77 71.67 1743.09 71.67 1733.43 55"/>
+        <polygon class="cls-4" points="1665.24 -20 1612.48 71.07 1718 71.07 1665.24 -20"/>
+        <polygon class="cls-14" points="1858.86 -10 1829.9 40 1887.83 40 1858.86 -10"/>
+        <polygon class="cls-11" points="1628.07 -20 1599.1 30 1657.03 30 1628.07 -20"/>
+      </g>
+    </g>
+    <path class="cls-6" d="M1665,17.5c6.89,0,12.5,5.61,12.5,12.5s-5.61,12.5-12.5,12.5-12.5-5.61-12.5-12.5,5.61-12.5,12.5-12.5M1665,15c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1665,20c-5.52,0-10,4.48-10,10s4.48,10,10,10,10-4.48,10-10-4.48-10-10-10Z"/>
+    <path class="cls-9" d="M1715,17.5c6.89,0,12.5,5.61,12.5,12.5s-5.61,12.5-12.5,12.5-12.5-5.61-12.5-12.5,5.61-12.5,12.5-12.5M1715,15c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1715,22.5c4.14,0,7.5,3.36,7.5,7.5s-3.36,7.5-7.5,7.5-7.5-3.36-7.5-7.5,3.36-7.5,7.5-7.5M1715,20c-5.52,0-10,4.48-10,10s4.48,10,10,10,10-4.48,10-10-4.48-10-10-10h0ZM1716.25,20.5h-2.5v19h2.5v-19Z"/>
+    <path class="cls-9" d="M1765,17.5c6.89,0,12.5,5.61,12.5,12.5s-5.61,12.5-12.5,12.5-12.5-5.61-12.5-12.5,5.61-12.5,12.5-12.5M1765,15c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1766.25,25c0,1.38-1.12,2.5-2.5,2.5s-2.5-1.12-2.5-2.5,1.12-2.5,2.5-2.5,2.5,1.12,2.5,2.5ZM1763.75,32.5c-1.38,0-2.5,1.12-2.5,2.5s1.12,2.5,2.5,2.5,2.5-1.12,2.5-2.5-1.12-2.5-2.5-2.5ZM1768.75,27.5c-1.38,0-2.5,1.12-2.5,2.5s1.12,2.5,2.5,2.5,2.5-1.12,2.5-2.5-1.12-2.5-2.5-2.5Z"/>
+    <path class="cls-9" d="M1815,17.5c6.89,0,12.5,5.61,12.5,12.5s-5.61,12.5-12.5,12.5-12.5-5.61-12.5-12.5,5.61-12.5,12.5-12.5M1815,15c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1816.25,40v-20c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25,1.25v20c0,.69.56,1.25,1.25,1.25s1.25-.56,1.25-1.25ZM1821.25,35v-10c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25,1.25v10c0,.69.56,1.25,1.25,1.25s1.25-.56,1.25-1.25ZM1811.25,35v-10c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25,1.25v10c0,.69.56,1.25,1.25,1.25s1.25-.56,1.25-1.25Z"/>
+    <path class="cls-13" d="M1677.5,57.5h-25c-1.38,0-2.5-1.12-2.5-2.5s1.12-2.5,2.5-2.5h25c1.38,0,2.5,1.12,2.5,2.5s-1.12,2.5-2.5,2.5Z"/>
+    <rect class="cls-10" x="60" y="350" width="380" height="110" rx="5" ry="5"/>
+
+  </g>
+  <g id="Text">
+    <path class="cls-10" d="M907.59,260H62.41c-1.33,0-2.41-1.12-2.41-2.5h0c0-1.38,1.08-2.5,2.41-2.5h845.17c1.33,0,2.41,1.12,2.41,2.5h0c0,1.38-1.08,2.5-2.41,2.5Z"/>
+    <rect class="cls-7" x="60" y="255" width="370" height="5" rx="2.5" ry="2.5"/>
+    <text class="cls-37" id="levelPercentage" transform="translate(110 297.5)">00%</text>
+    <path class="cls-1" d="M80,310c-1.27,0-2.53-.33-3.66-.98l-13.14-7.59c-2.26-1.31-3.66-3.74-3.66-6.35v-15.17c0-2.61,1.4-5.04,3.66-6.35l13.14-7.59c2.26-1.3,5.07-1.3,7.33,0l13.14,7.59c2.26,1.31,3.66,3.74,3.66,6.35v15.17c0,2.61-1.4,5.04-3.66,6.35l-13.14,7.59c-1.13.65-2.4.98-3.66.98ZM80,267.93c-.76,0-1.52.2-2.2.59l-13.14,7.59c-1.36.78-2.2,2.24-2.2,3.81v15.17c0,1.57.84,3.03,2.2,3.81l13.14,7.59c1.36.78,3.04.78,4.4,0l13.14-7.59c1.36-.78,2.2-2.24,2.2-3.81v-15.17c0-1.57-.84-3.03-2.2-3.81l-13.14-7.59c-.68-.39-1.44-.59-2.2-.59Z"/>
+    <text class="cls-35" id="level" text-anchor="middle" transform="translate(80 292.5)">100</text>
+    <g id="detailedStats">
+      <text class="cls-22" transform="translate(460 300)">进榜总分</text>
+      <text class="cls-23" text-anchor="end" id="rankedScore" transform="translate(905 300)">000,000,000,000</text>
+   
+      <text class="cls-22" transform="translate(460 332)">准确率</text>
+      <text class="cls-23" id="accuracy" text-anchor="end" transform="translate(899 332)">100.00%</text>
+
+      <text class="cls-22" transform="translate(460 364)">游玩次数</text>
+      <text class="cls-23" text-anchor="end" id="playCount" transform="translate(893 364)">00000</text>
+
+      <text class="cls-22" transform="translate(460 396)">总分</text>
+      <text class="cls-23" id="totalScore" text-anchor="end" transform="translate(887 396)">00,000,000,000,000</text>
+  
+      <text class="cls-22" transform="translate(460 428)">总命中次数</text>
+      <text class="cls-23" id="totalHits" text-anchor="end" transform="translate(881 428)">00,000,000</text>
+
+      <text class="cls-22" transform="translate(460 460)">游戏时长</text>
+      <text class="cls-23" id="playTime" text-anchor="end" transform="translate(875 460)">000.0h</text>
+    </g>
+
+    <g id="bplist-1" transform="translate(60,0)">
+    <path class="cls-18" d="M834.71,580H188.04c-5.52,0-9.21-4.48-8.24-10l7.05-40c.97-5.52,6.24-10,11.76-10h646.67c5.52,0,9.21,4.48,8.24,10l-7.05,40c-.97,5.52-6.24,10-11.76,10Z"/>
+    
+      <!-- <rect class="cls-18" width="668" height="60" rx="10" ry="10" x="280.5" y="520" transform="skewX(-10)" /> -->
+      <!-- <rect id="grade-placeholder" opacity="0" fill="#88da20" x="196.67" y="540" width="40" height="20" rx="5" ry="5"/> -->
+      <image xlink:href="assets/osuResources/GradeSmall-A.svg"
+      x="196.5"
+      y="540"
+      width="40"
+      height="20"
+      preserveAspectRatio="xMidYMid slice"
+      id="grade-1"/>
+      <text class="cls-30" id="songTitle-1" transform="translate(250 546.67)">Song by Artist</text>
+      <text id="diff-1" class="cls-26" transform="translate(306.67 566.67)">Diffculty</text>
+      <rect id="star-bg-1" fill="#321cb2" x="246" y="553.5" rx="10" ry="10" width="58" height="17.5"/>
+      <polygon id="starRatingStar-1" transform="translate(176.4,414.5),scale(0.4)"  fill="#f3b814" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
+      <text class="cls-34" text-anchor="middle" id="star-1" transform="translate(281 566.67)">0.00</text>
+      <text id="acc-1" class="cls-36" transform="translate(596.67 546.67)">100.0%</text>
+      <text id="pp-1" text-anchor="middle" class="cls-31" transform="translate(775 566.67)">000</text>
+      <text id="songTitle1-6" class="cls-38" transform="translate(830 540)">PP</text>
+      <text class="cls-34" id="combo-1" transform="translate(596.67 566.67)">0000x</text>
+  
+  </g>
+
+
+    <g id="bplist-2" transform="translate(45,70)">
+    <path class="cls-18" d="M834.71,580H188.04c-5.52,0-9.21-4.48-8.24-10l7.05-40c.97-5.52,6.24-10,11.76-10h646.67c5.52,0,9.21,4.48,8.24,10l-7.05,40c-.97,5.52-6.24,10-11.76,10Z"/>
+    
+        <!-- <rect class="cls-18" width="668" height="60" rx="10" ry="10" x="280.5" y="520" transform="skewX(-10)" /> -->
+        <image xlink:href="assets/osuResources/GradeSmall-A.svg"
+        x="196.5"
+        y="540"
+        width="40"
+        height="20"
+        preserveAspectRatio="xMidYMid slice"
+        id="grade-2"/>
+        <text class="cls-30" id="songTitle-2" transform="translate(250 546.67)">Song by Artist</text>
+        <text id="diff-2" class="cls-26" transform="translate(306.67 566.67)">Diffculty</text>
+        <rect id="star-bg-2" fill="#321cb2" x="246" y="553.5" rx="10" ry="10" width="58" height="17.5"/>
+        <polygon id="starRatingStar-2" transform="translate(176.4,414.5),scale(0.4)"  fill="#f3b814" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
+        <text class="cls-34" text-anchor="middle" id="star-2" transform="translate(281 566.67)">0.00</text>
+        <text id="acc-2" class="cls-36" transform="translate(596.67 546.67)">100.0%</text>
+        <text id="pp-2" text-anchor="middle" class="cls-31" transform="translate(775 566.67)">000</text>
+        <text class="cls-38" transform="translate(830 540)">PP</text>
+        <text class="cls-34" id="combo-2" transform="translate(596.67 566.67)">0000x</text>
+    
+    </g>
+
+    <g id="bplist-3" transform="translate(30,140)">
+    <path class="cls-18" d="M834.71,580H188.04c-5.52,0-9.21-4.48-8.24-10l7.05-40c.97-5.52,6.24-10,11.76-10h646.67c5.52,0,9.21,4.48,8.24,10l-7.05,40c-.97,5.52-6.24,10-11.76,10Z"/>
+    
+      <!-- <rect class="cls-18" width="668" height="60" rx="10" ry="10" x="280.5" y="520" transform="skewX(-10)" /> -->
+      <image xlink:href="assets/osuResources/GradeSmall-A.svg"
+      x="196.5"
+      y="540"
+      width="40"
+      height="20"
+      preserveAspectRatio="xMidYMid slice"
+      id="grade-3"/>
+      <text class="cls-30" id="songTitle-3" transform="translate(250 546.67)">Song by Artist</text>
+      <text id="diff-3" class="cls-26" transform="translate(306.67 566.67)">Diffculty</text>
+      <rect id="star-bg-3" fill="#321cb2" x="246" y="553.5" rx="10" ry="10" width="58" height="17.5"/>
+      <polygon id="starRatingStar-3" transform="translate(176.4,414.5),scale(0.4)"  fill="#f3b814" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
+      <text class="cls-34" text-anchor="middle" id="star-3" transform="translate(281 566.67)">0.00</text>
+      <text id="acc-3" class="cls-36" transform="translate(596.67 546.67)">100.0%</text>
+      <text id="pp-3" text-anchor="middle" class="cls-31" transform="translate(775 566.67)">000</text>
+      <text class="cls-38" transform="translate(830 540)">PP</text>
+      <text class="cls-34" id="combo-3" transform="translate(596.67 566.67)">0000x</text>
+  
+  </g>
+
+  <g id="bplist-4" transform="translate(15,210)">
+  <path class="cls-18" d="M834.71,580H188.04c-5.52,0-9.21-4.48-8.24-10l7.05-40c.97-5.52,6.24-10,11.76-10h646.67c5.52,0,9.21,4.48,8.24,10l-7.05,40c-.97,5.52-6.24,10-11.76,10Z"/>
+    
+    <!-- <rect class="cls-18" width="668" height="60" rx="10" ry="10" x="280.5" y="520" transform="skewX(-10)" /> -->
+    <image xlink:href="assets/osuResources/GradeSmall-A.svg"
+    x="196.5"
+    y="540"
+    width="40"
+    height="20"
+    preserveAspectRatio="xMidYMid slice"
+    id="grade-3"/>
+    <text class="cls-30" id="songTitle-3" transform="translate(250 546.67)">Song by Artist</text>
+    <text id="diff-3" class="cls-26" transform="translate(306.67 566.67)">Diffculty</text>
+    <rect id="star-bg-3" fill="#321cb2" x="246" y="553.5" rx="10" ry="10" width="58" height="17.5"/>
+    <polygon id="starRatingStar-3" transform="translate(176.4,414.5),scale(0.4)"  fill="#f3b814" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
+    <text class="cls-34" text-anchor="middle" id="star-3" transform="translate(281 566.67)">0.00</text>
+    <text id="acc-3" class="cls-36" transform="translate(596.67 546.67)">100.0%</text>
+    <text id="pp-3" text-anchor="middle" class="cls-31" transform="translate(775 566.67)">000</text>
+    <text class="cls-38" transform="translate(830 540)">PP</text>
+    <text class="cls-34" id="combo-3" transform="translate(596.67 566.67)">0000x</text>
+
+</g>
+
+<g id="bplist-5" transform="translate(0,280)">
+<path class="cls-18" d="M834.71,580H188.04c-5.52,0-9.21-4.48-8.24-10l7.05-40c.97-5.52,6.24-10,11.76-10h646.67c5.52,0,9.21,4.48,8.24,10l-7.05,40c-.97,5.52-6.24,10-11.76,10Z"/>
+    
+  <!-- <rect class="cls-18" width="668" height="60" rx="10" ry="10" x="280.5" y="520" transform="skewX(-10)" /> -->
+  <image xlink:href="assets/osuResources/GradeSmall-A.svg"
+  x="196.5"
+  y="540"
+  width="40"
+  height="20"
+  preserveAspectRatio="xMidYMid slice"
+  id="grade-5"/>
+  <text class="cls-30" id="songTitle-5" transform="translate(250 546.67)">Song by Artist</text>
+  <text id="diff-5" class="cls-26" transform="translate(306.67 566.67)">Diffculty</text>
+  <rect id="star-bg-5" fill="#321cb2" x="246" y="553.5" rx="10" ry="10" width="58" height="17.5"/>
+  <polygon id="starRatingStar-5" transform="translate(176.4,414.5),scale(0.4)"  fill="#f3b814" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
+  <text class="cls-34" text-anchor="middle" id="star-5" transform="translate(281 566.67)">0.00</text>
+  <text id="acc-5" class="cls-36" transform="translate(596.67 546.67)">100.0%</text>
+  <text id="pp-5" text-anchor="middle" class="cls-31" transform="translate(775 566.67)">000</text>
+  <text class="cls-38" transform="translate(830 540)">PP</text>
+  <text class="cls-34" id="combo-5" transform="translate(596.67 566.67)">0000x</text>
+
+</g>
+
+    <text class="cls-22" transform="translate(20 550)"><tspan class="cls-27" x="0" y="0">PP-Attr.</tspan><tspan class="cls-48" x="70" y="0"> Correlation</tspan></text>
+    <g>
+      <rect width="110" height="70" transform="translate(15,565)" fill="#4d4d4d" rx="10"/>
+      <rect width="110" height="70" transform="translate(100,565) skewX(-11)" fill="#4d4d4d" rx="10"/>
+      <text class="cls-100" font-size="25px"  transform="translate(25,595)">Aim</text>
+      <rect fill="#fff" transform="translate(25,595)" width="170" height="2" opacity="0.5"/>
+      <text class="cls-100" font-size="20px" id="aim-percent" transform="translate(25,615)">100%</text>
+      <text class="cls-100" font-size="20px" id="aim-value" transform="translate(190,615)" text-anchor="end">12999pp</text>
+    </g>
+    <g transform="translate(-13,80)">
+     <rect width="110" height="70" transform="translate(28,565)" fill="#4d4d4d" rx="10"/>
+      <rect width="110" height="70" transform="translate(98,565) skewX(-11)" fill="#4d4d4d" rx="10"/>
+      
+    <text class="cls-100" font-size="25px"  transform="translate(37,595)">Speed</text>
+    <rect fill="#fff" transform="translate(37,595)" width="158" height="2" opacity="0.5"/>
+    <text class="cls-100" font-size="20px" id="spd-percent" transform="translate(37,615)">100%</text>
+    <text class="cls-100" font-size="20px" id="spd-value" transform="translate(190,615)" text-anchor="end">12999pp</text>
+    </g>
+    <g transform="translate(-26,160)">
+     <rect width="110" height="70" transform="translate(41,565)" fill="#4d4d4d" rx="10"/>
+    <rect width="110" height="70" transform="translate(96,565) skewX(-11)" fill="#4d4d4d" rx="10"/>
+    <text class="cls-100" font-size="25px"  transform="translate(49,595)">Accuracy</text>
+    <rect fill="#fff" transform="translate(49,595)" width="145" height="2" opacity="0.5"/>
+    <text class="cls-100" font-size="20px" id="acc-percent"  transform="translate(47,615)">100%</text>
+    <text class="cls-100" font-size="20px" id="acc-value"  transform="translate(190,615)" text-anchor="end">12999pp</text>
+    </g>
+    <rect class="cls-10" x="60" y="110" width="50" height="50" rx="5" ry="5"/>
+    <image x="60" y="110" id="avatar" width="50" height="50" xlink:href="assets/guestAvatar.png" clip-path="url(#avatarClip)"/>
+    <text class="cls-33" transform="translate(120 150)"><tspan x="0" y="0">Pla</tspan><tspan class="cls-65" x="65.83" y="0">y</tspan><tspan x="88.56" y="0">erName</tspan></text>
+    <text class="cls-25" id="requestTime" transform="translate(60 40)">0000/00/00  00:00:00</text>
+    <text class="cls-32" transform="translate(60 20)">Request Time</text>
+    <text class="cls-28" transform="translate(100 340)">#000</text>
+    <rect class="cls-10" id="badge-1" x="60" y="175" width="50" height="25" rx="5" ry="5"/>
+    <rect class="cls-10" id="badge-2" x="120" y="175" width="50" height="25" rx="5" ry="5"/>
+    <rect class="cls-10" id="badge-1" x="180" y="175" width="50" height="25" rx="5" ry="5"/>
+    <rect class="cls-10" id="badge-2" x="240" y="175" width="50" height="25" rx="5" ry="5"/>
+    <rect class="cls-10" x="60" y="320" width="35" height="20" rx="5" ry="5"/>
+    <text class="cls-40" transform="translate(540 130)">Global</text>
+    <text class="cls-40" transform="translate(750 130)">PP</text>
+    <text class="cls-33" id="globalRank" transform="translate(540 170)">#20000</text>
+    <text class="cls-33" id="ppValue" transform="translate(750 170)">10000</text>
+    <text class="cls-19" id="rankImprove" transform="translate(560 190)">00</text>
+    <text class="cls-19" id="ppImprove" transform="translate(770 190)">100</text>
+    <polygon class="cls-2" id="upArrow-rank" points="553.94 186.06 550 182.12 546.06 186.06 543.94 183.94 550 177.88 556.06 183.94 553.94 186.06"/>
+    <polygon class="cls-2" id="downArrow-pp" points="760 187.12 753.94 181.06 756.06 178.94 760 182.88 763.94 178.94 766.06 181.06 760 187.12"/>
+    <text class="cls-22" transform="translate(30 910)"><tspan class="cls-27" x="0" y="0">Mods</tspan><tspan class="cls-58" x="55" y="0">Usage</tspan></text>
+    <text class="cls-22" transform="translate(630 910)"><tspan class="cls-27" x="0" y="0">Avg.</tspan><tspan class="cls-58" x="45" y="0">Stats</tspan></text>
+    <text class="cls-22" transform="translate(330 910)"><tspan class="cls-27" x="0" y="0">Ranks</tspan><tspan class="cls-58" x="60" y="0">Distribution</tspan></text>
+    
+    <g>
+      <rect width="90" height="40" fill="#4d4d4d" transform="translate(30,920)" rx="5" />
+       <text class="cls-100" font-size="20px" text-anchor="middle" transform="translate(75,945)">HR (882)</text>
+      <rect width="90" height="5" fill="#fc3d49" opacity="0.5" transform="translate(30,955)" rx="5" />
+    </g>
+      <g transform="translate(100,0)">
+      <rect width="90" height="40" fill="#4d4d4d" transform="translate(30,920)" rx="5" />
+       <text class="cls-100" font-size="20px" text-anchor="middle" transform="translate(75,945)">DT (882)</text>
+      <rect width="90" height="5" fill="#00a3d9" opacity="0.5" transform="translate(30,955)" rx="5" />
+    </g>
+    <g transform="translate(0,45)">
+      <rect width="90" height="40" fill="#4d4d4d" transform="translate(30,920)" rx="5" />
+       <text class="cls-100" font-size="20px" text-anchor="middle" transform="translate(75,945)">HR (882)</text>
+      <rect width="90" height="5" fill="#fc3d49" opacity="0.5" transform="translate(30,955)" rx="5" />
+    </g>
+      <g transform="translate(100,45)">
+      <rect width="90" height="40" fill="#4d4d4d" transform="translate(30,920)" rx="5" />
+       <text class="cls-100" font-size="20px" text-anchor="middle" transform="translate(75,945)">DT (882)</text>
+      <rect width="90" height="5" fill="#00a3d9" opacity="0.5" transform="translate(30,955)" rx="5" />
+    </g>
+        <g transform="translate(0,90)">
+      <rect width="90" height="40" fill="#4d4d4d" transform="translate(30,920)" rx="5" />
+       <text class="cls-100" font-size="20px" text-anchor="middle" transform="translate(75,945)">HR (882)</text>
+      <rect width="90" height="5" fill="#fc3d49" opacity="0.5" transform="translate(30,955)" rx="5" />
+    </g>
+      <g transform="translate(100,90)">
+      <rect width="90" height="40" fill="#4d4d4d" transform="translate(30,920)" rx="5" />
+       <text class="cls-100" font-size="20px" text-anchor="middle" transform="translate(75,945)">DT (882)</text>
+      <rect width="90" height="5" fill="#00a3d9" opacity="0.5" transform="translate(30,955)" rx="5" />
+    </g>
+
+    <g>
+      <rect width="167" height="40" fill="#4d4d4d" transform="translate(330,920)" rx="5" />
+      <text class="cls-100" font-size="20px" text-anchor="middle" transform="translate(414,945)">A: 21373pp (100)</text>
+      <rect width="167" height="5" fill="#99ff18" opacity="0.5" transform="translate(330,955)" rx="5" />
+    </g>
+    <g transform="translate(0,45)">
+      <rect width="167" height="40" fill="#4d4d4d" transform="translate(330,920)" rx="5" />
+      <text class="cls-100" font-size="20px" text-anchor="middle" transform="translate(414,945)">S: 2133pp (20)</text>
+      <rect width="167" height="5" fill="#ffe014" opacity="0.5" transform="translate(330,955)" rx="5" />
+    </g>
+        <g transform="translate(0,90)">
+      <rect width="167" height="40" fill="#4d4d4d" transform="translate(330,920)" rx="5" />
+      <text class="cls-100" font-size="20px" text-anchor="middle" transform="translate(414,945)">B : 2133pp (20)</text>
+      <rect width="167" height="5" fill="#66d3e9" opacity="0.5" transform="translate(330,955)" rx="5" />
+    </g>
+    
+    <text class="cls-33" opacity="0.3" transform="translate(125 420)">Rank Graph</text>
+  </g>
+</svg>

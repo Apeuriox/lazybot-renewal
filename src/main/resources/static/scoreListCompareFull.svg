@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  height="17180"
+  width="1800">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #2a2933;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
+        stroke-width: 0px;
+      }
+
+      .cls-8 {
+        font-family: Rubik-Regular, Rubik;
+        font-size: 15px;
+        font-variation-settings: 'wght' 400;
+      }
+
+      .cls-8, .cls-2, .cls-9, .cls-10 {
+        fill: #e6e6e6;
+      }
+
+      .cls-11, .cls-9, .cls-12, .cls-10, .cls-13, .cls-14 {
+        font-family: Rubik-Bold, Rubik;
+        font-variation-settings: 'wght' 700;
+        font-weight: 700;
+      }
+
+      .cls-11, .cls-10 {
+        font-size: 30px;
+      }
+
+      .cls-11, .cls-14 {
+        fill: #f3b814;
+      }
+
+      .cls-3 {
+        fill: #1f1e26;
+      }
+
+      .cls-4 {
+        fill: #988fcc;
+      }
+
+      .cls-15 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-16 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-5 {
+        fill: gray;
+      }
+
+      .cls-17 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-18 {
+        letter-spacing: 0em;
+      }
+
+      .cls-9, .cls-13, .cls-14 {
+        font-size: 20px;
+      }
+
+      .cls-19 {
+        letter-spacing: 0em;
+      }
+
+      .cls-20 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-12 {
+        font-size: 70px;
+      }
+
+      .cls-12, .cls-13 {
+        fill: #ff4080;
+      }
+
+      .cls-21 {
+        letter-spacing: 0em;
+      }
+
+      .cls-22 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-23 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-24 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-25 {
+        letter-spacing: 0em;
+      }
+
+      .cls-26 {
+        letter-spacing: 0em;
+      }
+
+      .cls-6 {
+        fill: #39b54a;
+      }
+
+      .cls-7 {
+        fill: #191919;
+      }
+
+      .cls-27 {
+        letter-spacing: 0em;
+      }
+
+      .cls-28 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-29 {
+        letter-spacing: -.02em;
+      }
+      .cls-124{
+        font-size:25px;
+        font-family: Rubik-Bold, Rubik;
+        font-variation-settings: 'wght' 700;
+        font-weight: 700;
+        }
+        .cls-225{
+          font-size:20px;
+          font-family: Rubik-Bold, Rubik;
+          font-variation-settings: 'wght' 700;
+          font-weight: 800;
+          }
+          .cls-116{
+            fill: #e6e6e6;
+            font-family: Rubik-Regular, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+            font-size: 25px;
+          }
+          .cls-126{
+            font-size: 15px;
+            fill: #f3b814;
+            font-family: Rubik-Regular, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+          }
+          .cls-115{
+            font-size: 17px;
+            fill: #e6e6e6;
+            font-family: Rubik-Regular, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+          }
+          .cls-121{
+            fill: #f3b814;
+            font-family: Rubik-Regular, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+            font-size: 25px;
+          }
+          .cls-123{
+            fill: #ff4080;
+             font-family: Rubik-Regular, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+            font-size: 40px;
+          }
+          .cls-125{
+            fill: #ff4080;
+             font-family: Rubik-Regular, Rubik;
+            font-variation-settings: 'wght' 700;
+            font-weight: 700;
+            font-size: 15px;
+          }
+      .cls-155{
+      font-size: 17px;
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      }
+    </style>
+    <rect rx="5" ry="5" x="10" y="10" height="60" width="60" fill="#ffffff" id="avatarBorderRect"/>
+    <rect rx="5" ry="5" x="1730" y="10" height="60" width="60" fill="#ffffff" id="avatarBorderRect-1"/>
+    <clipPath
+    id="imageBorder">
+      <use
+    xlink:href="#avatarBorderRect"
+    id="use1" />
+       </clipPath>
+       <clipPath
+       id="imageBorder-1">
+         <use
+       xlink:href="#avatarBorderRect-1"
+       id="use2" />
+          </clipPath>
+
+  </defs>
+  <g id="Background">
+    <rect width="1800" id="totalBackground" height="17600" class="cls-3"/>
+    <rect width="1800" height="80" class="cls-7"/>
+
+  </g>
+  <g id="footer" transform="translate(0,15260)">
+    <rect width="1800" height="80" x="0" y="1840" class="cls-7"/>
+    <text class="cls-10" id="roughTime" transform="translate(40 1890)">2024/01/01</text>
+    <g transform="translate(-350,0)">
+    <path class="cls-4" id="osu" d="M1895,1861.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1895,1857.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1895,1865c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15Z"/>
+    <path class="cls-2" id="taiko" d="M1962.5,1861.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1962.5,1857.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1962.5,1868.75c6.2,0,11.25,5.05,11.25,11.25s-5.05,11.25-11.25,11.25-11.25-5.05-11.25-11.25,5.05-11.25,11.25-11.25M1962.5,1865c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1964.38,1865.75h-3.75v28.5h3.75v-28.5Z"/>
+    <path class="cls-2" id="ctb" d="M2030,1861.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M2030,1857.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM2031.88,1872.5c0,2.07-1.68,3.75-3.75,3.75s-3.75-1.68-3.75-3.75,1.68-3.75,3.75-3.75,3.75,1.68,3.75,3.75ZM2028.12,1883.75c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75ZM2035.62,1876.25c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75Z"/>
+    <path class="cls-2" id="mania" d="M2097.5,1861.25c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M2097.5,1857.5c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM2099.38,1895v-30c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v30c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM2106.88,1887.5v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM2091.88,1887.5v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88Z"/>
+    </g>
+</g>
+<g id="nav">
+  <text class="cls-10" id="playerName-0" transform="translate(80 60)">*Player Name0</text>
+  <text class="cls-8" transform="translate(80 30)"><tspan x="0" y="0">Player Name</tspan></text>
+  <text class="cls-10" id="ppValue-0" transform="translate(408 60)">0000</text>
+  <text class="cls-8" transform="translate(410 30)"><tspan x="0" y="0">PP</tspan></text>
+
+  <text class="cls-10" id="playerName-1" text-anchor="end" transform="translate(1710 60)">*Player Name1</text>
+  <text class="cls-8" transform="translate(1622.76 30)"><tspan x="0" y="0">Player Name</tspan></text>
+  <text class="cls-10" id="ppValue-1" text-anchor="end" transform="translate(1453 60)">0000</text>
+  <text class="cls-8" transform="translate(1431.07 30)"><tspan x="0" y="0">PP</tspan></text>
+    
+      <rect rx="5" ry="5" x="10" y="10" height="60" width="60" fill="#ffffff" />
+      <image
+              xlink:href="assets/guestAvatar.png"
+      x="10"
+      y="10"
+      width="60"
+      height="60"
+      id="avatar-0"
+      style="stroke:none;stroke-opacity:1;stroke-linejoin:round;"
+      clip-path="url(#imageBorder)" />
+    
+      <rect rx="5" ry="5" x="1730" y="10" height="60" width="60" fill="#ffffff" />
+      <image
+              xlink:href="assets/guestAvatar.png"
+      x="1730"
+      y="10"
+      width="60"
+      height="60"
+      id="avatar-1"
+      style="stroke:none;stroke-opacity:1;stroke-linejoin:round;"
+      clip-path="url(#imageBorder-1)" />
+    </g>
+</svg>

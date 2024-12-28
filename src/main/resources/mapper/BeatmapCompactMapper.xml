@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.BeatmapCompactMapper">
+        <resultMap id="BaseResultMap" type="me.aloic.lazybot.osu.dao.entity.po.BeatmapCompactPO">
+            <id column="id" jdbcType="INTEGER" property="id"/>
+            <result column="bid" jdbcType="INTEGER" property="bid"/>
+            <result column="sid" jdbcType="INTEGER" property="sid"/>
+            <result column="max_combo" jdbcType="INTEGER" property="max_combo"/>
+            <result column="ruleset_id" jdbcType="INTEGER" property="ruleset_id"/>
+
+
+        </resultMap>
+        <sql id = "Base_Column_List">
+           id, bid, sid, max_combo, ruleset_id
+        </sql>
+
+        <select id="selectByBid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+            select <include refid="Base_Column_List"/>
+            from beatmap_static
+            where bid =#{bid}
+        </select>
+
+</mapper>

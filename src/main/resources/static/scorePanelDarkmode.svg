@@ -1,0 +1,1128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1920" height="1080">
+  <defs>
+    <style>
+      .cls-1 {
+      letter-spacing: -.08em;
+      }
+
+      .cls-2 {
+      letter-spacing: -.01em;
+      }
+
+      .cls-3 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-4 {
+      font-family: RubikItalic-BlackItalic, Rubik;
+      font-size: 305.99px;
+      font-style: italic;
+      font-variation-settings: 'wght' 900;
+      font-weight: 800;
+      letter-spacing: -.03em;
+      }
+
+      .cls-6 {
+      fill: #39b54a;
+      }
+
+      .cls-7 {
+      letter-spacing: -.03em;
+      }
+
+      .cls-8 {
+      letter-spacing: -.06em;
+      }
+
+      .cls-9 {
+      letter-spacing: .05em;
+      }
+
+      .cls-5, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14, .cls-15, .cls-16,.cls-217, .cls-17, .cls-18, .cls-19, .cls-20, .cls-21, .cls-22, .cls-23, .cls-24, .cls-25, .cls-26, .cls-210 {
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      }
+
+      .cls-5, .cls-11, .cls-14, .cls-17 {
+      font-size: 55px;
+      letter-spacing: .08em;
+      }
+
+      .cls-27, .cls-29, .cls-13, .cls-30, .cls-16, .cls-18, .cls-32, .cls-33, .cls-21, .cls-22, .cls-23, .cls-34 {
+      fill: #e6e6e6;
+      }
+
+      .cls-27, .cls-28, .cls-29, .cls-30, .cls-32, .cls-33, .cls-34 {
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      }
+
+      .cls-27, .cls-13, .cls-32 {
+      font-size: 40px;
+      }
+
+      .cls-28, .cls-10,.cls-210, .cls-11, .cls-13, .cls-14, .cls-35, .cls-15, .cls-16, .cls-32, .cls-33, .cls-20, .cls-22, .cls-24, .cls-25, .cls-34 {
+      isolation: isolate;
+      }
+
+      .cls-28, .cls-15 {
+      font-size: 27.5px;
+      }
+
+      .cls-10, .cls-29, .cls-23, .cls-25, .cls-34 {
+      font-size: 30px;
+      }
+
+      .cls-10, .cls-25 {
+      fill: #f2f2f2;
+      }
+
+      .cls-36 {
+      fill: #2a2933;
+      }
+
+      .cls-36, .cls-37, .cls-38, .cls-31, .cls-39, .cls-40, .cls-41, .cls-42, .cls-43, .cls-44, .cls-45, .cls-46, .cls-47, .cls-48, .cls-49, .cls-50, .cls-51, .cls-52, .cls-6, .cls-53, .cls-54, .cls-55, .cls-56 {
+      stroke-width: 0px;
+      }
+
+      .cls-57 {
+      letter-spacing: 0em;
+      }
+
+      .cls-39 {
+      fill: #c3292f;
+      }
+
+      .cls-37 {
+      fill: #898989;
+      }
+
+      .cls-58 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-38 {
+      fill: #aef0ff;
+      }
+
+      .cls-59 {
+      letter-spacing: .06em;
+      }
+
+      .cls-12, .cls-42, .cls-20 {
+      fill: #988fcc;
+      }
+
+      .cls-60 {
+      letter-spacing: 0em;
+      }
+
+      .cls-51 {
+      fill: #f3b814;
+      }
+
+      .cls-30, .cls-19 {
+      font-size: 15px;
+      }
+
+      .cls-61 {
+      letter-spacing: 0em;
+      }
+
+      .cls-62 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-63 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-64 {
+      letter-spacing: 0em;
+      }
+
+      .cls-65 {
+      letter-spacing: -.03em;
+      }
+
+      .cls-40 {
+      fill: #1f1e26;
+      }
+
+      .cls-41 {
+      fill: #29abe2;
+      }
+
+      .cls-66 {
+      letter-spacing: -.05em;
+      }
+
+      .cls-67 {
+      letter-spacing: -.06em;
+      }
+
+      .cls-16 {
+      font-size: 41.25px;
+      }
+
+      .cls-43 {
+      fill: #18171c;
+      }
+
+      .cls-68 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-69 {
+      letter-spacing: .05em;
+      }
+
+      .cls-70 {
+      letter-spacing: -.03em;
+      }
+
+      .cls-71, .cls-25 {
+      letter-spacing: .06em;
+      }
+
+      .cls-72 {
+      letter-spacing: 0em;
+      }
+
+      .cls-73 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-74 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-44 {
+      fill: #ff4200;
+      }
+
+      .cls-75 {
+      letter-spacing: -.01em;
+      }
+
+      .cls-45 {
+      fill: gray;
+      }
+
+      .cls-46 {
+      fill: #ff88b6;
+      }
+
+      .cls-18 {
+      font-size: 50px;
+      }
+
+      .cls-76 {
+      letter-spacing: -.03em;
+      }
+
+      .cls-77 {
+      letter-spacing: -.03em;
+      }
+
+      .cls-78 {
+      letter-spacing: 0em;
+      }
+      .cls-135 {
+      opacity: .5;
+      }
+
+      .cls-135, .cls-36 {
+      fill: #2a2933;
+      }
+
+
+      .cls-79 {
+      letter-spacing: 0em;
+      }
+
+      .cls-47 {
+      fill: #ff4080;
+      }
+
+      .cls-33,.cls-12,.cls-20 {
+      font-size: 20px;
+      }
+
+      .cls-80 {
+      letter-spacing: -.06em;
+      }
+
+      .cls-21 {
+      font-size: 75px;
+      }
+
+      .cls-81 {
+      letter-spacing: 0em;
+      }
+
+      .cls-82 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-48 {
+      fill: url(#darkGraditent);
+      }
+
+      .cls-83 {
+      letter-spacing: 0em;
+      }
+
+      .cls-22 {
+      font-size: 26.67px;
+      }
+
+      .cls-49 {
+      fill: #fff;
+      }
+
+      .cls-84 {
+      letter-spacing: -.06em;
+      }
+
+      .cls-50 {
+      fill: #ffe8a9;
+      }
+
+      .cls-85 {
+      letter-spacing: -.05em;
+      }
+
+      .cls-86 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-87 {
+      letter-spacing: 0em;
+      }
+
+      .cls-88 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-89 {
+      letter-spacing: -.03em;
+      }
+
+      .cls-90 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-91 {
+      letter-spacing: -.05em;
+      }
+
+      .cls-92 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-93 {
+      letter-spacing: -.03em;
+      }
+
+      .cls-24 {
+      font-size: 20.62px;
+      }
+
+      .cls-94 {
+      letter-spacing: 0em;
+      }
+
+      .cls-95 {
+      letter-spacing: 0em;
+      }
+
+      .cls-96 {
+      letter-spacing: 0em;
+      }
+
+      .cls-97 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-98 {
+      letter-spacing: -.06em;
+      }
+
+      .cls-99 {
+      letter-spacing: 0em;
+      }
+
+      .cls-100 {
+      letter-spacing: 0em;
+      }
+
+      .cls-101 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-26 {
+      font-size: 60px;
+      }
+
+      .cls-102 {
+      letter-spacing: .04em;
+      }
+
+      .cls-103 {
+      letter-spacing: 0em;
+      }
+
+      .cls-104 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-105 {
+      letter-spacing: 0em;
+      }
+
+      .cls-52 {
+      fill: #ff9e80;
+      }
+
+      .cls-106 {
+      letter-spacing: -.03em;
+      }
+
+      .cls-107 {
+      letter-spacing: 0em;
+      }
+
+      .cls-108 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-109 {
+      letter-spacing: .06em;
+      }
+
+      .cls-110 {
+      letter-spacing: .06em;
+      }
+
+
+      .cls-54 {
+      fill: #191919;
+      }
+
+      .cls-111 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-112 {
+      letter-spacing: -.01em;
+      }
+
+      .cls-113 {
+      letter-spacing: 0em;
+      }
+
+      .cls-114 {
+      letter-spacing: -.01em;
+      }
+
+      .cls-115 {
+      letter-spacing: 0em;
+      }
+
+      .cls-116 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-117 {
+      letter-spacing: -.03em;
+      }
+
+      .cls-55 {
+      fill: #f0ffbb;
+      }
+
+      .cls-118 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-119 {
+      letter-spacing: -.02em;
+      }
+
+      .cls-120 {
+      letter-spacing: 0em;
+      }
+
+      .cls-56 {
+      fill: #35323f;
+      }
+      .cls-57{
+      isolation: isolate;
+      font-weight: 700;
+      font-size: 110px;
+
+      font-family: RubikItalic-BlackItalic, Rubik;
+      }
+      .cls-121{
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      font-size:20px;
+      fill: #e6e6e6;
+      }
+      .cls-122{
+      stroke-width: 0px;
+      }
+      .cls-123{
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 30px;
+      }
+      .cls-124{
+      fill:white;
+      font-size:45px;
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      }
+      .cls-277{
+      font-size: 40px;
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      }
+      .cls-211{
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 75px;
+      }
+      .cls-188{
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 50px;
+      }
+      .cls-133{
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 40px;
+      isolation: isolate;
+      }
+      .cls-322{
+      isolation: isolate;
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      font-size: 40px;
+      }
+      .cls-333{
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      font-size: 20px;
+      isolation: isolate;
+      }
+      .cls-222{
+      isolation: isolate;
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 26.67px;
+      }
+      .cls-166{
+      isolation: isolate;
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 41.25px;
+      }
+      .cls-210{
+      font-size:20px;
+      }
+      .cls-217{
+        letter-spacing: .08em;
+        font-size:35px;
+      }
+    </style>
+    <linearGradient id="darkGraditent"  x1="553.71" y1="1444.87" x2="1798.94" y2="199.64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#000"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+
+    </linearGradient>
+      <linearGradient id="maniaMAXGraditent" x1="600" y1="670" x2="670" y2="700"  gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#702a17"/>
+        <stop offset="0.3" stop-color="#f5c238"/>
+        <stop offset="0.7" stop-color="#6e975f"/>
+        <stop offset="1" stop-color="#429886"/>
+      </linearGradient>
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
+
+    </filter>
+
+    <rect
+            class="cls-45" transform="translate(10 199)" width="60" height="60" rx="5" ry="5"
+            id="avatar-path" />
+
+    <clipPath
+            id="avatarBorder">
+      <use
+              xlink:href="#avatar-path"
+              id="use1" />
+    </clipPath>
+
+  </defs>
+  <g id="Background">
+    <image
+            xlink:href="assets/emptyBG.png"
+            x="541"
+            y="78"
+            width="1380"
+            height="1000"
+            preserveAspectRatio="xMidYMid slice"
+            filter="url(#blur)"
+            id="mapBg-right"/>
+    <rect class="cls-56" width="540" height="1080"/>
+    <rect class="cls-40" width="160" height="1080"/>
+
+    <rect class="cls-54" width="1920" height="80"/>
+    <path id="osu" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1655,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1655,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1655,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15Z"/>
+    <path id="taiko" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1722.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1722.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1722.5,217.34c6.2,0,11.25,5.05,11.25,11.25s-5.05,11.25-11.25,11.25-11.25-5.05-11.25-11.25,5.05-11.25,11.25-11.25M1722.5,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1724.38,214.34h-3.75v28.5h3.75v-28.5Z"/>
+    <path id="ctb" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1790,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1790,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1791.88,221.09c0,2.07-1.68,3.75-3.75,3.75s-3.75-1.68-3.75-3.75,1.68-3.75,3.75-3.75,3.75,1.68,3.75,3.75ZM1788.12,232.34c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75ZM1795.62,224.84c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75Z"/>
+    <path id="mania" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1857.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1857.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1859.38,243.59v-30c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v30c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1866.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1851.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88Z"/>
+    <rect class="cls-135" x="0" y="77.89" width="540" height="60"/>
+    <rect class="cls-135" x="0" y="197.89" width="540" height="60"/>
+    <rect class="cls-135" x="0" y="317.89" width="540" height="430"/>
+    <rect id="starRatingBG" class="cls-122" fill="#4829ff" x="180" y="349" width="130" height="40" rx="20" ry="20"/>
+    <polygon id="starRatingStar" transform="translate(4,-2)"  fill="#f3b814" class="cls-123" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
+
+
+    <rect class="cls-48" x="540" y="79" width="1380" height="1000"/>
+
+
+  </g>
+
+
+  <g id="Text" transform="translate(0,-189)">
+    <text class="cls-12" transform="translate(30 368.59)">Artist</text>
+    <text class="cls-20" transform="translate(30 428.59)">Mapper</text>
+    <text class="cls-20" transform="translate(30 548.59)">Map Infos</text>
+    <text class="cls-20" transform="translate(30 488.59)">Difficulty</text>
+    <text class="cls-20" transform="translate(30 308.59)">Title</text>
+    <g id="songTitle1">
+      <text id="songTitle" class="cls-23" transform="translate(180 308.59)">*Song Name</text>
+    </g>
+    <g id="songTitle1-2">
+      <text id="artist" class="cls-23" transform="translate(180 368.59)">*Artist Name</text>
+    </g>
+    <g id="songTitle1-3" >
+      <text id="mapper" class="cls-23" transform="translate(180 428.59)">*Mapper</text>
+    </g>
+    <g id="songTitle1-4" >
+      <text id="version" class="cls-23" transform="translate(180 488.59)">*Difficulty</text>
+    </g>
+    <g id="beatmapId">
+      <text id="bid" class="cls-23" transform="translate(180 668.59)">*123452</text>
+    </g>
+    <text class="cls-121" transform="translate(180 638.59)"><tspan x="0" y="0">Bid</tspan></text>
+    <g>
+      <text id="starRating" fill="#f3b814" class="cls-123" transform="translate(225 568)">0.00</text>
+    </g>
+    <text class="cls-121" transform="translate(180 738.59)">BPM</text>
+    <g>
+      <text id="bpm" class="cls-23" transform="translate(180 768.59)">000</text>
+    </g>
+    <text class="cls-121" transform="translate(390 738.59)">Length</text>
+    <g>
+      <text id="length" class="cls-23" transform="translate(390 768.59)">00:00</text>
+    </g>
+    <g id="attribute-osu" opacity="0"> 
+      <text class="cls-121" transform="translate(180 808.59)">AR</text>
+      <text id="AR-osu" class="cls-23" transform="translate(180 838.59)">000</text>
+      <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">OD</tspan></text>
+      <text id="OD-osu" class="cls-23" transform="translate(390 838.59)">000</text>
+      <text class="cls-121" transform="translate(180 878.59)">CS</text>
+      <text id="CS-osu" class="cls-23" transform="translate(180 908.59)">000</text>
+      <text class="cls-121" transform="translate(390 878.59)">HP</text>
+      <text id="HP-osu" class="cls-23" transform="translate(390 908.59)">000</text>
+    </g>
+    <g id="attribute-taiko" opacity="0"> 
+      <text class="cls-121" transform="translate(180 808.59)">OD</text>
+      <text id="OD-taiko" class="cls-23" transform="translate(180 838.59)">000</text>
+      <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">HP</tspan></text>
+      <text id="HP-taiko" class="cls-23" transform="translate(390 838.59)">000</text>
+
+    </g>
+     <g id="attribute-catch" opacity="0"> 
+    <text class="cls-121" transform="translate(180 808.59)">AR</text>
+      <text id="AR-catch" class="cls-23" transform="translate(180 838.59)">000</text>
+      <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">OD</tspan></text>
+      <text id="OD-catch" class="cls-23" transform="translate(390 838.59)">000</text>
+      <text class="cls-121" transform="translate(180 878.59)">CS</text>
+      <text id="CS-catch" class="cls-23" transform="translate(180 908.59)">000</text>
+      <text class="cls-121" transform="translate(390 878.59)">HP</text>
+      <text id="HP-catch" class="cls-23" transform="translate(390 908.59)">000</text>
+    </g>
+
+    <g id="attribute-mania" opacity="0"> 
+    <text class="cls-121" transform="translate(180 808.59)">KEY</text>
+      <text id="Key-mania" class="cls-23" transform="translate(180 838.59)">000</text>
+      <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">OD</tspan></text>
+      <text id="OD-mania" class="cls-23" transform="translate(390 838.59)">000</text>
+      <text class="cls-121" transform="translate(180 878.59)">HP</text>
+      <text id="HP-mania" class="cls-23" transform="translate(180 908.59)">000</text>
+    </g>
+   
+    <g id="avatarGroup">
+
+      <rect class="cls-45" transform="translate(10 199)" width="60" height="60" rx="5" ry="5"/>
+      <image
+              xlink:href="assets/guestAvatar.png"
+              x="10" y="199" width="60" height="60" id="avatar" clip-path="url(#avatarBorder)"
+      />
+    </g>
+    <g>
+      <text id="playerName" class="cls-23" transform="translate(80 248.59)">*Player Name</text>
+    </g>
+    <g>
+      <text class="cls-30" transform="translate(80 218.59)">Player Name</text>
+    </g>
+    <g>
+      <text id="roughTime" class="cls-23" transform="translate(550 248.59)">0000/00/00</text>
+      <text id="preciseTime" class="cls-23" transform="translate(770 248.59)">00:00:00</text>
+    </g>
+    <g>
+      <text class="cls-30" transform="translate(550 218.59)">Achieved Time</text>
+    </g>
+
+    <g id="osuStatistics" opacity="0">
+      <rect fill="black" opacity="0.4" x="902" y="700.59" width="67.48" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="700.59" width="116.36" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="820.59" width="85.93" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="902" y="820.59" width="92" height="40" rx="20" ry="20"/>
+      <rect class="cls-6" x="900" y="698.59" width="67.48" height="40" rx="20" ry="20"/>
+      <rect class="cls-41" x="600" y="698.59" width="116.36" height="40" rx="20" ry="20"/>
+      <rect class="cls-51" x="600" y="818.59" width="85.93" height="40" rx="20" ry="20"/>
+      <rect class="cls-39" x="900" y="818.59" width="92" height="40" rx="20" ry="20"/>
+      <text class="cls-10" transform="translate(910 728.59)"><tspan class="cls-71" x="0" y="0">OK</tspan></text>
+      <text id="100Count-Shadow-o" fill="black" opacity="0.4" class="cls-5" transform="translate(903 791.59)">0000</text>
+      <text id="100Count-o" class="cls-5" fill="#39b54a" transform="translate(900 788.59)">0000</text>
+      <text class="cls-10" transform="translate(610 728.59)"><tspan class="cls-71" x="0" y="0">Great</tspan></text>
+      <text id="300Count-Shadow-o" class="cls-17" fill="black" opacity="0.4" transform="translate(603 791.59)">0000</text>
+      <text id="300Count-o" class="cls-17" fill="#29abe2" transform="translate(600 788.59)">0000</text>
+      <text class="cls-25" transform="translate(610 848.59)"><tspan x="0" y="0">Meh</tspan></text>
+      <text id="50Count-Shadow-o" fill="black" opacity="0.4"  class="cls-14" transform="translate(603 911.59)">0000</text>
+      <text id="50Count-o" fill="#f3b814" class="cls-14" transform="translate(600 908.59)">0000</text>
+      <text class="cls-25" transform="translate(910 848.59)"><tspan x="0" y="0">Miss</tspan></text>
+      <text id="missCount-Shadow-o" fill="black" opacity="0.4"  class="cls-11" transform="translate(903 911.59)">0000</text>
+      <text id="missCount-o" fill="#c3292f" class="cls-11" transform="translate(900 908.59)">0000</text>
+    </g>
+
+    <g id="taikoStatistics" opacity="0">
+      <rect fill="black" opacity="0.4" x="902" y="700.59" width="104.48" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="700.59" width="116.36" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="820.59" width="92" height="40" rx="20" ry="20"/>
+      <rect class="cls-6" x="900" y="698.59" width="104.48" height="40" rx="20" ry="20"/>
+      <rect class="cls-41" x="600" y="698.59" width="116.36" height="40" rx="20" ry="20"/>
+      <rect class="cls-39" x="600" y="818.59" width="92" height="40" rx="20" ry="20"/>
+      <text class="cls-10" transform="translate(910 728.59)"><tspan class="cls-71" x="0" y="0">Good</tspan></text>
+      <text id="150Count-Shadow-t" fill="black" opacity="0.4" class="cls-5" transform="translate(903 791.59)">0000</text>
+      <text id="150Count-t" class="cls-5" fill="#39b54a" transform="translate(900 788.59)">0000</text>
+      <text class="cls-10" transform="translate(610 728.59)"><tspan class="cls-71" x="0" y="0">Great</tspan></text>
+      <text id="300Count-Shadow-t" class="cls-17" fill="black" opacity="0.4" transform="translate(603 791.59)">0000</text>
+      <text id="300Count-t" class="cls-17" fill="#29abe2" transform="translate(600 788.59)">0000</text>
+      <text class="cls-25" transform="translate(610 848.59)"><tspan x="0" y="0">Miss</tspan></text>
+      <text id="missCount-Shadow-t" fill="black" opacity="0.4"  class="cls-11" transform="translate(603 911.59)">0000</text>
+      <text id="missCount-t" fill="#c3292f" class="cls-11" transform="translate(600 908.59)">0000</text>
+    </g>
+
+    <g id="fruitsStatistics" opacity="0">
+      <rect fill="black" opacity="0.4" x="902" y="700.59" width="108.48" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="700.59" width="119.36" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="820.59" width="114.93" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="902" y="820.59" width="92" height="40" rx="20" ry="20"/>
+      <rect class="cls-6" x="900" y="698.59" width="108.48" height="40" rx="20" ry="20"/>
+      <rect class="cls-41" x="600" y="698.59" width="119.36" height="40" rx="20" ry="20"/>
+      <rect class="cls-51" x="600" y="818.59" width="114.93" height="40" rx="20" ry="20"/>
+      <rect class="cls-39" x="900" y="818.59" width="92" height="40" rx="20" ry="20"/>
+      <text class="cls-10" transform="translate(910 728.59)"><tspan class="cls-71" x="0" y="0">Ticks</tspan></text>
+      <text id="100Count-Shadow-f" fill="black" opacity="0.4" class="cls-5" transform="translate(903 791.59)">0000</text>
+      <text id="100Count-f" class="cls-5" fill="#39b54a" transform="translate(900 788.59)">0000</text>
+      <text class="cls-10" transform="translate(610 728.59)"><tspan class="cls-71" x="0" y="0">Fruits</tspan></text>
+      <text id="300Count-Shadow-f" class="cls-17" fill="black" opacity="0.4" transform="translate(603 791.59)">0000</text>
+      <text id="300Count-f" class="cls-17" fill="#29abe2" transform="translate(600 788.59)">0000</text>
+      <text class="cls-25" transform="translate(610 848.59)"><tspan x="0" y="0">Drops</tspan></text>
+      <text id="50Count-Shadow-f" fill="black" opacity="0.4"  class="cls-14" transform="translate(603 911.59)">0000</text>
+      <text id="50Count-f" fill="#f3b814" class="cls-14" transform="translate(600 908.59)">0000</text>
+      <text class="cls-25" transform="translate(910 848.59)"><tspan x="0" y="0">Miss</tspan></text>
+      <text id="missCount-Shadow-f" fill="black" opacity="0.4"  class="cls-11" transform="translate(903 911.59)">0000</text>
+      <text id="missCount-f" fill="#c3292f" class="cls-11" transform="translate(900 908.59)">0000</text>
+    </g>
+
+    <g id="maniaStatistics" transform="translate(0,-10)" opacity="0">
+      <rect fill="#000000" opacity="0.4" x="602" y="672" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="902" y="672" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="602" y="772" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="902" y="772" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="602" y="872" width="50" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="902" y="872" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="url(#maniaMAXGraditent)" x="600" y="670" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#f3b814" x="900" y="670" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#39b54a" x="600" y="770" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#2579e7" x="900" y="770" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#c6c5c6" x="600" y="870" width="50" height="30" rx="15" ry="15"/>
+      <rect fill="#ca2627" x="900" y="870" width="70" height="30" rx="15" ry="15"/>
+
+
+      <text class="cls-210" fill="#ffffff" stroke="#999999" transform="translate(610 691)"><tspan class="cls-71" x="0" y="0">MAX</tspan></text>
+      <text id="maxCount-Shadow-m" fill="black" opacity="0.4" class="cls-217" transform="translate(608 746)">0000</text>
+      <text id="maxCount-m" x="600" y="670" class="cls-217" fill="url(#maniaMAXGraditent)" stroke="#fff" transform="translate(5 73)">0000</text>
+            
+      <text class="cls-210" fill="#ffffff" transform="translate(913 691.5)"><tspan class="cls-71" x="0" y="0">300</tspan></text>
+      <text id="300Count-Shadow-m" class="cls-217" fill="black" opacity="0.4" transform="translate(908 746)">0000</text>
+      <text id="300Count-m" class="cls-217" fill="#f3b814" transform="translate(905 743)">0000</text>
+      
+      <text class="cls-210" fill="#ffffff" transform="translate(612.5 792)"><tspan class="cls-71" x="0" y="0">200</tspan></text>
+      <text id="200Count-Shadow-m" fill="black" opacity="0.4" class="cls-217" transform="translate(608 846.5)">0000</text>
+      <text id="200Count-m" class="cls-217" fill="#39b54a" transform="translate(605 843.5)">0000</text>
+
+      <text class="cls-210" fill="#ffffff" transform="translate(914 792)"><tspan class="cls-71" x="0" y="0">100</tspan></text>
+      <text id="100Count-Shadow-m" fill="black" opacity="0.4" class="cls-217" transform="translate(908 846.5)">0000</text>
+      <text id="100Count-m" class="cls-217" fill="#2579e7" transform="translate(905 843.5)">0000</text>
+
+      <text class="cls-210" fill="#333333" transform="translate(611.5 892)"><tspan x="0" y="0">50</tspan></text>
+      <text id="50Count-Shadow-m" fill="black" opacity="0.4"  class="cls-217" transform="translate(608 947)">0000</text>
+      <text id="50Count-m" fill="#c6c5c6" class="cls-217" transform="translate(605 944)">0000</text>
+
+      <text class="cls-210" fill="#ffffff" transform="translate(913 891.7)"><tspan x="0" y="0">Miss</tspan></text>
+      <text id="missCount-Shadow-m" fill="black" opacity="0.4"  class="cls-217" transform="translate(908 947)">0000</text>
+      <text id="missCount-m" fill="#c3292f" class="cls-217" transform="translate(905 944)">0000</text>
+    </g>
+
+
+    <text class="cls-277" fill="black" opacity="0.45" transform="translate(603 1011.59)">Accuracy</text>
+    <text class="cls-27" transform="translate(600 1008.59)">Accuracy</text>
+    <text class="cls-277" fill="black" opacity="0.45" transform="translate(603 1151.59)">Combo</text>
+    <text class="cls-27" transform="translate(600 1148.59)"><tspan x="0" y="0">Combo</tspan></text>
+    <g>
+      <text id="accuracy-Shadow" fill="black" opacity="0.45" class="cls-211" transform="translate(603 1092.59)">00.00%</text>
+      <text id="accuracy" class="cls-21" transform="translate(600 1088.59)">00.00%</text>
+
+      <text id="comboStatus-Shadow" fill="black" opacity="0.45" class="cls-188" transform="translate(602 1212.59)">0000x/0000x (100%)</text>
+      <text id="comboStatus" class="cls-18" transform="translate(600 1208.59)">0000x/0000x (100%)</text>
+    </g>
+    <text id="grade-Shadow" class="cls-4" fill="black" opacity="0.3" text-anchor="middle" transform="translate(803 561.59)">A</text>
+    <text id="grade" class="cls-4" fill="#ffffff" text-anchor="middle" transform="translate(800 558.59)">A</text>
+    <g>
+      <text id="score-Shadow" class="cls-26" opacity="0.5" fill="black" text-anchor="middle" transform="translate(792 630.59)">000,000,000</text>
+      <text id="score" class="cls-26" fill="#e6e6e6" text-anchor="middle" transform="translate(790 628.59)">000,000,000</text>
+    </g>
+
+    <g>
+      <text id="totalPPShadow" fill="black"  opacity="0.45" class="cls-57" transform="translate(1224 924)">0000 PP</text>
+      <text id="totalPP" fill="#c80065" class="cls-57" transform="translate(1220 920)">0000 PP</text>
+    </g>
+
+    <g class="cls-35">
+      <text class="cls-133" fill="black" opacity="0.45" transform="translate(1233 1022.59)">If FC</text>
+      <text class="cls-13" transform="translate(1230 1018.59)">If FC</text>
+    </g>
+    <text id="iffc-Shadow" class="cls-322" fill="black" opacity="0.45" transform="translate(1343 1022.59)">000 PP</text>
+    <text id="iffc" class="cls-32" transform="translate(1340 1018.59)">000 PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1232 1047.25)"><tspan x="0" y="0">95.00%</tspan></text>
+      <text class="cls-33" transform="translate(1230 1045.25)"><tspan x="0" y="0">95.00%</tspan></text>
+    </g>
+    <text id="95%pp-Shadow" class="cls-222" fill="black" opacity="0.6" transform="translate(1232 1073.92)">000 PP</text>
+    <text id="95%pp" class="cls-22" transform="translate(1230 1071.92)">000 PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1365.33 1047.25)">97.00%</text>
+      <text class="cls-33" transform="translate(1363.33 1045.25)">97.00%</text>
+    </g>
+    <text id="97%pp-Shadow" fill="black" opacity="0.6" class="cls-222" transform="translate(1365.33 1073.92)">000 PP</text>
+    <text id="97%pp"  class="cls-22" transform="translate(1363.33 1071.92)">000 PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1498.67 1047.25)">98.00%</text>
+      <text class="cls-33" transform="translate(1496.67 1045.25)">98.00%</text>
+    </g>
+    <text id="98%pp-Shadow" class="cls-222" fill="black" opacity="0.6" transform="translate(1498.67 1073.92)">000 PP</text>
+    <text id="98%pp" class="cls-22" transform="translate(1496.67 1071.92)">000 PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1632 1047.25)">99.00%</text>
+      <text class="cls-33" transform="translate(1630 1045.25)">99.00%</text>
+    </g>
+    <text id="99%pp-Shadow" class="cls-222" fill="black" opacity="0.6" transform="translate(1632 1073.92)">000 PP</text>
+    <text id="99%pp" class="cls-22" transform="translate(1630 1071.92)">000 PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1765.33 1047.25)">100.00%</text>
+      <text class="cls-33" transform="translate(1763.33 1045.25)">100.00%</text>
+    </g>
+    <text id="100%pp-Shadow" class="cls-222" fill="black" opacity="0.6" transform="translate(1765.33 1073.92)">000 PP</text>
+    <text id="100%pp" class="cls-22" transform="translate(1763.33 1071.92)">000 PP</text>
+    <g class="cls-35">
+      <text class="cls-166" fill="black" opacity="0.45" transform="translate(1232 1156.58)">PP Details</text>
+      <text class="cls-16" transform="translate(1230 1153.58)">PP Details</text>
+    </g>
+    <g class="cls-35">
+      <text class="cls-28" fill="black" opacity="0.5" transform="translate(1232 1183.08)"><tspan x="0" y="0">AIM</tspan></text>
+      <text class="cls-24" fill="black" opacity="0.5" transform="translate(1284.65 1183.08)">PP</text>
+      <text class="cls-28" fill="#e6e6e6" transform="translate(1230 1181.08)"><tspan x="0" y="0">AIM</tspan></text>
+      <text class="cls-24" fill="#e6e6e6" transform="translate(1282.65 1181.08)">PP</text>
+    </g>
+    <g class="cls-35">
+      <text class="cls-28" fill="black" opacity="0.5" transform="translate(1493.25 1183.08)"><tspan x="0" y="0">SPD</tspan></text>
+      <text class="cls-24" fill="black" opacity="0.5" transform="translate(1552.25 1183.08)">PP</text>
+      <text class="cls-28" fill="#e6e6e6" transform="translate(1491.25 1181.08)"><tspan x="0" y="0">SPD</tspan></text>
+      <text class="cls-24" fill="#e6e6e6" transform="translate(1550.25 1181.08)">PP</text>
+    </g>
+    <g class="cls-35">
+      <text class="cls-28" fill="black" opacity="0.5" transform="translate(1722 1183.08)">ACC</text>
+      <text class="cls-24" fill="black" opacity="0.5" transform="translate(1780 1183.08)">PP</text>
+      <text class="cls-28" fill="#e6e6e6" transform="translate(1720 1181.08)">ACC</text>
+      <text class="cls-24" fill="#e6e6e6" transform="translate(1778 1181.08)">PP</text>
+    </g>
+    <g transform="translate(-30,0)">
+      <g class="cls-35">
+        <text id="aimPPGet-1-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1272 1210.58)">0</text>
+        <text id="aimPPGet-2-Shadow" class="cls-15" opacity="0.1" text-anchor="middle" transform="translate(1290.5 1210.58)">0</text>
+        <text id="aimPPGet-3-Shadow" class="cls-15" opacity="0.1" text-anchor="middle" transform="translate(1309 1210.58)">0</text>
+        <text id="aimPPGet-4-Shadow" class="cls-15" opacity="0.1" text-anchor="middle" transform="translate(1327.5 1210.58)">0</text>
+        <text id="aimPPGet-1" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1270 1208.58)">0</text>
+        <text id="aimPPGet-2" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1288.5 1208.58)">0</text>
+        <text id="aimPPGet-3" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1307 1208.58)">0</text>
+        <text id="aimPPGet-4" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1325.5 1208.58)">0</text>
+        <text class="cls-15" opacity="0.4" fill="black" transform="translate(1336 1210.58)">/</text>
+        <text class="cls-15" fill="#e6e6e6" transform="translate(1335 1208.58)">/</text>
+        <text id="aimPPTotal-1-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1357 1210.58)">0</text>
+        <text id="aimPPTotal-2-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1371 1210.58)">0</text>
+        <text id="aimPPTotal-3-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1385 1210.58)">0</text>
+        <text id="aimPPTotal-4-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1399 1210.58)">0</text>
+        <text id="aimPPTotal-1" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1355 1208.58)">0</text>
+        <text id="aimPPTotal-2" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1369 1208.58)">0</text>
+        <text id="aimPPTotal-3" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1383 1208.58)">0</text>
+        <text id="aimPPTotal-4" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1397 1208.58)">0</text>
+      </g>
+      <g class="cls-35">
+        <text id="spdPPGet-1-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1532 1210.58)">0</text>
+        <text id="spdPPGet-2-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1550.5 1210.58)">0</text>
+        <text id="spdPPGet-3-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1569 1210.58)">0</text>
+        <text id="spdPPGet-4-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1588.5 1210.58)">0</text>
+        <text id="spdPPGet-1" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1530 1208.58)">0</text>
+        <text id="spdPPGet-2" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1548.5 1208.58)">0</text>
+        <text id="spdPPGet-3" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1567 1208.58)">0</text>
+        <text id="spdPPGet-4" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1585.5 1208.58)">0</text>
+        <text class="cls-15" opacity="0.4" fill="black" transform="translate(1597 1210.58)">/</text>
+        <text class="cls-15" fill="#e6e6e6" transform="translate(1595 1208.58)">/</text>
+        <text id="spdPPTotal-1-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1617 1210.58)">0</text>
+        <text id="spdPPTotal-2-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1631 1210.58)">0</text>
+        <text id="spdPPTotal-3-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1645 1210.58)">0</text>
+        <text id="spdPPTotal-4-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1659 1210.58)">0</text>
+        <text id="spdPPTotal-1" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1615 1208.58)">0</text>
+        <text id="spdPPTotal-2" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1629 1208.58)">0</text>
+        <text id="spdPPTotal-3" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1643 1208.58)">0</text>
+        <text id="spdPPTotal-4" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1657 1208.58)">0</text>
+      </g>
+      <g class="cls-35">
+        <text id="accPPGet-1-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1762 1210.58)">0</text>
+        <text id="accPPGet-2-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1780.5 1210.58)">0</text>
+        <text id="accPPGet-3-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1799 1210.58)">0</text>
+        <text id="accPPGet-4-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1817.5 1210.58)">0</text>
+        <text id="accPPGet-1" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1760 1208.58)">0</text>
+        <text id="accPPGet-2" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1778.5 1208.58)">0</text>
+        <text id="accPPGet-3" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1797 1208.58)">0</text>
+        <text id="accPPGet-4" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1815.5 1208.58)">0</text>
+        <text class="cls-15" opacity="0.4" fill="black" transform="translate(1827 1210.58)">/</text>
+        <text class="cls-15" fill="#e6e6e6" transform="translate(1825 1208.58)">/</text>
+        <text id="accPPTotal-1-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1847 1210.58)">0</text>
+        <text id="accPPTotal-2-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1861 1210.58)">0</text>
+        <text id="accPPTotal-3-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1875 1210.58)">0</text>
+        <text id="accPPTotal-4-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1889 1210.58)">0</text>
+        <text id="accPPTotal-1" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1845 1208.58)">0</text>
+        <text id="accPPTotal-2" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1859 1208.58)">0</text>
+        <text id="accPPTotal-3" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1873 1208.58)">0</text>
+        <text id="accPPTotal-4" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1887 1208.58)">0</text>
+      </g>
+    </g>
+  </g>
+
+
+  <g id="Decorative" transform="translate(-54,-159)">
+
+
+
+
+    <g id="ranked" opacity="0.1">
+      <rect id="rankedLine" class="cls-55" x="252.38" y="978.59" width="340" height="20"/>
+      <rect id="rankedRect" class="cls-53" fill="#99db00" x="240" y="978.59" width="72.59" height="20" rx="10" ry="10"/>
+      <text id="rankedText" fill="#302e38" class="cls-19" transform="translate(245 993.59)">RANKED</text>
+    </g>
+
+    <g id="qualified" opacity="0.1">
+      <rect id="qualifiedLine" class="cls-38" x="252.38" y="1003.59" width="340" height="20"/>
+      <rect class="cls-41" x="240" y="1003.59" width="91" height="20" rx="10" ry="10"/>
+      <text id="qualifiedText" fill="#302e38" class="cls-19" transform="translate(245 1018.59)">QUALIFIED</text>
+    </g>
+
+    <g id="loved" opacity="0.1">
+      <rect id="lovedLine"  class="cls-46" x="252.38" y="1028.59" width="340" height="20"/>
+      <rect class="cls-47" x="240" y="1028.59" width="60.67" height="20" rx="10" ry="10"/>
+      <text id="lovedText" fill="#302e38" class="cls-19" transform="translate(245 1043.59)">LOVED</text>
+    </g>
+
+    <g id="pending" opacity="0.1">
+      <rect id="pendingLine" class="cls-50" x="252.38" y="1053.59" width="340" height="20"/>
+      <rect class="cls-51" x="240" y="1053.59" width="78.35" height="20" rx="10" ry="10"/>
+      <text id="pendingText" fill="#302e38" class="cls-19" transform="translate(245 1068.59)">PENDING</text>
+    </g>
+
+    <g id="wip" opacity="0.1">
+      <rect id="wipLine"  class="cls-52" x="252.38" y="1078.59" width="340" height="20"/>
+      <rect class="cls-44" x="240" y="1078.59" width="37.47" height="20" rx="10" ry="10"/>
+      <text id="wipText" fill="#302e38" class="cls-19" transform="translate(245 1093.59)">WIP</text>
+    </g>
+    <g id="graveyard" opacity="0.1">
+      <rect class="cls-37" x="252.38" y="1103.59" width="340" height="20"/>
+      <rect class="cls-49" x="240" y="1103.59" width="103.45" height="20" rx="10" ry="10"/>
+      <text id="graveyardText" fill="#302e38" class="cls-19" transform="translate(245 1118.59)">GRAVEYARD</text>
+    </g>
+    <g id="approved" opacity="0.1">
+      <rect id="approvedLine" class="cls-55" x="252.38" y="1129" width="340" height="20"/>
+      <rect class="cls-53" fill="#99db00" x="240" y="1129" width="97" height="20" rx="10" ry="10"/>
+      <text id="approvedText" fill="#302e38" class="cls-19" transform="translate(246 1144)">APPROVED</text>
+    </g>
+    <path class="cls-31" d="M1825,330.25c1.84,0,3.33,1.5,3.33,3.33s-1.5,3.33-3.33,3.33-3.33-1.5-3.33-3.33,1.5-3.33,3.33-3.33M1825,328.59c-2.76,0-5,2.24-5,5s2.24,5,5,5,5-2.24,5-5-2.24-5-5-5h0ZM1840,328.59c-2.76,0-5,2.24-5,5s2.24,5,5,5,5-2.24,5-5-2.24-5-5-5ZM1855,328.59c-2.76,0-5,2.24-5,5s2.24,5,5,5,5-2.24,5-5-2.24-5-5-5Z"/>
+  </g>
+
+  <g id="mods" transform="translate(-20,-5)">
+    <g id="mod1" opacity="0">
+      <rect id="modBG1-0" x="1470" y="530" rx="10" ry="10" fill="#89001f" width="120" height="70"  transform="skewX(-20)" />
+      <rect id="modBG1-1" x="1520" y="550" rx="10" ry="10" fill="#a32f4a" width="70" height="50"  transform="skewX(-20)" />
+      <rect id="modBG1-2" x="1470" y="530" rx="10" ry="10" fill="#911833" width="50" height="30"  transform="skewX(-20)" />
+      <text id="modText1" class="cls-124" x="1495" y="580" transform="skewX(-20)">HR</text>
+    </g>
+    <g id="mod2" opacity="0">
+      <rect id="modBG2-0" x="1570" y="530" rx="10" ry="10" fill="#bda400" width="120" height="70"  transform="skewX(-20)" />
+      <rect id="modBG2-1" x="1620" y="550" rx="10" ry="10" fill="#d3bd58" width="70" height="50"  transform="skewX(-20)" />
+      <rect id="modBG2-2" x="1570" y="530" rx="10" ry="10" fill="#c8b02c" width="50" height="30"  transform="skewX(-20)" />
+      <text id="modText2" class="cls-124" x="1595" y="580" transform="skewX(-20)">HD</text>
+    </g>
+    <g id="mod3" opacity="0">
+      <rect id="modBG3-0" x="1670" y="530" rx="10" ry="10" fill="#3a259c" width="120" height="70"  transform="skewX(-20)" />
+      <rect id="modBG3-1" x="1720" y="550" rx="10" ry="10" fill="#4f38ab" width="70" height="50"  transform="skewX(-20)" />
+      <rect id="modBG3-2" x="1670" y="530" rx="10" ry="10" fill="#45339c" width="50" height="30"  transform="skewX(-20)" />
+      <text id="modText3" class="cls-124" x="1695" y="580" transform="skewX(-20)">DT</text>
+    </g>
+    <g id="mod4" opacity="0">
+      <rect id="modBG4-0" x="1770" y="530" rx="10" ry="10" fill="#0071a5" width="120" height="70"  transform="skewX(-20)" />
+      <rect id="modBG4-1" x="1820" y="550" rx="10" ry="10" fill="#237ca5" width="70" height="50"  transform="skewX(-20)" />
+      <rect id="modBG4-2" x="1770" y="530" rx="10" ry="10" fill="#157fac" width="50" height="30"  transform="skewX(-20)" />
+      <text id="modText4" class="cls-124" x="1795" y="580" transform="skewX(-20)">NF</text>
+    </g>
+    <g id="mod5" opacity="0">
+      <rect id="modBG5-0" x="1870" y="530" rx="10" ry="10" fill="#3a022d" width="120" height="70"  transform="skewX(-20)" />
+      <rect id="modBG5-1" x="1920" y="550" rx="10" ry="10" fill="#5b3055" width="70" height="50"  transform="skewX(-20)" />
+      <rect id="modBG5-2" x="1870" y="530" rx="10" ry="10" fill="#511841" width="50" height="30"  transform="skewX(-20)" />
+      <text id="modText5" class="cls-124" x="1895" y="580" transform="skewX(-20)">SO</text>
+    </g>
+    <g id="mod6" opacity="0">
+      <rect id="modBG6-0" x="1970" y="530" rx="10" ry="10" fill="#000100" width="120" height="70"  transform="skewX(-20)" />
+      <rect id="modBG6-1" x="2020" y="550" rx="10" ry="10" fill="#303030" width="70" height="50"  transform="skewX(-20)" />
+      <rect id="modBG6-2" x="1970" y="530" rx="10" ry="10" fill="#1a1819" width="50" height="30"  transform="skewX(-20)" />
+      <text id="modText6" class="cls-124" x="1995" y="580" transform="skewX(-20)">FL</text>
+    </g>
+    <g id="mod7" opacity="0">
+      <rect id="modBG6-0" x="2020" y="500" rx="10" ry="10" fill="#e69a4e" width="120" height="70"  transform="skewX(-20)" />
+      <rect id="modBG6-1" x="2070" y="520" rx="10" ry="10" fill="#e5a565" width="70" height="50"  transform="skewX(-20)" />
+      <rect id="modBG6-2" x="2020" y="500" rx="10" ry="10" fill="#eda25e" width="50" height="30"  transform="skewX(-20)" />
+      <text id="modText6" class="cls-124" x="2045" y="550" transform="skewX(-20)">PF</text>
+    </g>
+  </g>
+  <g id="lazer-label" opacity="0">
+    <image
+    xlink:href="assets/lazer-label.png"
+    x="20"
+    y="950"
+    width="110"
+    height="110"
+    id="lazer"/>
+  </g>
+
+  <!-- <g transform="translate(0,-189)" opacity="0">
+    <rect
+            id="modBG1"
+            fill="#ff3535"
+            x="17" y="950"
+            width="110" height="60"
+            rx="12" ry="12"/>
+    <text
+            id="modText1"
+            class="cls-124"
+            x="40" y="993"
+    >HR</text>
+
+    <rect
+            id="modBG2"
+            fill="#ffef13"
+            x="33" y="1000"
+            width="110" height="60"
+            rx="12" ry="12"/>
+    <text
+            id="modText2"
+            class="cls-124"
+            x="56" y="1043"
+    >HD</text>
+
+    <rect
+            id="modBG3"
+            fill="#2eb3ff"
+            x="17" y="1050"
+            width="110" height="60"
+            rx="12" ry="12"/>
+    <text
+            id="modText3"
+            class="cls-124"
+            x="40" y="1093"
+    >SO</text>
+
+    <rect
+            id="modBG4"
+            fill="#6428ff"
+            x="33" y="1100"
+            width="110" height="60"
+            rx="12" ry="12"/>
+    <text
+            id="modText4"
+            class="cls-124"
+            x="56" y="1143"
+    >DT</text>
+
+    <rect
+            id="modBG5"
+            fill="#070707"
+            x="17" y="1150"
+            width="110" height="60"
+            rx="12" ry="12"/>
+    <text
+            id="modText5"
+            class="cls-124"
+            x="40" y="1193"
+    >FL</text>
+
+    <rect
+            id="modBG6"
+            fill="#606079"
+            x="33" y="1200"
+            width="110" height="60"
+            rx="12" ry="12"/>
+    <text
+            id="modText6"
+            class="cls-124"
+            x="56" y="1243"
+    >NF</text>
+
+
+  </g> -->
+</svg>
