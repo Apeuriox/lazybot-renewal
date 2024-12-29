@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 
 public class ImageUploadUtil
 {

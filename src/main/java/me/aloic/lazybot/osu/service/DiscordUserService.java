@@ -7,4 +7,6 @@ import org.springframework.stereotype.Service;
 public interface DiscordUserService
 {
     void linkUser(SlashCommandInteractionEvent event);
+
+    void unlinkUser(SlashCommandInteractionEvent event);
 }

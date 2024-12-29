@@ -33,6 +33,19 @@ public class DiscordUserServiceImpl implements DiscordUserService
                         token -> createBindError.accept(event, token),
                         () -> insertUserToTable(event, event.getOption("username").getAsString()));
     }
+    @Override
+    public void unlinkUser(SlashCommandInteractionEvent event)
+    {
+        event.deferReply().queue();
+        BiConsumer<SlashCommandInteractionEvent, UserTokenPO> createBindError =  ErrorResultHandler::createBindError;
+        if(event.getOption("username")==null)
+            ErrorResultHandler.createParameterError(event);
+        Optional.ofNullable(tokenMapper.selectByDiscord(event.getUser().getIdLong()))
+                .ifPresentOrElse(
+                        token -> createBindError.accept(event, token),
+                        () -> tokenMapper.deleteByDiscord(event.getUser().getIdLong()));
+        event.getHook().sendMessage("已解除绑定: " +event.getOption("username").getAsString()).queue();
+    }
     private void insertUserToTable(SlashCommandInteractionEvent event, @Nonnull String username){
         UserTokenPO client = tokenMapper.selectByDiscord(0L);
         PlayerInfoDTO player = DataObjectExtractor.extractPlayerInfo(client.getAccess_token(),username, "osu");

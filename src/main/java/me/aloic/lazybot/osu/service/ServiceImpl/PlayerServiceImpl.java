@@ -1,17 +1,20 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.osu.utils.SVGRenderUtil;
+import me.aloic.lazybot.osu.utils.SvgUtil;
+import me.aloic.lazybot.parameter.BpCommandParameter;
+import me.aloic.lazybot.parameter.BplistCommandParameter;
 import me.aloic.lazybot.parameter.RecentCommandParameter;
 import me.aloic.lazybot.parameter.ScoreCommandParameter;
 import me.aloic.lazybot.util.DataObjectExtractor;
+import me.aloic.lazybot.util.TransformerUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +43,36 @@ public class PlayerServiceImpl implements PlayerService
                 String.valueOf(scoreList.get(params.getIndex()).getBeatmap_id()),params.getMode()),
                 scoreList.get(params.getIndex()));
         return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion());
+    }
+    @Override
+    public byte[] bp(BpCommandParameter params)
+    {
+        List<ScoreLazerDTO> scoreDTO = DataObjectExtractor.extractUserBestScoreList(params.getAccessToken().getAccess_token(), String.valueOf(params.getPlayerId()),params.getIndex(),params.getMode());
+        if(params.getIndex()>100) {
+            throw new IllegalArgumentException("INDEX must be less than 100");
+        }
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(DataObjectExtractor.extractBeatmap(
+                        params.getAccessToken().getAccess_token(),
+                        String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
+                scoreDTO.getFirst());
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion());
+    }
+    @Override
+    public byte[] bplist(BplistCommandParameter params) throws Exception
+    {
+        PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode());
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        if(params.getFrom()>100||params.getTo()>100) {
+            throw new IllegalArgumentException("FROM and TO must be less than 100");
+        }
+        List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(
+                params.getAccessToken().getAccess_token(),
+                String.valueOf(playerInfoDTO.getId()),
+                params.getTo()-params.getFrom()+1,
+                params.getFrom(),
+                params.getMode());
+        List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOArray,params.getFrom(),params.getVersion()));
     }
 
 }
