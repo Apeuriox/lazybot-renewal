@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@LazybotCommandMapping("score")
+@LazybotCommandMapping({"score"})
 @Component
 public class ScoreCommand implements LazybotSlashCommand
 {

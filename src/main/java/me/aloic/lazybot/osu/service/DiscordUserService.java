@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Service;
 
 @Service
-public interface UserService
+public interface DiscordUserService
 {
     void linkUser(SlashCommandInteractionEvent event);
 }

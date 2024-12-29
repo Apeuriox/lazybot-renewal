@@ -6,7 +6,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
-import me.aloic.lazybot.osu.service.UserService;
+import me.aloic.lazybot.osu.service.DiscordUserService;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Service;
@@ -14,8 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+//im too lazy to refactor this
 @Service
-public class UserServiceImpl implements UserService
+public class DiscordUserServiceImpl implements DiscordUserService
 {
     @Resource
     private TokenMapper tokenMapper;
