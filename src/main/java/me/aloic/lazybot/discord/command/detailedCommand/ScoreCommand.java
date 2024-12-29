@@ -10,7 +10,7 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
-import me.aloic.lazybot.parameter.ScoreCommandParameter;
+import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class ScoreCommand implements LazybotSlashCommand
         tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
 
-        ScoreCommandParameter params = new ScoreCommandParameter(OptionMappingTool.getOptionOrDefault(event.getOption("mod"),""),
+        ScoreParameter params = new ScoreParameter(OptionMappingTool.getOptionOrDefault(event.getOption("mod"),""),
                 Optional.ofNullable(event.getOption("bid")).orElseThrow(() -> new RuntimeException("bid为必选参数")).getAsString(),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);

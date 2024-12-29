@@ -10,8 +10,7 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
-import me.aloic.lazybot.parameter.BpCommandParameter;
-import me.aloic.lazybot.parameter.BplistCommandParameter;
+import me.aloic.lazybot.parameter.BplistParameter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -37,7 +36,7 @@ public class BpListCommand implements LazybotSlashCommand
         }
         tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
-        BplistCommandParameter params=new BplistCommandParameter(playerName,
+        BplistParameter params=new BplistParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),
                 OptionMappingTool.getOptionOrDefault(event.getOption("from"), 0),

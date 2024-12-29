@@ -7,4 +7,7 @@ import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 public abstract class LazybotCommandParameter
 {
     private UserTokenPO accessToken;
+    private String playerName;
+    private Integer playerId;
+    private String mode;
 }
