@@ -10,4 +10,6 @@ public abstract class LazybotCommandParameter
     private String playerName;
     private Integer playerId;
     private String mode;
+
+    abstract void validateParams();
 }

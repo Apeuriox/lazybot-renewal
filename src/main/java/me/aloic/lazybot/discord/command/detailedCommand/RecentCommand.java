@@ -41,6 +41,7 @@ public class RecentCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
+        params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,0));
     }
 }

@@ -9,16 +9,13 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.*;
-import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.TransformerUtil;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,8 +26,8 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] score(ScoreParameter params) throws Exception {
         BeatmapUserScoreLazer beatmapUserScoreLazer = DataObjectExtractor.extractBeatmapUserScore(params.getAccessToken().getAccess_token(),
-                params.getBeatmapId(),params.getPlayerId(),params.getMode(),params.getModCombination());
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(DataObjectExtractor.extractBeatmap(params.getAccessToken().getAccess_token(),params.getBeatmapId(),params.getMode())
+                String.valueOf(params.getBeatmapId()),params.getPlayerId(),params.getMode(),params.getModCombination());
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(DataObjectExtractor.extractBeatmap(params.getAccessToken().getAccess_token(), String.valueOf(params.getBeatmapId()),params.getMode())
                 ,beatmapUserScoreLazer.getScore());
         return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion());
     }
@@ -51,9 +48,6 @@ public class PlayerServiceImpl implements PlayerService
     public byte[] bp(BpParameter params)
     {
         List<ScoreLazerDTO> scoreDTO = DataObjectExtractor.extractUserBestScoreList(params.getAccessToken().getAccess_token(), String.valueOf(params.getPlayerId()),params.getIndex(),params.getMode());
-        if(params.getIndex()>100) {
-            throw new IllegalArgumentException("INDEX must be less than 100");
-        }
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(DataObjectExtractor.extractBeatmap(
                         params.getAccessToken().getAccess_token(),
                         String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
@@ -65,9 +59,6 @@ public class PlayerServiceImpl implements PlayerService
     {
         PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode());
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
-        if(params.getFrom()>100||params.getTo()>100) {
-            throw new IllegalArgumentException("FROM and TO must be less than 100");
-        }
         List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(
                 params.getAccessToken().getAccess_token(),
                 String.valueOf(playerInfoDTO.getId()),
@@ -75,12 +66,11 @@ public class PlayerServiceImpl implements PlayerService
                 params.getFrom(),
                 params.getMode());
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOArray,params.getFrom(),params.getVersion()));
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOArray,params.getFrom(),1));
     }
     @Override
     public byte[] todayBp(TodaybpParameter params) throws Exception
     {
-
         PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode());
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
         List<ScoreLazerDTO> scoreDTOList=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken().getAccess_token(), String.valueOf(params.getPlayerId()),100,0,params.getMode());
@@ -100,7 +90,7 @@ public class PlayerServiceImpl implements PlayerService
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOList,0,4,
                 "Current command: /todayBp. Showing new Bps within " + params.getMaxDays() +" day(s)"));
     }
-
+    @Override
     public byte[] bpvs(BpvsParameter params)throws Exception
     {
         PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode());

@@ -15,5 +15,7 @@ public interface PlayerService
 
     byte[] todayBp(TodaybpParameter params) throws Exception;
 
+    byte[] bpvs(BpvsParameter params)throws Exception;
+
     byte[] noChoke(NoChokeParameter params, int type) throws Exception;
 }

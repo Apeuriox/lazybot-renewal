@@ -10,14 +10,15 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
-import me.aloic.lazybot.parameter.BpParameter;
+import me.aloic.lazybot.parameter.BplistParameter;
+import me.aloic.lazybot.parameter.BpvsParameter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bp"})
+@LazybotCommandMapping({"bpvs"})
 @Component
-public class BpCommand implements LazybotSlashCommand
+public class BpvsCommand implements LazybotSlashCommand
 {
     @Resource
     private PlayerService playerService;
@@ -36,14 +37,13 @@ public class BpCommand implements LazybotSlashCommand
         }
         tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
-        BpParameter params=new BpParameter(playerName,
+        BpvsParameter params=new BpvsParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
-                OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),
-                OptionMappingTool.getOptionOrDefault(event.getOption("index"), 0));
+                OptionMappingTool.getOptionOrDefault(event.getOption("target"), playerName));
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
+        params.setComparePlayerId(OsuToolsUtil.getUserIdByUsername(params.getComparePlayerName(),tokenPO.getAccess_token()));
         params.setAccessToken(accessToken);
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.bp(params));
+        ImageUploadUtil.uploadImageToDiscord(event,playerService.bpvs(params));
     }
-
 }

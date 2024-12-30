@@ -39,11 +39,12 @@ public class ScoreCommand implements LazybotSlashCommand
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
 
         ScoreParameter params = new ScoreParameter(OptionMappingTool.getOptionOrDefault(event.getOption("mod"),""),
-                Optional.ofNullable(event.getOption("bid")).orElseThrow(() -> new RuntimeException("bid为必选参数")).getAsString(),
+                Optional.ofNullable(event.getOption("bid")).orElseThrow(() -> new RuntimeException("bid为必选参数")).getAsInt(),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
+        params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event, playerService.score(params));
     }
 }

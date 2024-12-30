@@ -18,4 +18,15 @@ public class RecentParameter extends LazybotCommandParameter
         this.version=version;
         this.setPlayerName(playerName);
     }
+
+    @Override
+    public void validateParams()
+    {
+        if (index<=0||index>100) {
+            throw new IllegalArgumentException("index must be between 1 and 100");
+        }
+        if(version!=0) {
+            version=1;
+        }
+    }
 }
