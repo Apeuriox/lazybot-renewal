@@ -20,7 +20,9 @@ public class LazybotSlashCommandRegistry
         for (LazybotSlashCommand command : beans.values()) {
             LazybotCommandMapping mapping = command.getClass().getAnnotation(LazybotCommandMapping.class);
             if (mapping != null) {
-                commandMap.put(mapping.value(), command);
+                for(String commandName : mapping.value()) {
+                    commandMap.put(commandName, command);
+                }
             }
         }
     }

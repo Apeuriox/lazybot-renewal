@@ -58,5 +58,8 @@
     <delete id="deleteByQQ" parameterType="java.lang.Long">
         DELETE FROM user_token WHERE qq_code = #{qq_code}
     </delete>
+    <delete id="deleteByDiscord" parameterType="java.lang.Long">
+        DELETE FROM user_token WHERE discord_code = #{discord_code}
+    </delete>
 
 </mapper>

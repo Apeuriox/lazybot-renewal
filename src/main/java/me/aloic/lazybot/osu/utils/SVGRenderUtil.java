@@ -56,7 +56,7 @@ public class SVGRenderUtil
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
         return convertByteArrayToOutputStream(result);
     }
-    protected static byte[] renderSVGDocumentToByteArray(Document document)
+    public static byte[] renderSVGDocumentToByteArray(Document document)
     {
         long startingTime = System.currentTimeMillis();
         byte[] result;

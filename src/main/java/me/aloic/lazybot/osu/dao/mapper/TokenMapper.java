@@ -14,4 +14,5 @@ public interface TokenMapper extends BaseMapper<UserTokenPO> {
     UserTokenPO selectByPlayername(String player_name);
     void updateClientToken(@Param("access_token")String access_token);
     void deleteByQQ(@Param("qq_code")Long qq_code);
+    void deleteByDiscord(@Param("discord_code")Long discord_code);
 }

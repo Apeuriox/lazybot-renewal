@@ -7,15 +7,15 @@ import me.aloic.lazybot.osu.service.DiscordUserService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"link"})
+@LazybotCommandMapping({"unlink"})
 @Component
-public class LinkCommand implements LazybotSlashCommand
+public class UnLinkCommand implements LazybotSlashCommand
 {
     @Resource
     private DiscordUserService userService;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
-        userService.linkUser(event);
+        userService.unlinkUser(event);
     }
 }

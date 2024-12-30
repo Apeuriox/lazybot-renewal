@@ -6,12 +6,18 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapVO;
+import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.TransformerUtil;
+import org.w3c.dom.Document;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class OsuToolsUtil
 {
@@ -50,5 +56,82 @@ public class OsuToolsUtil
             scoreVO.setPp(scoreVO.getPpDetailsLocal().getCurrentPP());
         ModCalculatorUtil.afterModMapInfo(scoreVO);
         return scoreVO;
+    }
+
+    public static List<ScoreVO> setUpImageStatic(List<ScoreVO> scoreVOList)
+    {
+        for(ScoreVO scoreVO:scoreVOList) {
+            scoreVO.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
+            try{
+                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO),scoreVO));
+                if(scoreVO.getPpDetailsLocal().getStar()!=null)
+                    scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
+            }
+            catch (Exception e) {
+                throw new RuntimeException("重算成绩详情时出错: " + e.getMessage());
+            }
+        }
+        return scoreVOList;
+    }
+    public static void setupFixedPPStats(ScoreVO scoreVO, boolean conditions)
+    {
+        if(conditions)
+        {
+            scoreVO.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
+            try
+            {
+                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO), scoreVO));
+                if (scoreVO.getPpDetailsLocal().getStar() != null)
+                {
+                    scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
+                    scoreVO.setPp(scoreVO.getPpDetailsLocal().getIfFc());
+                }
+            } catch (Exception e)
+            {
+                throw new RuntimeException("重算成绩详情时出错, 请重试");
+            }
+        }
+    }
+    public static PlayerInfoVO setupPlayerInfoVO(PlayerInfoDTO playerInfoDTO)
+    {
+        playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,false)));
+        return TransformerUtil.userTransform(playerInfoDTO);
+    }
+    public static NoChokeListVO setupNoChokeList(PlayerInfoVO info, List<ScoreVO> scoreList,int type)
+    {
+        NoChokeListVO noChokeListVO=new NoChokeListVO();
+        double originalRawPp= CommonTool.totalPpCalculator(scoreList);
+        if(type==1) {
+            for (ScoreVO scoreVO : scoreList) {
+                setupFixedPPStats(scoreVO,!scoreVO.getIsPerfectCombo() && scoreVO.getStatistics().getMiss() <= 1);
+            }
+        }else {
+            for (ScoreVO scoreVO : scoreList) {
+                setupFixedPPStats(scoreVO,!scoreVO.getIsPerfectCombo());
+            }
+        }
+        scoreList=scoreList.stream().sorted(Comparator.comparing(ScoreVO::getPp).reversed()).collect(Collectors.toList());
+        double fixedRawPp=CommonTool.totalPpCalculator(scoreList);
+        fixedRawPp+=Math.abs(info.getPerformancePoint()-originalRawPp);
+        StringBuilder sb=new StringBuilder(String.valueOf(Math.round(info.getPerformancePoint())));
+        sb.append(" -> ").append(Math.round(fixedRawPp))
+                .append(" (+")
+                .append(Math.round(Math.abs(originalRawPp-fixedRawPp)))
+                .append(")");
+        info.setFixedPPString(sb.toString());
+        List<ScoreVO> scoreListNeedsFix;
+        if(type==1) {
+            scoreListNeedsFix = scoreList.stream()
+                    .filter(scoreVO -> !scoreVO.getIsPerfectCombo() && scoreVO.getStatistics().getMiss() <= 1 && scoreVO.getPp() - scoreVO.getPpDetailsLocal().getCurrentPP() > 1.5)
+                    .collect(Collectors.toList());
+        }
+        else {
+            scoreListNeedsFix = scoreList.stream()
+                    .filter(scoreVO -> !scoreVO.getIsPerfectCombo() && scoreVO.getPp() - scoreVO.getPpDetailsLocal().getCurrentPP() > 1.5)
+                    .collect(Collectors.toList());
+        }
+        noChokeListVO.setScoreList(scoreListNeedsFix);
+        noChokeListVO.setInfo(info);
+        return noChokeListVO;
     }
 }

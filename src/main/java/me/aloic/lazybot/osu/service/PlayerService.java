@@ -1,13 +1,21 @@
 package me.aloic.lazybot.osu.service;
 
-import me.aloic.lazybot.parameter.RecentCommandParameter;
-import me.aloic.lazybot.parameter.ScoreCommandParameter;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import me.aloic.lazybot.parameter.*;
 
 public interface PlayerService
 {
 
-    byte[] score(ScoreCommandParameter params) throws Exception;
+    byte[] score(ScoreParameter params) throws Exception;
 
-    byte[] recent(RecentCommandParameter params, Integer type);
+    byte[] recent(RecentParameter params, Integer type);
+
+    byte[] bp(BpParameter params) throws Exception;
+
+    byte[] bplist(BplistParameter params) throws Exception;
+
+    byte[] todayBp(TodaybpParameter params) throws Exception;
+
+    byte[] bpvs(BpvsParameter params)throws Exception;
+
+    byte[] noChoke(NoChokeParameter params, int type) throws Exception;
 }

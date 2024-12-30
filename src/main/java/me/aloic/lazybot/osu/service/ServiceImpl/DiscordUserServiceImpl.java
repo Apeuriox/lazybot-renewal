@@ -6,7 +6,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
-import me.aloic.lazybot.osu.service.UserService;
+import me.aloic.lazybot.osu.service.DiscordUserService;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Service;
@@ -14,8 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+//im too lazy to refactor this
 @Service
-public class UserServiceImpl implements UserService
+public class DiscordUserServiceImpl implements DiscordUserService
 {
     @Resource
     private TokenMapper tokenMapper;
@@ -31,6 +32,19 @@ public class UserServiceImpl implements UserService
                 .ifPresentOrElse(
                         token -> createBindError.accept(event, token),
                         () -> insertUserToTable(event, event.getOption("username").getAsString()));
+    }
+    @Override
+    public void unlinkUser(SlashCommandInteractionEvent event)
+    {
+        event.deferReply().queue();
+        BiConsumer<SlashCommandInteractionEvent, UserTokenPO> createBindError =  ErrorResultHandler::createBindError;
+        if(event.getOption("username")==null)
+            ErrorResultHandler.createParameterError(event);
+        Optional.ofNullable(tokenMapper.selectByDiscord(event.getUser().getIdLong()))
+                .ifPresentOrElse(
+                        token -> createBindError.accept(event, token),
+                        () -> tokenMapper.deleteByDiscord(event.getUser().getIdLong()));
+        event.getHook().sendMessage("已解除绑定: " +event.getOption("username").getAsString()).queue();
     }
     private void insertUserToTable(SlashCommandInteractionEvent event, @Nonnull String username){
         UserTokenPO client = tokenMapper.selectByDiscord(0L);
