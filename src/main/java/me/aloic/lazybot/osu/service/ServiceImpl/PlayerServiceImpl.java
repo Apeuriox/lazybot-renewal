@@ -3,14 +3,13 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.PlayerService;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
-import me.aloic.lazybot.osu.utils.OsuToolsUtil;
-import me.aloic.lazybot.osu.utils.SVGRenderUtil;
-import me.aloic.lazybot.osu.utils.SvgUtil;
+import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.*;
+import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.TransformerUtil;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,7 @@ import org.w3c.dom.Document;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,10 +106,24 @@ public class PlayerServiceImpl implements PlayerService
         PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode());
         playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,false)));
         PlayerInfoDTO comparePlayerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getComparePlayerName(),params.getMode());
-        playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(comparePlayerInfoDTO,false)));
+        comparePlayerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(comparePlayerInfoDTO,false)));
         List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken().getAccess_token(), String.valueOf(playerInfoDTO.getId()),100,0,params.getMode());
         List<ScoreLazerDTO> compareScoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken().getAccess_token(), String.valueOf(comparePlayerInfoDTO.getId()),100,0,params.getMode());
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createCompareBpList(playerInfoDTO,comparePlayerInfoDTO,TransformerUtil.scoreTransformForArray(scoreDTOS),TransformerUtil.scoreTransformForArray(compareScoreDTOS)));
+    }
+    @Override
+    public byte[] noChoke(NoChokeParameter params, int type) throws Exception
+    {
+        PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode());
+        List<ScoreLazerDTO> originalScoreArray=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken().getAccess_token(), String.valueOf(playerInfoDTO.getId()),100,0,params.getMode());
+        NoChokeListVO noChokeListVO=OsuToolsUtil.setupNoChokeList(OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO),TransformerUtil.scoreTransformForList(originalScoreArray),type);
+        if(type==1) {
+            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,2));
+        }
+        else {
+            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,4,
+                    "All scores are recalculated with FC. Plz keep in mind that this may not reflect your skill correctly."));
+        }
     }
 
 
