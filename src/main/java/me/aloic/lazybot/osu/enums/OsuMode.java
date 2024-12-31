@@ -25,46 +25,27 @@ public enum OsuMode
     }
 
     public static OsuMode getMode(int value) {
-        switch (value) {
-            case 0:
-                return Osu;
-            case 1:
-                return Taiko;
-            case 2:
-                return Catch;
-            case 3:
-                return Mania;
-            default:
-                return Default;
-        }
+        return switch (value)
+        {
+            case 0 -> Osu;
+            case 1 -> Taiko;
+            case 2 -> Catch;
+            case 3 -> Mania;
+            default -> Default;
+        };
     }
 
     public static OsuMode getMode(String name) {
-        if (name == null) return Default;
-        switch (name.toLowerCase()) {
-            case "osu":
-            case "o":
-            case "0":
-                return Osu;
-            case "taiko":
-            case "t":
-            case "1":
-                return Taiko;
-            case "catch":
-            case "c":
-            case "fruits":
-            case "f":
-            case "2":
-                return Catch;
-            case "mania":
-            case "m":
-            case "3":
-                return Mania;
-            default:
-                return Default;
-        }
+        if (name == null) throw new RuntimeException("Invalid mode provided");
+        return switch (name.toLowerCase().trim())
+        {
+            case "osu", "o", "0", "std", "standard" -> Osu;
+            case "taiko", "t", "1", "tk" -> Taiko;
+            case "catch", "c", "ctb", "fruits", "fruit", "f", "2" -> Catch;
+            case "mania", "m", "3", "mn" -> Mania;
+            default -> throw new RuntimeException("Invalid mode provided: " + name);
+        };
     }
-
     @Override
     public String toString() {
         return describe;
