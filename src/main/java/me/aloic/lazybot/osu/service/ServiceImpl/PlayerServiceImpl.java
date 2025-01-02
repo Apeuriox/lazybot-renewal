@@ -115,7 +115,7 @@ public class PlayerServiceImpl implements PlayerService
                     "All scores are recalculated with FC. Plz keep in mind that this may not reflect your skill correctly."));
         }
     }
-    @Override
+    re@Override
     public byte[] card(GeneralParameter params) throws Exception {
         PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode()));
         playerInfoVO.setMode(params.getMode());

@@ -184,30 +184,38 @@ public class ResourceMonitor
     private static File jarPathVerifier(String jarPath)
     {
         try {
+            // 解码 URL 路径
             String decodedPath = URLDecoder.decode(jarPath, "UTF-8");
 
+            // 去掉 file: 前缀
             if (decodedPath.startsWith("file:/")) {
-                decodedPath = decodedPath.substring("file:/".length());
+                decodedPath = decodedPath.substring("file:".length());
             }
-            if (decodedPath.startsWith("/") && decodedPath.contains(":")) {
+
+            if (File.separatorChar == '\\' && decodedPath.startsWith("/")) {
                 decodedPath = decodedPath.substring(1);
             }
 
+            // 去掉 JAR 内部路径部分（如果存在）
             int jarSeparatorIndex = decodedPath.indexOf("!");
             if (jarSeparatorIndex > 0) {
                 decodedPath = decodedPath.substring(0, jarSeparatorIndex);
             }
+
+            // 转换为 File 对象
             File jarFile = new File(decodedPath);
+
+            // 检查文件是否存在
             if (jarFile.isFile() && jarFile.getName().endsWith(".jar")) {
                 logger.info("JAR 文件路径：{}", jarFile.getAbsolutePath());
             } else {
-                logger.warn("不是有效的 JAR 文件路径：{}", jarFile.getAbsolutePath());
+                logger.info("不是有效的 JAR 文件路径：{}", decodedPath);
             }
             return jarFile;
         }
         catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            throw new RuntimeException("URLDecoder.decode 出现异常", e);
+            throw new RuntimeException("Decode URL failed", e);
         }
     }
 }

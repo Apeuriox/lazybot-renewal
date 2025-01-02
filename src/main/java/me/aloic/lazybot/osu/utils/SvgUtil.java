@@ -950,98 +950,9 @@ public class SvgUtil
 
             doc.getElementById("starRatingBG").setAttribute("fill", "#".concat(CommonTool.calcDiffColor(targetScore.getBeatmap().getDifficult_rating())));
 
-            if (targetScore.getMods() != null)
+            if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0)
             {
-                for (int i = 0; i < targetScore.getMods().length; i++)
-                {
-                    switch (targetScore.getMods()[i])
-                    {
-                        case "HR":
-                        {
-                            wireModIcon(doc, i, "HR", "89001f", "a32f4a", "911833");
-                            break;
-                        }
-                        case "HD":
-                        {
-                            wireModIcon(doc, i, "HD", "bda400", "d3bd58", "c8b02c");
-                            break;
-                        }
-                        case "DT":
-                        {
-                            wireModIcon(doc, i, "DT", "3a259c", "4f38ab", "45339c");
-                            break;
-                        }
-                        case "NF":
-                        {
-                            wireModIcon(doc, i, "NF", "0071a5", "237ca5", "157fac");
-                            break;
-                        }
-                        case "SO":
-                        {
-                            wireModIcon(doc, i, "SO", "3a022d", "5b3055", "511841");
-                            break;
-                        }
-                        case "FL":
-                        {
-                            wireModIcon(doc, i, "FL", "000100", "303030", "1a1819");
-                            break;
-                        }
-                        case "SD":
-                        {
-                            wireModIcon(doc, i, "SD", "744c28", "926e4c", "8a5a38");
-                            break;
-                        }
-                        case "EZ":
-                        {
-                            wireModIcon(doc, i, "EZ", "088e47", "38a772", "1c9d58");
-                            break;
-                        }
-                        case "NC":
-                        {
-                            wireModIcon(doc, i, "NC", "9c22e9", "b925ff", "b520f0");
-                            break;
-                        }
-                        case "PF":
-                        {
-                            wireModIcon(doc, i, "PF", "e69a4e", "e5a565", "eda25e");
-                            break;
-                        }
-                        case "HT":
-                        {
-                            wireModIcon(doc, i, "HT", "32323c", "555a5d", "484848");
-                            break;
-                        }
-                        case "TD":
-                        {
-                            wireModIcon(doc, i, "TD", "27abe3", "4dbcee", "40b3e3");
-                            break;
-                        }
-                        case "RX":
-                        {
-                            wireModIcon(doc, i, "RX", "27abe3", "4dbcee", "40b3e3");
-                            break;
-                        }
-                        case "AP":
-                        {
-                            wireModIcon(doc, i, "AP", "27abe3", "4dbcee", "40b3e3");
-                            break;
-                        }
-                        case "CL":
-                        {
-                            if(targetScore.getIsLazer())
-                            {
-                                wireModIcon(doc, i, "CL", "6b64ab", "766db1", "8077b6");
-                                break;
-                            }
-                            break;
-                        }
-                        default:
-                        {
-                            wireModIcon(doc, i, targetScore.getMods()[i], "ea629f", "ec75aa", "ee86b4");
-                            break;
-                        }
-                    }
-                }
+                wireModIconForDarkScore(doc,targetScore);
             }
             logger.info("SVG elements changing cost (dark mode): " + (System.currentTimeMillis() - startingTime) + "ms");
             return doc;
@@ -1051,6 +962,167 @@ public class SvgUtil
             throw new RuntimeException(e);
         }
 
+    }
+    private static void wireModIconForDarkScore(Document doc, ScoreVO targetScore)
+    {
+        for (int i = 0; i < targetScore.getModJSON().size(); i++)
+        {
+            switch (targetScore.getModJSON().get(i).getAcronym().toString())
+            {
+                case "HR":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "89001f", "a32f4a", "911833");
+                    break;
+                }
+                case "HD":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "bda400", "d3bd58", "c8b02c");
+                    break;
+                }
+                case "DT":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "3a259c", "4f38ab", "45339c");
+                    break;
+                }
+                case "NF":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "0071a5", "237ca5", "157fac");
+                    break;
+                }
+                case "SO":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "3a022d", "5b3055", "511841");
+                    break;
+                }
+                case "FL":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "000100", "303030", "1a1819");
+                    break;
+                }
+                case "SD":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "744c28", "926e4c", "8a5a38");
+                    break;
+                }
+                case "EZ":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "088e47", "38a772", "1c9d58");
+                    break;
+                }
+                case "NC":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "9c22e9", "b925ff", "b520f0");
+                    break;
+                }
+                case "PF":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "e69a4e", "e5a565", "eda25e");
+                    break;
+                }
+                case "HT":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "32323c", "555a5d", "484848");
+                    break;
+                }
+                case "TD":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "27abe3", "4dbcee", "40b3e3");
+                    break;
+                }
+                case "RX":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "27abe3", "4dbcee", "40b3e3");
+                    break;
+                }
+                case "AP":
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "27abe3", "4dbcee", "40b3e3");
+                    break;
+                }
+                case "CL":
+                {
+                    if(targetScore.getIsLazer())
+                    {
+                        wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "6b64ab", "766db1", "8077b6");
+                        break;
+                    }
+                    break;
+                }
+                default:
+                {
+                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "ea629f", "ec75aa", "ee86b4");
+                    break;
+                }
+            }
+        }
+    }
+    private static void wireModIconForDarkScore(Document doc, int index, Mod mod, String color, String color2, String color3)
+    {
+        Element svgRoot = doc.getDocumentElement();
+        Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
+        Element sectionFull = (Element) sectionFullNode;
+        sectionFull.setAttribute("transform", "translate(" + index*100 +",0)");
+
+        Node modBGNode = doc.createElementNS(namespaceSVG, "rect");
+        Element modBG  = (Element) modBGNode ;
+        modBG .setAttribute("rx", "10");
+        modBG.setAttribute("ry", "10");
+        modBG.setAttribute("x", "1470");
+        modBG.setAttribute("y", "530");
+        modBG.setAttribute("width", "120");
+        modBG.setAttribute("height", "70");
+        modBG.setAttribute("fill", "#".concat(color));
+        modBG.setAttribute("transform", "skewX(-20)");
+
+        Node modBGNode2 = doc.createElementNS(namespaceSVG, "rect");
+        Element modBG2  = (Element) modBGNode2 ;
+        modBG2.setAttribute("rx", "10");
+        modBG2.setAttribute("ry", "10");
+        modBG2.setAttribute("x", "1520");
+        modBG2.setAttribute("y", "550");
+        modBG2.setAttribute("width", "70");
+        modBG2.setAttribute("height", "50");
+        modBG2.setAttribute("fill", "#".concat(color2));
+        modBG2.setAttribute("transform", "skewX(-20)");
+
+        Node modBGNode3 = doc.createElementNS(namespaceSVG, "rect");
+        Element modBG3  = (Element) modBGNode3 ;
+        modBG3.setAttribute("rx", "10");
+        modBG3.setAttribute("ry", "10");
+        modBG3.setAttribute("x", "1470");
+        modBG3.setAttribute("y", "530");
+        modBG3.setAttribute("width", "50");
+        modBG3.setAttribute("height", "30");
+        modBG3.setAttribute("fill", "#".concat(color3));
+        modBG3.setAttribute("transform", "skewX(-20)");
+
+        Node modNameNode = doc.createElementNS(namespaceSVG, "text");
+        Element modName  = (Element) modNameNode ;
+        modName.setAttribute("class", "cls-124");
+        modName.setAttribute("x", "1495");
+        modName.setAttribute("y", "580");
+        modName.setAttribute("transform", "skewX(-10) rotate(-10,1480,1160)");
+        modName.setTextContent(mod.getAcronym());
+        sectionFull.appendChild(modBGNode);
+        sectionFull.appendChild(modBGNode2);
+        sectionFull.appendChild(modBGNode3);
+        sectionFull.appendChild(modNameNode);
+
+
+        if(mod.getAcronym().equals("DT")||mod.getAcronym().equals("NC")||mod.getAcronym().equals("HT")||mod.getAcronym().equals("DC"))
+        {
+            Node modClockRateNode = doc.createElementNS(namespaceSVG, "text");
+            Element modeClockRate = (Element) modClockRateNode;
+            modeClockRate.setAttribute("class", "cls-125");
+            modeClockRate.setAttribute("x", "1495");
+            modeClockRate.setAttribute("y", "580");
+            modeClockRate.setAttribute("transform", "skewX(-10) rotate(-10,1550,1000)");
+            if(mod.getSettings().getSpeed_change()!=null) {
+                modeClockRate.setTextContent(CommonTool.toString(mod.getSettings().getSpeed_change()).concat("x"));
+            }
+            sectionFull.appendChild(modClockRateNode);
+        }
+        svgRoot.appendChild(sectionFull);
     }
 
     public static Document createCompareBpList(PlayerInfoDTO currentPlayer, PlayerInfoDTO comparedPlayer,
