@@ -1,8 +1,8 @@
-package me.aloic.lazybot.discord.command;
+package me.aloic.lazybot.command;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public interface LazybotSlashCommand
 {
-    void execute(SlashCommandInteractionEvent event) throws Exception;
+    void executeDiscord(SlashCommandInteractionEvent event) throws Exception;
 }

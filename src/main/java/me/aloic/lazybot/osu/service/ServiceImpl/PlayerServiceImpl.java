@@ -9,8 +9,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.*;
-import me.aloic.lazybot.util.DataObjectExtractor;
-import me.aloic.lazybot.util.TransformerUtil;
+import me.aloic.lazybot.util.*;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -121,6 +120,22 @@ public class PlayerServiceImpl implements PlayerService
         playerInfoVO.setMode(params.getMode());
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoCard(playerInfoVO));
     }
+    @Override
+    public String nameToId(NameToIdParameter params) {
+        StringBuilder builder = new StringBuilder();
+        for(String name:params.getTargets()){
+            ApiRequestStarter playerRequest = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerInfo(name),params.getAccessToken().getAccess_token());
+            PlayerInfoDTO playerInfoDTO = playerRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
+            if(playerInfoDTO.getId()==null){
+                builder.append(name).append(" --> ")
+                        .append("没这B人\n");
+            }
+            else {
+                builder.append(playerInfoDTO.getUsername()).append(" --> ").append(playerInfoDTO.getId()).append("\n");
+            }
+        }
 
+        return builder.toString();
+    }
 
 }

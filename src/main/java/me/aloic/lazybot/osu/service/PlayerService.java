@@ -20,4 +20,6 @@ public interface PlayerService
     byte[] noChoke(GeneralParameter params, int type) throws Exception;
 
     byte[] card(GeneralParameter params) throws Exception;
+
+    String nameToId(NameToIdParameter params) throws Exception;
 }

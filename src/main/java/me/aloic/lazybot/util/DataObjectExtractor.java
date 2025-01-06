@@ -2,9 +2,11 @@ package me.aloic.lazybot.util;
 
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMod;
 
 import java.util.List;
@@ -81,5 +83,14 @@ public class DataObjectExtractor
             throw new RuntimeException("没这成绩: " +"index=" + offset+1 + " player=" + playerId);
         }
         return scoreLazerDTOS;
+    }
+    public static List<HitScoreVO> extractOsuTrackHitScoreList(Integer playerId, String mode)
+    {
+        ApiRequestStarter apiRequestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackScore(playerId,mode));
+        java.util.List<HitScoreVO> hitScoreVOs= TransformerUtil.HitScoreTransform(apiRequestStarter.executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, HitScore.class));
+        if(hitScoreVOs.isEmpty()) {
+            throw new RuntimeException("暂无数据");
+        }
+        return hitScoreVOs;
     }
 }

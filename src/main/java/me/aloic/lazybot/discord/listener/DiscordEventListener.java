@@ -1,8 +1,8 @@
 package me.aloic.lazybot.discord.listener;
 
 import jakarta.annotation.Resource;
-import me.aloic.lazybot.discord.command.LazybotSlashCommand;
-import me.aloic.lazybot.discord.command.registry.LazybotSlashCommandRegistry;
+import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.command.registry.LazybotSlashCommandRegistry;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -43,7 +43,7 @@ public class DiscordEventListener extends ListenerAdapter
             LazybotSlashCommand command = registry.getCommand(event.getName());
             if (command != null) {
                 logger.info("正在处理 {} 命令",event.getName());
-                command.execute(event);
+                command.executeDiscord(event);
             } else {
                 event.reply("找不到对应指令").setEphemeral(true).queue();
             }

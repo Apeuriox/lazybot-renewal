@@ -1,8 +1,8 @@
-package me.aloic.lazybot.discord.command.registry;
+package me.aloic.lazybot.command.registry;
 
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 
-import me.aloic.lazybot.discord.command.LazybotSlashCommand;
+import me.aloic.lazybot.command.LazybotSlashCommand;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 

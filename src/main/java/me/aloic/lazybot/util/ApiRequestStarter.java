@@ -72,7 +72,6 @@ public class ApiRequestStarter
             headers = new HashMap<>();
         setDefaultHeaders();
         headers.put(headerName, content);
-
     }
 
     /**
@@ -100,12 +99,24 @@ public class ApiRequestStarter
         bodies.put(bodyName, obj);
     }
 
+
     /**
      * osu oauth相关header 添加后可根据token自动查询对应player信息
      * @param token
      */
     public void setOauth(String token){
         addHeader("Authorization", String.format("Bearer %s", token));
+    }
+
+    public ApiRequestStarter withOauth(String token) {
+        return withHeader("Authorization", "Bearer " + token);
+    }
+    public ApiRequestStarter withHeader(String name, String value) {
+        if(headers == null) {
+            headers = new HashMap<>();
+        }
+        headers.put(name, value);
+        return this;
     }
 
 

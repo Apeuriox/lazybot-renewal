@@ -18,5 +18,4 @@ public class HitScoreVO
     private String rank;
     private Date achievedTime;
     private String scoreTimeJSON;
-
 }

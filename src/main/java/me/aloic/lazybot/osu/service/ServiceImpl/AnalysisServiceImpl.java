@@ -9,6 +9,8 @@ import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.osu.utils.SVGRenderUtil;
 import me.aloic.lazybot.osu.utils.SvgUtil;
 import me.aloic.lazybot.parameter.BpifParameter;
+import me.aloic.lazybot.parameter.GeneralParameter;
+import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataObjectExtractor;
 
 import java.io.IOException;
@@ -26,6 +28,15 @@ public class AnalysisServiceImpl implements AnalysisService
         List<ScoreVO> scoreList=OsuToolsUtil.setupBpifScoreList(params,originalScoreArray,info);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreList.stream().limit(30).collect(Collectors.toList()),0,3,"/BpIf: Recalculate your Bps with desired mods. +mod to insert, -mod to remove, +mod! to replace."));
     }
+    @Override
+    public String recommendedDifficulty(GeneralParameter params) throws Exception
+    {
+        PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(), params.getPlayerName(), params.getMode());
+        double recommended = Math.pow(playerInfoDTO.getStatistics().getPp(), 0.4) * 0.195;
+        double recommendedFix=Math.pow((playerInfoDTO.getStatistics().getPp() * 0.85 / 20.0),0.33333);
+        return "ppy说"+playerInfoDTO.getUsername() +"应该打" + CommonTool.toString(recommended) + "星的图\n"
+                    +"另一种可能说" + playerInfoDTO.getUsername()+ "应该打"+CommonTool.toString(recommendedFix) + "星的图";
 
+    }
 
 }
