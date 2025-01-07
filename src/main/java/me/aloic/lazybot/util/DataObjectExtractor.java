@@ -8,6 +8,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMod;
+import me.aloic.lazybot.osu.enums.OsuMode;
 
 import java.util.List;
 
@@ -86,7 +87,7 @@ public class DataObjectExtractor
     }
     public static List<HitScoreVO> extractOsuTrackHitScoreList(Integer playerId, String mode)
     {
-        ApiRequestStarter apiRequestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackScore(playerId,mode));
+        ApiRequestStarter apiRequestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackScore(playerId, OsuMode.getMode(mode).getValue()));
         java.util.List<HitScoreVO> hitScoreVOs= TransformerUtil.HitScoreTransform(apiRequestStarter.executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, HitScore.class));
         if(hitScoreVOs.isEmpty()) {
             throw new RuntimeException("暂无数据");

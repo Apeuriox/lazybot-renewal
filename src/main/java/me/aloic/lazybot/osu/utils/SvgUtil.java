@@ -1147,6 +1147,7 @@ public class SvgUtil
         document.getElementById("avatar-0").setAttributeNS(xlinkns, "xlink:href", currentPlayer.getAvatar_url());
         document.getElementById("avatar-1").setAttributeNS(xlinkns, "xlink:href", comparedPlayer.getAvatar_url());
         document.getElementById("roughTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        document.getElementById(OsuMode.getMode(scoreVOArray[0].getMode()).getDescribe()).setAttribute("class", "cls-4");
         for(int i=0;i<totalCount;i++)
         {
             if(Objects.equals(allScores[i].getUser_name(), currentPlayer.getUsername()))
@@ -1228,6 +1229,7 @@ public class SvgUtil
         Element svgRoot = document.getDocumentElement();
 
         svgRoot.setAttribute("height", String.valueOf(targetHeight));
+        document.getElementById(OsuMode.getMode(scoreArray.get(0).getMode()).getDescribe()).setAttribute("class", "cls-24");
         document.getElementById("background").setAttribute("height", String.valueOf(targetHeight));
         document.getElementById("playername").setTextContent(player.getPlayerName());
         if(type==2) {

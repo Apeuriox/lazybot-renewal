@@ -11,19 +11,22 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
+import me.aloic.lazybot.parameter.NameToIdParameter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"nochoke","nc"})
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 @Component
-public class NoChokeCommand implements LazybotSlashCommand
+@LazybotCommandMapping({"nametoid","n2d"})
+public class NameToIdCommand implements LazybotSlashCommand
 {
     @Resource
     private PlayerService playerService;
     @Resource
     private TokenMapper tokenMapper;
-
     @Override
     public void executeDiscord(SlashCommandInteractionEvent event) throws Exception
     {
@@ -35,12 +38,14 @@ public class NoChokeCommand implements LazybotSlashCommand
             return;
         }
         tokenPO.setAccess_token(accessToken.getAccess_token());
-        String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
-        GeneralParameter params=new GeneralParameter(playerName,
-                OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
+        String playerNameList = OptionMappingTool.getOptionOrDefault(event.getOption("list"), tokenPO.getPlayer_name());
+        List<String> playerNames = Arrays.stream(playerNameList.split(","))
+                .distinct()
+                .limit(10)
+                .collect(Collectors.toList());
+        NameToIdParameter params=new NameToIdParameter(playerNames,"osu");
         params.setAccessToken(accessToken);
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.noChoke(params,0));
+        event.getHook().sendMessage(playerService.nameToId(params)).queue();
     }
 }

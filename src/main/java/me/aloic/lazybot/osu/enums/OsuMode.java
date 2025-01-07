@@ -36,7 +36,7 @@ public enum OsuMode
     }
 
     public static OsuMode getMode(String name) {
-        if (name == null) throw new RuntimeException("Invalid mode provided");
+        if (name == null) throw new RuntimeException("Null mode provided");
         return switch (name.toLowerCase().trim())
         {
             case "osu", "o", "0", "std", "standard" -> Osu;

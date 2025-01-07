@@ -8,9 +8,14 @@ import java.util.List;
 @Data
 public class NameToIdParameter extends LazybotCommandParameter
 {
+
     private List<String> targets;
+    public NameToIdParameter(List<String> targets,String mode) {
+         this.setMode(mode);
+         this.targets = targets;
+    }
     @Override
-    void validateParams()
+    public void validateParams()
     {
         if (targets == null)
             return;

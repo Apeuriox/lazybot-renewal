@@ -144,29 +144,22 @@ public class OsuToolsUtil
         List<ScoreVO> scoreList=TransformerUtil.scoreTransformForList(scoreLazerDTOS);
         double originalRawPp=CommonTool.totalPpCalculator(scoreList);
         List<Mod> modEntities = wireModEntities(params.getModList());
-        for(ScoreVO scoreVO:scoreList)
+        for (ScoreVO scoreVO : scoreList)
         {
-            if(params.getReplace()) {
-                scoreVO.setModJSON(modEntities.stream().distinct().collect(Collectors.toList()));
-            }
-            else {
-                if (params.getOperator().equals("+")) {
-                    scoreVO.setModJSON(Stream.concat(scoreVO.getModJSON().stream(), modEntities.stream())
-                            .distinct()
-                            .collect(Collectors.toList()));
-                }
-                else if (params.getOperator().equals("-")) {
-                    scoreVO.getModJSON().removeIf(modEntities::contains);
-                }
-                else {
-                    throw new RuntimeException("Operator invalid: " + params.getOperator());
-                }
+            switch (params.getOperator())
+            {
+                case "!","！" -> scoreVO.setModJSON(modEntities.stream().distinct().collect(Collectors.toList()));
+                case "+" -> scoreVO.setModJSON(Stream.concat(scoreVO.getModJSON().stream(), modEntities.stream())
+                        .distinct()
+                        .collect(Collectors.toList()));
+                case "-" -> scoreVO.getModJSON().removeIf(modEntities::contains);
+                default -> throw new RuntimeException("Operator invalid: " + params.getOperator());
             }
             scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO), scoreVO));
             if (scoreVO.getPpDetailsLocal().getStar() != null)
             {
                 scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
-                double currentPp=scoreVO.getPpDetailsLocal().getCurrentPP();
+                double currentPp = scoreVO.getPpDetailsLocal().getCurrentPP();
                 scoreVO.getPpDetailsLocal().setCurrentPP(scoreVO.getPp());
                 scoreVO.setPp(currentPp);
             }

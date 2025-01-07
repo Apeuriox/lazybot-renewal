@@ -152,7 +152,7 @@ public class URLBuildUtil
     {
         return ContentUtil.BASE_URL + "/users/" + playerId + "/scores/best?limit=100";
     }
-    public static String buildURLOfOsuTrackScore(int playerId,String mode)
+    public static String buildURLOfOsuTrackScore(int playerId,Integer mode)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.OSU_TRACK_BASE_URL, CharsetUtil.CHARSET_UTF_8);
         builder.addPath("hiscores");

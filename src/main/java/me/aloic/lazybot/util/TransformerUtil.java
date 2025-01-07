@@ -66,6 +66,7 @@ public class TransformerUtil
             scoreVO[i].setAvatarUrl(scoreDTO.get(i).getUser().getAvatar_url());
             scoreVO[i].setUser_name(scoreDTO.get(i).getUser().getUsername());
             scoreVO[i].setStatistics(scoreDTO.get(i).getStatistics());
+            scoreVO[i].setMode(String.valueOf(scoreDTO.get(i).getRuleset_id()));
             scoreVO[i].setBeatmap(TransformerUtil.beatmapTransform(scoreDTO.get(i).getBeatmap(),scoreDTO.get(i).getBeatmapset()));
         }
         return scoreVO;

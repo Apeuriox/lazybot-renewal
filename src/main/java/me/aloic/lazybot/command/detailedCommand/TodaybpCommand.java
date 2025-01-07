@@ -15,7 +15,7 @@ import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"todaybp"})
+@LazybotCommandMapping({"todaybp","tbp"})
 @Component
 public class TodaybpCommand implements LazybotSlashCommand
 {

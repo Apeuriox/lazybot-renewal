@@ -8,22 +8,22 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
-import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.service.TrackService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"nochoke","nc"})
+
 @Component
-public class NoChokeCommand implements LazybotSlashCommand
+@LazybotCommandMapping({"ppmap"})
+public class PpmapCommand implements LazybotSlashCommand
 {
     @Resource
-    private PlayerService playerService;
+    private TrackService trackService;
     @Resource
     private TokenMapper tokenMapper;
-
     @Override
     public void executeDiscord(SlashCommandInteractionEvent event) throws Exception
     {
@@ -41,6 +41,6 @@ public class NoChokeCommand implements LazybotSlashCommand
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.noChoke(params,0));
+        ImageUploadUtil.uploadImageToDiscord(event, trackService.ppTimeMap(params));
     }
 }

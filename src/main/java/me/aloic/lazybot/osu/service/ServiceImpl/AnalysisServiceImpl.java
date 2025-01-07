@@ -12,11 +12,12 @@ import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataObjectExtractor;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Service
 public class AnalysisServiceImpl implements AnalysisService
 {
     @Override
