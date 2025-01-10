@@ -1,9 +1,11 @@
 package me.aloic.lazybot.osu.utils;
 
 import me.aloic.lazybot.monitor.ResourceMonitor;
+import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.util.CommonTool;
@@ -1196,6 +1198,238 @@ public class SvgUtil
             SvgUtil.createListSubSection(document,scoreVOArray[i],i);
         }
         return document;
+    }
+    public static Document createScoreListDetailed(List<ScoreSequence> scorelist, String primaryColor, String type) throws IOException
+    {
+        Path filePath = ResourceMonitor.getResourcePath().resolve("static/TopScoresList.svg");
+        URI inputUri = filePath.toFile().toURI();
+        Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
+        Element svgRoot = doc.getDocumentElement();
+        String totalHeight=String.valueOf(130+120*scorelist.size());
+        svgRoot.setAttribute("height", totalHeight);
+        doc.getElementById("background").setAttribute("height", totalHeight);
+        doc.getElementById("StaticCommandName").setTextContent(type);
+        doc.getElementById("footer").setAttribute("transform", "translate(0," + 120*(scorelist.size()-1) +")");
+        doc.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+
+
+        for(ScoreSequence score:scorelist)
+        {
+            Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
+            Element sectionFull = (Element) sectionFullNode;
+            Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element totalBG  = (Element) totalBGNode ;
+            totalBG.setAttribute("rx", "10");
+            totalBG.setAttribute("ry", "10");
+            totalBG.setAttribute("width", "950");
+            totalBG.setAttribute("height", "100");
+            totalBG.setAttribute("fill", "#2a2933");
+            totalBG.setAttribute("transform", "translate(30,80)");
+
+            Node mapBGImageNode = doc.createElementNS(namespaceSVG, "image");
+            Element mapBGImage = (Element) mapBGImageNode;
+            mapBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBeatmap().getBgUrl());
+            mapBGImage.setAttribute("x", "30");
+            mapBGImage.setAttribute("y", "80");
+            mapBGImage.setAttribute("width", "950");
+            mapBGImage.setAttribute("height", "100");
+            mapBGImage.setAttribute("opacity", "0.5");
+            mapBGImage.setAttribute("clip-path", "url(#singleClip)");
+            mapBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+
+            Node playerNameNode = doc.createElementNS(namespaceSVG, "text");
+            Element playerName  = (Element) playerNameNode ;
+            playerName.setAttribute("class", "cls-122");
+            playerName.setAttribute("transform", "translate(70 170)");
+            playerName.setTextContent(score.getPlayerName());
+
+            Node starAndSongTitleNode = doc.createElementNS(namespaceSVG, "text");
+            Element starAndSongTitle  = (Element) starAndSongTitleNode ;
+            starAndSongTitle.setAttribute("class", "cls-110");
+            starAndSongTitle.setAttribute("transform", "translate(60 125)");
+
+            Node starNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element star  = (Element) starNode ;
+            star.setAttribute("fill", primaryColor);
+            star.setTextContent(String.valueOf(score.getBeatmap().getDifficult_rating()).concat(" *"));
+
+            Node divisorNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element divisor  = (Element) divisorNode ;
+            divisor.setTextContent(" | ");
+
+            Node titleNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element title  = (Element) titleNode ;
+            title.setTextContent(score.getBeatmap().getArtist().concat(" - ").concat(score.getBeatmap().getTitle()));
+
+
+            //pending
+//            Node scoreStatusNode = doc.createElementNS(namespaceSVG, "tspan");
+//            Element scoreStatus  = (Element) scoreStatusNode;
+//            scoreStatus.setAttribute("fill", "#f8bad4");
+//            scoreStatus.setTextContent(String.valueOf(score.getBeatmap().getDifficult_rating()).concat(" *"));
+
+            starAndSongTitle.appendChild(star);
+            starAndSongTitle.appendChild(divisor);
+            starAndSongTitle.appendChild(title);
+
+            Node bpmAndMapperNode = doc.createElementNS(namespaceSVG, "text");
+            Element bpmAndMapper  = (Element) bpmAndMapperNode ;
+            bpmAndMapper.setAttribute("class", "cls-113");
+            bpmAndMapper.setAttribute("transform", "translate(60 150)");
+
+            Node bpmNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element bpm  = (Element) bpmNode ;
+            bpm.setAttribute("fill", primaryColor);
+            bpm.setTextContent(String.valueOf(score.getBeatmap().getBpm()).concat(" bpm"));
+
+            Node divisorNode2 = doc.createElementNS(namespaceSVG, "tspan");
+            Element divisor2  = (Element) divisorNode2 ;
+            divisor2.setTextContent(" | ");
+
+            Node mapperNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element mapper  = (Element) mapperNode ;
+            mapper.setTextContent("Mapper: ".concat(score.getBeatmap().getCreator()));
+
+            bpmAndMapper.appendChild(bpm);
+            bpmAndMapper.appendChild(divisor2);
+            bpmAndMapper.appendChild(mapper);
+
+            Node underlineOfDateNode = doc.createElementNS(namespaceSVG, "rect");
+            Element underlineOfDate  = (Element) underlineOfDateNode ;
+            underlineOfDate.setAttribute("rx", "1.5");
+            underlineOfDate.setAttribute("ry", "1.5");
+            underlineOfDate.setAttribute("width", "105");
+            underlineOfDate.setAttribute("height", "3");
+            underlineOfDate.setAttribute("fill", primaryColor);
+            underlineOfDate.setAttribute("transform", "translate(377.5,177)");
+
+            Node underlineOfComboNode = doc.createElementNS(namespaceSVG, "rect");
+            Element underlineOfCombo  = (Element) underlineOfComboNode ;
+            underlineOfCombo.setAttribute("rx", "1.5");
+            underlineOfCombo.setAttribute("ry", "1.5");
+            underlineOfCombo.setAttribute("width", "55");
+            underlineOfCombo.setAttribute("height", "3");
+            underlineOfCombo.setAttribute("fill", primaryColor);
+            underlineOfCombo.setAttribute("transform", "translate(518,177)");
+
+            Node underlineOfAccuracyNode = doc.createElementNS(namespaceSVG, "rect");
+            Element underlineOfAccuracy  = (Element) underlineOfAccuracyNode ;
+            underlineOfAccuracy.setAttribute("rx", "1.5");
+            underlineOfAccuracy.setAttribute("ry", "1.5");
+            underlineOfAccuracy.setAttribute("width", "70");
+            underlineOfAccuracy.setAttribute("height", "3");
+            underlineOfAccuracy.setAttribute("fill", primaryColor);
+            underlineOfAccuracy.setAttribute("transform", "translate(605,177)");
+
+            Node underlineOfIndexNode = doc.createElementNS(namespaceSVG, "rect");
+            Element underlineOfIndex  = (Element) underlineOfIndexNode ;
+            underlineOfIndex.setAttribute("rx", "1.5");
+            underlineOfIndex.setAttribute("ry", "1.5");
+            underlineOfIndex.setAttribute("width", "70");
+            underlineOfIndex.setAttribute("height", "3");
+            underlineOfIndex.setAttribute("fill", primaryColor);
+            underlineOfIndex.setAttribute("transform", "translate(707,177)");
+
+            Node dateNode = doc.createElementNS(namespaceSVG, "text");
+            Element date  = (Element) dateNode ;
+            date.setAttribute("class", "cls-111");
+            date.setAttribute("font-size", "18px");
+            date.setAttribute("text-anchor", "middle");
+            date.setAttribute("fill", "#ffffff");
+            date.setAttribute("transform", "translate(430 170)");
+            date.setTextContent(score.getAchievedTime());
+
+            Node comboNode = doc.createElementNS(namespaceSVG, "text");
+            Element combo  = (Element) comboNode ;
+            combo.setAttribute("class", "cls-111");
+            combo.setAttribute("font-size", "18px");
+            combo.setAttribute("text-anchor", "middle");
+            combo.setAttribute("fill", "#ffffff");
+            combo.setAttribute("transform", "translate(545 170)");
+            combo.setTextContent(score.getMaxCombo().toString());
+
+            Node accuracyNode = doc.createElementNS(namespaceSVG, "text");
+            Element accuracy  = (Element) accuracyNode ;
+            accuracy.setAttribute("class", "cls-111");
+            accuracy.setAttribute("font-size", "18px");
+            accuracy.setAttribute("text-anchor", "middle");
+            accuracy.setAttribute("fill", "#ffffff");
+            accuracy.setAttribute("transform", "translate(640 170)");
+            accuracy.setTextContent(CommonTool.toString(score.getAccuracy()*100).concat("%"));
+
+            Node indexNode = doc.createElementNS(namespaceSVG, "text");
+            Element index  = (Element) indexNode ;
+            index.setAttribute("class", "cls-111");
+            index.setAttribute("font-size", "18px");
+            index.setAttribute("text-anchor", "middle");
+            index.setAttribute("fill", "#ffffff");
+            index.setAttribute("transform", "translate(725 170)");
+            index.setTextContent(score.getPositionInList().toString());
+
+            Node ppNode = doc.createElementNS(namespaceSVG, "text");
+            Element pp  = (Element) ppNode ;
+            pp.setAttribute("class", "cls-114");
+            pp.setAttribute("transform", "translate(960 142)");
+            pp.setTextContent(String.valueOf(Math.round(score.getPp())));
+
+            Node differenceNode = doc.createElementNS(namespaceSVG, "text");
+            Element difference  = (Element) differenceNode ;
+            difference.setAttribute("class", "cls-115");
+            difference.setAttribute("transform", "translate(910 162)");
+            difference.setTextContent(String.valueOf(score.getDifferenceBetweenNextScore()));
+
+            sectionFull.appendChild(totalBG);
+            sectionFull.appendChild(mapBGImage);
+            sectionFull.appendChild(playerName);
+            sectionFull.appendChild(starAndSongTitle);
+            sectionFull.appendChild(bpmAndMapper);
+            sectionFull.appendChild(underlineOfDate);
+            sectionFull.appendChild(underlineOfCombo);
+            sectionFull.appendChild(underlineOfAccuracy);
+            sectionFull.appendChild(underlineOfIndex);
+            sectionFull.appendChild(date);
+            sectionFull.appendChild(combo);
+            sectionFull.appendChild(accuracy);
+            sectionFull.appendChild(index);
+            sectionFull.appendChild(pp);
+            sectionFull.appendChild(difference);
+            setupModIconForScoreListDetailed(score.getModList(),doc,sectionFull);
+            sectionFull.setAttribute("transform", "translate(0," + 120*(score.getPositionInList()-1) + ")");
+            svgRoot.appendChild(sectionFull);
+        }
+        return  doc;
+    }
+
+    private static Document setupModIconForScoreListDetailed(List<Mod> modList,Document doc,Element sectionFull)
+    {
+        if (modList.isEmpty()) return doc;
+        Node modSingleNode = doc.createElementNS(namespaceSVG, "g");
+        Element modSingle = (Element) modSingleNode;
+        for(int i=modList.size()-1;i>0;i--)
+        {
+            Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element rectBG = (Element) rectBGNode;
+            rectBG.setAttribute("transform", "translate(925 95)");
+            rectBG.setAttribute("rx", "7.5");
+            rectBG.setAttribute("ry", "7.5");
+            rectBG.setAttribute("width", "30");
+            rectBG.setAttribute("height", "15");
+            rectBG.setAttribute("fill", getBplistCardModColor(modList.get(i)));
+
+            Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
+            Element modAcronym = (Element) modAcronymNode;
+            modAcronym.setAttribute("class", "cls-112");
+            modAcronym.setAttribute("transform", "translate(940 107)");
+            modAcronym.setAttribute("text-anchor", "middle");
+            modAcronym.setTextContent(modList.get(i).getAcronym());
+
+            modSingle.appendChild(rectBG);
+            modSingle.appendChild(modAcronym);
+            modSingle.setAttribute("transform", "translate(" + -35*i  + " 0)");
+            sectionFull.appendChild(modSingleNode);
+        }
+        return doc;
     }
 
     public static Document createBpCard(PlayerInfoVO player, List<ScoreVO> scoreArray, Integer offset, Integer type, String infoMsg) throws IOException{

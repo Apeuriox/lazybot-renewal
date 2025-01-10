@@ -1,10 +1,17 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import me.aloic.lazybot.entity.DiamondShape;
+import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreLazerVO;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.TrackService;
 import me.aloic.lazybot.parameter.GeneralParameter;
+import me.aloic.lazybot.parameter.TopScoresParameter;
 import me.aloic.lazybot.util.DataObjectExtractor;
+import me.aloic.lazybot.util.TransformerUtil;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -23,10 +30,8 @@ import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -165,6 +170,25 @@ public class TrackServiceImpl implements TrackService
             }
         }
         return result;
+    }
+
+    public byte[] bestPlaysInGamemode(TopScoresParameter params)
+    {
+        List<BestPlay> bestPlayList=DataObjectExtractor.extractOsuTrackBestPlay(params.getLimit(),params.getMode().getValue());
+        List<ScoreLazerDTO> listOfScores=new ArrayList<>();
+        for(BestPlay bestPlay:bestPlayList)
+        {
+            List<ScoreLazerDTO> scoreVOList = DataObjectExtractor.extractBeatmapUserScoreAll(
+                    params.getAccessToken().getAccess_token(),
+                    bestPlay.getBeatmap_id(),
+                    bestPlay.getUser(),
+                    params.getMode().getDescribe());
+            scoreVOList.sort(Comparator.comparing(ScoreLazerDTO::getPp).reversed());
+            listOfScores.add(scoreVOList.getFirst());
+        }
+        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores);
+
+        return null;
     }
 
 }

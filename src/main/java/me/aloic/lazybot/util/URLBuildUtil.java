@@ -13,22 +13,34 @@ public class URLBuildUtil
     public static String buildURLOfBeatmapScore(String beatmapId, String playerId, String mode)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.BASE_URL, CharsetUtil.CHARSET_UTF_8);
-        builder.addPath("beatmaps");
-        builder.addPath(beatmapId);
-        builder.addPath("scores");
-        builder.addPath("users");
-        builder.addPath(playerId);
-        builder.addQuery("mode", mode);
+        builder.addPath("beatmaps")
+                .addPath(beatmapId)
+                .addPath("scores")
+                .addPath("users")
+                .addPath(playerId)
+                .addQuery("mode", mode);
+        return builder.build();
+    }
+    public static String buildURLOfBeatmapScoreAll(String beatmapId, String playerId, String mode)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.BASE_URL, CharsetUtil.CHARSET_UTF_8);
+        builder.addPath("beatmaps")
+                .addPath(beatmapId)
+                .addPath("scores")
+                .addPath("users")
+                .addPath(playerId)
+                .addPath("all")
+                .addQuery("ruleset", mode);
         return builder.build();
     }
     public static String buildURLOfBeatmapScore(String beatmapId, String playerId,String[] modsArray,String mode)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.BASE_URL, CharsetUtil.CHARSET_UTF_8);
-        builder.addPath("beatmaps");
-        builder.addPath(beatmapId);
-        builder.addPath("scores");
-        builder.addPath("users");
-        builder.addPath(playerId);
+        builder.addPath("beatmaps")
+                .addPath(beatmapId)
+                .addPath("scores")
+                .addPath("users")
+                .addPath(playerId);
         for (String s : modsArray)
         {
             builder.addQuery("mods[]", s);
@@ -158,6 +170,24 @@ public class URLBuildUtil
         builder.addPath("hiscores");
         builder.addQuery("user", playerId);
         builder.addQuery("mode", mode);
+        return builder.build();
+    }
+    public static String buildURLOfOsuTrackBestPlays(Integer limit,Integer mode)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.OSU_TRACK_BASE_URL, CharsetUtil.CHARSET_UTF_8);
+        builder.addPath("bestplays");
+        builder.addQuery("limit", limit);
+        builder.addQuery("mode", mode);
+        return builder.build();
+    }
+    public static String buildURLOfOsuTrackBestPlays(Integer limit,Integer mode,String from,String to)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.OSU_TRACK_BASE_URL, CharsetUtil.CHARSET_UTF_8);
+        builder.addPath("bestplays");
+        builder.addQuery("limit", limit);
+        builder.addQuery("mode", mode);
+        builder.addQuery("from", from);
+        builder.addQuery("to", to);
         return builder.build();
     }
 

@@ -106,6 +106,39 @@ public class TransformerUtil
         }
         return scoreVO;
     }
+    public static List<ScoreSequence> scoreSequenceListTransform(List<ScoreLazerDTO> scoreLazerDTOS)
+    {
+        List<ScoreSequence> scoreSequences=new ArrayList<>();
+        for (int i=0;i<scoreLazerDTOS.size();i++) {
+            ScoreSequence temp = new ScoreSequence();
+            temp.setScore(scoreLazerDTOS.get(i).getClassic_total_score());
+            temp.setAccuracy(scoreLazerDTOS.get(i).getAccuracy());
+            temp.setModList(scoreLazerDTOS.get(i).getMods());
+            temp.setAchievedTime(scoreLazerDTOS.get(i).getEnded_at());
+            temp.setMaxCombo(scoreLazerDTOS.get(i).getMax_combo());
+            temp.setPositionInList(i);
+            temp.setPp(scoreLazerDTOS.get(i).getPp());
+            if(scoreLazerDTOS.get(i).getPassed()) {
+                temp.setRank(scoreLazerDTOS.get(i).getRank());
+            }
+            else {
+                temp.setRank("F");
+            }
+            //do not download avatar here
+            temp.setAvatarUrl(scoreLazerDTOS.get(i).getUser().getAvatar_url());
+            temp.setPlayerName(scoreLazerDTOS.get(i).getUser().getUsername());
+            temp.setIsLazer(scoreLazerDTOS.get(i).getLegacy_total_score() == 0);
+            temp.setStatistics(scoreLazerDTOS.get(i).getStatistics());
+            temp.setBeatmap(TransformerUtil.beatmapTransform(scoreLazerDTOS.get(i).getBeatmap(), scoreLazerDTOS.get(i).getBeatmapset()));
+            temp.setRulesetId(scoreLazerDTOS.get(i).getRuleset_id());
+            temp.setIsPerfectCombo(scoreLazerDTOS.get(i).getIs_perfect_combo());
+            temp.setDifferenceBetweenNextScore((int) Math.round(scoreLazerDTOS.size()>i+1?(scoreLazerDTOS.get(i).getPp()-scoreLazerDTOS.get(i+1).getPp()):0));
+            scoreSequences.add(temp);
+        }
+        return scoreSequences;
+    }
+
+
     public static BeatmapVO beatmapTransform(BeatmapDTO beatmapDTO){
         BeatmapVO beatmapVO=new BeatmapVO();
         beatmapVO.setAccuracy(beatmapDTO.getAccuracy()); //od

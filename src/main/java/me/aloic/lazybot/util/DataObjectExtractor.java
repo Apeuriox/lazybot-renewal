@@ -2,6 +2,7 @@ package me.aloic.lazybot.util;
 
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -58,6 +59,15 @@ public class DataObjectExtractor
         return beatmapUserScoreLazer;
     }
 
+    public static List<ScoreLazerDTO> extractBeatmapUserScoreAll(String accessToken, Integer beatmapId, Integer playerId, String mode)
+    {
+        List<ScoreLazerDTO> scoreLazerDTOS = new ApiRequestStarter(URLBuildUtil.buildURLOfBeatmapScoreAll(String.valueOf(beatmapId), String.valueOf(playerId),mode),accessToken)
+                .executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, ScoreLazerDTO.class);
+        if(scoreLazerDTOS==null||scoreLazerDTOS.isEmpty())
+            throw new RuntimeException("没这成绩: BID=" +beatmapId + " player=" + playerId);
+        return scoreLazerDTOS;
+    }
+
     public static BeatmapDTO extractBeatmap(String accessToken, String beatmapId, String mode)
     {
         BeatmapDTO beatmapDTO = new ApiRequestStarter(URLBuildUtil.buildURLOfBeatmap(beatmapId,mode),accessToken)
@@ -93,5 +103,14 @@ public class DataObjectExtractor
             throw new RuntimeException("暂无数据");
         }
         return hitScoreVOs;
+    }
+    public static List<BestPlay> extractOsuTrackBestPlay(Integer limit, Integer mode)
+    {
+        ApiRequestStarter apiRequestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackBestPlays(limit,mode));
+        List<BestPlay> bestPlayList= apiRequestStarter.executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, BestPlay.class);
+        if(bestPlayList.isEmpty()) {
+            throw new RuntimeException("暂无数据");
+        }
+        return bestPlayList;
     }
 }
