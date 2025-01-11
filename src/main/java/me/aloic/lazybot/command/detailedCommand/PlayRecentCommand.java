@@ -1,8 +1,8 @@
-package me.aloic.lazybot.discord.command.detailedCommand;
+package me.aloic.lazybot.command.detailedCommand;
 
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
-import me.aloic.lazybot.discord.command.LazybotSlashCommand;
+import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
@@ -15,17 +15,16 @@ import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"re"})
+@LazybotCommandMapping({"pr","playrecent"})
 @Component
-public class RecentCommand implements LazybotSlashCommand
+public class PlayRecentCommand implements LazybotSlashCommand
 {
     @Resource
     private PlayerService playerService;
     @Resource
     private TokenMapper tokenMapper;
-
     @Override
-    public void execute(SlashCommandInteractionEvent event)
+    public void executeDiscord(SlashCommandInteractionEvent event)
     {
         event.deferReply().queue();
         UserTokenPO accessToken=tokenMapper.selectByDiscord(0L);
@@ -42,6 +41,6 @@ public class RecentCommand implements LazybotSlashCommand
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,0));
+        ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,1));
     }
 }

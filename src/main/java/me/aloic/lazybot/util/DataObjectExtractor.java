@@ -2,10 +2,15 @@ package me.aloic.lazybot.util;
 
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
+import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
+import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMod;
+import me.aloic.lazybot.osu.enums.OsuMode;
 
 import java.util.List;
 
@@ -17,6 +22,15 @@ public class DataObjectExtractor
         PlayerInfoDTO playerInfoDTO = requestStarter.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
         if(playerInfoDTO.getId()==null) {
             throw new RuntimeException("没这B人: " + playerName);
+        }
+        return playerInfoDTO;
+    }
+    public static PlayerInfoDTO extractPlayerInfo(String accessToken, Integer playerId, String mode)
+    {
+        ApiRequestStarter requestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerInfo(playerId,mode),accessToken);
+        PlayerInfoDTO playerInfoDTO = requestStarter.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
+        if(playerInfoDTO.getId()==null) {
+            throw new RuntimeException("没这B人: " + playerId);
         }
         return playerInfoDTO;
     }
@@ -55,6 +69,12 @@ public class DataObjectExtractor
         return beatmapUserScoreLazer;
     }
 
+    public static List<ScoreLazerDTO> extractBeatmapUserScoreAll(String accessToken, Integer beatmapId, Integer playerId, String mode)
+    {
+        return new ApiRequestStarter(URLBuildUtil.buildURLOfBeatmapScoreAll(String.valueOf(beatmapId), String.valueOf(playerId),mode),accessToken)
+                .executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, BeatmapUserScores.class).getScores();
+    }
+
     public static BeatmapDTO extractBeatmap(String accessToken, String beatmapId, String mode)
     {
         BeatmapDTO beatmapDTO = new ApiRequestStarter(URLBuildUtil.buildURLOfBeatmap(beatmapId,mode),accessToken)
@@ -81,5 +101,23 @@ public class DataObjectExtractor
             throw new RuntimeException("没这成绩: " +"index=" + offset+1 + " player=" + playerId);
         }
         return scoreLazerDTOS;
+    }
+    public static List<HitScoreVO> extractOsuTrackHitScoreList(Integer playerId, String mode)
+    {
+        ApiRequestStarter apiRequestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackScore(playerId, OsuMode.getMode(mode).getValue()));
+        java.util.List<HitScoreVO> hitScoreVOs= TransformerUtil.HitScoreTransform(apiRequestStarter.executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, HitScore.class));
+        if(hitScoreVOs.isEmpty()) {
+            throw new RuntimeException("暂无数据");
+        }
+        return hitScoreVOs;
+    }
+    public static List<BestPlay> extractOsuTrackBestPlay(Integer limit, Integer mode)
+    {
+        ApiRequestStarter apiRequestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackBestPlays(limit,mode));
+        List<BestPlay> bestPlayList= apiRequestStarter.executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, BestPlay.class);
+        if(bestPlayList.isEmpty()) {
+            throw new RuntimeException("暂无数据");
+        }
+        return bestPlayList;
     }
 }

@@ -64,7 +64,26 @@ public enum CommandEnum {
             List.of( new CommandOption(OptionType.STRING, "user", "指定用户", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
                     new CommandOption(OptionType.STRING, "days", "限定查询天数", false, false))),
-
+    CARD(13, "card", "生成指定玩家的card", true,
+            List.of( new CommandOption(OptionType.STRING, "user", "指定用户", false, false),
+                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
+    NAME_TO_ID(14, "nametoid", "将指定玩家名序列转化为UID", true,
+            List.of( new CommandOption(OptionType.STRING, "list", "指定玩家名列表，分隔符为 , ", true, false))),
+    PP_MAP(15, "ppmap", "查询Osu track数据并绘制散点图", true,
+            List.of( new CommandOption(OptionType.STRING, "user", "指定用户", false, false),
+                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
+    RECOMMEND_DIFFICULTY(16, "rd", "查询指定模式下的推荐星数", true,
+            List.of( new CommandOption(OptionType.STRING, "user", "指定用户", false, false),
+                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
+    BP_IF(17, "bpif", "按照指定mod重算全部bp", true,
+            List.of( new CommandOption(OptionType.STRING, "operator", "指定运算符: +为插入, -为删除, ！为替换", true, false),
+                    new CommandOption(OptionType.STRING, "mods", "指定mod组合，使用缩写且不含空格，例: HDHR, 冲突以及重复添加会被忽略", true, false),
+                    new CommandOption(OptionType.STRING, "user", "指定用户", false, false),
+                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
+                    new CommandOption(OptionType.STRING, "rendersize", "指定输出图形最多渲染数量，默认30", false, false))),
+    TOP_SCORES(18, "topscores", "查询指定模式下的最高PP成绩", true,
+          List.of( new CommandOption(OptionType.STRING, "mode", "指定模式", false, false),
+                    new CommandOption(OptionType.STRING, "limit", "指定最大显示数量，默认为10", false, false))),
     ;
     private final Integer id;
 

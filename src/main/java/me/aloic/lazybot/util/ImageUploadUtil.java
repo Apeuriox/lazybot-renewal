@@ -13,11 +13,9 @@ public class ImageUploadUtil
     {
         if (imageByteArray != null) {
             logger.info("Image size: {}", imageByteArray.length);
-            long startingTime = System.currentTimeMillis();
             ByteArrayInputStream inputStream = new ByteArrayInputStream(imageByteArray);
             FileUpload fileUpload = FileUpload.fromData(inputStream, "lazybot-image.png");
             event.getHook().sendFiles(fileUpload).queue();
-            logger.info("Upload cost:{}ms", System.currentTimeMillis() - startingTime);
         } else {
             event.getHook().sendMessage("Failed to render image.").setEphemeral(true).queue();
         }

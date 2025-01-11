@@ -17,5 +17,9 @@ public interface PlayerService
 
     byte[] bpvs(BpvsParameter params)throws Exception;
 
-    byte[] noChoke(NoChokeParameter params, int type) throws Exception;
+    byte[] noChoke(GeneralParameter params, int type) throws Exception;
+
+    byte[] card(GeneralParameter params) throws Exception;
+
+    String nameToId(NameToIdParameter params) throws Exception;
 }

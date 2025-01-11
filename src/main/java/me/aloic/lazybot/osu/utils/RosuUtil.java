@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.utils;
 import cn.hutool.json.JSONUtil;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import org.spring.osu.OsuMode;
 import org.spring.osu.extended.rosu.JniBeatmap;
@@ -16,12 +17,16 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RosuUtil
 {
     public static PerformanceVO getPPStats(Path pathToOsuFile, ScoreVO scoreVO) throws IOException {
         return getPPStats(pathToOsuFile, JSONUtil.toJsonStr(scoreVO.getModJSON()) ,scoreVO.getStatistics(),scoreVO.getMode(),scoreVO.getMaxCombo(),scoreVO.getIsLazer());
+    }
+    public static PerformanceVO getPPStats(Path pathToOsuFile, ScoreSequence scoreSequence) throws IOException {
+        return getPPStats(pathToOsuFile, JSONUtil.toJsonStr(scoreSequence.getModList()) ,scoreSequence.getStatistics(), String.valueOf(scoreSequence.getRulesetId()),scoreSequence.getMaxCombo(),scoreSequence.getIsLazer());
     }
 
 
@@ -70,45 +75,45 @@ public class RosuUtil
         JniPerformance performance=beatmap.createPerformance();
         if(maxCombo!=0)
             performance.setCombo(maxCombo);
-        OsuMode osuMode=convertMode(mode);
+        OsuMode osuMode=me.aloic.lazybot.osu.enums.OsuMode.convertMode(mode);
         performance.setMods(modJSON,osuMode);
         JniPerformanceAttributes rosuResult;
         switch (osuMode)
         {
             case Osu:
-                performance.setN300(statistics.getGreat());
-                performance.setN100(statistics.getOk());
-                performance.setN50(statistics.getMeh());
+                performance.setN300(Optional.ofNullable(statistics.getGreat()).orElse(0));
+                performance.setN100(Optional.ofNullable(statistics.getOk()).orElse(0));
+                performance.setN50(Optional.ofNullable(statistics.getMeh()).orElse(0));
                 if(maxCombo!=0)
-                    performance.setMisses(statistics.getMiss());
+                    performance.setMisses(Optional.ofNullable(statistics.getMiss()).orElse(0));
                 performance.setLazer(isLazerScore);
                 if(isLazerScore) {
-                    performance.setLargeTick(statistics.getLarge_tick_hit());
-                    performance.setSliderEnds(statistics.getSlider_tail_hit());
+                    performance.setLargeTick(Optional.ofNullable(statistics.getLarge_tick_hit()).orElse(0));
+                    performance.setSliderEnds(Optional.ofNullable(statistics.getSlider_tail_hit()).orElse(0));
                 }
                 rosuResult= performance.calculate();
                 break;
             case Taiko:
-                performance.setN300(statistics.getGreat());
-                performance.setN100(statistics.getOk());
+                performance.setN300(Optional.ofNullable(statistics.getGreat()).orElse(0));
+                performance.setN100(Optional.ofNullable(statistics.getOk()).orElse(0));
                 if(maxCombo!=0)
-                    performance.setMisses(statistics.getMiss());
+                    performance.setMisses(Optional.ofNullable(statistics.getMiss()).orElse(0));
                 rosuResult= performance.calculate();
                 break;
             case Mania:
-                performance.setGeki(statistics.getPerfect());
-                performance.setN300(statistics.getGreat());
-                performance.setKatu(statistics.getGood());
-                performance.setN100(statistics.getOk());
-                performance.setN50(statistics.getMeh());
-                performance.setMisses(statistics.getMiss());
+                performance.setGeki(Optional.ofNullable(statistics.getPerfect()).orElse(0));
+                performance.setN300(Optional.ofNullable(statistics.getGreat()).orElse(0));
+                performance.setKatu(Optional.ofNullable(statistics.getGood()).orElse(0));
+                performance.setN100(Optional.ofNullable(statistics.getOk()).orElse(0));
+                performance.setN50(Optional.ofNullable(statistics.getMeh()).orElse(0));
+                performance.setMisses(Optional.ofNullable(statistics.getMiss()).orElse(0));
                 rosuResult= performance.calculate();
                 break;
             case Catch:
-                performance.setN300(statistics.getGreat());
-                performance.setLargeTick(statistics.getLarge_tick_hit());
+                performance.setN300(Optional.ofNullable(statistics.getGreat()).orElse(0));
+                performance.setLargeTick(Optional.ofNullable(statistics.getLarge_tick_hit()).orElse(0));
                 if(maxCombo!=0)
-                    performance.setMisses(statistics.getSmall_bonus());
+                    performance.setMisses(Optional.ofNullable(statistics.getSmall_bonus()).orElse(0));
                 rosuResult= performance.calculate();
                 break;
             default:
@@ -124,7 +129,7 @@ public class RosuUtil
     private static double getIfFc(JniBeatmap beatmap,String modJSON,String mode,double accuracy,boolean isLazerScore)
     {
         JniPerformance performance = beatmap.createPerformance();
-        performance.setMods(modJSON,convertMode(mode));
+        performance.setMods(modJSON,me.aloic.lazybot.osu.enums.OsuMode.convertMode(mode));
         performance.setAcc(accuracy);
         performance.setLazer(isLazerScore);
         return performance.calculate().getPP();
@@ -143,10 +148,10 @@ public class RosuUtil
     {
         List<Double> result=new ArrayList<>();
         JniPerformance performance = beatmap.createPerformance();
-        performance.setMode(convertMode(mode));
+        performance.setMode(me.aloic.lazybot.osu.enums.OsuMode.convertMode(mode));
         performance.setLazer(isLazerScore);
         performance.setAcc(100.0);
-        performance.setMods(modJSON,convertMode(mode));
+        performance.setMods(modJSON,me.aloic.lazybot.osu.enums.OsuMode.convertMode(mode));
         JniPerformanceAttributes rosuResult=performance.calculate();
         if (rosuResult instanceof OsuPerformanceAttributes) {
             OsuPerformanceAttributes osu=(OsuPerformanceAttributes) rosuResult;
@@ -162,32 +167,5 @@ public class RosuUtil
             result.add(0.0);
         }
         return result;
-    }
-    private static OsuMode convertMode(String mode)
-    {
-        String modeStr=mode.trim().toUpperCase();
-        switch(modeStr){
-            case "OSU":
-            case "0":
-            case "O":
-            case "STD":
-                return OsuMode.Osu;
-            case "TAIKO":
-            case "1":
-            case "T":
-                return OsuMode.Taiko;
-            case "CATCH":
-            case "2":
-            case "C":
-            case "FRUITS":
-            case "F":
-                return OsuMode.Catch;
-            case "MANIA":
-            case "3":
-            case "M":
-                return OsuMode.Mania;
-            default:
-                return OsuMode.Default;
-        }
     }
 }

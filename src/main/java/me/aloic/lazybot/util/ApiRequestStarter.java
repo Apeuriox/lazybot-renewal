@@ -72,7 +72,6 @@ public class ApiRequestStarter
             headers = new HashMap<>();
         setDefaultHeaders();
         headers.put(headerName, content);
-
     }
 
     /**
@@ -100,12 +99,24 @@ public class ApiRequestStarter
         bodies.put(bodyName, obj);
     }
 
+
     /**
      * osu oauth相关header 添加后可根据token自动查询对应player信息
      * @param token
      */
     public void setOauth(String token){
         addHeader("Authorization", String.format("Bearer %s", token));
+    }
+
+    public ApiRequestStarter withOauth(String token) {
+        return withHeader("Authorization", "Bearer " + token);
+    }
+    public ApiRequestStarter withHeader(String name, String value) {
+        if(headers == null) {
+            headers = new HashMap<>();
+        }
+        headers.put(name, value);
+        return this;
     }
 
 
@@ -191,6 +202,10 @@ public class ApiRequestStarter
                 try {
                     HttpResponse response = HttpUtil.createGet(url.toString()).addHeaders(headers).execute();
 //                    handleHttpCode(response.getStatus());
+                    if(response.getStatus()==404) {
+                        logger.warn("<list> GET {} NOT FOUND, skipping", this.getUrl());
+                        return new ArrayList<>();
+                    }
                     List<T> res = JSON.parseArray(response.body(), resultClass);
                     response.close();
                     logger.info("<list> GET {} successfully with code of {}", this.getUrl(), response.getStatus());

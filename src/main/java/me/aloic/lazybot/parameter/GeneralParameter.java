@@ -5,14 +5,14 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class NoChokeParameter extends LazybotCommandParameter
+public class GeneralParameter extends LazybotCommandParameter
 {
     @Override
     public void validateParams()
     {
 
     }
-    public NoChokeParameter(String playerName,String mode)
+    public GeneralParameter(String playerName, String mode)
     {
         this.setPlayerName(playerName);
         this.setMode(mode);

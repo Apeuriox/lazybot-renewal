@@ -14,9 +14,6 @@ public class BplistParameter extends LazybotCommandParameter
 
     public BplistParameter(String playerName, String mode, Integer from, Integer to)
     {
-        if(from>to) {
-            throw new IllegalArgumentException("from must be less than to");
-        }
         this.setPlayerName(playerName);
         this.setMode(mode);
         this.from=from;
@@ -32,7 +29,7 @@ public class BplistParameter extends LazybotCommandParameter
         if (from>=to){
             throw new IllegalArgumentException("{FROM} must be less than {TO}");
         }
-        if (from<=0||to<=0) {
+        if (from<=0) {
             throw new IllegalArgumentException("{FROM} and {TO} must be greater than 0");
         }
     }

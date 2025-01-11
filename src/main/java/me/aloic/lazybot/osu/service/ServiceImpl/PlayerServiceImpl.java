@@ -9,8 +9,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.*;
-import me.aloic.lazybot.util.DataObjectExtractor;
-import me.aloic.lazybot.util.TransformerUtil;
+import me.aloic.lazybot.util.*;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -102,7 +101,7 @@ public class PlayerServiceImpl implements PlayerService
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createCompareBpList(playerInfoDTO,comparePlayerInfoDTO,TransformerUtil.scoreTransformForArray(scoreDTOS),TransformerUtil.scoreTransformForArray(compareScoreDTOS)));
     }
     @Override
-    public byte[] noChoke(NoChokeParameter params, int type) throws Exception
+    public byte[] noChoke(GeneralParameter params, int type) throws Exception
     {
         PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode());
         List<ScoreLazerDTO> originalScoreArray=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken().getAccess_token(), String.valueOf(playerInfoDTO.getId()),100,0,params.getMode());
@@ -115,6 +114,28 @@ public class PlayerServiceImpl implements PlayerService
                     "All scores are recalculated with FC. Plz keep in mind that this may not reflect your skill correctly."));
         }
     }
+    @Override
+    public byte[] card(GeneralParameter params) throws Exception {
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode()));
+        playerInfoVO.setMode(params.getMode());
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoCard(playerInfoVO));
+    }
+    @Override
+    public String nameToId(NameToIdParameter params) {
+        StringBuilder builder = new StringBuilder();
+        for(String name:params.getTargets()){
+            ApiRequestStarter playerRequest = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerInfo(name),params.getAccessToken().getAccess_token());
+            PlayerInfoDTO playerInfoDTO = playerRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
+            if(playerInfoDTO.getId()==null){
+                builder.append(name).append(" --> ")
+                        .append("没这B人\n");
+            }
+            else {
+                builder.append(playerInfoDTO.getUsername()).append(" --> ").append(playerInfoDTO.getId()).append("\n");
+            }
+        }
 
+        return builder.toString();
+    }
 
 }
