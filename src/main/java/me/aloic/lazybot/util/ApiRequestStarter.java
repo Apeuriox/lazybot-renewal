@@ -202,6 +202,10 @@ public class ApiRequestStarter
                 try {
                     HttpResponse response = HttpUtil.createGet(url.toString()).addHeaders(headers).execute();
 //                    handleHttpCode(response.getStatus());
+                    if(response.getStatus()==404) {
+                        logger.warn("<list> GET {} NOT FOUND, skipping", this.getUrl());
+                        return new ArrayList<>();
+                    }
                     List<T> res = JSON.parseArray(response.body(), resultClass);
                     response.close();
                     logger.info("<list> GET {} successfully with code of {}", this.getUrl(), response.getStatus());

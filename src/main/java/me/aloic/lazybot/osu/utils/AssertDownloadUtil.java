@@ -10,14 +10,20 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.management.RuntimeMBeanException;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.concurrent.*;
 
 public class AssertDownloadUtil
@@ -27,13 +33,20 @@ public class AssertDownloadUtil
     private static final long ONE_MINUTE_IN_MS;
     private static final DelayQueue<DownloadTask> delayQueue;
     private static final ExecutorService executor;
+    private static final HttpClient httpClient;
+    private static final int MAX_RETRIES;
 
     static{
         MAX_DOWNLOADS_PER_MINUTE=64;
         ONE_MINUTE_IN_MS=60*1000;
         delayQueue=new DelayQueue<>();
-        executor=Executors.newScheduledThreadPool(2);
+        executor=Executors.newScheduledThreadPool(3);
+        httpClient = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+        MAX_RETRIES=3;
         initDownloadControl();
+
     }
     private static void initDownloadControl() {
         for (int i = 0; i < MAX_DOWNLOADS_PER_MINUTE; i++) {
@@ -44,7 +57,7 @@ public class AssertDownloadUtil
         Future<Void> downloadFuture = executor.submit(() -> {
             try {
                 delayQueue.take();
-                largeResourceDownload(targetUrl, desiredLocalPath);
+                fileDownloadJavaHttpClient(targetUrl, desiredLocalPath);
                 delayQueue.offer(new DownloadTask(ONE_MINUTE_IN_MS));
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -53,13 +66,13 @@ public class AssertDownloadUtil
             return null;
         });
         downloadFuture.get();
-        logger.info("Download completed for: {}", targetUrl);
+        logger.info("(QUEUE) Download completed for: {}", targetUrl);
     }
     private static void downloadResourceSmallQueue(String targetUrl, String desiredLocalPath) throws InterruptedException, ExecutionException {
         Future<Void> downloadFuture = executor.submit(() -> {
             try {
                 delayQueue.take();
-                resourceDownload(targetUrl, desiredLocalPath);
+                fileDownloadJavaHttpClient(targetUrl, desiredLocalPath);
                 delayQueue.offer(new DownloadTask(ONE_MINUTE_IN_MS));
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -120,7 +133,7 @@ public class AssertDownloadUtil
         }
         catch (Exception e)
         {
-            logger.error("地图下载失败: {}", e.getMessage());
+            logger.error("头像下载失败: {}", e.getMessage());
             throw new RuntimeException("下载线程出错: "+ e.getMessage());
         }
         return Paths.get(desiredLocalPath);
@@ -224,6 +237,36 @@ public class AssertDownloadUtil
     {
        return HttpUtil.downloadFile(targetUrl, FileUtil.file(desiredLocalPath));
     }
+    public static void fileDownloadJavaHttpClient(String targetUrl, String desiredLocalPath) throws Exception {
+        int attempt = 0;
+        while (attempt < MAX_RETRIES) {
+            try {
+                attempt++;
+                logger.info("尝试下载文件 (第 {} 次)： {}", attempt, targetUrl);
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(targetUrl))
+                        .timeout(Duration.ofSeconds(30))
+                        .GET()
+                        .build();
+                Path path = Path.of(desiredLocalPath);
+                HttpResponse<Path> response = httpClient.send(request, HttpResponse.BodyHandlers.ofFile(path));
+                if (response.statusCode() == 200) {
+                    logger.info("文件下载成功，保存路径：{}", desiredLocalPath);
+                    return;
+                } else {
+                    throw new RuntimeException("HTTP 状态码：" + response.statusCode());
+                }
+            } catch (Exception e) {
+                logger.warn("下载失败 (第 {} 次): {}", attempt, e.getMessage());
+                if (attempt >= MAX_RETRIES) {
+                    logger.error("重试三次后仍无法下载");
+                    throw new RuntimeException("三次重试后仍下载失败: " + e.getMessage());
+                }
+                Thread.sleep(2000);
+            }
+        }
+    }
+
 
     static class DownloadTask implements Delayed {
         private long delayTime;

@@ -48,6 +48,7 @@ public class DiscordEventListener extends ListenerAdapter
                 event.reply("找不到对应指令").setEphemeral(true).queue();
             }
             } catch (Exception e) {
+                e.printStackTrace();
                 ErrorResultHandler.createExceptionMessage(event, e);
             }
 

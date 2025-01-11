@@ -114,7 +114,7 @@ public class TransformerUtil
             temp.setScore(scoreLazerDTOS.get(i).getClassic_total_score());
             temp.setAccuracy(scoreLazerDTOS.get(i).getAccuracy());
             temp.setModList(scoreLazerDTOS.get(i).getMods());
-            temp.setAchievedTime(scoreLazerDTOS.get(i).getEnded_at());
+            temp.setAchievedTime(scoreLazerDTOS.get(i).getEnded_at().split("T")[0]);
             temp.setMaxCombo(scoreLazerDTOS.get(i).getMax_combo());
             temp.setPositionInList(i);
             temp.setPp(scoreLazerDTOS.get(i).getPp());
@@ -125,7 +125,6 @@ public class TransformerUtil
                 temp.setRank("F");
             }
             //do not download avatar here
-            temp.setAvatarUrl(scoreLazerDTOS.get(i).getUser().getAvatar_url());
             temp.setPlayerName(scoreLazerDTOS.get(i).getUser().getUsername());
             temp.setIsLazer(scoreLazerDTOS.get(i).getLegacy_total_score() == 0);
             temp.setStatistics(scoreLazerDTOS.get(i).getStatistics());

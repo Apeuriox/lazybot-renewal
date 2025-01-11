@@ -17,4 +17,9 @@ public class BestPlay implements Serializable
     private String rank;
     private String score_time;
     private String update_time;
+
+    public String getScoreKey()
+    {
+        return String.format("%d-%d", user, beatmap_id);
+    }
 }

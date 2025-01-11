@@ -8,13 +8,19 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 @Data
 public class TopScoresParameter extends LazybotCommandParameter
 {
-    private OsuMode mode;
+    private OsuMode ruleset;
     private Integer from;
     private Integer to;
     private Integer limit;
 
+    public TopScoresParameter(String mode,Integer limit)
+    {
+        this.limit=limit;
+        this.ruleset = OsuMode.getMode(mode);
+    }
+
     @Override
-    void validateParams()
+    public void validateParams()
     {
         if(limit<=0)
         {

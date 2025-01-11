@@ -5,6 +5,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
+import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
@@ -21,6 +22,15 @@ public class DataObjectExtractor
         PlayerInfoDTO playerInfoDTO = requestStarter.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
         if(playerInfoDTO.getId()==null) {
             throw new RuntimeException("没这B人: " + playerName);
+        }
+        return playerInfoDTO;
+    }
+    public static PlayerInfoDTO extractPlayerInfo(String accessToken, Integer playerId, String mode)
+    {
+        ApiRequestStarter requestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerInfo(playerId,mode),accessToken);
+        PlayerInfoDTO playerInfoDTO = requestStarter.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
+        if(playerInfoDTO.getId()==null) {
+            throw new RuntimeException("没这B人: " + playerId);
         }
         return playerInfoDTO;
     }
@@ -61,11 +71,8 @@ public class DataObjectExtractor
 
     public static List<ScoreLazerDTO> extractBeatmapUserScoreAll(String accessToken, Integer beatmapId, Integer playerId, String mode)
     {
-        List<ScoreLazerDTO> scoreLazerDTOS = new ApiRequestStarter(URLBuildUtil.buildURLOfBeatmapScoreAll(String.valueOf(beatmapId), String.valueOf(playerId),mode),accessToken)
-                .executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, ScoreLazerDTO.class);
-        if(scoreLazerDTOS==null||scoreLazerDTOS.isEmpty())
-            throw new RuntimeException("没这成绩: BID=" +beatmapId + " player=" + playerId);
-        return scoreLazerDTOS;
+        return new ApiRequestStarter(URLBuildUtil.buildURLOfBeatmapScoreAll(String.valueOf(beatmapId), String.valueOf(playerId),mode),accessToken)
+                .executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, BeatmapUserScores.class).getScores();
     }
 
     public static BeatmapDTO extractBeatmap(String accessToken, String beatmapId, String mode)
