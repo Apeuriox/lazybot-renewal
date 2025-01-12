@@ -1,4 +1,18 @@
-# Hello
+# lazybot-renewal
+---
+### Planned
+
+- implement Tencent official Api support</br>
+- refactor Svg utils</br>
+- improve render pipeline, add some queue or sth</br>
+---
+
+### About Image Generation
+
+- We use SVG as template panels
+- SVG setup: Apache Batik
+- SVG rendering: Resvg (batik can render SVG into PNG too, but way slower)
+---
 
 ### Before exploring
 
@@ -15,6 +29,11 @@ it will release static files (svg, png, etc) from the jar package to environment
 * [Resvg-JNI by Zh_jk](https://github.com/fantasyzhjk)</br>
     to install it, use the following command in maven:
 ```mvn install:install-file -Dfile=lib/resvg-jni-0.1.2.jar -DgroupId=me.aloic -DartifactId=resvg-jni -Dversion=0.1.2 -Dpackaging=jar```
+---
+### Technical Support
 
+- Graphic design: Slimezz, Aloic</br>
+- Developer: LazyChildren, Aloic
+- Feasibility: LazyChildren, Marisaya, -Spring Night-, Zh_jk, ATRI1024</br>
 
 
