@@ -84,6 +84,11 @@ public enum CommandEnum {
     TOP_SCORES(18, "topscores", "查询指定模式下的最高PP成绩", true,
           List.of( new CommandOption(OptionType.STRING, "mode", "指定模式", false, false),
                     new CommandOption(OptionType.STRING, "limit", "指定最大显示数量，默认为10", false, false))),
+    BP_CARD(19, "bpcard", "查询指定用户的指定from到to的bp，以卡片列表形式输出", true,
+            List.of(new CommandOption(OptionType.INTEGER, "from", "指定开始的位置", true, false),
+                    new CommandOption(OptionType.INTEGER, "to", "指定结束的位置", true, false),
+                    new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
+                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
     ;
     private final Integer id;
 

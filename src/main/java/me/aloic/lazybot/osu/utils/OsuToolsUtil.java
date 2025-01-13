@@ -6,10 +6,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.entity.vo.BeatmapVO;
-import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataObjectExtractor;
@@ -78,6 +75,27 @@ public class OsuToolsUtil
         }
         return scoreVOList;
     }
+    public static List<ScoreSequence> setUpImageStaticSequence(List<ScoreSequence> scoreSequences)
+    {
+        for(ScoreSequence scoreSequence:scoreSequences)
+        {
+            scoreSequence.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreSequence.getBeatmap().getBeatmapset_id()));
+            ModCalculatorUtil.setupBpmChange(scoreSequence);
+            try{
+                scoreSequence.setPpDetails(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid()), scoreSequence));
+                if (scoreSequence.getPpDetails().getStar() != null) {
+                    scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
+                }
+            }
+
+            catch (Exception e) {
+                throw new RuntimeException("重算成绩详情时出错: " + e.getMessage());
+            }
+        }
+        return scoreSequences;
+    }
+
+
     public static void setupFixedPPStats(ScoreVO scoreVO, boolean conditions)
     {
         if(conditions)

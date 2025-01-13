@@ -11,7 +11,9 @@ public interface PlayerService
 
     byte[] bp(BpParameter params) throws Exception;
 
-    byte[] bplist(BplistParameter params) throws Exception;
+    byte[] bplistCardView(BplistParameter params) throws Exception;
+
+    byte[] bplistListView(BplistParameter params) throws Exception;
 
     byte[] todayBp(TodaybpParameter params) throws Exception;
 
@@ -22,4 +24,5 @@ public interface PlayerService
     byte[] card(GeneralParameter params) throws Exception;
 
     String nameToId(NameToIdParameter params) throws Exception;
+
 }

@@ -5,6 +5,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.*;
@@ -54,7 +55,7 @@ public class PlayerServiceImpl implements PlayerService
         return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion());
     }
     @Override
-    public byte[] bplist(BplistParameter params) throws Exception
+    public byte[] bplistCardView(BplistParameter params) throws Exception
     {
         PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode());
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
@@ -136,6 +137,21 @@ public class PlayerServiceImpl implements PlayerService
         }
 
         return builder.toString();
+    }
+    @Override
+    public byte[] bplistListView(BplistParameter params) throws Exception
+    {
+        PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),params.getPlayerName(),params.getMode());
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(
+                params.getAccessToken().getAccess_token(),
+                String.valueOf(playerInfoDTO.getId()),
+                params.getTo()-params.getFrom()+1,
+                params.getFrom(),
+                params.getMode());
+        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS);
+        OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,info));
     }
 
 }

@@ -15,9 +15,9 @@ import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bplist"})
+@LazybotCommandMapping({"bpcard"})
 @Component
-public class BpListCommand implements LazybotSlashCommand
+public class BpCardCommand implements LazybotSlashCommand
 {
     @Resource
     private PlayerService playerService;
@@ -43,6 +43,6 @@ public class BpListCommand implements LazybotSlashCommand
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.bplistListView(params));
+        ImageUploadUtil.uploadImageToDiscord(event,playerService.bplistCardView(params));
     }
 }

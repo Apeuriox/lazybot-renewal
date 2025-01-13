@@ -23,5 +23,5 @@ public class PlayerInfoVO
     private Long totalPlayTime;
     private String avatarUrl;
     private String fixedPPString;
-
+    private String primaryColor;
 }

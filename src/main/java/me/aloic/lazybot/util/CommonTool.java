@@ -467,5 +467,52 @@ public class CommonTool {
         List<String> elements = Arrays.asList("HR","DT","HT","EZ","FL","NC","TD");
         return Arrays.stream(array).anyMatch(elements::contains);
     }
+    public static String hsvToHex(Integer hue)
+    {
+        return hsvToHex(hue,0.4F,1F);
+    }
+
+    /**
+     * 将 HSV 转换为 HEX 颜色表示
+     *
+     * @param h 色相（Hue），范围 0-360
+     * @param s 饱和度（Saturation），范围 0-1
+     * @param v 明度（Value），范围 0-1
+     * @return HEX 颜色表示（如 #RRGGBB）
+     */
+    public static String hsvToHex(float h, float s, float v) {
+        int r, g, b;
+
+        float c = v * s; // Chroma
+        float x = c * (1 - Math.abs((h / 60) % 2 - 1));
+        float m = v - c;
+
+        if (h < 60) {
+            r = Math.round((c + m) * 255);
+            g = Math.round((x + m) * 255);
+            b = Math.round(m * 255);
+        } else if (h < 120) {
+            r = Math.round((x + m) * 255);
+            g = Math.round((c + m) * 255);
+            b = Math.round(m * 255);
+        } else if (h < 180) {
+            r = Math.round(m * 255);
+            g = Math.round((c + m) * 255);
+            b = Math.round((x + m) * 255);
+        } else if (h < 240) {
+            r = Math.round(m * 255);
+            g = Math.round((x + m) * 255);
+            b = Math.round((c + m) * 255);
+        } else if (h < 300) {
+            r = Math.round((x + m) * 255);
+            g = Math.round(m * 255);
+            b = Math.round((c + m) * 255);
+        } else {
+            r = Math.round((c + m) * 255);
+            g = Math.round(m * 255);
+            b = Math.round((x + m) * 255);
+        }
+        return String.format("#%02X%02X%02X", r, g, b);
+    }
 
 }

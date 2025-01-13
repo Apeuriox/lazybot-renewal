@@ -31,7 +31,7 @@ public class UserCompactDTO implements Serializable {
 
     private Boolean pm_friends_only;
 
-    private String profile_colour;
+    private Integer profile_hue;
 
     private String username;
 

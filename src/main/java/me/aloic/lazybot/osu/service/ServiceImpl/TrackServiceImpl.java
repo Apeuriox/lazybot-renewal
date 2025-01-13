@@ -8,10 +8,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.service.TrackService;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
-import me.aloic.lazybot.osu.utils.RosuUtil;
-import me.aloic.lazybot.osu.utils.SVGRenderUtil;
-import me.aloic.lazybot.osu.utils.SvgUtil;
+import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TopScoresParameter;
 import me.aloic.lazybot.util.DataObjectExtractor;
@@ -214,14 +211,7 @@ public class TrackServiceImpl implements TrackService
         logger.info("存在成绩长度为: {}",listOfScores.size());
         List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores).stream().filter(scoreSequence -> scoreSequence.getDifferenceBetweenNextScore()>=0).toList();
         logger.info("最终过滤长度为: {}",scoreSequences.size());
-        for(ScoreSequence scoreSequence:scoreSequences)
-        {
-            scoreSequence.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreSequence.getBeatmap().getBeatmapset_id()));
-            scoreSequence.setPpDetails(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid()), scoreSequence));
-            if (scoreSequence.getPpDetails().getStar() != null) {
-                scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
-            }
-        }
+        OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned"));
     }
 
