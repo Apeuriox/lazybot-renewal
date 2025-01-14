@@ -10,7 +10,6 @@ import java.util.Objects;
 public class BpvsParameter extends LazybotCommandParameter
 {
     private String comparePlayerName;
-    private Integer comparePlayerId;
     public BpvsParameter(String playerName,String mode,String comparePlayerName)
     {
         this.setMode(mode);
@@ -22,9 +21,6 @@ public class BpvsParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if(comparePlayerName.equals(this.getPlayerName())) {
-            throw new IllegalArgumentException("You cannot compare with yourself");
-        }
-        if (Objects.equals(comparePlayerId, this.getPlayerInfo().getId())){
             throw new IllegalArgumentException("You cannot compare with yourself");
         }
     }

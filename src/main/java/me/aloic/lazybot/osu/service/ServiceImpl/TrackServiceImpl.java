@@ -73,7 +73,7 @@ public class TrackServiceImpl implements TrackService
     @Override
     public byte[] ppTimeMap(GeneralParameter params) throws Exception
     {
-        java.util.List<HitScoreVO> hitScoreVOs= DataObjectExtractor.extractOsuTrackHitScoreList(params.getPlayerInfo().getId(), params.getMode());
+        java.util.List<HitScoreVO> hitScoreVOs= DataObjectExtractor.extractOsuTrackHitScoreList(params.getPlayerId(), params.getMode());
         logger.info("ppMap转换后对象数量：{}", hitScoreVOs.size());
 
         ZonedDateTime dateTime1 = ZonedDateTime.parse(hitScoreVOs.getFirst().getScoreTimeJSON());

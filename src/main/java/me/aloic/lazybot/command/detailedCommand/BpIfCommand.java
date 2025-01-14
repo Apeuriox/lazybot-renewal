@@ -43,7 +43,7 @@ public class BpIfCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("operator"), "+"),
                 OptionMappingTool.getOptionOrDefault(event.getOption("mods"), ""),
                 OptionMappingTool.getOptionOrDefault(event.getOption("rendersize"), 30));
-        params.setPlayerInfo(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
+        params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,analysisService.bpIf(params));

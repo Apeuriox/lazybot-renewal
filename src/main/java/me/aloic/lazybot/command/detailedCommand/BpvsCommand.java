@@ -35,12 +35,9 @@ public class BpvsCommand implements LazybotSlashCommand
             return;
         }
         tokenPO.setAccess_token(accessToken.getAccess_token());
-        String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
-        BpvsParameter params=new BpvsParameter(playerName,
+        BpvsParameter params=new BpvsParameter(OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name()),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
-                OptionMappingTool.getOptionOrDefault(event.getOption("target"), playerName));
-        params.setPlayerInfo(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
-        params.setComparePlayerId(OsuToolsUtil.getUserIdByUsername(params.getComparePlayerName(),tokenPO.getAccess_token()));
+                OptionMappingTool.getOptionOrException(event.getOption("target"), "请输入对比对象"));
         params.setAccessToken(accessToken);
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.bpvs(params));

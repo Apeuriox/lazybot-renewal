@@ -35,12 +35,10 @@ public class BpListCommand implements LazybotSlashCommand
             return;
         }
         tokenPO.setAccess_token(accessToken.getAccess_token());
-        String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
-        BplistParameter params=new BplistParameter(playerName,
+        BplistParameter params=new BplistParameter(OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name()),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("from"), 0),
                 OptionMappingTool.getOptionOrDefault(event.getOption("to"), 1));
-        params.setPlayerInfo(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.bplistListView(params));

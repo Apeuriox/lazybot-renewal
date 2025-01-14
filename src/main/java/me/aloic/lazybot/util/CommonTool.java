@@ -520,11 +520,12 @@ public class CommonTool {
         return String.format("#%02X%02X%02X", r, g, b);
     }
 
-    public static String getAverageHSL(File imageFile) throws IOException
-    {
-        BufferedImage image = ImageIO.read(imageFile);
+    public static String getAverageColor(File imageFile) throws IOException {
+        BufferedImage image = resizeImage(ImageIO.read(imageFile), 100, 100);
+
         long totalR = 0, totalG = 0, totalB = 0;
         int pixelCount = 0;
+
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -532,6 +533,7 @@ public class CommonTool {
             for (int y = 0; y < height; y++) {
                 int rgb = image.getRGB(x, y);
 
+                // 忽略透明部分
                 if ((rgb >> 24) == 0x00) continue;
 
                 totalR += (rgb >> 16) & 0xFF;
@@ -540,10 +542,13 @@ public class CommonTool {
                 pixelCount++;
             }
         }
-        double avgR = totalR / (double) pixelCount;
-        double avgG = totalG / (double) pixelCount;
-        double avgB = totalB / (double) pixelCount;
-        return rgbToHsl(avgR, avgG, avgB);
+
+        // 计算平均值
+        int avgR = (int) (totalR / pixelCount);
+        int avgG = (int) (totalG / pixelCount);
+        int avgB = (int) (totalB / pixelCount);
+
+        return String.format("#%02X%02X%02X", avgR, avgG, avgB);
     }
     public static String getDominantHSLWithBins(File imageFile, int binSize) throws IOException {
         int dominantColor =  calcDominantColor(imageFile, binSize);

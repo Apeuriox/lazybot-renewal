@@ -9,7 +9,10 @@ public abstract class LazybotCommandParameter
 {
     private UserTokenPO accessToken;
     private String playerName;
-    private PlayerInfoDTO playerInfo;
+
+    private Integer playerId;
+
+    private PlayerInfoDTO infoDTO;
     private String mode;
 
     abstract void validateParams();

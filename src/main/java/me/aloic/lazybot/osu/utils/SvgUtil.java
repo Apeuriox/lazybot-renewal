@@ -683,10 +683,6 @@ public class SvgUtil
                         break;
                 }
             }
-            int imageAverageHue=CommonTool.getDominantHueWithBins(new File(targetScore.getBeatmap().getBgUrl()),12);
-            logger.info("图片Hue: {}, 用户Hue: {}",imageAverageHue,hue);
-            hue=Math.abs(imageAverageHue-hue)>20?imageAverageHue:hue;
-            if (imageAverageHue==361) hue=361;
 
             if(targetScore.getIsLazer()) {
                 doc.getElementById("lazer-label").setAttribute("opacity", "1");
