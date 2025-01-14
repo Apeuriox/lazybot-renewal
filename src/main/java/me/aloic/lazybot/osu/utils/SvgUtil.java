@@ -683,6 +683,11 @@ public class SvgUtil
                         break;
                 }
             }
+            int imageAverageHue=CommonTool.getDominantHueWithBins(new File(targetScore.getBeatmap().getBgUrl()),12);
+            logger.info("图片Hue: {}, 用户Hue: {}",imageAverageHue,hue);
+            hue=Math.abs(imageAverageHue-hue)>20?imageAverageHue:hue;
+            if (imageAverageHue==361) hue=361;
+
             if(targetScore.getIsLazer()) {
                 doc.getElementById("lazer-label").setAttribute("opacity", "1");
             }
@@ -848,7 +853,7 @@ public class SvgUtil
                 case Osu:
                 {
                     logger.info("Score Type: Osu");
-                    doc.getElementById("osu").setAttribute("fill", hue==333?"#988fcc":CommonTool.hslToHex(hue,0.4F,1F));
+                    doc.getElementById("osu").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-osu").setAttribute("opacity","1");
                     doc.getElementById("osuStatistics").setAttribute("opacity","1");
                     doc.getElementById("100Count-o").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
@@ -870,7 +875,7 @@ public class SvgUtil
                 case Taiko:
                 {
                     logger.info("Score Type: Taiko");
-                    doc.getElementById("taiko").setAttribute("fill", hue==333?"#988fcc":CommonTool.hslToHex(hue,0.4F,1F));
+                    doc.getElementById("taiko").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-taiko").setAttribute("opacity","1");
                     doc.getElementById("taikoStatistics").setAttribute("opacity","1");
                     doc.getElementById("150Count-t").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
@@ -888,7 +893,7 @@ public class SvgUtil
                 case Catch:
                 {
                     logger.info("Score Type: CTB");
-                    doc.getElementById("ctb").setAttribute("fill", hue==333?"#988fcc":CommonTool.hslToHex(hue,0.4F,1F));
+                    doc.getElementById("ctb").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-ctb").setAttribute("opacity","1");
                     doc.getElementById("fruitsStatistics").setAttribute("opacity","1");
                     doc.getElementById("300Count-f").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -910,7 +915,7 @@ public class SvgUtil
                 case Mania:
                 {
                     logger.info("Score Type: Mania");
-                    doc.getElementById("mania").setAttribute("fill", hue==333?"#988fcc":CommonTool.hslToHex(hue,0.4F,1F));
+                    doc.getElementById("mania").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-mania").setAttribute("opacity","1");
                     doc.getElementById("maniaStatistics").setAttribute("opacity","1");
                     doc.getElementById("maxCount-m").setTextContent(String.valueOf(targetScore.getStatistics().getPerfect()));
@@ -933,7 +938,7 @@ public class SvgUtil
                     break;
                 }
             }
-            if(hue!=333)
+            if(hue!=361)
                 setupoCustomColorForDarkmodeScore(doc,hue);
 
             doc.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));
@@ -960,7 +965,7 @@ public class SvgUtil
             {
                 wireModIconForDarkScore(doc,targetScore);
             }
-            logger.info("SVG elements changing cost (dark mode): " + (System.currentTimeMillis() - startingTime) + "ms");
+            logger.info("Batik SVG util cost (dark mode): " + (System.currentTimeMillis() - startingTime) + "ms");
             return doc;
         } catch (Exception e)
         {
@@ -1248,7 +1253,7 @@ public class SvgUtil
             Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(filePath.toFile().toURI().toString());
             Element svgRoot = doc.getDocumentElement();
             String totalHeight = String.valueOf(130 + 120 * scorelist.size());
-            String primaryColor = CommonTool.hslToHex(info.getPrimaryColor(),0.4f,1.0f);
+            String primaryColor = CommonTool.hsvToHex(info.getPrimaryColor(),0.4f,1.0f);
             svgRoot.setAttribute("height", totalHeight);
             doc.getElementById("background").setAttribute("height", totalHeight);
             doc.getElementById("footer").setAttribute("transform", "translate(0," + 120 * (scorelist.size() - 1) + ")");

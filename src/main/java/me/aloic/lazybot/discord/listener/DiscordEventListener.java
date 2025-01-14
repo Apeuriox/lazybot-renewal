@@ -22,20 +22,20 @@ public class DiscordEventListener extends ListenerAdapter
     @Resource
     private LazybotSlashCommandRegistry registry;
 
-    @Override
-    public void onMessageReceived(MessageReceivedEvent event)
-    {
-        if (event.getAuthor().isBot()) return;
-        Message message = event.getMessage();
-        String content = message.getContentRaw();
-        logger.info("接受消息 [{}] : [{}]",event.getAuthor().getName(),event.getMessage().getContentRaw());
-
-        if (content.equals("!ping"))
-        {
-            MessageChannel channel = event.getChannel();
-            channel.sendMessage("Pong!").queue();
-        }
-    }
+//    @Override
+//    public void onMessageReceived(MessageReceivedEvent event)
+//    {
+//        if (event.getAuthor().isBot()) return;
+//        Message message = event.getMessage();
+//        String content = message.getContentRaw();
+//        logger.info("接受消息 [{}] : [{}]",event.getAuthor().getName(),event.getMessage().getContentRaw());
+//
+//        if (content.equals("!ping"))
+//        {
+//            MessageChannel channel = event.getChannel();
+//            channel.sendMessage("Pong!").queue();
+//        }
+//    }
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event)
     {

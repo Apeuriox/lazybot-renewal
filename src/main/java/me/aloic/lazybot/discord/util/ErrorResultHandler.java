@@ -9,7 +9,7 @@ public class ErrorResultHandler
         event.getHook().sendMessage("您已绑定用户: " + user.getPlayer_name() ).queue();
     }
     public static void createNotBindOsuError(SlashCommandInteractionEvent event) {
-        event.getHook().sendMessage("您还为绑定Osu账号").queue();
+        event.getHook().sendMessage("您还未绑定Osu账号").queue();
     }
     public static void createNoSuchUserError(SlashCommandInteractionEvent event,String username) {
         event.getHook().sendMessage("此用户不存在: " + username).queue();

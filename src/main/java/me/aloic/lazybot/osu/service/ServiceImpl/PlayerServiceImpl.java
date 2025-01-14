@@ -30,7 +30,7 @@ public class PlayerServiceImpl implements PlayerService
                 String.valueOf(params.getBeatmapId()),params.getPlayerInfo().getId(),params.getMode(),params.getModCombination());
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(DataObjectExtractor.extractBeatmap(params.getAccessToken().getAccess_token(), String.valueOf(params.getBeatmapId()),params.getMode())
                 ,beatmapUserScoreLazer.getScore());
-        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(), Optional.ofNullable(params.getPlayerInfo().getProfile_hue()).orElse(333));
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(), Optional.ofNullable(params.getPlayerInfo().getProfile_hue()).orElse(251));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class PlayerServiceImpl implements PlayerService
                 params.getAccessToken().getAccess_token(),
                 String.valueOf(scoreList.get(params.getIndex()).getBeatmap_id()),params.getMode()),
                 scoreList.get(params.getIndex()-1));
-        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),Optional.ofNullable(params.getPlayerInfo().getProfile_hue()).orElse(333));
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),Optional.ofNullable(params.getPlayerInfo().getProfile_hue()).orElse(251));
     }
     @Override
     public byte[] bp(BpParameter params)
@@ -53,7 +53,7 @@ public class PlayerServiceImpl implements PlayerService
                         params.getAccessToken().getAccess_token(),
                         String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
                 scoreDTO.getFirst());
-        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),Optional.ofNullable(params.getPlayerInfo().getProfile_hue()).orElse(333));
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),Optional.ofNullable(params.getPlayerInfo().getProfile_hue()).orElse(251));
     }
     @Override
     public byte[] bplistCardView(BplistParameter params) throws Exception
