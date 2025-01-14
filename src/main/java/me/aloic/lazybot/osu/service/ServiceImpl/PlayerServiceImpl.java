@@ -127,7 +127,7 @@ public class PlayerServiceImpl implements PlayerService
             return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,2));
         }
         else {
-            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,4,
+            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,3,
                     "All scores are recalculated with FC. Plz keep in mind that this may not reflect your skill correctly."));
         }
     }
