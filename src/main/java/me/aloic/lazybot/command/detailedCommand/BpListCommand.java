@@ -40,7 +40,7 @@ public class BpListCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("from"), 0),
                 OptionMappingTool.getOptionOrDefault(event.getOption("to"), 1));
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
+        params.setPlayerInfo(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.bplistListView(params));

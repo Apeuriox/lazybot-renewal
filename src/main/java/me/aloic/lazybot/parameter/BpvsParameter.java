@@ -24,7 +24,7 @@ public class BpvsParameter extends LazybotCommandParameter
         if(comparePlayerName.equals(this.getPlayerName())) {
             throw new IllegalArgumentException("You cannot compare with yourself");
         }
-        if (Objects.equals(comparePlayerId, this.getPlayerId())){
+        if (Objects.equals(comparePlayerId, this.getPlayerInfo().getId())){
             throw new IllegalArgumentException("You cannot compare with yourself");
         }
     }

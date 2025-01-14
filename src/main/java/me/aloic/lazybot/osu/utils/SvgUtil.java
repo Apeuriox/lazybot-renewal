@@ -84,9 +84,9 @@ public class SvgUtil
         return outputName;
     }
 
-    public static OutputStream scoreToImageDarkApache(ScoreVO targetScore) throws TranscoderException, IOException
+    public static OutputStream scoreToImageDarkApache(ScoreVO targetScore, int hue) throws TranscoderException, IOException
     {
-        Document doc = getScorePanelDarkModeDoc(targetScore);
+        Document doc = getScorePanelDarkModeDoc(targetScore,hue);
         long startingTime = System.currentTimeMillis();
         TranscoderInput input = new TranscoderInput(doc);
         OutputStream o =svgToPng(input);
@@ -94,9 +94,9 @@ public class SvgUtil
         return o;
     }
 
-    public static String scoreToImageDarkURLApache(ScoreVO targetScore) throws TranscoderException, IOException
+    public static String scoreToImageDarkURLApache(ScoreVO targetScore, int hue) throws TranscoderException, IOException
     {
-        Document doc = getScorePanelDarkModeDoc(targetScore);
+        Document doc = getScorePanelDarkModeDoc(targetScore,hue);
         TranscoderInput input = new TranscoderInput(doc);
         String outputName = "score-dark-".concat(targetScore.getUser_name()).concat(".png");
         svgToPng(input, new File(outputName));
@@ -630,12 +630,12 @@ public class SvgUtil
         }
     }
 
-    public static Document getScorePanelDarkModeDoc(ScoreVO targetScore)
+    public static Document getScorePanelDarkModeDoc(ScoreVO targetScore,Integer hue)
     {
         long startingTime = System.currentTimeMillis();
         try
         {
-            Path filePath = ResourceMonitor.getResourcePath().resolve("static/scorePanelDarkmode.svg");
+            Path filePath = ResourceMonitor.getResourcePath().resolve("static/scorePanelDarkmode_customize.svg");
             URI inputUri = filePath.toFile().toURI();
             Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
             //此图片元素对应替换玩家的头像以及Beatmap的背景图
@@ -848,7 +848,8 @@ public class SvgUtil
                 case Osu:
                 {
                     logger.info("Score Type: Osu");
-                    doc.getElementById("osu").setAttribute("fill", "#988fcc");
+                    doc.getElementById("osu").setAttribute("fill", hue==333?"#988fcc":CommonTool.hslToHex(hue,0.4F,1F));
+                    doc.getElementById("label-osu").setAttribute("opacity","1");
                     doc.getElementById("osuStatistics").setAttribute("opacity","1");
                     doc.getElementById("100Count-o").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
                     doc.getElementById("300Count-o").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -869,7 +870,8 @@ public class SvgUtil
                 case Taiko:
                 {
                     logger.info("Score Type: Taiko");
-                    doc.getElementById("taiko").setAttribute("fill", "#988fcc");
+                    doc.getElementById("taiko").setAttribute("fill", hue==333?"#988fcc":CommonTool.hslToHex(hue,0.4F,1F));
+                    doc.getElementById("label-taiko").setAttribute("opacity","1");
                     doc.getElementById("taikoStatistics").setAttribute("opacity","1");
                     doc.getElementById("150Count-t").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
                     doc.getElementById("300Count-t").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -886,7 +888,8 @@ public class SvgUtil
                 case Catch:
                 {
                     logger.info("Score Type: CTB");
-                    doc.getElementById("ctb").setAttribute("fill", "#988fcc");
+                    doc.getElementById("ctb").setAttribute("fill", hue==333?"#988fcc":CommonTool.hslToHex(hue,0.4F,1F));
+                    doc.getElementById("label-ctb").setAttribute("opacity","1");
                     doc.getElementById("fruitsStatistics").setAttribute("opacity","1");
                     doc.getElementById("300Count-f").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
                     doc.getElementById("100Count-f").setTextContent(String.valueOf(targetScore.getStatistics().getLarge_tick_hit()));
@@ -907,7 +910,8 @@ public class SvgUtil
                 case Mania:
                 {
                     logger.info("Score Type: Mania");
-                    doc.getElementById("mania").setAttribute("fill", "#988fcc");
+                    doc.getElementById("mania").setAttribute("fill", hue==333?"#988fcc":CommonTool.hslToHex(hue,0.4F,1F));
+                    doc.getElementById("label-mania").setAttribute("opacity","1");
                     doc.getElementById("maniaStatistics").setAttribute("opacity","1");
                     doc.getElementById("maxCount-m").setTextContent(String.valueOf(targetScore.getStatistics().getPerfect()));
                     doc.getElementById("300Count-m").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -929,6 +933,8 @@ public class SvgUtil
                     break;
                 }
             }
+            if(hue!=333)
+                setupoCustomColorForDarkmodeScore(doc,hue);
 
             doc.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));
             doc.getElementById("length").setTextContent(CommonTool.formatHitLength(targetScore.getBeatmap().getAttributes().getLength()));
@@ -962,6 +968,19 @@ public class SvgUtil
             throw new RuntimeException(e);
         }
 
+    }
+    private static void setupoCustomColorForDarkmodeScore(Document doc, Integer hue){
+        doc.getElementById("label-left-background").setAttribute("fill",CommonTool.hslFormat(hue,12,22));
+        doc.getElementById("label-left-left-background").setAttribute("fill",CommonTool.hslFormat(hue,12,13));
+        doc.getElementById("label-artist").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-mapper").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-mapInfo").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-diff").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-title").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-mask-1").setAttribute("fill",CommonTool.hslFormat(hue,11,18));
+        doc.getElementById("label-mask-2").setAttribute("fill",CommonTool.hslFormat(hue,11,18));
+        doc.getElementById("label-mask-3").setAttribute("fill",CommonTool.hslFormat(hue,11,18));
+        doc.getElementById("label-header-bg").setAttribute("fill",CommonTool.hslFormat(hue,7,10));
     }
     private static void wireModIconForDarkScore(Document doc, ScoreVO targetScore)
     {
@@ -1212,6 +1231,7 @@ public class SvgUtil
             doc.getElementById("footer").setAttribute("transform", "translate(0," + 120 * (scorelist.size() - 1) + ")");
             doc.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("class", "cls-24");
+            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
             return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot);
         }
         catch (Exception e)
@@ -1228,6 +1248,7 @@ public class SvgUtil
             Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(filePath.toFile().toURI().toString());
             Element svgRoot = doc.getDocumentElement();
             String totalHeight = String.valueOf(130 + 120 * scorelist.size());
+            String primaryColor = CommonTool.hslToHex(info.getPrimaryColor(),0.4f,1.0f);
             svgRoot.setAttribute("height", totalHeight);
             doc.getElementById("background").setAttribute("height", totalHeight);
             doc.getElementById("footer").setAttribute("transform", "translate(0," + 120 * (scorelist.size() - 1) + ")");
@@ -1235,10 +1256,11 @@ public class SvgUtil
             doc.getElementById("playername").setTextContent(info.getPlayerName());
             doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", info.getAvatarUrl());
             doc.getElementById("totalPp").setTextContent(String.valueOf(Math.round(info.getPerformancePoint())));
-            doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("fill", info.getPrimaryColor());
-            doc.getElementById("playernameLabel").setAttribute("fill", info.getPrimaryColor());
-            doc.getElementById("totalPpLabel").setAttribute("fill", info.getPrimaryColor());
-            return setupBpListDetailedSingle(scorelist, info.getPrimaryColor(), doc, svgRoot);
+            doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("fill",primaryColor);
+            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
+            doc.getElementById("playernameLabel").setAttribute("fill", primaryColor);
+            doc.getElementById("totalPpLabel").setAttribute("fill", primaryColor);
+            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot);
         }
         catch (Exception e)
         {

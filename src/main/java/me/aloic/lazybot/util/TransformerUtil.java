@@ -41,7 +41,7 @@ public class TransformerUtil
         playerInfoVO.setPlayerName(playerInfoDTO.getUsername());
         playerInfoVO.setTotalPlayTime(playerInfoDTO.getStatistics().getPlay_time());
         playerInfoVO.setAvatarUrl(playerInfoDTO.getAvatar_url());
-        playerInfoVO.setPrimaryColor(CommonTool.hsvToHex(Optional.ofNullable(playerInfoDTO.getProfile_hue()).orElse(333)));
+        playerInfoVO.setPrimaryColor(Optional.ofNullable(playerInfoDTO.getProfile_hue()).orElse(333));
         return playerInfoVO;
 
     }

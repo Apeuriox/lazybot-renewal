@@ -36,7 +36,7 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
+        params.setPlayerInfo(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
         params.validateParams();
         event.getHook().sendMessage(analysisService.recommendedDifficulty(params)).queue();

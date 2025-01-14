@@ -39,8 +39,8 @@ public class BpCommand implements LazybotSlashCommand
         BpParameter params=new BpParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),
-                OptionMappingTool.getOptionOrDefault(event.getOption("index"), 0));
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
+                OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1));
+        params.setPlayerInfo(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.bp(params));

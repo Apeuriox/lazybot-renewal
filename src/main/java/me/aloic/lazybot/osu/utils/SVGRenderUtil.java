@@ -23,23 +23,23 @@ public class SVGRenderUtil
     }
 
 
-    public static OutputStream renderScoreToImage(ScoreVO targetScore, int version)
+    public static OutputStream renderScoreToImage(ScoreVO targetScore, int version, int hue)
     {
 
         Document doc;
         if (version==0)
             doc = SvgUtil.getScorePanelWhiteModeDoc(targetScore);
         else
-            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore);
+            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore,hue);
         return renderSVGToOutputstream(doc);
     }
-    public static byte[] renderScoreToByteArray(ScoreVO targetScore, int version)
+    public static byte[] renderScoreToByteArray(ScoreVO targetScore, int version,int hue)
     {
         Document doc;
         if (version==0)
             doc = SvgUtil.getScorePanelWhiteModeDoc(targetScore);
         else
-            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore);
+            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore,hue);
         return renderSVGDocumentToByteArray(doc);
     }
     public static OutputStream renderSVGToOutputstream(Document document)

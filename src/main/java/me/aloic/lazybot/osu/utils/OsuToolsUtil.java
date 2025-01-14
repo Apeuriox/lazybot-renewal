@@ -35,6 +35,10 @@ public class OsuToolsUtil
             playerId= OsuToolsUtil.getUserIdByUsername(username, tokenPO.getAccess_token());
         return playerId;
     }
+    public static PlayerInfoDTO getUserInfoByUsername(@Nonnull String username, @Nonnull UserTokenPO tokenPO)
+    {
+        return DataObjectExtractor.extractPlayerInfo(tokenPO.getAccess_token(),username,"osu");
+    }
     public static BeatmapVO setupBeatmapVO(BeatmapDTO beatmapDTO)
     {
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransform(beatmapDTO);

@@ -39,7 +39,7 @@ public class TodaybpCommand implements LazybotSlashCommand
         TodaybpParameter params=new TodaybpParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("days"), 1));
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
+        params.setPlayerInfo(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken);
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.todayBp(params));

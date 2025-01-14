@@ -39,7 +39,7 @@ public class BpvsCommand implements LazybotSlashCommand
         BpvsParameter params=new BpvsParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("target"), playerName));
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
+        params.setPlayerInfo(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
         params.setComparePlayerId(OsuToolsUtil.getUserIdByUsername(params.getComparePlayerName(),tokenPO.getAccess_token()));
         params.setAccessToken(accessToken);
         params.validateParams();

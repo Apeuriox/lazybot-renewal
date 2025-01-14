@@ -467,25 +467,25 @@ public class CommonTool {
         List<String> elements = Arrays.asList("HR","DT","HT","EZ","FL","NC","TD");
         return Arrays.stream(array).anyMatch(elements::contains);
     }
-    public static String hsvToHex(Integer hue)
+    public static String hslFormat(Integer hue, Integer saturation, Integer value)
     {
-        return hsvToHex(hue,0.4F,1F);
+        return String.format("hsl(%d,%d%%,%d%%)", hue, saturation, value);
     }
 
     /**
-     * 将 HSV 转换为 HEX 颜色表示
+     * 将 HSL 转换为 HEX 颜色表示
      *
      * @param h 色相（Hue），范围 0-360
      * @param s 饱和度（Saturation），范围 0-1
-     * @param v 明度（Value），范围 0-1
+     * @param l 明度（lightness），范围 0-1
      * @return HEX 颜色表示（如 #RRGGBB）
      */
-    public static String hsvToHex(float h, float s, float v) {
+    public static String hslToHex(float h, float s, float l) {
         int r, g, b;
 
-        float c = v * s; // Chroma
+        float c = l * s; // Chroma
         float x = c * (1 - Math.abs((h / 60) % 2 - 1));
-        float m = v - c;
+        float m = l - c;
 
         if (h < 60) {
             r = Math.round((c + m) * 255);
