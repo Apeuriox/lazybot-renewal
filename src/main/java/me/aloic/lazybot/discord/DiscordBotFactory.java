@@ -1,6 +1,6 @@
 package me.aloic.lazybot.discord;
 import jakarta.annotation.Resource;
-import me.aloic.lazybot.discord.listener.DiscordEventListener;
+import me.aloic.lazybot.component.EventListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -18,7 +18,7 @@ public class DiscordBotFactory
 
     private JDA instance;
     @Resource
-    private DiscordEventListener discordEventListener;
+    private EventListener discordEventListener;
 
 
     public JDA createBotInstance() {
