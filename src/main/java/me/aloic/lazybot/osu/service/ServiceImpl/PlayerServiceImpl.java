@@ -31,7 +31,7 @@ public class PlayerServiceImpl implements PlayerService
                 String.valueOf(params.getBeatmapId()),params.getPlayerId(),params.getMode(),params.getModCombination());
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(DataObjectExtractor.extractBeatmap(params.getAccessToken().getAccess_token(), String.valueOf(params.getBeatmapId()),params.getMode())
                 ,beatmapUserScoreLazer.getScore());
-        int imageAverageHue=CommonTool.getDominantHueWithBins(new File(scoreVO.getBeatmap().getBgUrl()),12);
+        int imageAverageHue=CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
         return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),imageAverageHue);
     }
 
@@ -46,7 +46,7 @@ public class PlayerServiceImpl implements PlayerService
                 String.valueOf(scoreList.get(params.getIndex()-1).getBeatmap_id()),params.getMode()),
                 scoreList.get(params.getIndex()-1));
         try{
-            int imageAverageHue=CommonTool.getDominantHueWithBins(new File(scoreVO.getBeatmap().getBgUrl()),12);
+            int imageAverageHue=CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
             return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),imageAverageHue);
         }
         catch (Exception e){
@@ -64,7 +64,7 @@ public class PlayerServiceImpl implements PlayerService
                         String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
                 scoreDTO.getFirst());
         try{
-            int imageAverageHue=CommonTool.getDominantHueWithBins(new File(scoreVO.getBeatmap().getBgUrl()),12);
+            int imageAverageHue=CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
             return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),imageAverageHue);
         }
         catch (Exception e){

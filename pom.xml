@@ -118,6 +118,13 @@
             <artifactId>jfreechart</artifactId>
             <version>1.5.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/de.androidpit/color-thief -->
+        <dependency>
+            <groupId>de.androidpit</groupId>
+            <artifactId>color-thief</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+
 
     </dependencies>
 

@@ -1,5 +1,6 @@
 package me.aloic.lazybot.util;
 
+import de.androidpit.colorthief.ColorThief;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import org.w3c.dom.Document;
@@ -610,9 +611,46 @@ public class CommonTool {
                 .get()
                 .getKey();
     }
-
+    public static int getDominantColorHue(File imageFile) throws IOException {
+        BufferedImage image = ImageIO.read(imageFile);
+        int[] dominantColor =  ColorThief.getColor(image);
+        return rgbToHue(dominantColor);
+    }
     private static String rgbToHsl(double r, double g, double b) {
         r /= 255.0;
+        g /= 255.0;
+        b /= 255.0;
+
+        double max = Math.max(r, Math.max(g, b));
+        double min = Math.min(r, Math.min(g, b));
+        double delta = max - min;
+
+        double l = (max + min) / 2;
+        double s = 0;
+        if (delta != 0) {
+            s = delta / (1 - Math.abs(2 * l - 1));
+        }
+
+        double h = 0;
+        if (delta != 0) {
+            if (max == r) {
+                h = 60 * ((g - b) / delta % 6);
+            } else if (max == g) {
+                h = 60 * ((b - r) / delta + 2);
+            } else if (max == b) {
+                h = 60 * ((r - g) / delta + 4);
+            }
+        }
+        if (h < 0) {
+            h += 360;
+        }
+        return String.format("hsl(%.0f, %.0f%%, %.0f%%)", h, s * 100, l * 100);
+    }
+    private static String rgbToHsl(int[] rgb) {
+        double r=rgb[0];
+        double g=rgb[1];
+        double b=rgb[2];
+        r/= 255.0;
         g /= 255.0;
         b /= 255.0;
 
@@ -651,6 +689,36 @@ public class CommonTool {
         double l = (max + min) / 2;
         if (l<0.04) return 361;
         if (l>0.92) return 361;
+        double h = 0;
+        if (delta != 0) {
+            if (max == r) {
+                h = 60 * ((g - b) / delta % 6);
+            } else if (max == g) {
+                h = 60 * ((b - r) / delta + 2);
+            } else if (max == b) {
+                h = 60 * ((r - g) / delta + 4);
+            }
+        }
+        if (h < 0) {
+            h += 360;
+        }
+        return (int) h;
+    }
+
+    private static Integer rgbToHue(int[] rgb) {
+        double r=rgb[0];
+        double g=rgb[1];
+        double b=rgb[2];
+        r/= 255.0;
+        g /= 255.0;
+        b /= 255.0;
+
+        double max = Math.max(r, Math.max(g, b));
+        double min = Math.min(r, Math.min(g, b));
+        double delta = max - min;
+        double l = (max + min) / 2;
+        if (l<0.04) return 361;
+        if (l>0.95) return 361;
         double h = 0;
         if (delta != 0) {
             if (max == r) {
