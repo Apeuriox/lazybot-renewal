@@ -34,7 +34,7 @@ public class ScoreParameter extends LazybotCommandParameter
         if(beatmapId<=0) {
             throw new IllegalArgumentException("illegal bid: " + beatmapId);
         }
-        if(modCombination.length()%2!=0) {
+        if(modCombination!=null && modCombination.length()%2!=0) {
             throw new IllegalArgumentException("invalid mod: " + modCombination);
         }
     }
