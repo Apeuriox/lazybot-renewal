@@ -739,5 +739,9 @@ public class CommonTool {
         resizedImage.getGraphics().drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
         return resizedImage;
     }
+    public static Boolean isPositiveInteger(String num)
+    {
+        return num.matches("[1-9][0-9]*");
+    }
 
 }

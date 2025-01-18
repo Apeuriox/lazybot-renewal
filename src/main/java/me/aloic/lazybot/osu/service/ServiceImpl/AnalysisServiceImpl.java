@@ -24,7 +24,7 @@ public class AnalysisServiceImpl implements AnalysisService
     public byte[] bpIf(BpifParameter params) throws IOException
     {
         PlayerInfoVO info= OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
-        List<ScoreLazerDTO> originalScoreArray=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken().getAccess_token(), String.valueOf(params.getInfoDTO().getId()),100,0,params.getMode());
+        List<ScoreLazerDTO> originalScoreArray=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(params.getInfoDTO().getId()),100,0,params.getMode());
         List<ScoreVO> scoreList=OsuToolsUtil.setupBpifScoreList(params,originalScoreArray,info);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreList.stream().limit(30).collect(Collectors.toList()),0,3,"/BpIf: Recalculate your Bps with desired mods. +mod to insert, -mod to remove, +mod! to replace."));
     }

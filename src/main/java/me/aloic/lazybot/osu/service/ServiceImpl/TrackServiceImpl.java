@@ -191,7 +191,7 @@ public class TrackServiceImpl implements TrackService
         for(BestPlay bestPlay:bestPlayListDistinct)
         {
             List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractBeatmapUserScoreAll(
-                    params.getAccessToken().getAccess_token(),
+                    params.getAccessToken(),
                     bestPlay.getBeatmap_id(),
                     bestPlay.getUser(),
                     params.getRuleset().getDescribe());
@@ -199,12 +199,12 @@ public class TrackServiceImpl implements TrackService
             {
                 scoreList.sort(Comparator.comparing(ScoreLazerDTO::getPp).reversed());
                 BeatmapDTO beatmapDTO=DataObjectExtractor.extractBeatmap(
-                        params.getAccessToken().getAccess_token(),
+                        params.getAccessToken(),
                         String.valueOf(bestPlay.getBeatmap_id()),
                         params.getRuleset().getDescribe());
                 scoreList.getFirst().setBeatmap(beatmapDTO);
                 scoreList.getFirst().setBeatmapset(beatmapDTO.getBeatmapset());
-                scoreList.getFirst().setUser(DataObjectExtractor.extractPlayerInfo(params.getAccessToken().getAccess_token(),bestPlay.getUser(),params.getRuleset().getDescribe()));
+                scoreList.getFirst().setUser(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),bestPlay.getUser(),params.getRuleset().getDescribe()));
                 listOfScores.add(scoreList.getFirst());
             }
         }

@@ -1,16 +1,18 @@
 package me.aloic.lazybot.command.detailedCommand;
 
+import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
+import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +23,13 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
     @Resource
     private AnalysisService analysisService;
     @Resource
-    private TokenMapper tokenMapper;
+    private DiscordTokenMapper discordTokenMapper;
     @Override
-    public void executeDiscord(SlashCommandInteractionEvent event) throws Exception
+    public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken=tokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = tokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
+        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
@@ -37,8 +39,14 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
-        params.setAccessToken(accessToken);
+        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         event.getHook().sendMessage(analysisService.recommendedDifficulty(params)).queue();
+    }
+
+    @Override
+    public void execute(Bot bot, LazybotSlashCommandEvent event)
+    {
+
     }
 }

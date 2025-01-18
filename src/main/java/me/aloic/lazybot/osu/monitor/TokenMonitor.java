@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.osu.dao.entity.dto.oauth.AccessTokenDTO;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.util.BeanCopierUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +30,8 @@ public class TokenMonitor
     private Integer clientId;
     @Value("${lazybot.client_secret}")
     private String clientSecret;
+    @Resource
+    private DiscordTokenMapper discordTokenMapper;
     @Resource
     private TokenMapper tokenMapper;
 
@@ -51,11 +56,18 @@ public class TokenMonitor
             UserTokenPO tokenPO = new UserTokenPO(tokenDTO.getRefresh_token(), tokenDTO.getAccess_token());
             tokenPO.setPlayer_name("CLIENT");
             tokenPO.setPlayer_id(0);
-            tokenPO.setQq_code(0L);
             tokenPO.setDiscord_code(0L);
-            Optional.ofNullable(tokenMapper.selectByDiscord(0L)).ifPresentOrElse(
-                    token -> tokenMapper.updateByToken(tokenPO),
-                    () -> tokenMapper.insert(tokenPO)
+            Optional.ofNullable(discordTokenMapper.selectByDiscord(0L)).ifPresentOrElse(
+                    token -> discordTokenMapper.updateByToken(tokenPO),
+                    () -> discordTokenMapper.insert(tokenPO)
+            );
+            AccessTokenPO accessTokenPO = new AccessTokenPO(tokenDTO.getRefresh_token(), tokenDTO.getAccess_token());
+            accessTokenPO.setPlayer_name("CLIENT");
+            accessTokenPO.setPlayer_id(0);
+            accessTokenPO.setQq_code(0L);
+            Optional.ofNullable(tokenMapper.selectByQq_code(0L)).ifPresentOrElse(
+                    token -> tokenMapper.updateByToken(accessTokenPO),
+                    () -> tokenMapper.insert(accessTokenPO)
             );
             logger.info("successfully created client token: {}", tokenPO.getAccess_token());
         }

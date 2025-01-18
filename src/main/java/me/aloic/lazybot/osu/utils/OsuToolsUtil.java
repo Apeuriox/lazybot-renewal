@@ -5,6 +5,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.parameter.BpifParameter;
@@ -30,6 +31,12 @@ public class OsuToolsUtil
     }
     public static Integer getUserIdByUsername(@Nonnull String username, @Nonnull UserTokenPO tokenPO)
     {
+        Integer playerId= tokenPO.getPlayer_id();
+        if(!Objects.equals(username, tokenPO.getPlayer_name()))
+            playerId= OsuToolsUtil.getUserIdByUsername(username, tokenPO.getAccess_token());
+        return playerId;
+    }
+    public static Integer getUserIdByUsername(@Nonnull String username, @Nonnull AccessTokenPO tokenPO) {
         Integer playerId= tokenPO.getPlayer_id();
         if(!Objects.equals(username, tokenPO.getPlayer_name()))
             playerId= OsuToolsUtil.getUserIdByUsername(username, tokenPO.getAccess_token());
