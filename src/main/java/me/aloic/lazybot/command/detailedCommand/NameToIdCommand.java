@@ -1,13 +1,16 @@
 package me.aloic.lazybot.command.detailedCommand;
 
+import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.NameToIdParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -25,6 +28,8 @@ public class NameToIdCommand implements LazybotSlashCommand
     private PlayerService playerService;
     @Resource
     private DiscordTokenMapper discordTokenMapper;
+    @Resource
+    private TokenMapper tokenMapper;
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -48,8 +53,13 @@ public class NameToIdCommand implements LazybotSlashCommand
     }
 
     @Override
-    public void execute(Bot bot, LazybotSlashCommandEvent event)
+    public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-
+        AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
+        NameToIdParameter params=NameToIdParameter.analyzeParameter(event.getCommandParameters());
+        NameToIdParameter.setupDefaultValue(params,accessToken);
+        params.setAccessToken(accessToken.getAccess_token());
+        params.validateParams();
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(playerService.nameToId(params)).build(),false);
     }
 }

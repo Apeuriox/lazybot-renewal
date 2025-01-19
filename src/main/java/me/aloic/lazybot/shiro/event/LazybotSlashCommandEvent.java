@@ -17,6 +17,7 @@ public class LazybotSlashCommandEvent
    private List<String> commandParameters;
    private GroupMessageEvent messageEvent;
    private Integer scorePanelVersion;
+   private OsuMode osuMode;
 
    public LazybotSlashCommandEvent(GroupMessageEvent event) {
       this.messageEvent = event;

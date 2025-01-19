@@ -27,6 +27,7 @@ public class HelpCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
-
+        Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
+        ImageUploadUtil.uploadImageToOnebot(bot,event,filePath.toAbsolutePath().toString());
     }
 }

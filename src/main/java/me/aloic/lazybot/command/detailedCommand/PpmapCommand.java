@@ -6,8 +6,10 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.TrackService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
@@ -26,6 +28,8 @@ public class PpmapCommand implements LazybotSlashCommand
     private TrackService trackService;
     @Resource
     private DiscordTokenMapper discordTokenMapper;
+    @Resource
+    private TokenMapper tokenMapper;
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -47,8 +51,20 @@ public class PpmapCommand implements LazybotSlashCommand
     }
 
     @Override
-    public void execute(Bot bot, LazybotSlashCommandEvent event)
+    public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-
+        AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
+        AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
+        if (tokenPO == null)
+            throw new RuntimeException("请先使用/link绑定osu账号");
+        tokenPO.setAccess_token(accessToken.getAccess_token());
+        GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
+        GeneralParameter.setupDefaultValue(params,tokenPO);
+        if(event.getOsuMode()!=null)
+            params.setMode(event.getOsuMode().getDescribe());
+        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
+        params.setAccessToken(accessToken.getAccess_token());
+        params.validateParams();
+        ImageUploadUtil.uploadImageToOnebot(bot,event,trackService.ppTimeMap(params));
     }
 }

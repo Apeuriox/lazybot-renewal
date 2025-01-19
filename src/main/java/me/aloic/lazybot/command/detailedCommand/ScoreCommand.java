@@ -54,17 +54,19 @@ public class ScoreCommand implements LazybotSlashCommand
     }
 
     @Override
-    public void execute(Bot bot, LazybotSlashCommandEvent event)
+    public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
         AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
         if (tokenPO == null)
-            throw new RuntimeException("请先绑定osu账号");
+            throw new RuntimeException("请先使用/link绑定osu账号");
         tokenPO.setAccess_token(accessToken.getAccess_token());
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
         ScoreParameter.setupDefaultValue(params,tokenPO);
+        params.setVersion(event.getScorePanelVersion());
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
         params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
+        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.score(params));
     }
 }

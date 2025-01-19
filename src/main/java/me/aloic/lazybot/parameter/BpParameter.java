@@ -40,8 +40,7 @@ public class BpParameter extends LazybotCommandParameter
     public static BpParameter analyzeParameter(List<String> params)
     {
         BpParameter bpParameter=new BpParameter();
-        if (params != null)
-        {
+        if (params != null && !params.isEmpty()) {
             if (params.size() == 1) {
                 if(params.getFirst().contains("#")) {
                     String[] paras = params.getFirst().split("#");
@@ -75,9 +74,7 @@ public class BpParameter extends LazybotCommandParameter
                 throw new RuntimeException("Incorrect parameters: " + params);
             }
         }
-        else {
-            bpParameter.setIndex(1);
-        }
+        else bpParameter.setIndex(1);
         return bpParameter;
     }
     public static void setupDefaultValue(BpParameter bpParameter, AccessTokenPO accessTokenPO)

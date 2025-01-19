@@ -581,7 +581,7 @@ public class SvgUtil
             {
                 doc.getElementById("comboStatus").setTextContent(CommonTool.toString(targetScore.getMaxCombo()).concat("x"));
             }
-            doc.getElementById("mode").setTextContent(targetScore.getMode().concat("!"));
+            doc.getElementById("mode").setTextContent(OsuMode.getMode(targetScore.getMode()).getDescribe().concat("!"));
             doc.getElementById("score").setTextContent(CommonTool.transformNumber(String.valueOf(targetScore.getScore())));
             if (targetScore.getBeatmap().getVersion().length() < 24)
             {
@@ -621,7 +621,7 @@ public class SvgUtil
             doc.getElementById("gradeShadow").setTextContent(targetScore.getRank());
             grade.setTextContent(targetScore.getRank());
             grade.setAttribute("fill", rankColorIndictor(targetScore.getRank()));
-            logger.info("Modify time (white Mode):" + (System.currentTimeMillis() - startingTime) + "ms");
+            logger.info("Batik Util Cost (white Mode):" + (System.currentTimeMillis() - startingTime) + "ms");
             return doc;
         } catch (Exception e)
         {

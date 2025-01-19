@@ -40,14 +40,14 @@ public class TodaybpParameter extends LazybotCommandParameter
     public static TodaybpParameter analyzeParameter(List<String> params)
     {
         TodaybpParameter parameter=new TodaybpParameter();
-        if (params != null) {
+        if (params != null && !params.isEmpty()) {
             if (params.size() == 1) {
                 if(params.getFirst().contains("#")) {
                     String[] paras = params.getFirst().split("#");
                     if (CommonTool.isPositiveInteger(paras[1]))
                         parameter.setMaxDays(Integer.parseInt(paras[1]));
                     else
-                        throw new RuntimeException("参数解析错误，para=1");
+                        throw new RuntimeException("参数解析错误, index不为正整数，length=1");
                 }
                 else if(CommonTool.isPositiveInteger(params.getFirst()))
                     parameter.setMaxDays(Integer.parseInt(params.getFirst()));
@@ -63,7 +63,7 @@ public class TodaybpParameter extends LazybotCommandParameter
                     if (CommonTool.isPositiveInteger(paras[1]))
                         parameter.setMaxDays(Integer.parseInt(paras[1]));
                     else
-                        throw new RuntimeException("参数解析错误,para=2");
+                        throw new RuntimeException("参数解析错误, index不为正整数,length=2");
                 }
                 else if(CommonTool.isPositiveInteger(params.get(1))) {
                     parameter.setPlayerName(params.getFirst());
@@ -79,11 +79,13 @@ public class TodaybpParameter extends LazybotCommandParameter
         }
         return parameter;
     }
-    public static void setupDefaultValue(BplistParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(TodaybpParameter parameter, AccessTokenPO accessTokenPO)
     {
         if (parameter.getPlayerName() == null)
             parameter.setPlayerName(accessTokenPO.getPlayer_name());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
+        if (parameter.getMaxDays() == null)
+            parameter.setMaxDays(1);
     }
 }

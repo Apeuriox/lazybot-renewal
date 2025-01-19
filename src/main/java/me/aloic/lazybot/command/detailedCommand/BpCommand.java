@@ -61,10 +61,13 @@ public class BpCommand implements LazybotSlashCommand
         AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
         AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
         if (tokenPO == null)
-            throw new RuntimeException("请先绑定osu账号");
+            throw new RuntimeException("请先使用/link绑定osu账号");
         tokenPO.setAccess_token(accessToken.getAccess_token());
         BpParameter params=BpParameter.analyzeParameter(event.getCommandParameters());
         BpParameter.setupDefaultValue(params,tokenPO);
+        if(event.getOsuMode()!=null)
+            params.setMode(event.getOsuMode().getDescribe());
+        params.setVersion(event.getScorePanelVersion());
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
         params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();

@@ -52,12 +52,12 @@ public class BplistParameter extends LazybotCommandParameter
                 try {
                     String[] fromAndTo = params.getFirst().split("-");
                     if (fromAndTo.length != 2)
-                        throw new RuntimeException("参数错误，请输入正确的范围: "+ params.getFirst());
+                        throw new RuntimeException("请输入正确的范围: "+ params.getFirst());
                     int offset=Integer.parseInt(fromAndTo[0]);
                     int endsAt=Integer.parseInt(fromAndTo[1]);
                     int totalCount = endsAt-offset+1;
                     if (offset <= 0 || totalCount <= 0 ||offset > 99 || endsAt>100) {
-                        throw new RuntimeException("参数错误，请输入正确的范围");
+                        throw new RuntimeException("请输入正确的范围");
                     }
                     parameter.setFrom(offset);
                     parameter.setTo(endsAt);
@@ -77,6 +77,7 @@ public class BplistParameter extends LazybotCommandParameter
             parameter.setPlayerName(accessTokenPO.getPlayer_name());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
+
     }
 
 

@@ -6,8 +6,10 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
@@ -17,6 +19,8 @@ import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @LazybotCommandMapping({"bpif"})
 @Component
 public class BpIfCommand implements LazybotSlashCommand
@@ -25,6 +29,8 @@ public class BpIfCommand implements LazybotSlashCommand
     private AnalysisService analysisService;
     @Resource
     private DiscordTokenMapper discordTokenMapper;
+    @Resource
+    private TokenMapper tokenMapper;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -50,8 +56,20 @@ public class BpIfCommand implements LazybotSlashCommand
     }
 
     @Override
-    public void execute(Bot bot, LazybotSlashCommandEvent event)
+    public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
-
+        AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
+        AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
+        if (tokenPO == null)
+            throw new RuntimeException("请先使用/link绑定osu账号");
+        tokenPO.setAccess_token(accessToken.getAccess_token());
+        BpifParameter params=BpifParameter.analyzeParameter(event.getCommandParameters());
+        BpifParameter.setupDefaultValue(params,tokenPO);
+        if(event.getOsuMode()!=null)
+            params.setMode(event.getOsuMode().getDescribe());
+        params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(params.getPlayerName(),tokenPO));
+        params.setAccessToken(accessToken.getAccess_token());
+        params.validateParams();
+        ImageUploadUtil.uploadImageToOnebot(bot,event,analysisService.bpIf(params));
     }
 }

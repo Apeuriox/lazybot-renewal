@@ -6,8 +6,10 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
@@ -25,6 +27,8 @@ public class RecentCommand implements LazybotSlashCommand
     private PlayerService playerService;
     @Resource
     private DiscordTokenMapper discordTokenMapper;
+    @Resource
+    private TokenMapper tokenMapper;
 
     @Override
     public void execute(SlashCommandInteractionEvent event)
@@ -50,6 +54,19 @@ public class RecentCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
-
+        AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
+        AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
+        if (tokenPO == null)
+            throw new RuntimeException("请先使用/link绑定osu账号");
+        tokenPO.setAccess_token(accessToken.getAccess_token());
+        RecentParameter params=RecentParameter.analyzeParameter(event.getCommandParameters());
+        RecentParameter.setupDefaultValue(params,tokenPO);
+        if(event.getOsuMode()!=null)
+            params.setMode(event.getOsuMode().getDescribe());
+        params.setVersion(event.getScorePanelVersion());
+        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
+        params.setAccessToken(accessToken.getAccess_token());
+        params.validateParams();
+        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.recent(params,0));
     }
 }

@@ -81,7 +81,7 @@ public class PlayerServiceImpl implements PlayerService
                 params.getAccessToken(),
                 String.valueOf(playerInfoDTO.getId()),
                 params.getTo()-params.getFrom()+1,
-                params.getFrom(),
+                params.getFrom()-1,
                 params.getMode());
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOArray,params.getFrom(),1));
@@ -141,6 +141,7 @@ public class PlayerServiceImpl implements PlayerService
     public String nameToId(NameToIdParameter params) {
         StringBuilder builder = new StringBuilder();
         for(String name:params.getTargets()){
+            name=name.trim();
             ApiRequestStarter playerRequest = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerInfo(name),params.getAccessToken());
             PlayerInfoDTO playerInfoDTO = playerRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
             if(playerInfoDTO.getId()==null){
@@ -163,7 +164,7 @@ public class PlayerServiceImpl implements PlayerService
                 params.getAccessToken(),
                 String.valueOf(playerInfoDTO.getId()),
                 params.getTo()-params.getFrom()+1,
-                params.getFrom(),
+                params.getFrom()-1,
                 params.getMode());
         List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS);
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);

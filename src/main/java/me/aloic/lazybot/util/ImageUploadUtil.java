@@ -57,6 +57,14 @@ public class ImageUploadUtil
             e.printStackTrace();
         }
     }
+    public static void uploadImageToOnebot(Bot bot, LazybotSlashCommandEvent event, String filePath) {
+        try {
+            filePath = "file:///".concat(filePath);
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().img(filePath).build(), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 //    public static File saveBytesToFile(byte[] imageBytes, String fileName) throws IOException {
 //        long startTime = System.currentTimeMillis();
 //        File tempFile = new File(System.getProperty("java.io.tmpdir"), fileName);

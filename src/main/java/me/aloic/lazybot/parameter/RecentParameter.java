@@ -37,7 +37,7 @@ public class RecentParameter extends LazybotCommandParameter
     public static RecentParameter analyzeParameter(List<String> params)
     {
         RecentParameter recentParameter=new RecentParameter();
-        if (params != null) {
+        if (params != null && !params.isEmpty()) {
             if (params.size() > 2)
                 throw new RuntimeException("最高参数长度为2（如果你名字有空格请把空格换成下划线），使用例：/pr userName #1");
             else if (params.size() == 1) {
