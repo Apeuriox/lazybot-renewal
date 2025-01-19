@@ -1128,9 +1128,7 @@ public class SvgUtil
         sectionFull.appendChild(modBGNode3);
         sectionFull.appendChild(modNameNode);
 
-
-        if(mod.getAcronym().equals("DT")||mod.getAcronym().equals("NC")||mod.getAcronym().equals("HT")||mod.getAcronym().equals("DC"))
-        {
+        if(mod.getAcronym().equals("DT")||mod.getAcronym().equals("NC")||mod.getAcronym().equals("HT")||mod.getAcronym().equals("DC")) {
             Node modClockRateNode = doc.createElementNS(namespaceSVG, "text");
             Element modeClockRate = (Element) modClockRateNode;
             modeClockRate.setAttribute("class", "cls-125");
@@ -1140,7 +1138,11 @@ public class SvgUtil
             if(mod.getSettings().getSpeed_change()!=null) {
                 modeClockRate.setTextContent(CommonTool.toString(mod.getSettings().getSpeed_change()).concat("x"));
             }
-            sectionFull.appendChild(modClockRateNode);
+            else {
+                modeClockRate.setTextContent("1.50x");
+                modeClockRate.setAttribute("opacity", "0.2");
+            }
+            sectionFull.appendChild(modeClockRate);
         }
         svgRoot.appendChild(sectionFull);
     }

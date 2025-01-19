@@ -18,7 +18,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -169,6 +168,17 @@ public class PlayerServiceImpl implements PlayerService
         List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS);
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,info));
+    }
+    @Override
+    public String update(UpdateParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO=DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(), params.getMode());
+//        ApiRequestStarter trackApiRequest = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackUpdate(playerInfoDTO.getId(),request.getMode()));
+//        UserDifference userDifference = trackApiRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_POST, UserDifference.class);
+//        playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true)));
+//        BotRequest req = new BotRequest(CommandEnum.UPDATE);
+//        req.setResponseMessage("正在更新用户" +playerName + "的数据");
+        return null;
     }
 
 }

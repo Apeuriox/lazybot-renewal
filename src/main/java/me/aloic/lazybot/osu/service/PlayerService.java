@@ -25,4 +25,5 @@ public interface PlayerService
 
     String nameToId(NameToIdParameter params) throws Exception;
 
+    String update(UpdateParameter params);
 }
