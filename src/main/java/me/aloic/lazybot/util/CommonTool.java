@@ -1,11 +1,15 @@
 package me.aloic.lazybot.util;
 
+import de.androidpit.colorthief.ColorThief;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -14,7 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 public class CommonTool {
     public static boolean isEmpty(String s) {
@@ -466,6 +472,276 @@ public class CommonTool {
     {
         List<String> elements = Arrays.asList("HR","DT","HT","EZ","FL","NC","TD");
         return Arrays.stream(array).anyMatch(elements::contains);
+    }
+    public static String hslFormat(Integer hue, Integer saturation, Integer value)
+    {
+        return String.format("hsl(%d,%d%%,%d%%)", hue, saturation, value);
+    }
+
+    /**
+     * 将 HSL 转换为 HEX 颜色表示
+     *
+     * @param h 色相（Hue），范围 0-360
+     * @param s 饱和度（Saturation），范围 0-1
+     * @param v 明度（lightness），范围 0-1
+     * @return HEX 颜色表示（如 #RRGGBB）
+     */
+    public static String hsvToHex(float h, float s, float v) {
+        int r, g, b;
+
+        float c = v * s; // Chroma
+        float x = c * (1 - Math.abs((h / 60) % 2 - 1));
+        float m = v - c;
+
+        if (h < 60) {
+            r = Math.round((c + m) * 255);
+            g = Math.round((x + m) * 255);
+            b = Math.round(m * 255);
+        } else if (h < 120) {
+            r = Math.round((x + m) * 255);
+            g = Math.round((c + m) * 255);
+            b = Math.round(m * 255);
+        } else if (h < 180) {
+            r = Math.round(m * 255);
+            g = Math.round((c + m) * 255);
+            b = Math.round((x + m) * 255);
+        } else if (h < 240) {
+            r = Math.round(m * 255);
+            g = Math.round((x + m) * 255);
+            b = Math.round((c + m) * 255);
+        } else if (h < 300) {
+            r = Math.round((x + m) * 255);
+            g = Math.round(m * 255);
+            b = Math.round((c + m) * 255);
+        } else {
+            r = Math.round((c + m) * 255);
+            g = Math.round(m * 255);
+            b = Math.round((x + m) * 255);
+        }
+        return String.format("#%02X%02X%02X", r, g, b);
+    }
+
+    public static String getAverageColor(File imageFile) throws IOException {
+        BufferedImage image = resizeImage(ImageIO.read(imageFile), 100, 100);
+
+        long totalR = 0, totalG = 0, totalB = 0;
+        int pixelCount = 0;
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int rgb = image.getRGB(x, y);
+
+                // 忽略透明部分
+                if ((rgb >> 24) == 0x00) continue;
+
+                totalR += (rgb >> 16) & 0xFF;
+                totalG += (rgb >> 8) & 0xFF;
+                totalB += rgb & 0xFF;
+                pixelCount++;
+            }
+        }
+
+        // 计算平均值
+        int avgR = (int) (totalR / pixelCount);
+        int avgG = (int) (totalG / pixelCount);
+        int avgB = (int) (totalB / pixelCount);
+
+        return String.format("#%02X%02X%02X", avgR, avgG, avgB);
+    }
+    public static String getDominantHSLWithBins(File imageFile, int binSize) throws IOException {
+        int dominantColor =  calcDominantColor(imageFile, binSize);
+        return rgbToHsl((dominantColor >> 16) & 0xFF, (dominantColor >> 8) & 0xFF, dominantColor & 0xFF);
+    }
+    public static Integer getDominantHueWithBins(File imageFile, int binSize) throws IOException {
+        int dominantColor =  calcDominantColor(imageFile, binSize);
+        return rgbToHue((dominantColor >> 16) & 0xFF, (dominantColor >> 8) & 0xFF, dominantColor & 0xFF);
+    }
+
+    private static int calcDominantColor(File imageFile, int binSize) throws IOException
+    {
+        BufferedImage image = resizeImage(ImageIO.read(imageFile), 100, 100); // 缩小图片到 100x100
+        Map<Integer, Integer> colorFrequency = new ConcurrentHashMap<>();
+        int width = image.getWidth();
+        int height = image.getHeight();
+//        IntStream.range(0, width).parallel().forEach(x -> {
+//            for (int y = 0; y < height; y++) {
+//                int rgb = image.getRGB(x, y);
+//
+//                if ((rgb >> 24) == 0x00) continue;
+//
+//                int r = ((rgb >> 16) & 0xFF) / binSize * binSize;
+//                int g = ((rgb >> 8) & 0xFF) / binSize * binSize;
+//                int b = (rgb & 0xFF) / binSize * binSize;
+//
+//                int binnedColor = (r << 16) | (g << 8) | b;
+//                frequency.incrementAndGet(binnedColor);
+//            }
+//        });
+//
+//        // 找到出现频率最高的颜色
+//        int dominantColor = 0;
+//        int maxFrequency = 0;
+//        for (int i = 0; i < frequency.length(); i++) {
+//            int freq = frequency.get(i);
+//            if (freq > maxFrequency) {
+//                maxFrequency = freq;
+//                dominantColor = i;
+//            }
+//        }
+//        return dominantColor;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int rgb = image.getRGB(x, y);
+                if ((rgb >> 24) == 0x00) continue;
+                int r = ((rgb >> 16) & 0xFF) / binSize * binSize;
+                int g = ((rgb >> 8) & 0xFF) / binSize * binSize;
+                int b = (rgb & 0xFF) / binSize * binSize;
+
+                int binnedColor = (r << 16) | (g << 8) | b;
+                colorFrequency.put(binnedColor, colorFrequency.getOrDefault(binnedColor, 0) + 1);
+            }
+        }
+
+        return colorFrequency.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .get()
+                .getKey();
+    }
+    public static int getDominantColorHue(File imageFile) throws IOException {
+        BufferedImage image = ImageIO.read(imageFile);
+        int[] dominantColor =  ColorThief.getColor(image);
+        return rgbToHue(dominantColor);
+    }
+    private static String rgbToHsl(double r, double g, double b) {
+        r /= 255.0;
+        g /= 255.0;
+        b /= 255.0;
+
+        double max = Math.max(r, Math.max(g, b));
+        double min = Math.min(r, Math.min(g, b));
+        double delta = max - min;
+
+        double l = (max + min) / 2;
+        double s = 0;
+        if (delta != 0) {
+            s = delta / (1 - Math.abs(2 * l - 1));
+        }
+
+        double h = 0;
+        if (delta != 0) {
+            if (max == r) {
+                h = 60 * ((g - b) / delta % 6);
+            } else if (max == g) {
+                h = 60 * ((b - r) / delta + 2);
+            } else if (max == b) {
+                h = 60 * ((r - g) / delta + 4);
+            }
+        }
+        if (h < 0) {
+            h += 360;
+        }
+        return String.format("hsl(%.0f, %.0f%%, %.0f%%)", h, s * 100, l * 100);
+    }
+    private static String rgbToHsl(int[] rgb) {
+        double r=rgb[0];
+        double g=rgb[1];
+        double b=rgb[2];
+        r/= 255.0;
+        g /= 255.0;
+        b /= 255.0;
+
+        double max = Math.max(r, Math.max(g, b));
+        double min = Math.min(r, Math.min(g, b));
+        double delta = max - min;
+
+        double l = (max + min) / 2;
+        double s = 0;
+        if (delta != 0) {
+            s = delta / (1 - Math.abs(2 * l - 1));
+        }
+
+        double h = 0;
+        if (delta != 0) {
+            if (max == r) {
+                h = 60 * ((g - b) / delta % 6);
+            } else if (max == g) {
+                h = 60 * ((b - r) / delta + 2);
+            } else if (max == b) {
+                h = 60 * ((r - g) / delta + 4);
+            }
+        }
+        if (h < 0) {
+            h += 360;
+        }
+        return String.format("hsl(%.0f, %.0f%%, %.0f%%)", h, s * 100, l * 100);
+    }
+    private static Integer rgbToHue(double r, double g, double b) {
+        r /= 255.0;
+        g /= 255.0;
+        b /= 255.0;
+        double max = Math.max(r, Math.max(g, b));
+        double min = Math.min(r, Math.min(g, b));
+        double delta = max - min;
+        double l = (max + min) / 2;
+        if (l<0.04) return 361;
+        if (l>0.92) return 361;
+        double h = 0;
+        if (delta != 0) {
+            if (max == r) {
+                h = 60 * ((g - b) / delta % 6);
+            } else if (max == g) {
+                h = 60 * ((b - r) / delta + 2);
+            } else if (max == b) {
+                h = 60 * ((r - g) / delta + 4);
+            }
+        }
+        if (h < 0) {
+            h += 360;
+        }
+        return (int) h;
+    }
+
+    private static Integer rgbToHue(int[] rgb) {
+        double r=rgb[0];
+        double g=rgb[1];
+        double b=rgb[2];
+        r/= 255.0;
+        g /= 255.0;
+        b /= 255.0;
+
+        double max = Math.max(r, Math.max(g, b));
+        double min = Math.min(r, Math.min(g, b));
+        double delta = max - min;
+        double l = (max + min) / 2;
+        if (l<0.04) return 361;
+        if (l>0.95) return 361;
+        double h = 0;
+        if (delta != 0) {
+            if (max == r) {
+                h = 60 * ((g - b) / delta % 6);
+            } else if (max == g) {
+                h = 60 * ((b - r) / delta + 2);
+            } else if (max == b) {
+                h = 60 * ((r - g) / delta + 4);
+            }
+        }
+        if (h < 0) {
+            h += 360;
+        }
+        return (int) h;
+    }
+    private static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+        resizedImage.getGraphics().drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
+        return resizedImage;
+    }
+    public static Boolean isPositiveInteger(String num)
+    {
+        return num.matches("[1-9][0-9]*");
     }
 
 }

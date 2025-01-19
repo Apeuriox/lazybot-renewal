@@ -1,7 +1,6 @@
 package me.aloic.lazybot.osu.utils;
 
 import me.aloic.lazybot.monitor.ResourceMonitor;
-import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
@@ -22,7 +21,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -86,9 +84,9 @@ public class SvgUtil
         return outputName;
     }
 
-    public static OutputStream scoreToImageDarkApache(ScoreVO targetScore) throws TranscoderException, IOException
+    public static OutputStream scoreToImageDarkApache(ScoreVO targetScore, int hue) throws TranscoderException, IOException
     {
-        Document doc = getScorePanelDarkModeDoc(targetScore);
+        Document doc = getScorePanelDarkModeDoc(targetScore,hue);
         long startingTime = System.currentTimeMillis();
         TranscoderInput input = new TranscoderInput(doc);
         OutputStream o =svgToPng(input);
@@ -96,9 +94,9 @@ public class SvgUtil
         return o;
     }
 
-    public static String scoreToImageDarkURLApache(ScoreVO targetScore) throws TranscoderException, IOException
+    public static String scoreToImageDarkURLApache(ScoreVO targetScore, int hue) throws TranscoderException, IOException
     {
-        Document doc = getScorePanelDarkModeDoc(targetScore);
+        Document doc = getScorePanelDarkModeDoc(targetScore,hue);
         TranscoderInput input = new TranscoderInput(doc);
         String outputName = "score-dark-".concat(targetScore.getUser_name()).concat(".png");
         svgToPng(input, new File(outputName));
@@ -583,7 +581,7 @@ public class SvgUtil
             {
                 doc.getElementById("comboStatus").setTextContent(CommonTool.toString(targetScore.getMaxCombo()).concat("x"));
             }
-            doc.getElementById("mode").setTextContent(targetScore.getMode().concat("!"));
+            doc.getElementById("mode").setTextContent(OsuMode.getMode(targetScore.getMode()).getDescribe().concat("!"));
             doc.getElementById("score").setTextContent(CommonTool.transformNumber(String.valueOf(targetScore.getScore())));
             if (targetScore.getBeatmap().getVersion().length() < 24)
             {
@@ -623,7 +621,7 @@ public class SvgUtil
             doc.getElementById("gradeShadow").setTextContent(targetScore.getRank());
             grade.setTextContent(targetScore.getRank());
             grade.setAttribute("fill", rankColorIndictor(targetScore.getRank()));
-            logger.info("Modify time (white Mode):" + (System.currentTimeMillis() - startingTime) + "ms");
+            logger.info("Batik Util Cost (white Mode):" + (System.currentTimeMillis() - startingTime) + "ms");
             return doc;
         } catch (Exception e)
         {
@@ -632,12 +630,12 @@ public class SvgUtil
         }
     }
 
-    public static Document getScorePanelDarkModeDoc(ScoreVO targetScore)
+    public static Document getScorePanelDarkModeDoc(ScoreVO targetScore,Integer hue)
     {
         long startingTime = System.currentTimeMillis();
         try
         {
-            Path filePath = ResourceMonitor.getResourcePath().resolve("static/scorePanelDarkmode.svg");
+            Path filePath = ResourceMonitor.getResourcePath().resolve("static/scorePanelDarkmode_customize.svg");
             URI inputUri = filePath.toFile().toURI();
             Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
             //此图片元素对应替换玩家的头像以及Beatmap的背景图
@@ -685,6 +683,7 @@ public class SvgUtil
                         break;
                 }
             }
+
             if(targetScore.getIsLazer()) {
                 doc.getElementById("lazer-label").setAttribute("opacity", "1");
             }
@@ -850,7 +849,8 @@ public class SvgUtil
                 case Osu:
                 {
                     logger.info("Score Type: Osu");
-                    doc.getElementById("osu").setAttribute("fill", "#988fcc");
+                    doc.getElementById("osu").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("label-osu").setAttribute("opacity","1");
                     doc.getElementById("osuStatistics").setAttribute("opacity","1");
                     doc.getElementById("100Count-o").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
                     doc.getElementById("300Count-o").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -871,7 +871,8 @@ public class SvgUtil
                 case Taiko:
                 {
                     logger.info("Score Type: Taiko");
-                    doc.getElementById("taiko").setAttribute("fill", "#988fcc");
+                    doc.getElementById("taiko").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("label-taiko").setAttribute("opacity","1");
                     doc.getElementById("taikoStatistics").setAttribute("opacity","1");
                     doc.getElementById("150Count-t").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
                     doc.getElementById("300Count-t").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -888,7 +889,8 @@ public class SvgUtil
                 case Catch:
                 {
                     logger.info("Score Type: CTB");
-                    doc.getElementById("ctb").setAttribute("fill", "#988fcc");
+                    doc.getElementById("ctb").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("label-ctb").setAttribute("opacity","1");
                     doc.getElementById("fruitsStatistics").setAttribute("opacity","1");
                     doc.getElementById("300Count-f").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
                     doc.getElementById("100Count-f").setTextContent(String.valueOf(targetScore.getStatistics().getLarge_tick_hit()));
@@ -909,7 +911,8 @@ public class SvgUtil
                 case Mania:
                 {
                     logger.info("Score Type: Mania");
-                    doc.getElementById("mania").setAttribute("fill", "#988fcc");
+                    doc.getElementById("mania").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("label-mania").setAttribute("opacity","1");
                     doc.getElementById("maniaStatistics").setAttribute("opacity","1");
                     doc.getElementById("maxCount-m").setTextContent(String.valueOf(targetScore.getStatistics().getPerfect()));
                     doc.getElementById("300Count-m").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -931,6 +934,8 @@ public class SvgUtil
                     break;
                 }
             }
+            if(hue!=361)
+                setupoCustomColorForDarkmodeScore(doc,hue);
 
             doc.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));
             doc.getElementById("length").setTextContent(CommonTool.formatHitLength(targetScore.getBeatmap().getAttributes().getLength()));
@@ -956,7 +961,7 @@ public class SvgUtil
             {
                 wireModIconForDarkScore(doc,targetScore);
             }
-            logger.info("SVG elements changing cost (dark mode): " + (System.currentTimeMillis() - startingTime) + "ms");
+            logger.info("Batik SVG util cost (dark mode): " + (System.currentTimeMillis() - startingTime) + "ms");
             return doc;
         } catch (Exception e)
         {
@@ -964,6 +969,19 @@ public class SvgUtil
             throw new RuntimeException(e);
         }
 
+    }
+    private static void setupoCustomColorForDarkmodeScore(Document doc, Integer hue){
+        doc.getElementById("label-left-background").setAttribute("fill",CommonTool.hslFormat(hue,12,22));
+        doc.getElementById("label-left-left-background").setAttribute("fill",CommonTool.hslFormat(hue,12,13));
+        doc.getElementById("label-artist").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-mapper").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-mapInfo").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-diff").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-title").setAttribute("fill",CommonTool.hslFormat(hue,37,68));
+        doc.getElementById("label-mask-1").setAttribute("fill",CommonTool.hslFormat(hue,11,18));
+        doc.getElementById("label-mask-2").setAttribute("fill",CommonTool.hslFormat(hue,11,18));
+        doc.getElementById("label-mask-3").setAttribute("fill",CommonTool.hslFormat(hue,11,18));
+        doc.getElementById("label-header-bg").setAttribute("fill",CommonTool.hslFormat(hue,7,10));
     }
     private static void wireModIconForDarkScore(Document doc, ScoreVO targetScore)
     {
@@ -1203,7 +1221,6 @@ public class SvgUtil
     {
         try
         {
-
             Path filePath = ResourceMonitor.getResourcePath().resolve("static/TopScoresList.svg");
             URI inputUri = filePath.toFile().toURI();
             Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
@@ -1215,231 +1232,8 @@ public class SvgUtil
             doc.getElementById("footer").setAttribute("transform", "translate(0," + 120 * (scorelist.size() - 1) + ")");
             doc.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("class", "cls-24");
-
-            int listIndex=0;
-            for (ScoreSequence score : scorelist)
-            {
-                Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
-                Element sectionFull = (Element) sectionFullNode;
-                Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
-                Element totalBG = (Element) totalBGNode;
-                totalBG.setAttribute("rx", "10");
-                totalBG.setAttribute("ry", "10");
-                totalBG.setAttribute("width", "950");
-                totalBG.setAttribute("height", "100");
-                totalBG.setAttribute("fill", "#2a2933");
-                totalBG.setAttribute("transform", "translate(30,80)");
-
-                Node mapBGImageNode = doc.createElementNS(namespaceSVG, "image");
-                Element mapBGImage = (Element) mapBGImageNode;
-                mapBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBeatmap().getBgUrl());
-                mapBGImage.setAttribute("x", "30");
-                mapBGImage.setAttribute("y", "80");
-                mapBGImage.setAttribute("width", "950");
-                mapBGImage.setAttribute("height", "100");
-                mapBGImage.setAttribute("opacity", "0.5");
-                mapBGImage.setAttribute("clip-path", "url(#singleClip)");
-                mapBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
-
-                Node totalBGMaskNode = doc.createElementNS(namespaceSVG, "rect");
-                Element totalBGMask = (Element) totalBGMaskNode;
-                totalBGMask.setAttribute("rx", "10");
-                totalBGMask.setAttribute("ry", "10");
-                totalBGMask.setAttribute("width", "950");
-                totalBGMask.setAttribute("height", "100");
-                totalBGMask.setAttribute("fill", "#2a2933");
-                totalBGMask.setAttribute("opacity", "0.5");
-                totalBGMask.setAttribute("transform", "translate(30,80)");
-
-                Node playerNameNode = doc.createElementNS(namespaceSVG, "text");
-                Element playerName = (Element) playerNameNode;
-                playerName.setAttribute("class", "cls-122");
-                playerName.setAttribute("transform", "translate(70 170)");
-                playerName.setTextContent(score.getPlayerName());
-
-                Node starAndSongTitleNode = doc.createElementNS(namespaceSVG, "text");
-                Element starAndSongTitle = (Element) starAndSongTitleNode;
-                starAndSongTitle.setAttribute("class", "cls-110");
-                starAndSongTitle.setAttribute("transform", "translate(60 125)");
-
-                Node starNode = doc.createElementNS(namespaceSVG, "tspan");
-                Element star = (Element) starNode;
-                star.setAttribute("fill", primaryColor);
-                star.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat(" *"));
-
-                Node divisorNode = doc.createElementNS(namespaceSVG, "tspan");
-                Element divisor = (Element) divisorNode;
-                divisor.setTextContent(" | ");
-
-                Node titleNode = doc.createElementNS(namespaceSVG, "tspan");
-                Element title = (Element) titleNode;
-                title.setTextContent(score.getBeatmap().getArtist().concat(" - ").concat(score.getBeatmap().getTitle()));
-
-
-                //pending
-//            Node scoreStatusNode = doc.createElementNS(namespaceSVG, "tspan");
-//            Element scoreStatus  = (Element) scoreStatusNode;
-//            scoreStatus.setAttribute("fill", "#f8bad4");
-//            scoreStatus.setTextContent(String.valueOf(score.getBeatmap().getDifficult_rating()).concat(" *"));
-
-                starAndSongTitle.appendChild(star);
-                starAndSongTitle.appendChild(divisor);
-                starAndSongTitle.appendChild(title);
-
-                Node bpmAndMapperNode = doc.createElementNS(namespaceSVG, "text");
-                Element bpmAndMapper = (Element) bpmAndMapperNode;
-                bpmAndMapper.setAttribute("class", "cls-113");
-                bpmAndMapper.setAttribute("transform", "translate(60 150)");
-
-                Node bpmNode = doc.createElementNS(namespaceSVG, "tspan");
-                Element bpm = (Element) bpmNode;
-                bpm.setAttribute("fill", primaryColor);
-                bpm.setTextContent(String.valueOf(score.getBeatmap().getBpm()).concat(" bpm"));
-
-                Node divisorNode2 = doc.createElementNS(namespaceSVG, "tspan");
-                Element divisor2 = (Element) divisorNode2;
-                divisor2.setTextContent(" | ");
-
-                Node mapperNode = doc.createElementNS(namespaceSVG, "tspan");
-                Element mapper = (Element) mapperNode;
-                mapper.setTextContent(score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]"));
-
-                bpmAndMapper.appendChild(bpm);
-                bpmAndMapper.appendChild(divisor2);
-                bpmAndMapper.appendChild(mapper);
-
-                Node underlineOfDateNode = doc.createElementNS(namespaceSVG, "rect");
-                Element underlineOfDate = (Element) underlineOfDateNode;
-                underlineOfDate.setAttribute("rx", "1.5");
-                underlineOfDate.setAttribute("ry", "1.5");
-                underlineOfDate.setAttribute("width", "105");
-                underlineOfDate.setAttribute("height", "3");
-                underlineOfDate.setAttribute("fill", primaryColor);
-                underlineOfDate.setAttribute("transform", "translate(377.5,177)");
-
-                Node underlineOfComboNode = doc.createElementNS(namespaceSVG, "rect");
-                Element underlineOfCombo = (Element) underlineOfComboNode;
-                underlineOfCombo.setAttribute("rx", "1.5");
-                underlineOfCombo.setAttribute("ry", "1.5");
-                underlineOfCombo.setAttribute("width", "55");
-                underlineOfCombo.setAttribute("height", "3");
-                underlineOfCombo.setAttribute("fill", primaryColor);
-                underlineOfCombo.setAttribute("transform", "translate(518,177)");
-
-                Node underlineOfAccuracyNode = doc.createElementNS(namespaceSVG, "rect");
-                Element underlineOfAccuracy = (Element) underlineOfAccuracyNode;
-                underlineOfAccuracy.setAttribute("rx", "1.5");
-                underlineOfAccuracy.setAttribute("ry", "1.5");
-                underlineOfAccuracy.setAttribute("width", "70");
-                underlineOfAccuracy.setAttribute("height", "3");
-                underlineOfAccuracy.setAttribute("fill", primaryColor);
-                underlineOfAccuracy.setAttribute("transform", "translate(605,177)");
-
-                Node underlineOfIndexNode = doc.createElementNS(namespaceSVG, "rect");
-                Element underlineOfIndex = (Element) underlineOfIndexNode;
-                underlineOfIndex.setAttribute("rx", "1.5");
-                underlineOfIndex.setAttribute("ry", "1.5");
-                underlineOfIndex.setAttribute("width", "40");
-                underlineOfIndex.setAttribute("height", "3");
-                underlineOfIndex.setAttribute("fill", primaryColor);
-                underlineOfIndex.setAttribute("transform", "translate(707,177)");
-
-                Node underlineOfRankNode = doc.createElementNS(namespaceSVG, "rect");
-                Element underlineOfRank = (Element) underlineOfRankNode;
-                underlineOfRank.setAttribute("rx", "1.5");
-                underlineOfRank.setAttribute("ry", "1.5");
-                underlineOfRank.setAttribute("width", "30");
-                underlineOfRank.setAttribute("height", "3");
-                underlineOfRank.setAttribute("fill", rankColorIndictor(score.getRank()));
-                underlineOfRank.setAttribute("transform", "translate(60,80)");
-
-                Node dateNode = doc.createElementNS(namespaceSVG, "text");
-                Element date = (Element) dateNode;
-                date.setAttribute("class", "cls-111");
-                date.setAttribute("font-size", "18px");
-                date.setAttribute("text-anchor", "middle");
-                date.setAttribute("fill", "#ffffff");
-                date.setAttribute("transform", "translate(430 170)");
-                date.setTextContent(score.getAchievedTime());
-
-                Node comboNode = doc.createElementNS(namespaceSVG, "text");
-                Element combo = (Element) comboNode;
-                combo.setAttribute("class", "cls-111");
-                combo.setAttribute("font-size", "18px");
-                combo.setAttribute("text-anchor", "middle");
-                combo.setAttribute("fill", "#ffffff");
-                combo.setAttribute("transform", "translate(545 170)");
-                combo.setTextContent(score.getMaxCombo().toString().concat("x"));
-
-                Node accuracyNode = doc.createElementNS(namespaceSVG, "text");
-                Element accuracy = (Element) accuracyNode;
-                accuracy.setAttribute("class", "cls-111");
-                accuracy.setAttribute("font-size", "18px");
-                accuracy.setAttribute("text-anchor", "middle");
-                accuracy.setAttribute("fill", "#ffffff");
-                accuracy.setAttribute("transform", "translate(640 170)");
-                accuracy.setTextContent(CommonTool.toString(score.getAccuracy() * 100).concat("%"));
-
-                Node indexNode = doc.createElementNS(namespaceSVG, "text");
-                Element index = (Element) indexNode;
-                index.setAttribute("class", "cls-111");
-                index.setAttribute("font-size", "18px");
-                index.setAttribute("text-anchor", "middle");
-                index.setAttribute("fill", "#ffffff");
-                index.setAttribute("transform", "translate(725 170)");
-                index.setTextContent("#".concat(String.valueOf((score.getPositionInList()+1))));
-
-                Node ppNode = doc.createElementNS(namespaceSVG, "text");
-                Element pp = (Element) ppNode;
-                pp.setAttribute("class", "cls-114");
-                pp.setAttribute("text-anchor", "end");
-                pp.setAttribute("transform", "translate(960 142)");
-                pp.setTextContent(String.valueOf(Math.round(score.getPp())).concat("pp"));
-
-                Node differenceNode = doc.createElementNS(namespaceSVG, "text");
-                Element difference = (Element) differenceNode;
-
-                difference.setAttribute("transform", "translate(910 162)");
-                difference.setAttribute("text-anchor", "middle");
-                if(score.getDifferenceBetweenNextScore()>0)
-                {
-                    difference.setAttribute("class", "cls-115");
-                    difference.setTextContent("+".concat(String.valueOf(score.getDifferenceBetweenNextScore())).concat("pp"));
-                }
-                else if(score.getDifferenceBetweenNextScore()<0)
-                {
-                    difference.setAttribute("class", "cls-116");
-                    difference.setTextContent(String.valueOf(score.getDifferenceBetweenNextScore()).concat("pp"));
-                }
-                else
-                {
-                    difference.setAttribute("class", "cls-117");
-                    difference.setTextContent("- pp");
-                }
-
-                sectionFull.appendChild(totalBG);
-                sectionFull.appendChild(mapBGImage);
-                sectionFull.appendChild(totalBGMask);
-                sectionFull.appendChild(playerName);
-                sectionFull.appendChild(starAndSongTitle);
-                sectionFull.appendChild(bpmAndMapper);
-                sectionFull.appendChild(underlineOfDate);
-                sectionFull.appendChild(underlineOfCombo);
-                sectionFull.appendChild(underlineOfAccuracy);
-                sectionFull.appendChild(underlineOfIndex);
-                sectionFull.appendChild(underlineOfRank);
-                sectionFull.appendChild(date);
-                sectionFull.appendChild(combo);
-                sectionFull.appendChild(accuracy);
-                sectionFull.appendChild(index);
-                sectionFull.appendChild(pp);
-                sectionFull.appendChild(difference);
-                setupModIconForScoreListDetailed(score.getModList(), doc, sectionFull);
-                sectionFull.setAttribute("transform", "translate(0," + 120 * listIndex + ")");
-                svgRoot.appendChild(sectionFull);
-                listIndex++;
-            }
-            return doc;
+            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
+            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot);
         }
         catch (Exception e)
         {
@@ -1447,11 +1241,266 @@ public class SvgUtil
             throw new RuntimeException("SVG 处理时出错");
         }
     }
+    public static Document createScoreListDetailed(List<ScoreSequence> scorelist,PlayerInfoVO info) throws IOException
+    {
+        try
+        {
+            Path filePath = ResourceMonitor.getResourcePath().resolve("static/ScoreListDetailed.svg");
+            Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(filePath.toFile().toURI().toString());
+            Element svgRoot = doc.getDocumentElement();
+            String totalHeight = String.valueOf(130 + 120 * scorelist.size());
+            String primaryColor = CommonTool.hsvToHex(info.getPrimaryColor(),0.4f,1.0f);
+            svgRoot.setAttribute("height", totalHeight);
+            doc.getElementById("background").setAttribute("height", totalHeight);
+            doc.getElementById("footer").setAttribute("transform", "translate(0," + 120 * (scorelist.size() - 1) + ")");
+            doc.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            doc.getElementById("playername").setTextContent(info.getPlayerName());
+            doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", info.getAvatarUrl());
+            doc.getElementById("totalPp").setTextContent(String.valueOf(Math.round(info.getPerformancePoint())));
+            doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("fill",primaryColor);
+            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
+            doc.getElementById("playernameLabel").setAttribute("fill", primaryColor);
+            doc.getElementById("totalPpLabel").setAttribute("fill", primaryColor);
+            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException("SVG 处理时出错");
+        }
+    }
+    private static Document setupBpListDetailedSingle(List<ScoreSequence> scorelist, String primaryColor, Document doc, Element svgRoot)
+    {
+        int listIndex=0;
+        for (ScoreSequence score : scorelist)
+        {
+            Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
+            Element sectionFull = (Element) sectionFullNode;
+            Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element totalBG = (Element) totalBGNode;
+            totalBG.setAttribute("rx", "10");
+            totalBG.setAttribute("ry", "10");
+            totalBG.setAttribute("width", "950");
+            totalBG.setAttribute("height", "100");
+            totalBG.setAttribute("fill", "#2a2933");
+            totalBG.setAttribute("transform", "translate(30,80)");
+
+            Node mapBGImageNode = doc.createElementNS(namespaceSVG, "image");
+            Element mapBGImage = (Element) mapBGImageNode;
+            mapBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBeatmap().getBgUrl());
+            mapBGImage.setAttribute("x", "30");
+            mapBGImage.setAttribute("y", "80");
+            mapBGImage.setAttribute("width", "950");
+            mapBGImage.setAttribute("height", "100");
+            mapBGImage.setAttribute("opacity", "0.5");
+            mapBGImage.setAttribute("clip-path", "url(#singleClip)");
+            mapBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+
+            Node totalBGMaskNode = doc.createElementNS(namespaceSVG, "rect");
+            Element totalBGMask = (Element) totalBGMaskNode;
+            totalBGMask.setAttribute("rx", "10");
+            totalBGMask.setAttribute("ry", "10");
+            totalBGMask.setAttribute("width", "950");
+            totalBGMask.setAttribute("height", "100");
+            totalBGMask.setAttribute("fill", "#2a2933");
+            totalBGMask.setAttribute("opacity", "0.5");
+            totalBGMask.setAttribute("transform", "translate(30,80)");
+
+            Node playerNameNode = doc.createElementNS(namespaceSVG, "text");
+            Element playerName = (Element) playerNameNode;
+            playerName.setAttribute("class", "cls-122");
+            playerName.setAttribute("transform", "translate(70 170)");
+            playerName.setTextContent(score.getPlayerName());
+
+            Node starAndSongTitleNode = doc.createElementNS(namespaceSVG, "text");
+            Element starAndSongTitle = (Element) starAndSongTitleNode;
+            starAndSongTitle.setAttribute("class", "cls-110");
+            starAndSongTitle.setAttribute("transform", "translate(60 125)");
+
+            Node starNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element star = (Element) starNode;
+            star.setAttribute("fill", primaryColor);
+            star.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat(" *"));
+
+            Node divisorNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element divisor = (Element) divisorNode;
+            divisor.setTextContent(" | ");
+
+            Node titleNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element title = (Element) titleNode;
+            title.setTextContent(score.getBeatmap().getArtist().concat(" - ").concat(score.getBeatmap().getTitle()));
+
+
+            //pending
+//            Node scoreStatusNode = doc.createElementNS(namespaceSVG, "tspan");
+//            Element scoreStatus  = (Element) scoreStatusNode;
+//            scoreStatus.setAttribute("fill", "#f8bad4");
+//            scoreStatus.setTextContent(String.valueOf(score.getBeatmap().getDifficult_rating()).concat(" *"));
+
+            starAndSongTitle.appendChild(star);
+            starAndSongTitle.appendChild(divisor);
+            starAndSongTitle.appendChild(title);
+
+            Node bpmAndMapperNode = doc.createElementNS(namespaceSVG, "text");
+            Element bpmAndMapper = (Element) bpmAndMapperNode;
+            bpmAndMapper.setAttribute("class", "cls-113");
+            bpmAndMapper.setAttribute("transform", "translate(60 150)");
+
+            Node bpmNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element bpm = (Element) bpmNode;
+            bpm.setAttribute("fill", primaryColor);
+            bpm.setTextContent(String.valueOf(Math.round(score.getBeatmap().getBpm())).concat(" bpm"));
+
+            Node divisorNode2 = doc.createElementNS(namespaceSVG, "tspan");
+            Element divisor2 = (Element) divisorNode2;
+            divisor2.setTextContent(" | ");
+
+            Node mapperNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element mapper = (Element) mapperNode;
+            mapper.setTextContent(score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]"));
+
+            bpmAndMapper.appendChild(bpm);
+            bpmAndMapper.appendChild(divisor2);
+            bpmAndMapper.appendChild(mapper);
+
+            Node underlineOfDateNode = doc.createElementNS(namespaceSVG, "rect");
+            Element underlineOfDate = (Element) underlineOfDateNode;
+            underlineOfDate.setAttribute("rx", "1.5");
+            underlineOfDate.setAttribute("ry", "1.5");
+            underlineOfDate.setAttribute("width", "105");
+            underlineOfDate.setAttribute("height", "3");
+            underlineOfDate.setAttribute("fill", primaryColor);
+            underlineOfDate.setAttribute("transform", "translate(377.5,177)");
+
+            Node underlineOfComboNode = doc.createElementNS(namespaceSVG, "rect");
+            Element underlineOfCombo = (Element) underlineOfComboNode;
+            underlineOfCombo.setAttribute("rx", "1.5");
+            underlineOfCombo.setAttribute("ry", "1.5");
+            underlineOfCombo.setAttribute("width", "55");
+            underlineOfCombo.setAttribute("height", "3");
+            underlineOfCombo.setAttribute("fill", primaryColor);
+            underlineOfCombo.setAttribute("transform", "translate(518,177)");
+
+            Node underlineOfAccuracyNode = doc.createElementNS(namespaceSVG, "rect");
+            Element underlineOfAccuracy = (Element) underlineOfAccuracyNode;
+            underlineOfAccuracy.setAttribute("rx", "1.5");
+            underlineOfAccuracy.setAttribute("ry", "1.5");
+            underlineOfAccuracy.setAttribute("width", "70");
+            underlineOfAccuracy.setAttribute("height", "3");
+            underlineOfAccuracy.setAttribute("fill", primaryColor);
+            underlineOfAccuracy.setAttribute("transform", "translate(605,177)");
+
+            Node underlineOfIndexNode = doc.createElementNS(namespaceSVG, "rect");
+            Element underlineOfIndex = (Element) underlineOfIndexNode;
+            underlineOfIndex.setAttribute("rx", "1.5");
+            underlineOfIndex.setAttribute("ry", "1.5");
+            underlineOfIndex.setAttribute("width", "40");
+            underlineOfIndex.setAttribute("height", "3");
+            underlineOfIndex.setAttribute("fill", primaryColor);
+            underlineOfIndex.setAttribute("transform", "translate(707,177)");
+
+            Node underlineOfRankNode = doc.createElementNS(namespaceSVG, "rect");
+            Element underlineOfRank = (Element) underlineOfRankNode;
+            underlineOfRank.setAttribute("rx", "1.5");
+            underlineOfRank.setAttribute("ry", "1.5");
+            underlineOfRank.setAttribute("width", "30");
+            underlineOfRank.setAttribute("height", "3");
+            underlineOfRank.setAttribute("fill", rankColorIndictor(score.getRank()));
+            underlineOfRank.setAttribute("transform", "translate(60,80)");
+
+            Node dateNode = doc.createElementNS(namespaceSVG, "text");
+            Element date = (Element) dateNode;
+            date.setAttribute("class", "cls-111");
+            date.setAttribute("font-size", "18px");
+            date.setAttribute("text-anchor", "middle");
+            date.setAttribute("fill", "#ffffff");
+            date.setAttribute("transform", "translate(430 170)");
+            date.setTextContent(score.getAchievedTime());
+
+            Node comboNode = doc.createElementNS(namespaceSVG, "text");
+            Element combo = (Element) comboNode;
+            combo.setAttribute("class", "cls-111");
+            combo.setAttribute("font-size", "18px");
+            combo.setAttribute("text-anchor", "middle");
+            combo.setAttribute("fill", "#ffffff");
+            combo.setAttribute("transform", "translate(545 170)");
+            combo.setTextContent(score.getMaxCombo().toString().concat("x"));
+
+            Node accuracyNode = doc.createElementNS(namespaceSVG, "text");
+            Element accuracy = (Element) accuracyNode;
+            accuracy.setAttribute("class", "cls-111");
+            accuracy.setAttribute("font-size", "18px");
+            accuracy.setAttribute("text-anchor", "middle");
+            accuracy.setAttribute("fill", "#ffffff");
+            accuracy.setAttribute("transform", "translate(640 170)");
+            accuracy.setTextContent(CommonTool.toString(score.getAccuracy() * 100).concat("%"));
+
+            Node indexNode = doc.createElementNS(namespaceSVG, "text");
+            Element index = (Element) indexNode;
+            index.setAttribute("class", "cls-111");
+            index.setAttribute("font-size", "18px");
+            index.setAttribute("text-anchor", "middle");
+            index.setAttribute("fill", "#ffffff");
+            index.setAttribute("transform", "translate(725 170)");
+            index.setTextContent("#".concat(String.valueOf((score.getPositionInList()+1))));
+
+            Node ppNode = doc.createElementNS(namespaceSVG, "text");
+            Element pp = (Element) ppNode;
+            pp.setAttribute("class", "cls-114");
+            pp.setAttribute("text-anchor", "end");
+            pp.setAttribute("transform", "translate(960 142)");
+            pp.setTextContent(String.valueOf(Math.round(score.getPp())).concat("pp"));
+
+            Node differenceNode = doc.createElementNS(namespaceSVG, "text");
+            Element difference = (Element) differenceNode;
+
+            difference.setAttribute("transform", "translate(910 162)");
+            difference.setAttribute("text-anchor", "middle");
+            if(score.getDifferenceBetweenNextScore()>0)
+            {
+                difference.setAttribute("class", "cls-115");
+                difference.setTextContent("+".concat(String.valueOf(score.getDifferenceBetweenNextScore())).concat("pp"));
+            }
+            else if(score.getDifferenceBetweenNextScore()<0)
+            {
+                difference.setAttribute("class", "cls-116");
+                difference.setTextContent(String.valueOf(score.getDifferenceBetweenNextScore()).concat("pp"));
+            }
+            else
+            {
+                difference.setAttribute("class", "cls-117");
+                difference.setTextContent("- pp");
+            }
+
+            sectionFull.appendChild(totalBG);
+            sectionFull.appendChild(mapBGImage);
+            sectionFull.appendChild(totalBGMask);
+            sectionFull.appendChild(playerName);
+            sectionFull.appendChild(starAndSongTitle);
+            sectionFull.appendChild(bpmAndMapper);
+            sectionFull.appendChild(underlineOfDate);
+            sectionFull.appendChild(underlineOfCombo);
+            sectionFull.appendChild(underlineOfAccuracy);
+            sectionFull.appendChild(underlineOfIndex);
+            sectionFull.appendChild(underlineOfRank);
+            sectionFull.appendChild(date);
+            sectionFull.appendChild(combo);
+            sectionFull.appendChild(accuracy);
+            sectionFull.appendChild(index);
+            sectionFull.appendChild(pp);
+            sectionFull.appendChild(difference);
+            setupModIconForScoreListDetailed(score.getModList(), doc, sectionFull);
+            sectionFull.setAttribute("transform", "translate(0," + 120 * listIndex + ")");
+            svgRoot.appendChild(sectionFull);
+            listIndex++;
+        }
+        return doc;
+    }
 
     private static Document setupModIconForScoreListDetailed(List<Mod> modList,Document doc,Element sectionFull)
     {
         if (modList.isEmpty()) return doc;
-        modList.reversed();
+        modList=modList.reversed();
         for(int i=0;i<modList.size();i++)
         {
             Node modSingleNode = doc.createElementNS(namespaceSVG, "g");

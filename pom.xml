@@ -34,6 +34,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>
@@ -117,6 +122,17 @@
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.5.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/de.androidpit/color-thief -->
+        <dependency>
+            <groupId>de.androidpit</groupId>
+            <artifactId>color-thief</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mikuac</groupId>
+            <artifactId>shiro</artifactId>
+            <version>2.3.3</version>
         </dependency>
 
     </dependencies>

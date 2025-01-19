@@ -1,9 +1,12 @@
 package me.aloic.lazybot.osu.utils;
 
 
+import me.aloic.lazybot.command.detailedCommand.PlayRecentCommand;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapAttributeVO;
+import me.aloic.lazybot.osu.dao.entity.vo.BeatmapVO;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 
@@ -19,6 +22,10 @@ public class ModCalculatorUtil
                                                             initialScore.getBeatmap().getCs(), initialScore.getBeatmap().getDrain(),
                                                             initialScore.getBeatmap().getBpm(), initialScore.getMode(), initialScore.getBeatmap().getTotal_length());
         initialScore.getBeatmap().setAttributes(calcAllValues(attributes,initialScore.getModJSON(), OsuMode.getMode(initialScore.getMode())));
+    }
+    public static void setupBpmChange(ScoreSequence initialScore)
+    {
+        setupBpmChange(initialScore.getBeatmap(),initialScore.getModList());
     }
 
     private static double getArAfterRateChange(double ar, double clockRate)
@@ -72,9 +79,7 @@ public class ModCalculatorUtil
         for(Mod mod: mods)
         {
             if (mod.getAcronym().equals("DT")||mod.getAcronym().equals("NC")) {
-                if(mod.getSettings()==null) {
-                    mod.setSettings(new ModSetting());
-                }
+                ensureSettingsInitialized(mod);
                 attributes.setAr(getArAfterRateChange(attributes.getAr(), Optional.ofNullable(mod.getSettings().getSpeed_change()).orElse(1.5)));
                 if(mode== OsuMode.Osu||mode== OsuMode.Catch) {
                     attributes.setOd(getOdAfterRateChange(attributes.getOd(), Optional.ofNullable(mod.getSettings().getSpeed_change()).orElse(1.5)));
@@ -87,9 +92,7 @@ public class ModCalculatorUtil
             }
             else if(mod.getAcronym().equals("HT")||mod.getAcronym().equals("DC"))
             {
-                if(mod.getSettings()==null) {
-                    mod.setSettings(new ModSetting());
-                }
+                ensureSettingsInitialized(mod);
                 attributes.setAr(getArAfterRateChange(attributes.getAr(), Optional.ofNullable(mod.getSettings().getSpeed_change()).orElse(0.75)));
                 if(mode== OsuMode.Osu||mode== OsuMode.Catch) {
                     attributes.setOd(getOdAfterRateChange(attributes.getOd(), Optional.ofNullable(mod.getSettings().getSpeed_change()).orElse(0.75)));
@@ -102,5 +105,26 @@ public class ModCalculatorUtil
             }
         }
         return attributes;
+    }
+    private static void setupBpmChange(BeatmapVO beatmap, List<Mod> mods)
+    {
+        for(Mod mod:mods)
+        {
+            if(mod.getAcronym().equals("DT")||mod.getAcronym().equals("NC"))
+            {
+                ensureSettingsInitialized(mod);
+                beatmap.setBpm(beatmap.getBpm() * Optional.ofNullable(mod.getSettings().getSpeed_change()).orElse(1.50));
+            }
+            else if (mod.getAcronym().equals("HT")||mod.getAcronym().equals("DC"))
+            {
+                ensureSettingsInitialized(mod);
+                beatmap.setBpm(beatmap.getBpm() * Optional.ofNullable(mod.getSettings().getSpeed_change()).orElse(0.75));
+            }
+        }
+    }
+    private static void ensureSettingsInitialized(Mod mod) {
+        if (mod.getSettings() == null) {
+            mod.setSettings(new ModSetting());
+        }
     }
 }

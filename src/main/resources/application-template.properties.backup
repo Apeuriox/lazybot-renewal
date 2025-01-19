@@ -1,25 +1,42 @@
 spring.application.name=lazybot-jda
-server.port=9001
 
 
-spring.data.redis.port=
-spring.data.redis.host=
-spring.data.redis.database=
-spring.data.redis.password=
-
+spring.data.redis.port=6379
+spring.data.redis.host=localhost
+spring.data.redis.database=2
+spring.data.redis.password= yourpassword
 spring.data.redis.timeout=5000ms
 
-discord.bot.key =
-discord.bot.id = 
-discord.bot.token =
+server.port=9001
+shiro.ws.server.enable=true
+shiro.ws.server.url= "/lazybot"
+
+shiro.ws.timeout= 10
+shiro.ws.max-binary-message-buffer-size= 5120000
+shiro.ws.max-text-message-buffer-size= 512000
+
+shiro.limiter.enable= true
+shiro.limiter.rate= 10
+shiro.limiter.capacity=  30
+shiro.limiter.awaitTask= true
+shiro.limiter.timeout= 10
+
+
+discord.bot.key = yourdiscordkey
+discord.bot.id = yourdiscordid
+discord.bot.secret = yourdiscordsecret
+discord.bot.token = yourdiscordtoken
+
 
 #osu-api
-lazybot.client_id=
+lazybot.client_id= osuclientid
 lazybot.responseType=code
 lazybot.scopes=friends.read identify public
-lazybot.client_secret=
-lazybot.redirect_uri=
+lazybot.client_secret= osuclientidsecret
 lazybot.grant_type=authorization_code
+
+lazybot.global.discord.enabled=false
+lazybot.global.tencent.enabled=true
 
 async.executor.thread.core_pool_size=5
 async.executor.thread.max_pool_size=5
@@ -28,13 +45,14 @@ async.executor.thread.name.prefix=api_request_pool-
 
 
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.datasource.url:
-spring.datasource.username=
-spring.datasource.password=
+spring.datasource.url: jdbc:mysql://localhost:3306/lazybot_dc?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+spring.datasource.username=root
+spring.datasource.password=yourpassword
 spring.datasource.hikari.max-lifetime=120000
 
 spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
 spring.jackson.time-zone=GMT+8
+
 
 
 

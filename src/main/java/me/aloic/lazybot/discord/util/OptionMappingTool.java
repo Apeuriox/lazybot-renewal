@@ -11,6 +11,11 @@ public class OptionMappingTool
     {
        return Optional.ofNullable(option).orElseThrow(() -> new RuntimeException("必须参数为被正确传递")).getAsString();
     }
+    public static String getOptionOrException(OptionMapping option, String message)
+    {
+        return Optional.ofNullable(option).orElseThrow(() -> new RuntimeException(message)).getAsString();
+    }
+
     public static String getOptionOrDefault(OptionMapping option,@Nonnull String defaultValue)
     {
         try {

@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *将osu api中返回的对象转换为最终需要发送消息的对象（参数的精简）
@@ -40,6 +41,7 @@ public class TransformerUtil
         playerInfoVO.setPlayerName(playerInfoDTO.getUsername());
         playerInfoVO.setTotalPlayTime(playerInfoDTO.getStatistics().getPlay_time());
         playerInfoVO.setAvatarUrl(playerInfoDTO.getAvatar_url());
+        playerInfoVO.setPrimaryColor(Optional.ofNullable(playerInfoDTO.getProfile_hue()).orElse(333));
         return playerInfoVO;
 
     }

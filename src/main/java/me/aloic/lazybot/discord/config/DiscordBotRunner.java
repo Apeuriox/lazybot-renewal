@@ -4,8 +4,6 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.discord.DiscordBotFactory;
 import me.aloic.lazybot.discord.entity.CommandOption;
 import me.aloic.lazybot.discord.enums.CommandEnum;
-import me.aloic.lazybot.monitor.ResourceMonitor;
-import me.aloic.lazybot.osu.monitor.TokenMonitor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
@@ -25,23 +23,27 @@ import java.util.Optional;
 public class DiscordBotRunner implements ApplicationRunner
 {
     @Resource
-    private DiscordBotFactory botFactory;
+    private DiscordBotFactory discordBotFactory;
     @Value("${discord.bot.id}")
     private String botId;
 
     private JDA botInstance;
 
+    @Value("${lazybot.global.discord.enabled}")
+    private Boolean enabled;
+
     private static final Logger logger = LoggerFactory.getLogger(DiscordBotRunner.class);
-    @Resource
-    private TokenMonitor tokenMonitor;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception
+    public void run(ApplicationArguments args)
     {
-        botInstance = botFactory.createBotInstance();
-        initCommands();
-        ResourceMonitor.initResources();
-        tokenMonitor.refreshClientToken();
+        logger.info("Discord端启用: {}",enabled);
+        if(enabled)
+        {
+            logger.info("正在初始化Discord服务");
+            botInstance = discordBotFactory.createBotInstance();
+            initCommands();
+        }
     }
     private void initCommands(){
         Optional.ofNullable(botInstance)

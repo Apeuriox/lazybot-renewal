@@ -307,9 +307,7 @@
     <rect class="cls-15" width="850" height="480" id="background"/>
     <rect class="cls-35" x="0" y="0" width="850" height="60"/>
     <rect fill="#151b23" x="25" y="70" rx="10" ry="10" stroke="#777" width="800" height="60" id="commandInfos"/>
-    <image
-        xlink:href="assets/info.svg"
-        x="50" y="85" width="30" height="30"/>
+    <path fill="none" transform="translate(45,82) scale(0.75)" opacity="0.7" d="M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18zM24 20v14M24 18v-4" stroke="#f3f3f3" stroke-width="2"/>
     <text class="cls-145" id="desc" transform="translate(90 105)">Only 1 miss scores are counted. If you want all scores to be treated as FCs, use /noChoke instead.</text>
     
     <!-- <rect class="cls-35" transform="translate(0 440)" width="850" height="40"/>

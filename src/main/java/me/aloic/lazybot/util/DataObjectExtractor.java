@@ -98,7 +98,7 @@ public class DataObjectExtractor
         List<ScoreLazerDTO> scoreLazerDTOS =  new ApiRequestStarter(URLBuildUtil.buildURLOfUserBest(playerId,limit,offset,mode),accessToken)
                 .executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, ScoreLazerDTO.class);
         if(scoreLazerDTOS==null|| scoreLazerDTOS.isEmpty()) {
-            throw new RuntimeException("没这成绩: " +"index=" + offset+1 + " player=" + playerId);
+            throw new RuntimeException("没这成绩: " +"index=" + (offset+1) + " player=" + playerId);
         }
         return scoreLazerDTOS;
     }
