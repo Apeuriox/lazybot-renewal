@@ -17,7 +17,7 @@ public class FunServiceImpl implements FunService
     @Override
     public String tips(TipsParameter parameter)
     {
-        if (parameter.getId() == null) {
+        if (parameter.getId() == null || parameter.getId() == 0) {
             return Optional.ofNullable(tipsMapper.selectRandom())
                     .map(TipsPO::getContent)
                     .orElseThrow(() -> new RuntimeException("数据库查询出错"));

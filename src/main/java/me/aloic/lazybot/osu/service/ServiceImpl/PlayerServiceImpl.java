@@ -1,21 +1,18 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import jakarta.annotation.Resource;
-import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapCompactDTO;
-import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
-import me.aloic.lazybot.osu.dao.entity.po.BeatmapCompactPO;
 import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
-import me.aloic.lazybot.osu.dao.mapper.BeatmapCompactMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -24,39 +21,23 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService
 {
-    @Resource
-    private BeatmapCompactMapper beatmapCompactMapper;
-
+    private static final Logger logger = LoggerFactory.getLogger(PlayerServiceImpl.class);
     @Override
     public byte[] score(ScoreParameter params) throws Exception
     {
         BeatmapUserScoreLazer beatmapUserScoreLazer = DataObjectExtractor.extractBeatmapUserScore(params.getAccessToken(),
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
-        BeatmapCompactPO beatmapCompactPO = beatmapCompactMapper.selectByBidAndRuleset(beatmapUserScoreLazer.getScore().getBeatmap_id(), beatmapUserScoreLazer.getScore().getRuleset_id());
-        if (beatmapCompactPO == null || beatmapCompactPO.getMax_combo() == null) {
             ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
                     DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()), params.getMode()),
-                    beatmapUserScoreLazer.getScore(),true);
-            int imageAverageHue = CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
-            scoreVO.getBeatmap().setHue(imageAverageHue);
-            insertBeatmapStatic(scoreVO);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), imageAverageHue);
-        }
-        else {
-            Boolean override= !Objects.equals(beatmapCompactPO.getCheck_sum(), beatmapUserScoreLazer.getScore().getBeatmap().getChecksum());
-            ScoreVO scoreVO = OsuToolsUtil.setupScoreVOCompact(
-                    beatmapUserScoreLazer.getScore().getBeatmap(),
                     beatmapUserScoreLazer.getScore(),
-                    override);
-            revertBeatmapStaticToVO(scoreVO,beatmapCompactPO,override,params);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), beatmapCompactPO.getHue());
-        }
+                    false);
+            verifyBeatmapsCache(scoreVO);
+            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantHue(scoreVO));
     }
 
     @Override
@@ -66,54 +47,24 @@ public class PlayerServiceImpl implements PlayerService
         if(params.getIndex()>scoreList.size()) {
             throw new RuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " +scoreList.size());
         }
-        BeatmapCompactPO beatmapCompactPO = beatmapCompactMapper.selectByBidAndRuleset(
-                scoreList.get(params.getIndex()-1).getBeatmap_id(),
-                scoreList.get(params.getIndex()-1).getRuleset_id());
-        if (beatmapCompactPO == null || beatmapCompactPO.getMax_combo() == null) {
-            ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
-                    DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
-                    scoreList.get(params.getIndex() - 1),
-                    true);
-            int imageAverageHue = CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
-            scoreVO.getBeatmap().setHue(imageAverageHue);
-            insertBeatmapStatic(scoreVO);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), imageAverageHue);
-        }
-        else {
-            Boolean override=!Objects.equals(beatmapCompactPO.getCheck_sum(), scoreList.get(params.getIndex() - 1).getBeatmap().getChecksum());
-            ScoreVO scoreVO = OsuToolsUtil.setupScoreVOCompact(
-                    scoreList.get(params.getIndex() - 1).getBeatmap(),
-                    scoreList.get(params.getIndex() - 1),
-                    override);
-            revertBeatmapStaticToVO(scoreVO,beatmapCompactPO,override,params);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), beatmapCompactPO.getHue());
-        }
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
+                scoreList.get(params.getIndex() - 1),
+                false);
+        verifyBeatmapsCache(scoreVO);
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantHue(scoreVO));
 
     }
     @Override
     public byte[] bp(BpParameter params) throws IOException
     {
         List<ScoreLazerDTO> scoreDTO = DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(params.getPlayerId()),params.getIndex()-1,params.getMode());
-        BeatmapCompactPO beatmapCompactPO = beatmapCompactMapper.selectByBidAndRuleset(scoreDTO.getFirst().getBeatmap_id(), scoreDTO.getFirst().getRuleset_id());
-        if (beatmapCompactPO == null || beatmapCompactPO.getMax_combo() == null) {
             ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
                     DataObjectExtractor.extractBeatmap(params.getAccessToken(),String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
                     scoreDTO.getFirst(),
-                    true);
-            int imageAverageHue=CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
-            scoreVO.getBeatmap().setHue(imageAverageHue);
-            insertBeatmapStatic(scoreVO);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),imageAverageHue);
-        }
-        else {
-            Boolean override = !Objects.equals(beatmapCompactPO.getCheck_sum(), scoreDTO.getFirst().getBeatmap().getChecksum());
-            ScoreVO scoreVO = OsuToolsUtil.setupScoreVOCompact(
-                    scoreDTO.getFirst().getBeatmap(),
-                    scoreDTO.getFirst(),
-                    override);
-            revertBeatmapStaticToVO(scoreVO,beatmapCompactPO,override,params);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), beatmapCompactPO.getHue());
-        }
+                    false);
+            verifyBeatmapsCache(scoreVO);
+            return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),getDominantHue(scoreVO));
     }
     @Override
     public byte[] bplistCardView(BplistParameter params) throws Exception
@@ -213,27 +164,18 @@ public class PlayerServiceImpl implements PlayerService
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,info));
     }
+    private boolean verifyBeatmapsCache(ScoreVO scoreVO) {
+        String checksum=CommonTool.calculateMD5(new File(AssertDownloadUtil.beatmapPath(scoreVO,false).toUri()));
+        if (!checksum.equals(scoreVO.getBeatmap().getChecksum())) {
+            logger.warn("Checksum mismatch, downloading beatmap: {} != {}", scoreVO.getBeatmap().getChecksum(), checksum);
+            AssertDownloadUtil.beatmapPath(scoreVO, true);
+            return false;
+        }
+        return true;
+    }
+    private Integer getDominantHue(ScoreVO scoreVO) throws IOException {
+        return CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
+    }
 
-    private void insertBeatmapStatic(ScoreVO scoreVO)
-    {
-        BeatmapCompactPO beatmapCompactPO = TransformerUtil.reverseBeatmapPO(scoreVO.getBeatmap());
-        beatmapCompactMapper.insert(beatmapCompactPO);
-    }
-    private void updateBeatmapStatic(ScoreVO scoreVO, LazybotCommandParameter params)
-    {
-        BeatmapDTO beatmapDTO=  DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(scoreVO.getBeatmap().getBid()),params.getMode());
-        BeatmapCompactPO beatmapCompactPO = TransformerUtil.reverseBeatmapPO(beatmapDTO);
-        beatmapCompactMapper.updateByBidAndRuleset(beatmapDTO.getId(),beatmapDTO.getMode_int(),beatmapCompactPO);
-    }
-    private void revertBeatmapStaticToVO(ScoreVO scoreVO,BeatmapCompactPO beatmapCompactPO,Boolean override,LazybotCommandParameter params)
-    {
-        scoreVO.getBeatmap().setHue(beatmapCompactPO.getHue());
-        scoreVO.getBeatmap().setMax_combo(beatmapCompactPO.getMax_combo());
-        scoreVO.getBeatmap().setChecksum(beatmapCompactPO.getCheck_sum());
-        scoreVO.getBeatmap().setTitle(beatmapCompactPO.getTitle());
-        scoreVO.getBeatmap().setArtist(beatmapCompactPO.getArtist());
-        scoreVO.getBeatmap().setCreator(beatmapCompactPO.getMapper());
-        if (override) updateBeatmapStatic(scoreVO,params);
-    }
 
 }

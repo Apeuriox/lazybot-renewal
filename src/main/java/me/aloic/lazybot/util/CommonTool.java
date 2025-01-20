@@ -10,13 +10,18 @@ import org.w3c.dom.NodeList;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -742,6 +747,34 @@ public class CommonTool {
     public static Boolean isPositiveInteger(String num)
     {
         return num.matches("[1-9][0-9]*");
+    }
+    public static String calculateMD5(File file)
+    {
+        if (!file.getName().endsWith(".osu")) {
+            throw new IllegalArgumentException("校验和计算: 不支持的文件类型");
+        }
+        try (FileInputStream fis = new FileInputStream(file);
+             FileChannel channel = fis.getChannel()) {
+             MessageDigest digest = MessageDigest.getInstance("MD5");
+             ByteBuffer buffer = ByteBuffer.allocateDirect(512);
+
+            while (channel.read(buffer) != -1) {
+                buffer.flip();
+                digest.update(buffer);
+                buffer.clear();
+            }
+            byte[] md5Bytes = digest.digest();
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : md5Bytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        }
+        catch (Exception e) {
+            throw new RuntimeException("计算MD5时出错: " + e.getMessage());
+        }
     }
 
 }

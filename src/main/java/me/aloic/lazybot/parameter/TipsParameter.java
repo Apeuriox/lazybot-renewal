@@ -11,7 +11,6 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class TipsParameter extends LazybotCommandParameter
 {
@@ -21,7 +20,11 @@ public class TipsParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-
+        if (id==null) id=0;
+        if (id<0) throw new RuntimeException("{id} 必须大于 0");
+    }
+    public TipsParameter(Integer id) {
+        this.id=id;
     }
 
     public static TipsParameter analyzeParameter(List<String> params)
