@@ -1219,7 +1219,7 @@ public class SvgUtil
         }
         return document;
     }
-    public static Document createScoreListDetailed(List<ScoreSequence> scorelist, String primaryColor, String type) throws IOException
+    public static Document createScoreListDetailed(List<ScoreSequence> scorelist, String primaryColor, String type,Integer offset) throws IOException
     {
         try
         {
@@ -1235,7 +1235,7 @@ public class SvgUtil
             doc.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("class", "cls-24");
             doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
-            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot);
+            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot,offset);
         }
         catch (Exception e)
         {
@@ -1243,7 +1243,7 @@ public class SvgUtil
             throw new RuntimeException("SVG 处理时出错");
         }
     }
-    public static Document createScoreListDetailed(List<ScoreSequence> scorelist,PlayerInfoVO info) throws IOException
+    public static Document createScoreListDetailed(List<ScoreSequence> scorelist,PlayerInfoVO info, Integer offset) throws IOException
     {
         try
         {
@@ -1263,7 +1263,7 @@ public class SvgUtil
             doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
             doc.getElementById("playernameLabel").setAttribute("fill", primaryColor);
             doc.getElementById("totalPpLabel").setAttribute("fill", primaryColor);
-            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot);
+            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot, offset);
         }
         catch (Exception e)
         {
@@ -1271,7 +1271,7 @@ public class SvgUtil
             throw new RuntimeException("SVG 处理时出错");
         }
     }
-    private static Document setupBpListDetailedSingle(List<ScoreSequence> scorelist, String primaryColor, Document doc, Element svgRoot)
+    private static Document setupBpListDetailedSingle(List<ScoreSequence> scorelist, String primaryColor, Document doc, Element svgRoot, Integer offset)
     {
         int listIndex=0;
         for (ScoreSequence score : scorelist)
@@ -1444,7 +1444,7 @@ public class SvgUtil
             index.setAttribute("text-anchor", "middle");
             index.setAttribute("fill", "#ffffff");
             index.setAttribute("transform", "translate(725 170)");
-            index.setTextContent("#".concat(String.valueOf((score.getPositionInList()+1))));
+            index.setTextContent("#".concat(String.valueOf((score.getPositionInList()+offset))));
 
             Node ppNode = doc.createElementNS(namespaceSVG, "text");
             Element pp = (Element) ppNode;

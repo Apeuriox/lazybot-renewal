@@ -162,8 +162,11 @@ public class PlayerServiceImpl implements PlayerService
                 params.getMode());
         List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS);
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,info));
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,info,params.getFrom()));
     }
+
+
+
     private boolean verifyBeatmapsCache(ScoreVO scoreVO) {
         String checksum=CommonTool.calculateMD5(new File(AssertDownloadUtil.beatmapPath(scoreVO,false).toUri()));
         if (!checksum.equals(scoreVO.getBeatmap().getChecksum())) {

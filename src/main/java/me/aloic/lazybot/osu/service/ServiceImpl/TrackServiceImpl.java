@@ -212,7 +212,7 @@ public class TrackServiceImpl implements TrackService
         List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores).stream().filter(scoreSequence -> scoreSequence.getDifferenceBetweenNextScore()>=0).toList();
         logger.info("最终过滤长度为: {}",scoreSequences.size());
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned"));
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned",0));
     }
 
 }
