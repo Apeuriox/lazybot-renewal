@@ -45,6 +45,7 @@ public class DiscordUserServiceImpl implements DiscordUserService
     public void linkUser(Bot bot, LazybotSlashCommandEvent event)
     {
         String username = String.join(" ", event.getCommandParameters());
+        Optional.ofNullable(tokenMapper.selectByPlayername(username)).ifPresent(this::createAlreadyBindError);
         Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
                 .ifPresentOrElse(
                         this::createBindError,
@@ -100,6 +101,9 @@ public class DiscordUserServiceImpl implements DiscordUserService
     }
     private void createBindError(AccessTokenPO token){
         throw new RuntimeException("您已绑定用户: " +token.getPlayer_name());
+    }
+    private void createAlreadyBindError(AccessTokenPO token){
+        throw new RuntimeException("该用户已绑定账户: " +token.getQq_code());
     }
     private void createNotBindError(){
         {

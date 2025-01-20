@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 @Data
 @NoArgsConstructor
-public class Covers implements Serializable
+public class CoversDTO implements Serializable
 {
     private String  cover;
     private String  cover2x;

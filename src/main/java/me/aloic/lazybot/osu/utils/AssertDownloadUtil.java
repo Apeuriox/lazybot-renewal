@@ -82,11 +82,11 @@ public class AssertDownloadUtil
         downloadFuture.get();
         logger.info("Download completed for: {}", targetUrl);
     }
-    public static boolean beatmapDownload(Integer bid)
+    public static boolean beatmapDownload(Integer bid,Boolean override)
     {
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/" + bid +".osu";
         File saveFilePath = new File(desiredLocalPath);
-        if (saveFilePath.exists()) {
+        if (saveFilePath.exists() && !override) {
             logger.info("地图.osu文件已存在: {}", saveFilePath.getAbsolutePath());
             return false;
         }
@@ -140,14 +140,14 @@ public class AssertDownloadUtil
     }
 
 
-    public static Path beatmapPath(Integer bid)
+    public static Path beatmapPath(Integer bid,Boolean override)
     {
-        beatmapDownload(bid);
+        beatmapDownload(bid,override);
         return Paths.get(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/" +bid +".osu");
     }
-    public static Path beatmapPath(ScoreVO scoreVO)
+    public static Path beatmapPath(ScoreVO scoreVO, Boolean override)
     {
-        beatmapDownload(scoreVO.getBeatmap().getBid());
+        beatmapDownload(scoreVO.getBeatmap().getBid(),override);
         return Paths.get(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/" +scoreVO.getBeatmap().getBid() +".osu");
     }
     public static String svgAbsolutePath(Integer sid)

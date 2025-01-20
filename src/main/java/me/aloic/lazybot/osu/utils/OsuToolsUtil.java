@@ -12,6 +12,7 @@ import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.TransformerUtil;
+import org.jetbrains.annotations.NotNull;
 
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class OsuToolsUtil
         PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(accessToken,username,"osu");
         return playerInfoDTO.getId();
     }
+
     public static Integer getUserIdByUsername(@Nonnull String username, @Nonnull UserTokenPO tokenPO)
     {
         Integer playerId= tokenPO.getPlayer_id();
@@ -36,35 +38,54 @@ public class OsuToolsUtil
             playerId= OsuToolsUtil.getUserIdByUsername(username, tokenPO.getAccess_token());
         return playerId;
     }
+
     public static Integer getUserIdByUsername(@Nonnull String username, @Nonnull AccessTokenPO tokenPO) {
         Integer playerId= tokenPO.getPlayer_id();
         if(!Objects.equals(username, tokenPO.getPlayer_name()))
             playerId= OsuToolsUtil.getUserIdByUsername(username, tokenPO.getAccess_token());
         return playerId;
     }
+
     public static PlayerInfoDTO getUserInfoByUsername(@Nonnull String username, @Nonnull AccessTokenPO tokenPO)
     {
         return DataObjectExtractor.extractPlayerInfo(tokenPO.getAccess_token(),username,"osu");
     }
+
     public static PlayerInfoDTO getUserInfoByUsername(@Nonnull String username, @Nonnull UserTokenPO tokenPO)
     {
         return DataObjectExtractor.extractPlayerInfo(tokenPO.getAccess_token(),username,"osu");
     }
+
     public static BeatmapVO setupBeatmapVO(BeatmapDTO beatmapDTO)
     {
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransform(beatmapDTO);
         beatmapVO.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapVO.getBeatmapset_id()));
         return beatmapVO;
     }
-    public static ScoreVO setupScoreVO(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO)
+
+    public static ScoreVO setupScoreVO(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override)
     {
         ScoreVO scoreVO = TransformerUtil.transformScoreLazerToScoreVO(scoreLazerDTO);
         scoreVO.setBeatmap(OsuToolsUtil.setupBeatmapVO(beatmapDTO));
+        return setupScoreVOLocalCache(override, scoreVO);
+    }
+
+    public static ScoreVO setupScoreVOCompact(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override)
+    {
+        ScoreVO scoreVO = TransformerUtil.transformScoreLazerToScoreVO(scoreLazerDTO);
+        BeatmapVO beatmapVO = TransformerUtil.beatmapTransformCompact(beatmapDTO);
+        beatmapVO.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapVO.getBeatmapset_id()));
+        scoreVO.setBeatmap(beatmapVO);
+        return setupScoreVOLocalCache(override, scoreVO);
+    }
+
+    @NotNull
+    private static ScoreVO setupScoreVOLocalCache(Boolean override, ScoreVO scoreVO)
+    {
         try {
-            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO), scoreVO));
+            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,override), scoreVO));
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             throw new RuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
         }
         if (CommonTool.modsContainsAnyOfStarChanging(scoreVO.getMods()))
@@ -75,12 +96,13 @@ public class OsuToolsUtil
         return scoreVO;
     }
 
+
     public static List<ScoreVO> setUpImageStatic(List<ScoreVO> scoreVOList)
     {
         for(ScoreVO scoreVO:scoreVOList) {
             scoreVO.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
             try{
-                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO),scoreVO));
+                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,false),scoreVO));
                 if(scoreVO.getPpDetailsLocal().getStar()!=null)
                     scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
             }
@@ -90,6 +112,7 @@ public class OsuToolsUtil
         }
         return scoreVOList;
     }
+
     public static List<ScoreSequence> setUpImageStaticSequence(List<ScoreSequence> scoreSequences)
     {
         for(ScoreSequence scoreSequence:scoreSequences)
@@ -97,7 +120,7 @@ public class OsuToolsUtil
             scoreSequence.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreSequence.getBeatmap().getBeatmapset_id()));
             ModCalculatorUtil.setupBpmChange(scoreSequence);
             try{
-                scoreSequence.setPpDetails(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid()), scoreSequence));
+                scoreSequence.setPpDetails(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(),false), scoreSequence));
                 if (scoreSequence.getPpDetails().getStar() != null) {
                     scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
                 }
@@ -118,7 +141,7 @@ public class OsuToolsUtil
             scoreVO.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
             try
             {
-                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO), scoreVO));
+                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,false), scoreVO));
                 if (scoreVO.getPpDetailsLocal().getStar() != null)
                 {
                     scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
@@ -130,11 +153,13 @@ public class OsuToolsUtil
             }
         }
     }
+
     public static PlayerInfoVO setupPlayerInfoVO(PlayerInfoDTO playerInfoDTO)
     {
         playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,false)));
         return TransformerUtil.userTransform(playerInfoDTO);
     }
+
     public static NoChokeListVO setupNoChokeList(PlayerInfoVO info, List<ScoreVO> scoreList,int type)
     {
         NoChokeListVO noChokeListVO=new NoChokeListVO();
@@ -172,6 +197,7 @@ public class OsuToolsUtil
         noChokeListVO.setInfo(info);
         return noChokeListVO;
     }
+
     public static List<ScoreVO> setupBpifScoreList(BpifParameter params, List<ScoreLazerDTO> scoreLazerDTOS, PlayerInfoVO info) throws IOException
     {
         List<ScoreVO> scoreList=TransformerUtil.scoreTransformForList(scoreLazerDTOS);
@@ -188,7 +214,7 @@ public class OsuToolsUtil
                 case "-" -> scoreVO.getModJSON().removeIf(modEntities::contains);
                 default -> throw new RuntimeException("Operator invalid: " + params.getOperator());
             }
-            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO), scoreVO));
+            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,false), scoreVO));
             if (scoreVO.getPpDetailsLocal().getStar() != null)
             {
                 scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
@@ -215,6 +241,7 @@ public class OsuToolsUtil
         info.setFixedPPString(sb.toString());
         return scoreList;
     }
+
     private static List<Mod> wireModEntities(List<String> modStrList) {
         List<Mod> modList = new ArrayList<>();
         for (String modStr : modStrList) {

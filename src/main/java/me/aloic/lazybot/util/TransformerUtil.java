@@ -161,8 +161,31 @@ public class TransformerUtil
         beatmapVO.setBeatmapset_id(beatmapDTO.getBeatmapset_id());
         beatmapVO.setBid(beatmapDTO.getId());
         beatmapVO.setMode_int(beatmapDTO.getMode_int());
+        beatmapVO.setChecksum(beatmapDTO.getChecksum());
         return beatmapVO;
     }
+    public static BeatmapVO beatmapTransformCompact(BeatmapDTO beatmapDTO){
+        BeatmapVO beatmapVO=new BeatmapVO();
+        beatmapVO.setAccuracy(beatmapDTO.getAccuracy()); //od
+        beatmapVO.setAr(beatmapDTO.getAr()); //ar
+        beatmapVO.setCs(beatmapDTO.getCs());  //cs
+        beatmapVO.setDrain(beatmapDTO.getDrain()); //hp
+        beatmapVO.setDifficult_rating(beatmapDTO.getDifficulty_rating());  //star rating
+        beatmapVO.setBpm(beatmapDTO.getBpm());
+        beatmapVO.setHit_length(beatmapDTO.getHit_length());
+        beatmapVO.setTotal_length(beatmapDTO.getTotal_length());
+        beatmapVO.setVersion(beatmapDTO.getVersion()); //diff name
+        beatmapVO.setStatus(beatmapDTO.getStatus());  //ranked or loved something
+        beatmapVO.setMax_combo(beatmapDTO.getMax_combo());
+        beatmapVO.setSid(beatmapDTO.getBeatmapset_id());
+        beatmapVO.setBeatmapset_id(beatmapDTO.getBeatmapset_id());
+        beatmapVO.setBid(beatmapDTO.getId());
+        beatmapVO.setMode_int(beatmapDTO.getMode_int());
+        beatmapVO.setChecksum(beatmapDTO.getChecksum());
+        return beatmapVO;
+    }
+
+
     public static BeatmapVO beatmapTransform(BeatmapDTO beatmapDTO, BeatmapsetDTO beatmapsetDTO){
         beatmapDTO.setBeatmapset(beatmapsetDTO);
         BeatmapVO beatmapVO=new BeatmapVO();
@@ -288,13 +311,19 @@ public class TransformerUtil
         return new BeatmapCompactPO(beatmapDTO.getId(),
                 beatmapDTO.getBeatmapset_id(),
                 beatmapDTO.getMax_combo(),
-                beatmapDTO.getMode_int());
+                beatmapDTO.getMode_int(),
+                beatmapDTO.getChecksum());
     }
     public static BeatmapCompactPO reverseBeatmapPO(BeatmapVO beatmapVO)
     {
         return new BeatmapCompactPO(beatmapVO.getBid(),
                 beatmapVO.getBeatmapset_id(),
                 beatmapVO.getMax_combo(),
-                beatmapVO.getMode_int());
+                beatmapVO.getMode_int(),
+                beatmapVO.getHue(),
+                beatmapVO.getChecksum(),
+                beatmapVO.getArtist(),
+                beatmapVO.getTitle(),
+                beatmapVO.getCreator());
     }
 }

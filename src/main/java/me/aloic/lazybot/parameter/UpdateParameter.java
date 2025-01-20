@@ -22,16 +22,22 @@ public class UpdateParameter extends LazybotCommandParameter
     {
 
     }
-    public UpdateParameter(String playerName, String mode)
+    public UpdateParameter(String playerName, String type)
     {
         this.setPlayerName(playerName);
-        this.setMode(mode);
+        this.type=type;
     }
     public static UpdateParameter analyzeParameter(List<String> params)
     {
         UpdateParameter parameter=new UpdateParameter();
         if (!params.isEmpty()) {
-            parameter.setPlayerName(String.join(" ", params));
+            if (params.size() == 1) {
+                throw new RuntimeException("update avatar {username} or Update track {username}");
+            }
+            else {
+                parameter.setType(params.getFirst());
+                parameter.setPlayerName(params.get(1));
+            }
         }
         return parameter;
     }

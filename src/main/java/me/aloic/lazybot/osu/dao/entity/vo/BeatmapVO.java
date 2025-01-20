@@ -39,5 +39,7 @@ public class BeatmapVO
     private Double pp_spd;
     private Double pp_acc;
     private BeatmapAttributeVO attributes;
+    private Integer hue;
+    private String checksum;
 
 }

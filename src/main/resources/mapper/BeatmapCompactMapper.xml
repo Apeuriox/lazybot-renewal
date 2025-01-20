@@ -8,11 +8,14 @@
             <result column="sid" jdbcType="INTEGER" property="sid"/>
             <result column="max_combo" jdbcType="INTEGER" property="max_combo"/>
             <result column="ruleset_id" jdbcType="INTEGER" property="ruleset_id"/>
-
-
+            <result column="hue" jdbcType="INTEGER" property="hue"/>
+            <result column="check_sum" jdbcType="VARCHAR" property="check_sum"/>
+            <result column="artist" jdbcType="VARCHAR" property="artist"/>
+            <result column="title" jdbcType="VARCHAR" property="title"/>
+            <result column="mapper" jdbcType="VARCHAR" property="mapper"/>
         </resultMap>
         <sql id = "Base_Column_List">
-           id, bid, sid, max_combo, ruleset_id
+           id, bid, sid, max_combo, ruleset_id, hue, check_sum, artist, title, mapper
         </sql>
 
         <select id="selectByBid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -20,5 +23,23 @@
             from beatmap_static
             where bid =#{bid}
         </select>
+        <select id="selectByBidAndRuleset" parameterType="map" resultMap="BaseResultMap">
+            SELECT <include refid="Base_Column_List"/>
+            FROM beatmap_static
+            where bid =#{bid}
+              AND ruleset_id = #{ruleset_id}
+        </select>
+        <update id="updateByBidAndRuleset" parameterType="map">
+            UPDATE beatmap_static
+            SET
+                max_combo = #{user.max_combo},
+                hue = #{user.hue},
+                check_sum = #{user.check_sum},
+                artist = #{user.artist},
+                title = #{user.title},
+                mapper = #{user.mapper}
+            where bid =#{bid}
+              AND ruleset_id = #{ruleset_id}
+        </update>
 
 </mapper>

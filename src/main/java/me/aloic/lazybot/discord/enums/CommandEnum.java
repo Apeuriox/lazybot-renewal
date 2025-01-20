@@ -89,6 +89,11 @@ public enum CommandEnum {
                     new CommandOption(OptionType.INTEGER, "to", "指定结束的位置", true, false),
                     new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
+    UPDATE(19, "update", "更新指定类型缓存数据", true,
+            List.of(new CommandOption(OptionType.INTEGER, "type", "指定类型", true, false),
+                    new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false))),
+    TIPS(19, "tips", "获取一个Aloic的小提示", true,
+            List.of(new CommandOption(OptionType.INTEGER, "id", "指定id", false, false))),
     ;
     private final Integer id;
 
