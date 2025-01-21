@@ -41,5 +41,7 @@ public class BeatmapVO
     private BeatmapAttributeVO attributes;
     private Integer hue;
     private String checksum;
+    private String genre;
+    private String language;
 
 }

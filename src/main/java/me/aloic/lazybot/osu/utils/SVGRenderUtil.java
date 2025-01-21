@@ -23,23 +23,29 @@ public class SVGRenderUtil
     }
 
 
-    public static OutputStream renderScoreToImage(ScoreVO targetScore, int version, int hue)
+    public static OutputStream renderScoreToImage(ScoreVO targetScore, int version, int[] primaryColor)
     {
 
         Document doc;
         if (version==0)
+            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore,primaryColor);
+        else if (version==1)
             doc = SvgUtil.getScorePanelWhiteModeDoc(targetScore);
-        else
-            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore,hue);
+        else if (version==2)
+            doc = SvgUtil.getScorePanelMaterialDesign(targetScore,primaryColor);
+        else throw new RuntimeException("不支持的面板版本: " + version);
         return renderSVGToOutputstream(doc);
     }
-    public static byte[] renderScoreToByteArray(ScoreVO targetScore, int version,int hue)
+    public static byte[] renderScoreToByteArray(ScoreVO targetScore, int version,int[] primaryColor)
     {
         Document doc;
         if (version==0)
+            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore,primaryColor);
+        else if (version==1)
             doc = SvgUtil.getScorePanelWhiteModeDoc(targetScore);
-        else
-            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore,hue);
+        else if (version==2)
+            doc = SvgUtil.getScorePanelMaterialDesign(targetScore,primaryColor);
+        else throw new RuntimeException("不支持的面板版本: " + version);
         return renderSVGDocumentToByteArray(doc);
     }
     public static OutputStream renderSVGToOutputstream(Document document)

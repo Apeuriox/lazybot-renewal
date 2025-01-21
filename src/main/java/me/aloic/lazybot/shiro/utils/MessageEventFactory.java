@@ -41,8 +41,7 @@ public class MessageEventFactory
     {
         String s = convertString(slashCommandEvent.getMessageEvent().getMessage());
         s = formatCommand(s);
-        if(s.contains("&")) slashCommandEvent.setScorePanelVersion(0);
-        else  slashCommandEvent.setScorePanelVersion(1);
+        slashCommandEvent.setScorePanelVersion(countOccurrences(s, '&'));
         s=s.replace("&", "");
 
         List<String> information = new java.util.ArrayList<>(List.of(s.split(" ")));
@@ -86,5 +85,14 @@ public class MessageEventFactory
                 .replace("&#93;", "]")
                 .replace("&amp;", "&")
                 .replace("&#44;", ",");
+    }
+    public static int countOccurrences(String originalStr, char target) {
+        int count = 0;
+        for (char c : originalStr.toCharArray()) {
+            if (c == target) {
+                count++;
+            }
+        }
+        return count;
     }
 }

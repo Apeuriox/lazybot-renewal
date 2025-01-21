@@ -162,6 +162,8 @@ public class TransformerUtil
         beatmapVO.setBid(beatmapDTO.getId());
         beatmapVO.setMode_int(beatmapDTO.getMode_int());
         beatmapVO.setChecksum(beatmapDTO.getChecksum());
+        beatmapVO.setGenre(beatmapDTO.getBeatmapset().getGenre());
+        beatmapVO.setLanguage(beatmapDTO.getBeatmapset().getLanguage());
         return beatmapVO;
     }
     public static BeatmapVO beatmapTransformCompact(BeatmapDTO beatmapDTO){

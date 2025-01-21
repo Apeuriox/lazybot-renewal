@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1920" height="1080">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-2 {
+        font-size: 10px;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14 {
+        font-family: Outfit-Regular, Outfit;
+      }
+
+      .cls-2, .cls-9, .cls-11, .cls-13 {
+        fill: #4d4d4d;
+      }
+
+      .cls-15 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-16 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-17 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-18 {
+        letter-spacing: -.1em;
+      }
+
+      .cls-19 {
+        letter-spacing: 0em;
+      }
+
+      .cls-20 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-21 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-3, .cls-4, .cls-22, .cls-5, .cls-6, .cls-7, .cls-8, .cls-23, .cls-10, .cls-24, .cls-25, .cls-14 {
+        fill: #333;
+      }
+
+      .cls-3, .cls-9, .cls-12, .cls-13 {
+        font-size: 30px;
+      }
+
+      .cls-26 {
+        mask: url(#mask-1);
+      }
+
+      .cls-4 {
+        font-size: 75px;
+      }
+
+      .cls-27 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-28 {
+        letter-spacing: 0em;
+      }
+
+      .cls-22, .cls-29 {
+        opacity: .25;
+      }
+
+      .cls-30 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-31 {
+        letter-spacing: -.08em;
+      }
+
+      .cls-32 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-33 {
+        fill: #fff;
+      }
+
+
+      .cls-35 {
+        mask: url(#mask);
+      }
+
+      .cls-36 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-37 {
+        letter-spacing: 0em;
+      }
+
+      .cls-38 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-5, .cls-11, .cls-14 {
+        font-size: 15px;
+      }
+
+      .cls-39 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-40 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-41 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-42 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-43 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-44 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-45 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-6, .cls-24 {
+        font-size: 20px;
+      }
+
+      .cls-46 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-47 {
+        letter-spacing: 0em;
+      }
+
+      .cls-48 {
+        letter-spacing: 0em;
+      }
+
+      .cls-7 {
+        font-size: 25px;
+      }
+
+      .cls-49 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-50 {
+        fill: #f2f2f2;
+      }
+
+      .cls-8, .cls-51, .cls-9, .cls-14 {
+        isolation: isolate;
+      }
+
+      .cls-52 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-53 {
+        letter-spacing: -.09em;
+      }
+
+      .cls-54 {
+        letter-spacing: 0em;
+      }
+
+      .cls-55 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-56 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-57 {
+        letter-spacing: 0em;
+      }
+
+      .cls-58 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-59 {
+        letter-spacing: -.11em;
+      }
+
+      .cls-60 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-61 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-62 {
+        letter-spacing: 0em;
+      }
+
+      .cls-63 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-10 {
+        font-size: 90px;
+      }
+
+      .cls-64 {
+        fill: #999;
+      }
+
+      .cls-65 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-66 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-67 {
+        mix-blend-mode: overlay;
+      }
+
+      .cls-68 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-69 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-70 {
+        letter-spacing: 0em;
+      }
+
+      .cls-24, .cls-25 {
+        font-family: Outfit-Bold, Outfit;
+        font-weight: 700;
+      }
+
+      .cls-25 {
+        font-size: 210px;
+        letter-spacing: -.03em;
+      }
+
+      .cls-71 {
+        letter-spacing: -.07em;
+      }
+
+      .cls-72 {
+        letter-spacing: 0em;
+      }
+
+      .cls-12 {
+        fill: #1a1a1a;
+      }
+
+      .cls-73 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-74 {
+        fill: #b3b3b3;
+      }
+
+      .cls-75 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-76 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-77 {
+        letter-spacing: 0em;
+      }
+
+      .cls-78 {
+        letter-spacing: 0em;
+      }
+
+      .cls-79 {
+        fill: gray;
+      }
+
+      .cls-80 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-81 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-82 {
+        letter-spacing: 0em;
+      }
+
+      .cls-83 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-84 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-85 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-86 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-87 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-88 {
+        letter-spacing: 0em;
+      }
+
+      .cls-89 {
+        letter-spacing: 0em;
+      }
+
+      .cls-90 {
+        letter-spacing: -.07em;
+      }
+
+      .cls-91 {
+        letter-spacing: 0em;
+      }
+
+      .cls-92 {
+        fill: #e6e6e6;
+      }
+    </style>
+      <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="15"/>
+
+    </filter>
+    <mask id="mask" x="-609.97" y="-370" width="2689.97" height="1814.02" maskUnits="userSpaceOnUse">
+      <rect class="cls-33" width="1920" height="1080"/>
+    </mask>
+    <mask id="mask-1" x="-647" y="-408" width="2764" height="1889" maskUnits="userSpaceOnUse">
+      <g>
+        <rect class="cls-33" x="915" y="75" width="90" height="1920" transform="translate(-75 1995) rotate(-90)"/>
+        <rect class="cls-33" x="10" y="60" width="460" height="400" rx="30" ry="30" transform="translate(-20 500) rotate(-90)"/>
+        <rect class="cls-33" x="20" y="530" width="440" height="400" rx="20" ry="20" transform="translate(970 490) rotate(90)"/>
+        <circle class="cls-33" cx="1720" cy="320" r="160"/>
+        <rect class="cls-33" x="1615" y="455" width="210" height="320" rx="30" ry="30" transform="translate(2335 -1105) rotate(90)"/>
+        <rect class="cls-33" x="595" y="685" width="210" height="320" rx="30" ry="30" transform="translate(1545 145) rotate(90)"/>
+        <rect class="cls-33" x="1445" y="515" width="210" height="660" rx="30" ry="30" transform="translate(2395 -705) rotate(90)"/>
+        <path class="cls-33" d="M1045,605h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(1805 -275) rotate(90)"/>
+        <rect class="cls-33" x="1015" y="658.33" width="50" height="320" rx="5" ry="5" transform="translate(1858.33 -221.67) rotate(90)"/>
+        <rect class="cls-33" x="1015" y="711.67" width="50" height="320" rx="5" ry="5" transform="translate(1911.67 -168.33) rotate(90)"/>
+        <path class="cls-33" d="M1045,765h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(115 1965) rotate(-90)"/>
+      </g>
+    </mask>
+  </defs>
+  <g class="cls-51">
+    <g id="Background">
+      <rect class="cls-50" width="1920" height="1080"/>
+      <g id="Background-2" data-name="Background">
+        <g class="cls-35">
+            <image
+            xlink:href="assets/2287983.jpg"
+             x="0"
+             y="0"
+             id="mapBg"
+             preserveAspectRatio="xMidYMid slice"
+            width="1920"
+            height="1080"/>
+        </g>
+        <g class="cls-26">
+          <image  x="0"
+            y="0"
+            width="1920"
+              id="mapBg-mask"
+            filter="url(#blur)"
+            preserveAspectRatio="xMidYMid slice"
+            transform="scale(1.1)"
+            height="1080" xlink:href="assets/2287983.jpg" />
+        </g>
+      </g>
+    
+    </g>
+    <g id="Deco">
+      <g class="cls-29">
+        <rect class="cls-92" x="915" y="75" width="90" height="1920" transform="translate(-75 1995) rotate(-90)"/>
+        <rect class="cls-92" x="10" y="60" width="460" height="400" rx="30" ry="30" transform="translate(-20 500) rotate(-90)"/>
+        <rect class="cls-92" x="20" y="530" width="440" height="400" rx="20" ry="20" transform="translate(970 490) rotate(90)"/>
+        <circle class="cls-64" cx="1720" cy="320" r="160"/>
+        <rect class="cls-64" x="1615" y="455" width="210" height="320" rx="30" ry="30" transform="translate(2335 -1105) rotate(90)"/>
+        <rect class="cls-64" x="595" y="685" width="210" height="320" rx="30" ry="30" transform="translate(1545 145) rotate(90)"/>
+        <rect class="cls-92" x="1445" y="515" width="210" height="660" rx="30" ry="30" transform="translate(2395 -705) rotate(90)"/>
+        <path class="cls-64" d="M1045,605h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(1805 -275) rotate(90)"/>
+        <rect class="cls-74" x="1015" y="658.33" width="50" height="320" rx="5" ry="5" transform="translate(1858.33 -221.67) rotate(90)"/>
+        <rect class="cls-92" x="1015" y="711.67" width="50" height="320" rx="5" ry="5" transform="translate(1911.67 -168.33) rotate(90)"/>
+        <path class="cls-92" d="M1045,765h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(115 1965) rotate(-90)"/>
+      </g>
+      <rect class="cls-79" x="20" y="1010" width="50" height="50" rx="15" ry="15"/>
+      <path class="cls-64" d="M402.5,617.5H80s0-35,0-35h322.5c9.66,0,17.5,7.84,17.5,17.5h0c0,9.67-7.84,17.5-17.5,17.5Z"/>
+      <path class="cls-79" d="M80,582.5h72.5c9.66,0,17.5,7.84,17.5,17.5h0c0,9.66-7.84,17.5-17.5,17.5h-72.5v-35h0Z"/>
+      <path class="cls-64" d="M80.89,581.07h0c1.13,1,2.74,1.26,4.12.65h0c2.09-.91,4.51.16,5.22,2.33h0c.48,1.43,1.74,2.46,3.24,2.63h0c2.26.25,3.82,2.4,3.36,4.63h0c-.31,1.48.28,3,1.5,3.9h0c1.84,1.35,2.11,3.99.6,5.69h0c-1,1.13-1.26,2.74-.65,4.12h0c.91,2.09-.16,4.51-2.33,5.22h0c-1.43.48-2.46,1.74-2.63,3.24h0c-.25,2.26-2.4,3.82-4.63,3.36h0c-1.48-.31-3,.28-3.9,1.5h0c-1.35,1.84-3.99,2.11-5.69.6h0c-1.13-1-2.74-1.26-4.12-.65h0c-2.09.91-4.51-.16-5.22-2.33h0c-.48-1.43-1.74-2.46-3.24-2.63h0c-2.26-.25-3.82-2.4-3.36-4.63h0c.31-1.48-.28-3-1.5-3.9h0c-1.84-1.35-2.11-3.99-.6-5.69h0c1-1.13,1.26-2.74.65-4.12h0c-.91-2.09.16-4.51,2.33-5.22h0c1.43-.48,2.46-1.74,2.63-3.24h0c.25-2.26,2.4-3.82,4.63-3.36h0c1.48.31,3-.28,3.9-1.5h0c1.35-1.84,3.99-2.11,5.69-.6Z"/>
+      <polygon class="cls-23" points="80 590 82.94 595.95 89.51 596.91 84.76 601.55 85.88 608.09 80 605 74.12 608.09 75.24 601.55 70.49 596.91 77.06 595.95 80 590"/>
+      <path class="cls-22" id="osu" d="M860,1018.33c9.19,0,16.67,7.48,16.67,16.67s-7.48,16.67-16.67,16.67-16.67-7.48-16.67-16.67,7.48-16.67,16.67-16.67M860,1015c-11.05,0-20,8.95-20,20s8.95,20,20,20,20-8.95,20-20-8.95-20-20-20h0ZM860,1021.67c-7.36,0-13.33,5.97-13.33,13.33s5.97,13.33,13.33,13.33,13.33-5.97,13.33-13.33-5.97-13.33-13.33-13.33Z"/>
+      <path class="cls-22" id="taiko" d="M926.67,1018.33c9.19,0,16.67,7.48,16.67,16.67s-7.48,16.67-16.67,16.67-16.67-7.48-16.67-16.67,7.48-16.67,16.67-16.67M926.67,1015c-11.05,0-20,8.95-20,20s8.95,20,20,20,20-8.95,20-20-8.95-20-20-20h0ZM926.67,1025c5.51,0,10,4.49,10,10s-4.49,10-10,10-10-4.49-10-10,4.49-10,10-10M926.67,1021.67c-7.36,0-13.33,5.97-13.33,13.33s5.97,13.33,13.33,13.33,13.33-5.97,13.33-13.33-5.97-13.33-13.33-13.33h0ZM928.33,1022.33h-3.33v25.33h3.33v-25.33Z"/>
+      <path class="cls-22" id="fruits" d="M993.33,1018.33c9.19,0,16.67,7.48,16.67,16.67s-7.48,16.67-16.67,16.67-16.67-7.48-16.67-16.67,7.48-16.67,16.67-16.67M993.33,1015c-11.05,0-20,8.95-20,20s8.95,20,20,20,20-8.95,20-20-8.95-20-20-20h0ZM995,1028.33c0,1.84-1.49,3.33-3.33,3.33s-3.33-1.49-3.33-3.33,1.49-3.33,3.33-3.33,3.33,1.49,3.33,3.33ZM991.67,1038.33c-1.84,0-3.33,1.49-3.33,3.33s1.49,3.33,3.33,3.33,3.33-1.49,3.33-3.33-1.49-3.33-3.33-3.33ZM998.33,1031.67c-1.84,0-3.33,1.49-3.33,3.33s1.49,3.33,3.33,3.33,3.33-1.49,3.33-3.33-1.49-3.33-3.33-3.33Z"/>
+      <path class="cls-22" id="mania" d="M1060,1018.33c9.19,0,16.67,7.48,16.67,16.67s-7.48,16.67-16.67,16.67-16.67-7.48-16.67-16.67,7.48-16.67,16.67-16.67M1060,1015c-11.05,0-20,8.95-20,20s8.95,20,20,20,20-8.95,20-20-8.95-20-20-20h0ZM1061.67,1048.33v-26.67c0-.92-.75-1.67-1.67-1.67s-1.67.75-1.67,1.67v26.67c0,.92.75,1.67,1.67,1.67s1.67-.75,1.67-1.67ZM1068.33,1041.67v-13.33c0-.92-.75-1.67-1.67-1.67s-1.67.75-1.67,1.67v13.33c0,.92.75,1.67,1.67,1.67s1.67-.75,1.67-1.67ZM1055,1041.67v-13.33c0-.92-.75-1.67-1.67-1.67s-1.67.75-1.67,1.67v13.33c0,.92.75,1.67,1.67,1.67s1.67-.75,1.67-1.67Z"/>
+    </g>
+    <g id="Main">
+      <text class="cls-2" transform="translate(80 1020)">Player Name</text>
+      <text class="cls-12" transform="translate(80 1050)" id="playername">*Player Name</text>
+      <text class="cls-2" transform="translate(1832.72 1020)">Achieved Time</text>
+      <text class="cls-12" transform="translate(1704.13 1050)" id="achievedTime">YYYY-MM-DD</text>
+      <!-- <text class="cls-2" transform="translate(200 1020)"><tspan id="totalPp">0000</tspan><tspan>pp</tspan></text>
+      -->
+      <text class="cls-3" transform="translate(60 80)">BASIC INFO</text>
+      <text class="cls-11" transform="translate(60 120)">TITLE</text>
+      <text class="cls-3" transform="translate(60 150)" id="title">*Title</text>
+      <text class="cls-11" transform="translate(60 180)">Artist</text>
+      <text class="cls-3" transform="translate(60 210)" id="artist">*Artist</text>
+      <text class="cls-11" transform="translate(60 240)">MAPPER</text>
+      <text class="cls-3" transform="translate(60 270)" id="mapper">*Mapper</text>
+      <text class="cls-11" transform="translate(60 300)">DIFFUCULTY</text>
+      <text class="cls-3" transform="translate(60 330)" id="version">*Diffuculty</text>
+      <text class="cls-11" transform="translate(60 360)">GENRE</text>
+      <text class="cls-3" transform="translate(60 390)" id="genre">*Genre</text>
+      <text class="cls-11" transform="translate(60 420)">LANGUAGE</text>
+      <text class="cls-3" transform="translate(60 450)" id="language">*Language</text>
+
+
+      <text class="cls-3" transform="translate(60 550)">BEATMAP INFO</text>
+      <text class="cls-6" transform="translate(107 607.5)" id="starRating">0.00</text>
+      <text class="cls-24" transform="translate(180 607.5)" id="status">RANKED</text>
+      <text class="cls-11" transform="translate(60 650)">BID</text>
+      <text class="cls-3" transform="translate(60 680)" id="bid">*11223344</text>
+      <text class="cls-11" transform="translate(240 650)">SID</text>
+      <text class="cls-3" transform="translate(240 680)" id="sid">*11223344</text>
+      <text class="cls-11" transform="translate(60 780)">BPM</text>
+      <text class="cls-3" transform="translate(60 810)" id="bpm">300 (200)</text>
+      <text class="cls-11" transform="translate(240 780)">LENGTH</text>
+      <text class="cls-3" transform="translate(240 810)" id="length">3:59</text>
+      <text class="cls-11" transform="translate(60 840)">AR</text>
+      <text class="cls-3" transform="translate(60 870)" id="ar">10.0</text>
+      <text class="cls-11" transform="translate(240 840)">OD</text>
+      <text class="cls-3" transform="translate(240 870)" id="od">10.0</text>
+      <text class="cls-11" transform="translate(60 900)">CS</text>
+      <text class="cls-3" transform="translate(60 930)" id="cs">10.0</text>
+      <text class="cls-11" transform="translate(240 900)">HP</text>
+      <text class="cls-3" transform="translate(240 930)" id="hp">10.0</text>
+      <text class="cls-11" transform="translate(900 760)">GREAT</text>
+      <text class="cls-3" transform="translate(960 775)" id="great">0000</text>
+      <text class="cls-11" transform="translate(900 813.33)" >OK</text>
+      <text class="cls-3" transform="translate(960 828.33)" id="ok">0000</text>
+      <text class="cls-11" transform="translate(900 866.67)">MEH</text>
+      <text class="cls-3" transform="translate(960 881.67)" id="meh">0000</text>
+      <text class="cls-11" transform="translate(900 920)">MISS</text>
+      <text class="cls-3" transform="translate(960 935)" id="miss">0000</text>
+      <text class="cls-25" transform="translate(1643.46 380)" id="rank">A</text>
+      <g>
+        <text class="cls-3" transform="translate(1623.95 429.58) rotate(37.43)"><tspan x="0" y="0">0</tspan></text>
+        <text class="cls-3" transform="translate(1641.2 442.61) rotate(28.95)"><tspan x="0" y="0">0</tspan></text>
+        <text class="cls-3" transform="translate(1660.14 452.93) rotate(20.43)"><tspan x="0" y="0">0</tspan></text>
+        <text class="cls-3" transform="translate(1679.13 459.67) rotate(14.7)"><tspan x="0" y="0">,</tspan></text>
+        <text class="cls-3" transform="translate(1687.51 462.14) rotate(8.97)"><tspan x="0" y="0">0</tspan></text>
+        <text class="cls-3" transform="translate(1708.99 465.29) rotate(.93)"><tspan x="0" y="0">0</tspan></text>
+        <text class="cls-3" transform="translate(1730.43 465.42) rotate(-7.93)"><tspan x="0" y="0">0</tspan></text>
+        <text class="cls-3" transform="translate(1750.34 462.33) rotate(-13.66)"><tspan x="0" y="0">,</tspan></text>
+        <text class="cls-3" transform="translate(1758.87 460.53) rotate(-19.38)"><tspan x="0" y="0">0</tspan></text>
+        <text class="cls-3" transform="translate(1779.2 453.22) rotate(-27.92)"><tspan x="0" y="0">0</tspan></text>
+        <text class="cls-3" transform="translate(1798.22 442.98) rotate(-36.4)"><tspan x="0" y="0">0</tspan></text>
+      </g>
+      <text class="cls-13" transform="translate(1680.13 210)">RANK</text>
+      <text class="cls-13" transform="translate(1590 560)">Performance</text>
+      <text class="cls-10" transform="translate(1720 645)" text-anchor="middle" id="pp">0,000</text>
+      <text class="cls-13" transform="translate(560 780)">ACCURACY</text>
+      <text class="cls-11" transform="translate(560 910)">COMBO</text>
+      <text class="cls-4" transform="translate(560 855)" id="accuracy">100.00%</text>
+      <text class="cls-6" transform="translate(560 930)" id="combo">0000X/0000X(00.00%)</text>
+      <text class="cls-9" transform="translate(1240 780)">PP-Acc Coordination</text>
+      <g transform="translate(0,5)">
+        <g class="cls-51">
+          <text class="cls-14" transform="translate(1240 800)">95.00%</text>
+        </g>
+        <g id="_95_pp" data-name="95%pp" class="cls-51">
+          <text class="cls-7" transform="translate(1240 820)"><tspan id="95%pp">000 </tspan><tspan class="cls-19">PP</tspan></text>
+        </g>
+  
+    
+        <g class="cls-51">
+          <text class="cls-14" transform="translate(1370 800)">97.00%</text>
+        </g>
+        <g id="_97_pp" data-name="97%pp" class="cls-51">
+          <text class="cls-7" transform="translate(1370 820)"><tspan id="97%pp">000 </tspan><tspan class="cls-19">PP</tspan></text>
+        </g>
+
+        <g class="cls-51">
+          <text class="cls-14" transform="translate(1500 800)">98.00%</text>
+        </g>
+        <g id="_98_pp" data-name="98%pp" class="cls-51">
+          <text class="cls-7" transform="translate(1500 820)"><tspan id="98%pp">000 </tspan><tspan class="cls-19">PP</tspan></text>
+        </g>
+  
+        <g class="cls-51">
+          <text class="cls-14" transform="translate(1630 800)">99.00%</text>
+        </g>
+        <g id="_99_pp" data-name="99%pp" class="cls-51">
+          <text class="cls-7" transform="translate(1630 820)"><tspan id="99%pp">000 </tspan><tspan class="cls-19">PP</tspan></text>
+        </g>
+        <g class="cls-51">
+          <text class="cls-14" transform="translate(1760 800)">100.00%</text>
+        </g>
+        <g id="_100_pp" data-name="100%pp" class="cls-51">
+          <text class="cls-7" transform="translate(1760 820)"><tspan id="100%pp">000 </tspan><tspan class="cls-19">PP</tspan></text>
+        </g>
+      </g>
+      <text class="cls-9" transform="translate(1240 880)">DETAILS</text>
+      <text class="cls-5" transform="translate(1240 900)">AIM</text>
+      <text class="cls-5" transform="translate(1500 900)">SPD</text>
+      <text class="cls-5" transform="translate(1760 900)">ACC</text>
+      <text class="cls-8" transform="translate(1240 930)"><tspan font-size="30px" id="aimPPGet">0000</tspan><tspan>/</tspan><tspan font-szie="23px" id="aimPPAll">0000</tspan></text>
+      <text class="cls-8" transform="translate(1500 930)"><tspan font-size="30px" id="spdPPGet">0000</tspan><tspan>/</tspan><tspan font-szie="23px" id="spdPPAll">0000</tspan></text>
+      <text class="cls-8" transform="translate(1760 930)"><tspan font-size="30px" id="accPPGet">0000</tspan><tspan>/</tspan><tspan font-szie="23px" id="accPPAll">0000</tspan></text>
+      <text class="cls-3" transform="translate(1860 695)" text-anchor="end"><tspan>If FC </tspan><tspan id="iffc">0000</tspan><tspan>pp</tspan></text>
+    </g>
+    <g id="Color">
+      <g class="cls-67">
+        <rect id="color-0" class="cls-34" x="915" y="75" width="90" height="1920" transform="translate(-75 1995) rotate(-90)"/>
+        <rect id="color-1" class="cls-34" x="10" y="60" width="460" height="400" rx="30" ry="30" transform="translate(-20 500) rotate(-90)"/>
+        <rect id="color-2" class="cls-34" x="20" y="530" width="440" height="400" rx="20" ry="20" transform="translate(970 490) rotate(90)"/>
+        <circle id="color-3" class="cls-34" cx="1720" cy="320" r="160"/>
+        <rect id="color-4" class="cls-34" x="1615" y="455" width="210" height="320" rx="30" ry="30" transform="translate(2335 -1105) rotate(90)"/>
+        <rect id="color-5" class="cls-34" x="595" y="685" width="210" height="320" rx="30" ry="30" transform="translate(1545 145) rotate(90)"/>
+        <rect id="color-6" class="cls-34" x="1445" y="515" width="210" height="660" rx="30" ry="30" transform="translate(2395 -705) rotate(90)"/>
+        <path id="color-7" class="cls-34" d="M1045,605h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(1805 -275) rotate(90)"/>
+        <rect id="color-8" class="cls-34" x="1015" y="658.33" width="50" height="320" rx="5" ry="5" transform="translate(1858.33 -221.67) rotate(90)"/>
+        <rect id="color-9" class="cls-34" x="1015" y="711.67" width="50" height="320" rx="5" ry="5" transform="translate(1911.67 -168.33) rotate(90)"/>
+        <path id="color-10" class="cls-34" d="M1045,765h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(115 1965) rotate(-90)"/>
+      </g>
+    </g>
+        <g id="WhiteLayer">
+      <g class="cls-67">
+        <rect fill="#ffffff" opacity="0.2" x="915" y="75" width="90" height="1920" transform="translate(-75 1995) rotate(-90)"/>
+        <rect fill="#ffffff" opacity="0.2" x="10" y="60" width="460" height="400" rx="30" ry="30" transform="translate(-20 500) rotate(-90)"/>
+        <rect fill="#ffffff" opacity="0.2" x="20" y="530" width="440" height="400" rx="20" ry="20" transform="translate(970 490) rotate(90)"/>
+        <circle fill="#ffffff" opacity="0.2" cx="1720" cy="320" r="160"/>
+        <rect fill="#ffffff" opacity="0.2" x="1615" y="455" width="210" height="320" rx="30" ry="30" transform="translate(2335 -1105) rotate(90)"/>
+        <rect fill="#ffffff" opacity="0.2" x="595" y="685" width="210" height="320" rx="30" ry="30" transform="translate(1545 145) rotate(90)"/>
+        <rect fill="#ffffff" opacity="0.2" x="1445" y="515" width="210" height="660" rx="30" ry="30" transform="translate(2395 -705) rotate(90)"/>
+        <path fill="#ffffff" opacity="0.2" d="M1045,605h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(1805 -275) rotate(90)"/>
+        <rect fill="#ffffff" opacity="0.2" x="1015" y="658.33" width="50" height="320" rx="5" ry="5" transform="translate(1858.33 -221.67) rotate(90)"/>
+        <rect fill="#ffffff" opacity="0.2" x="1015" y="711.67" width="50" height="320" rx="5" ry="5" transform="translate(1911.67 -168.33) rotate(90)"/>
+        <path fill="#ffffff" opacity="0.2" d="M1045,765h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(115 1965) rotate(-90)"/>
+      </g>
+    </g>
+  </g>
+</svg>

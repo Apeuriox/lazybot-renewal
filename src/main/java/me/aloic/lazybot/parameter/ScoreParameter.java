@@ -37,6 +37,9 @@ public class ScoreParameter extends LazybotCommandParameter
         if(modCombination!=null && modCombination.length()%2!=0) {
             throw new IllegalArgumentException("invalid mod: " + modCombination);
         }
+        if(version==null) {
+            version=0;
+        }
     }
     public static ScoreParameter analyzeParameter(List<String> params)
     {

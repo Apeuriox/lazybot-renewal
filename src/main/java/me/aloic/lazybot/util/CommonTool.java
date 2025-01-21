@@ -556,6 +556,7 @@ public class CommonTool {
 
         return String.format("#%02X%02X%02X", avgR, avgG, avgB);
     }
+
     public static String getDominantHSLWithBins(File imageFile, int binSize) throws IOException {
         int dominantColor =  calcDominantColor(imageFile, binSize);
         return rgbToHsl((dominantColor >> 16) & 0xFF, (dominantColor >> 8) & 0xFF, dominantColor & 0xFF);
@@ -616,10 +617,10 @@ public class CommonTool {
                 .get()
                 .getKey();
     }
-    public static int getDominantColorHue(File imageFile) throws IOException {
+
+    public static int[] getDominantColorColorThief(File imageFile) throws IOException {
         BufferedImage image = ImageIO.read(imageFile);
-        int[] dominantColor =  ColorThief.getColor(image);
-        return rgbToHue(dominantColor);
+        return ColorThief.getColor(image);
     }
     private static String rgbToHsl(double r, double g, double b) {
         r /= 255.0;
@@ -651,18 +652,17 @@ public class CommonTool {
         }
         return String.format("hsl(%.0f, %.0f%%, %.0f%%)", h, s * 100, l * 100);
     }
-    private static String rgbToHsl(int[] rgb) {
+
+    public static String rgbToHsl(int[] rgb) {
         double r=rgb[0];
         double g=rgb[1];
         double b=rgb[2];
         r/= 255.0;
         g /= 255.0;
         b /= 255.0;
-
         double max = Math.max(r, Math.max(g, b));
         double min = Math.min(r, Math.min(g, b));
         double delta = max - min;
-
         double l = (max + min) / 2;
         double s = 0;
         if (delta != 0) {
@@ -684,6 +684,38 @@ public class CommonTool {
         }
         return String.format("hsl(%.0f, %.0f%%, %.0f%%)", h, s * 100, l * 100);
     }
+    public static List<Double> rgbToHslDetailed(int[] rgb) {
+        double r=rgb[0];
+        double g=rgb[1];
+        double b=rgb[2];
+        r/= 255.0;
+        g /= 255.0;
+        b /= 255.0;
+        double max = Math.max(r, Math.max(g, b));
+        double min = Math.min(r, Math.min(g, b));
+        double delta = max - min;
+        double l = (max + min) / 2;
+        double s = 0;
+        if (delta != 0) {
+            s = delta / (1 - Math.abs(2 * l - 1));
+        }
+
+        double h = 0;
+        if (delta != 0) {
+            if (max == r) {
+                h = 60 * ((g - b) / delta % 6);
+            } else if (max == g) {
+                h = 60 * ((b - r) / delta + 2);
+            } else if (max == b) {
+                h = 60 * ((r - g) / delta + 4);
+            }
+        }
+        if (h < 0) {
+            h += 360;
+        }
+        return List.of(h,s,l);
+    }
+
     private static Integer rgbToHue(double r, double g, double b) {
         r /= 255.0;
         g /= 255.0;
@@ -710,7 +742,7 @@ public class CommonTool {
         return (int) h;
     }
 
-    private static Integer rgbToHue(int[] rgb) {
+    public static Integer rgbToHue(int[] rgb) {
         double r=rgb[0];
         double g=rgb[1];
         double b=rgb[2];
@@ -744,10 +776,12 @@ public class CommonTool {
         resizedImage.getGraphics().drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
         return resizedImage;
     }
+
     public static Boolean isPositiveInteger(String num)
     {
         return num.matches("[1-9][0-9]*");
     }
+
     public static String calculateMD5(File file)
     {
         if (!file.getName().endsWith(".osu")) {
@@ -775,6 +809,30 @@ public class CommonTool {
         catch (Exception e) {
             throw new RuntimeException("计算MD5时出错: " + e.getMessage());
         }
+    }
+
+
+    public static int hexToInt(String hex) {
+        if (hex.startsWith("#")) {
+            hex = hex.substring(1);
+        }
+        return Integer.parseInt(hex, 16);
+    }
+
+    public static String rgbToHex(int[] rgb) {
+        if (rgb == null || rgb.length != 3) {
+            throw new IllegalArgumentException("RGB array must have exactly 3 elements.");
+        }
+
+        // 检查每个值是否在有效范围内
+        for (int value : rgb) {
+            if (value < 0 || value > 255) {
+                throw new IllegalArgumentException("RGB values must be between 0 and 255.");
+            }
+        }
+
+        // 使用String.format将RGB值转换为HEX格式
+        return String.format("#%02X%02X%02X", rgb[0], rgb[1], rgb[2]);
     }
 
 }

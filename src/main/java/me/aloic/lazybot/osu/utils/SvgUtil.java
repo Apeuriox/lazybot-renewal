@@ -84,9 +84,9 @@ public class SvgUtil
         return outputName;
     }
 
-    public static OutputStream scoreToImageDarkApache(ScoreVO targetScore, int hue) throws TranscoderException, IOException
+    public static OutputStream scoreToImageDarkApache(ScoreVO targetScore, int[] primaryColor) throws TranscoderException, IOException
     {
-        Document doc = getScorePanelDarkModeDoc(targetScore,hue);
+        Document doc = getScorePanelDarkModeDoc(targetScore,primaryColor);
         long startingTime = System.currentTimeMillis();
         TranscoderInput input = new TranscoderInput(doc);
         OutputStream o =svgToPng(input);
@@ -94,9 +94,9 @@ public class SvgUtil
         return o;
     }
 
-    public static String scoreToImageDarkURLApache(ScoreVO targetScore, int hue) throws TranscoderException, IOException
+    public static String scoreToImageDarkURLApache(ScoreVO targetScore, int[] primaryColor) throws TranscoderException, IOException
     {
-        Document doc = getScorePanelDarkModeDoc(targetScore,hue);
+        Document doc = getScorePanelDarkModeDoc(targetScore,primaryColor);
         TranscoderInput input = new TranscoderInput(doc);
         String outputName = "score-dark-".concat(targetScore.getUser_name()).concat(".png");
         svgToPng(input, new File(outputName));
@@ -629,12 +629,93 @@ public class SvgUtil
             throw new RuntimeException(e);
         }
     }
+    public static Document getScorePanelMaterialDesign(ScoreVO targetScore,int[] primaryColor)
+    {
+        try{
+            List<Double> hsl = CommonTool.rgbToHslDetailed(primaryColor);
+            String color =String.format("hsl(%.0f, %.0f%%, %.0f%%)", hsl.get(0),  hsl.get(1) * 100,  (hsl.get(2) * 100)+20>94?94:(hsl.get(2) * 100)+20);
 
-    public static Document getScorePanelDarkModeDoc(ScoreVO targetScore,Integer hue)
+            Path filePath = ResourceMonitor.getResourcePath().resolve("static/ScorePanelMaterialDesign-Reranged.svg");
+            URI inputUri = filePath.toFile().toURI();
+            Document document = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
+            Element svgRoot = document.getDocumentElement();
+            document.getElementById("color-0").setAttribute("fill",color);
+            document.getElementById("color-1").setAttribute("fill",color);
+            document.getElementById("color-2").setAttribute("fill",color);
+            document.getElementById("color-3").setAttribute("fill",color);
+            document.getElementById("color-4").setAttribute("fill",color);
+            document.getElementById("color-5").setAttribute("fill",color);
+            document.getElementById("color-6").setAttribute("fill",color);
+            document.getElementById("color-7").setAttribute("fill",color);
+            document.getElementById("color-8").setAttribute("fill",color);
+            document.getElementById("color-9").setAttribute("fill",color);
+            document.getElementById("color-10").setAttribute("fill",color);
+            document.getElementById("mapBg").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
+            document.getElementById("mapBg-mask").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
+            document.getElementById("playername").setTextContent(targetScore.getUser_name());
+            document.getElementById("achievedTime").setTextContent(CommonTool.timestampSpilt(targetScore.getCreate_at())[0]);
+            document.getElementById("title").setTextContent(targetScore.getBeatmap().getTitle());
+            document.getElementById("artist").setTextContent(targetScore.getBeatmap().getArtist());
+            document.getElementById("mapper").setTextContent(targetScore.getBeatmap().getCreator());
+            document.getElementById("version").setTextContent(targetScore.getBeatmap().getVersion());
+            document.getElementById("genre").setTextContent(targetScore.getBeatmap().getGenre());
+            document.getElementById("language").setTextContent(targetScore.getBeatmap().getLanguage());
+            document.getElementById("starRating").setTextContent(CommonTool.toString(targetScore.getBeatmap().getDifficult_rating()));
+            document.getElementById("status").setTextContent(targetScore.getBeatmap().getStatus().toUpperCase());
+            document.getElementById("bid").setTextContent(String.valueOf(targetScore.getBeatmap().getBid()));
+            document.getElementById("sid").setTextContent(String.valueOf(targetScore.getBeatmap().getSid()));
+            document.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));
+            document.getElementById("length").setTextContent(CommonTool.formatHitLength(targetScore.getBeatmap().getAttributes().getLength()));
+            document.getElementById("ar").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getAr()));
+            document.getElementById("od").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getOd()));
+            document.getElementById("hp").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getHp()));
+            document.getElementById("cs").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getCs()));
+            document.getElementById("ok").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
+            document.getElementById("great").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
+            document.getElementById("meh").setTextContent(String.valueOf(targetScore.getStatistics().getMeh()));
+            document.getElementById("miss").setTextContent(String.valueOf(targetScore.getStatistics().getMiss()));
+            document.getElementById("rank").setTextContent(targetScore.getRank().toUpperCase());
+            if (targetScore.getPpDetailsLocal().getCurrentPP() != null) {
+                document.getElementById("pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getCurrentPP())));
+            }
+            document.getElementById("accuracy").setTextContent(CommonTool.toString(targetScore.getAccuracy() * 100).concat("%"));
+            document.getElementById("combo").setTextContent(CommonTool.toString(targetScore.getMaxCombo()).concat("x/")
+                    .concat(CommonTool.toString(targetScore.getBeatmap().getMax_combo())
+                            .concat("x")).concat(" (").
+                    concat(CommonTool.toString(((double) targetScore.getMaxCombo() / (double) targetScore.getBeatmap().getMax_combo()) * 100.0).concat("%)")));
+
+            if (targetScore.getPpDetailsLocal() != null)
+            {
+                document.getElementById("aimPPAll").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAimPPMax())));
+                document.getElementById("spdPPAll").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getSpdPPMax())));
+                document.getElementById("accPPAll").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPMax())));
+
+                document.getElementById("aimPPGet").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAimPP())));
+                document.getElementById("accPPGet").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPP())));
+                document.getElementById("spdPPGet").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getSpdPP())));
+                document.getElementById("iffc").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getIfFc())));
+
+                document.getElementById("95%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(95))));
+                document.getElementById("97%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(97))));
+                document.getElementById("98%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(98))));
+                document.getElementById("99%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(99))));
+                document.getElementById("100%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(100))));
+            }
+            document.getElementById(OsuMode.getMode(targetScore.getMode()).getDescribe()).setAttribute("class", "cls-23");
+            return document;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("生成图像时出错");
+        }
+    }
+    public static Document getScorePanelDarkModeDoc(ScoreVO targetScore,int[] primaryColor)
     {
         long startingTime = System.currentTimeMillis();
+
         try
         {
+            int hue=CommonTool.rgbToHue(primaryColor);
             Path filePath = ResourceMonitor.getResourcePath().resolve("static/scorePanelDarkmode_customize.svg");
             URI inputUri = filePath.toFile().toURI();
             Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
@@ -849,7 +930,7 @@ public class SvgUtil
                 case Osu:
                 {
                     logger.info("Score Type: Osu");
-                    doc.getElementById("osu").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("osu").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-osu").setAttribute("opacity","1");
                     doc.getElementById("osuStatistics").setAttribute("opacity","1");
                     doc.getElementById("100Count-o").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
@@ -871,7 +952,7 @@ public class SvgUtil
                 case Taiko:
                 {
                     logger.info("Score Type: Taiko");
-                    doc.getElementById("taiko").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("taiko").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-taiko").setAttribute("opacity","1");
                     doc.getElementById("taikoStatistics").setAttribute("opacity","1");
                     doc.getElementById("150Count-t").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
@@ -889,7 +970,7 @@ public class SvgUtil
                 case Catch:
                 {
                     logger.info("Score Type: CTB");
-                    doc.getElementById("ctb").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("ctb").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-ctb").setAttribute("opacity","1");
                     doc.getElementById("fruitsStatistics").setAttribute("opacity","1");
                     doc.getElementById("300Count-f").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -911,7 +992,7 @@ public class SvgUtil
                 case Mania:
                 {
                     logger.info("Score Type: Mania");
-                    doc.getElementById("mania").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("mania").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-mania").setAttribute("opacity","1");
                     doc.getElementById("maniaStatistics").setAttribute("opacity","1");
                     doc.getElementById("maxCount-m").setTextContent(String.valueOf(targetScore.getStatistics().getPerfect()));
@@ -934,7 +1015,7 @@ public class SvgUtil
                     break;
                 }
             }
-            if(hue!=361)
+            if(hue<361)
                 setupoCustomColorForDarkmodeScore(doc,hue);
 
             doc.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));

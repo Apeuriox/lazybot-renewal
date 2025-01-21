@@ -64,6 +64,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
         RecentParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
+        params.setVersion(event.getScorePanelVersion());
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
         params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();

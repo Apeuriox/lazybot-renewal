@@ -37,7 +37,7 @@ public class PlayerServiceImpl implements PlayerService
                     beatmapUserScoreLazer.getScore(),
                     false);
             verifyBeatmapsCache(scoreVO);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantHue(scoreVO));
+            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class PlayerServiceImpl implements PlayerService
                 scoreList.get(params.getIndex() - 1),
                 false);
         verifyBeatmapsCache(scoreVO);
-        return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantHue(scoreVO));
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
 
     }
     @Override
@@ -64,7 +64,7 @@ public class PlayerServiceImpl implements PlayerService
                     scoreDTO.getFirst(),
                     false);
             verifyBeatmapsCache(scoreVO);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),getDominantHue(scoreVO));
+            return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(), getDominantColorArray(scoreVO));
     }
     @Override
     public byte[] bplistCardView(BplistParameter params) throws Exception
@@ -176,8 +176,8 @@ public class PlayerServiceImpl implements PlayerService
         }
         return true;
     }
-    private Integer getDominantHue(ScoreVO scoreVO) throws IOException {
-        return CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
+    private int[] getDominantColorArray(ScoreVO scoreVO) throws IOException {
+        return CommonTool.getDominantColorColorThief(new File(scoreVO.getBeatmap().getBgUrl()));
     }
 
 

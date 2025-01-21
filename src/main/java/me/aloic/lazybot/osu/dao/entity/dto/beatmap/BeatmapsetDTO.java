@@ -32,9 +32,9 @@ public class BeatmapsetDTO implements Serializable {
 //    private String description;
 //    private String discussions;
 //    private String events;
-//    private String genre;
+    private String genre;
 //    private Boolean has_favourited;
-//    private String language;
+    private String language;
 //    private String nominations;
 //    private String[] pack_tags;
 //    private Float ratings;
