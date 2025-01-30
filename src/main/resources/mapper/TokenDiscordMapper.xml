@@ -44,7 +44,7 @@
     <update id="updateDefaultMode" parameterType="map">
         update user_token_discord
         <set>
-            default_mopde=#{default_mopde},
+            default_mode=#{default_mode},
         </set>
         where discord_code =#{discord_code,jdbcType=BIGINT}
     </update>

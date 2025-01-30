@@ -44,7 +44,7 @@
     <update id="updateDefaultMode" parameterType="map">
         update token
         <set>
-            default_mopde=#{default_mopde},
+            default_mode=#{default_mode},
         </set>
         where qq_code =#{qq_code,jdbcType=BIGINT}
     </update>

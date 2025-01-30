@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService
             ErrorResultHandler.createParameterError(event);
         Optional.ofNullable(discordTokenMapper.selectByDiscord(event.getUser().getIdLong()))
                 .ifPresentOrElse(
-                        token -> createBindError.accept(event, token),
-                        () -> discordTokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getUser().getIdLong()));
+                        token -> discordTokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getUser().getIdLong()),
+                        this::createNotBindError);
         event.getHook().sendMessage("已成功更改模式为: " +mode.getDescribe()).queue();
     }
     @Override
@@ -55,10 +55,11 @@ public class UserServiceImpl implements UserService
         if (mode == OsuMode.Default) throw new RuntimeException("未知的模式: " + event.getCommandParameters().getFirst());
         Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
                 .ifPresentOrElse(
-                        this::createBindError,
-                        () -> tokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getMessageEvent().getSender().getUserId()));
+                        token -> tokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getMessageEvent().getSender().getUserId()),
+                        this::createNotBindError);
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("已成功更改模式为: " +mode.getDescribe()).build(),false);
     }
+
 
 
     @Override
