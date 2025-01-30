@@ -41,4 +41,11 @@
         DELETE FROM user_token_discord WHERE discord_code = #{discord_code}
     </delete>
 
+    <update id="updateDefaultMode" parameterType="map">
+        update user_token_discord
+        <set>
+            default_mopde=#{default_mopde},
+        </set>
+        where discord_code =#{discord_code,jdbcType=BIGINT}
+    </update>
 </mapper>

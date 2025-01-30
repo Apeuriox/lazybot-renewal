@@ -94,6 +94,10 @@ public enum CommandEnum {
                     new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false))),
     TIPS(19, "tips", "获取一个Aloic的小提示", true,
             List.of(new CommandOption(OptionType.INTEGER, "id", "指定id", false, false))),
+    SET_MODE(20, "setmode", "更新默认模式", true,
+            List.of(new CommandOption(OptionType.STRING, "mode", "指定模式", true, false))),
+    VERIFY_MAP(20, "verifymap", "(需要权限) 验证.osu缓存是否过期", true,
+            List.of(new CommandOption(OptionType.INTEGER, "bid", "指定bid", true, false))),
     ;
     private final Integer id;
 

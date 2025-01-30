@@ -9,21 +9,21 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"unlink"})
+@LazybotCommandMapping({"setmode"})
 @Component
-public class UnLinkCommand implements LazybotSlashCommand
+public class SetmodeCommand implements LazybotSlashCommand
 {
     @Resource
     private UserService userService;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
-        userService.unlinkUser(event);
+        userService.updateDefaultMode(event);
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
-        userService.unlinkUser(bot, event);
+        userService.updateDefaultMode(bot, event);
     }
 }

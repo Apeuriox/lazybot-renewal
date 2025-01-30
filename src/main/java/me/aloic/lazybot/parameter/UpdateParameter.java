@@ -32,12 +32,13 @@ public class UpdateParameter extends LazybotCommandParameter
         UpdateParameter parameter=new UpdateParameter();
         if (!params.isEmpty()) {
             if (params.size() == 1) {
-                throw new RuntimeException("update avatar {username} or Update track {username}");
+                parameter.setType(params.getFirst());
             }
-            else {
+            else if (params.size() == 2) {
                 parameter.setType(params.getFirst());
                 parameter.setPlayerName(params.get(1));
             }
+            else throw new RuntimeException("update avatar ${user_name} or Update track ${user_name}");
         }
         return parameter;
     }

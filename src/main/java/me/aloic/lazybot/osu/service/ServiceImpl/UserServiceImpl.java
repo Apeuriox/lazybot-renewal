@@ -10,7 +10,8 @@ import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
-import me.aloic.lazybot.osu.service.DiscordUserService;
+import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -21,12 +22,44 @@ import java.util.function.BiConsumer;
 
 //im too lazy to refactor this
 @Service
-public class DiscordUserServiceImpl implements DiscordUserService
+public class UserServiceImpl implements UserService
 {
     @Resource
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private TokenMapper tokenMapper;
+
+
+
+    @Override
+    public void updateDefaultMode(SlashCommandInteractionEvent event)
+    {
+        event.deferReply().queue();
+        if(event.getOption("mode")==null) throw new RuntimeException("请输入模式");
+        OsuMode mode = OsuMode.getMode(event.getOption("mode").getAsString());
+        if (mode == OsuMode.Default) throw new RuntimeException("未知的模式: " + event.getOption("mode").getAsString());
+        BiConsumer<SlashCommandInteractionEvent, UserTokenPO> createBindError =  ErrorResultHandler::createBindError;
+        if(event.getOption("username")==null)
+            ErrorResultHandler.createParameterError(event);
+        Optional.ofNullable(discordTokenMapper.selectByDiscord(event.getUser().getIdLong()))
+                .ifPresentOrElse(
+                        token -> createBindError.accept(event, token),
+                        () -> discordTokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getUser().getIdLong()));
+        event.getHook().sendMessage("已成功更改模式为: " +mode.getDescribe()).queue();
+    }
+    @Override
+    public void updateDefaultMode(Bot bot, LazybotSlashCommandEvent event)
+    {
+        if (event.getCommandParameters()==null || event.getCommandParameters().isEmpty()) throw new RuntimeException("请输入模式");
+        OsuMode mode = OsuMode.getMode(event.getCommandParameters().getFirst());
+        if (mode == OsuMode.Default) throw new RuntimeException("未知的模式: " + event.getCommandParameters().getFirst());
+        Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
+                .ifPresentOrElse(
+                        this::createBindError,
+                        () -> tokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getMessageEvent().getSender().getUserId()));
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("已成功更改模式为: " +mode.getDescribe()).build(),false);
+    }
+
 
     @Override
     public void linkUser(SlashCommandInteractionEvent event)

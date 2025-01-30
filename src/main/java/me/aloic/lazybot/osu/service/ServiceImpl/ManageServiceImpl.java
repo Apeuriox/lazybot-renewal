@@ -1,16 +1,16 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
+import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.parameter.BeatmapParameter;
 import me.aloic.lazybot.parameter.UpdateParameter;
-import me.aloic.lazybot.util.ApiRequestStarter;
-import me.aloic.lazybot.util.ContentUtil;
-import me.aloic.lazybot.util.DataObjectExtractor;
-import me.aloic.lazybot.util.URLBuildUtil;
+import me.aloic.lazybot.util.*;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -18,15 +18,18 @@ import java.util.function.Function;
 public class ManageServiceImpl implements ManageService
 {
     private static final Map<String, Function<UpdateParameter,String>> updateMap;
+    private static final Map<Long,Boolean> adminMap;  //Long ass numbers are discord ids
     static{
         updateMap = Map.of("avatar",ManageServiceImpl::updateAvatar,
                 "track",ManageServiceImpl::updateOsuTrack);
+        adminMap = Map.of( 1524185356L,true,
+                412246007024451585L,true);
     }
 
     @Override
     public String update(UpdateParameter params)
     {
-        if(!updateMap.containsKey(params.getType())) return "Update avatar {username} or Update track {username}";
+        if(params==null || params.getType()==null || !updateMap.containsKey(params.getType())) return "Update avatar {user_name} or Update track {user_name}";
         return updateMap.get(params.getType()).apply(params);
     }
 
@@ -44,4 +47,16 @@ public class ManageServiceImpl implements ManageService
         return "已更新用户"+playerInfoDTO.getUsername()+"的Osu Track数据";
     }
 
+    @Override
+    public String verifyBeatmap(BeatmapParameter params)
+    {
+        if(!adminMap.containsKey(params.getUserIdentity())) throw new RuntimeException("你没有权限");
+        String checksum= CommonTool.calculateMD5(new File(AssertDownloadUtil.beatmapPath(params.getBid(),false).toUri()));
+        BeatmapDTO beatmapDTO = DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBid()),params.getMode());
+        if (!checksum.equals(beatmapDTO.getChecksum())) {
+            AssertDownloadUtil.beatmapPath(params.getBid(), true);
+            return "校验和不匹配: " + beatmapDTO.getChecksum() + " != " + checksum;
+        }
+        return "校验和正常: "+checksum;
+    }
 }

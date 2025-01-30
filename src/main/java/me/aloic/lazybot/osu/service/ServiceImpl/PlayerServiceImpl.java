@@ -176,6 +176,7 @@ public class PlayerServiceImpl implements PlayerService
         }
         return true;
     }
+
     private int[] getDominantColorArray(ScoreVO scoreVO) throws IOException {
         return CommonTool.getDominantColorColorThief(new File(scoreVO.getBeatmap().getBgUrl()));
     }

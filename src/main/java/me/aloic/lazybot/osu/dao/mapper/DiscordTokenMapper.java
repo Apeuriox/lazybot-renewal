@@ -12,4 +12,5 @@ public interface DiscordTokenMapper extends BaseMapper<UserTokenPO> {
     UserTokenPO selectByPlayername(String player_name);
     void updateClientToken(@Param("access_token")String access_token);
     void deleteByDiscord(@Param("discord_code")Long discord_code);
+    void updateDefaultMode(@Param("default_mode")String default_mode, @Param("discord_code")Long discord_code);
 }
