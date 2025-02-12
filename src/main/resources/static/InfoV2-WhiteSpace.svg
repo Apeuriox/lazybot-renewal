@@ -364,7 +364,7 @@
     
     <path fill="#4d4d4d" d="M1815,17.5c6.89,0,12.5,5.61,12.5,12.5s-5.61,12.5-12.5,12.5-12.5-5.61-12.5-12.5,5.61-12.5,12.5-12.5M1815,15c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1816.25,40v-20c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25,1.25v20c0,.69.56,1.25,1.25,1.25s1.25-.56,1.25-1.25ZM1821.25,35v-10c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25,1.25v10c0,.69.56,1.25,1.25,1.25s1.25-.56,1.25-1.25ZM1811.25,35v-10c0-.69-.56-1.25-1.25-1.25s-1.25.56-1.25,1.25v10c0,.69.56,1.25,1.25,1.25s1.25-.56,1.25-1.25Z"/>
     <path fill="#058eb2" d="M1677.5,57.5h-25c-1.38,0-2.5-1.12-2.5-2.5s1.12-2.5,2.5-2.5h25c1.38,0,2.5,1.12,2.5,2.5s-1.12,2.5-2.5,2.5Z"/>
-    <rect fill="hsl(193, 0%, 95%)" x="60" y="350" width="380" height="110" rx="5" ry="5"/>
+    <rect fill="hsl(193, 0%, 95%)" x="60" y="350" width="380" height="110" rx="5" ry="5" opacity="0.7"/>
 
   </g>
   <g id="Text">
@@ -395,35 +395,11 @@
 
     <g transform="translate(0,10)" id="bp-block">
 
-        <rect class="cls-18" width="900" height="440" rx="20" ry="20" x="0" y="520" 
-        stroke-width="2" stroke-opacity="0.8" stroke="#dcf1f1"/>
+
+      <rect fill="#f1f4f3" width="900" height="440" rx="20" ry="20" x="0" y="520"
+            stroke-width="2" stroke-opacity="0.8" stroke="hsl(192, 76%, 85%)"/>
 
         <text class="cls-23"  transform="translate(30 555)">Best Performances</text>
-   
-
-    
-    <!-- <g id="bplist-1">
-      <rect class="cls-12" width="668" height="60" rx="10" ry="10" x="280.5" y="520" transform="skewX(-10)" />
-     <image xlink:href="static/osuAssets/GradeSmall-A.svg"
-      x="196.5"
-      y="540"
-      width="40"
-      height="20"
-      preserveAspectRatio="xMidYMid slice"
-      id="grade-1"/>
-      <text class="cls-30" id="songTitle-1" transform="translate(250 546.67)">Song by Artist</text>
-      <text id="diff-1" class="cls-26" transform="translate(306.67 566.67)">Diffculty</text>
-      <rect id="star-bg-1" fill="#321cb2" x="246" y="553.5" rx="10" ry="10" width="58" height="17.5"/>
-      <polygon id="starRatingStar-1" transform="translate(176.4,414.5),scale(0.4)"  fill="#f3b814" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
-      <text class="cls-34" text-anchor="middle" id="star-1" transform="translate(281 566.67)">0.00</text>
-      <text id="acc-1" class="cls-36" transform="translate(596.67 546.67)">100.0%</text>
-      <text id="pp-1" text-anchor="middle" class="cls-31" transform="translate(775 566.67)">000</text>
-      <text id="songTitle1-6" class="cls-38" transform="translate(830 540)">PP</text>
-      <text class="cls-34" id="combo-1" transform="translate(596.67 566.67)">0000x</text>
-
-    </g> -->
-      
-    </g>
         <image
               xlink:href="assets/whitespace.png"
               x="0"
@@ -431,8 +407,34 @@
               width="1900"
               height="1000"
               preserveAspectRatio="xMidYMid slice"
-             
-              clip-path="url(#performance-block-clip)" opacity="0.2"/>
+              filter="url(#blur)"
+              clip-path="url(#performance-block-clip)" opacity="0.3"/>
+
+
+
+
+      <!-- <g id="bplist-1">
+        <rect class="cls-12" width="668" height="60" rx="10" ry="10" x="280.5" y="520" transform="skewX(-10)" />
+       <image xlink:href="static/osuAssets/GradeSmall-A.svg"
+        x="196.5"
+        y="540"
+        width="40"
+        height="20"
+        preserveAspectRatio="xMidYMid slice"
+        id="grade-1"/>
+        <text class="cls-30" id="songTitle-1" transform="translate(250 546.67)">Song by Artist</text>
+        <text id="diff-1" class="cls-26" transform="translate(306.67 566.67)">Diffculty</text>
+        <rect id="star-bg-1" fill="#321cb2" x="246" y="553.5" rx="10" ry="10" width="58" height="17.5"/>
+        <polygon id="starRatingStar-1" transform="translate(176.4,414.5),scale(0.4)"  fill="#f3b814" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
+        <text class="cls-34" text-anchor="middle" id="star-1" transform="translate(281 566.67)">0.00</text>
+        <text id="acc-1" class="cls-36" transform="translate(596.67 546.67)">100.0%</text>
+        <text id="pp-1" text-anchor="middle" class="cls-31" transform="translate(775 566.67)">000</text>
+        <text id="songTitle1-6" class="cls-38" transform="translate(830 540)">PP</text>
+        <text class="cls-34" id="combo-1" transform="translate(596.67 566.67)">0000x</text>
+
+      </g> -->
+      
+    </g>
 
   <rect class="cls-10" x="60" y="110" width="90" height="90" rx="10" ry="10"/>
 
@@ -451,10 +453,10 @@
    
     
     <text class="cls-40" fill="hsl(192, 95%, 36%)" transform="translate(540 130)">Global</text>
-    <text class="cls-40" fill="hsl(192, 95%, 36%)" transform="translate(750 130)">PP</text>
+    <text class="cls-40" fill="#f285b1" transform="translate(750 130)">PP</text>
  
     <text class="cls-33" id="globalRank" fill="hsl(192, 95%, 40%)" transform="translate(540 170)">#20000</text>
-    <text class="cls-33" id="ppValue" fill="hsl(192, 95%, 40%)" transform="translate(750 170)">10000</text>
+    <text class="cls-33" id="ppValue" fill="#f285b1" transform="translate(750 170)">10000</text>
    
    <g opacity="0.15">  
     <text class="cls-19" id="rankImprove" transform="translate(560 190)">000</text>
@@ -463,7 +465,7 @@
     <polygon class="cls-19" id="downArrow-pp" points="760 187.12 753.94 181.06 756.06 178.94 760 182.88 763.94 178.94 766.06 181.06 760 187.12"/>
     
    </g>
-   <g transform="translate(30,20)" id="rankGraphGroup">   
+   <g transform="translate(30,20)" id="rankGraphGroup" opacity="0.7">
    <text class="cls-28" id="rankGraph-label-1" fill="hsl(192, 95%, 36%)" transform="translate(38,355)"> 10.4k</text>
    <text class="cls-28" id="rankGraph-label-2" fill="hsl(192, 95%, 36%)" transform="translate(38,420)"> 11.5k</text>
    

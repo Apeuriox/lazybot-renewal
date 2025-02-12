@@ -2331,6 +2331,7 @@ public class SvgUtil
         document.getElementById("ppValue").setTextContent(String.valueOf(Math.round(playerInfo.getPerformancePoint())));
         document.getElementById("rankedScore").setTextContent(formatter.format(playerInfo.getRankTotalScore()));
         document.getElementById("accuracy").setTextContent(CommonTool.toString(playerInfo.getAccuracy()).concat("%"));
+        document.getElementById("playCount").setTextContent(formatter.format(playerInfo.getPlayCount()));
         document.getElementById("totalScore").setTextContent(formatter.format(playerInfo.getTotalScore()));
         document.getElementById("totalHits").setTextContent(formatter.format(playerInfo.getTotalHitCount()));
         document.getElementById("playTime").setTextContent(CommonTool.formatSecondsToHours(playerInfo.getTotalPlayTime()).concat("h"));
@@ -2401,7 +2402,7 @@ public class SvgUtil
     private static void setupProfileBps(Document doc,PlayerInfoVO playerInfo,int[] primaryColor)
     {
         String mainColorDeep="hsl("+primaryColor[0]+",95%, 36%)";
-        String middleColor ="hsl("+primaryColor[0]+",100%, 50%)";
+        String middleColor ="hsl("+primaryColor[0]+",84%, 68%)";
 
         int listIndex=0;
         List<ScoreVO> scoreList = playerInfo.getBps();
@@ -2409,13 +2410,15 @@ public class SvgUtil
         {
             Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
             Element sectionFull = (Element) sectionFullNode;
+
             Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
             Element totalBG = (Element) totalBGNode;
             totalBG.setAttribute("rx", "15");
             totalBG.setAttribute("ry", "15");
             totalBG.setAttribute("width", "415");
             totalBG.setAttribute("height", "100");
-            totalBG.setAttribute("fill", "#f1f4f3");
+            totalBG.setAttribute("fill", "#000");
+            totalBG.setAttribute("opacity", "0.5");
             totalBG.setAttribute("x", "25");
             totalBG.setAttribute("y", "580");
 
@@ -2425,6 +2428,7 @@ public class SvgUtil
             mapBGImage.setAttribute("x", "25");
             mapBGImage.setAttribute("y", "580");
             mapBGImage.setAttribute("width", "415");
+            mapBGImage.setAttribute("opacity", "0.9");
             mapBGImage.setAttribute("height", "100");
             mapBGImage.setAttribute("filter", "url(#bp-blur)");
             mapBGImage.setAttribute("clip-path", "url(#bpclip)");
@@ -2592,8 +2596,6 @@ public class SvgUtil
             iffc.appendChild(iffcLabel);
             iffc.appendChild(iffcNumber);
 
-
-
             sectionFull.appendChild(totalBG);
             sectionFull.appendChild(mapBGImage);
             sectionFull.appendChild(totalBGMask);
@@ -2605,9 +2607,8 @@ public class SvgUtil
             sectionFull.appendChild(pp);
             sectionFull.appendChild(iffc);
 
-
-
             setupModIconForProfileBps(score.getModJSON(), doc, sectionFull);
+            sectionFull.setAttribute("opacity","0.9");
             sectionFull.setAttribute("transform", "translate("+ 435*(listIndex%2)+ "," + 120 * (int)(listIndex/2) + ")");
             doc.getElementById("bp-block").appendChild(sectionFull);
             listIndex++;
