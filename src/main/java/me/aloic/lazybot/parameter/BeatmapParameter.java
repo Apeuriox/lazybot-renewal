@@ -57,7 +57,6 @@ public class BeatmapParameter extends LazybotCommandParameter
                     }
                     else
                         throw new RuntimeException("输入bid不为正整数");
-
             }
         }
         return parameter;

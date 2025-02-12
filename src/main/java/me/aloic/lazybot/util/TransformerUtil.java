@@ -33,6 +33,17 @@ public class TransformerUtil
         playerInfoVO.setPerformancePoint(playerInfoDTO.getStatistics().getPp());
         playerInfoVO.setAccuracy(playerInfoDTO.getStatistics().getHit_accuracy());
         playerInfoVO.setCountry(playerInfoDTO.getCountry().getName());
+        playerInfoVO.setCountryCode(playerInfoDTO.getCountry().getCode());
+        playerInfoVO.setLevel(playerInfoDTO.getStatistics().getLevel().getCurrent());
+        playerInfoVO.setLevelProgress(playerInfoDTO.getStatistics().getLevel().getProgress());
+        playerInfoVO.setTotalScore(playerInfoDTO.getStatistics().getTotal_score());
+        try{
+            playerInfoVO.setRankHistory(List.of(playerInfoDTO.getRank_history().getData()));
+        }
+        catch (Exception e){
+            playerInfoVO.setRankHistory(List.of(0,0,0,0,0,0,0,0));
+        }
+
         playerInfoVO.setCountryRank(playerInfoDTO.getStatistics().getCountry_rank());
         playerInfoVO.setPlayCount(playerInfoDTO.getStatistics().getPlay_count());
         playerInfoVO.setGlobalRank(playerInfoDTO.getStatistics().getGlobal_rank());
@@ -41,6 +52,7 @@ public class TransformerUtil
         playerInfoVO.setPlayerName(playerInfoDTO.getUsername());
         playerInfoVO.setTotalPlayTime(playerInfoDTO.getStatistics().getPlay_time());
         playerInfoVO.setAvatarUrl(playerInfoDTO.getAvatar_url());
+        playerInfoVO.setId(playerInfoDTO.getId());
         playerInfoVO.setPrimaryColor(Optional.ofNullable(playerInfoDTO.getProfile_hue()).orElse(333));
         return playerInfoVO;
 

@@ -835,4 +835,12 @@ public class CommonTool {
         return String.format("#%02X%02X%02X", rgb[0], rgb[1], rgb[2]);
     }
 
+
+    public static String abbrNumber(Integer number) {
+        if (number < 1000) return String.valueOf(number);
+        if (number < 1000000) return String.format("%.1fK", number / 1000.0);
+        if (number < 1000000000) return String.format("%.1fM", number / 1000000.0);
+        return String.format("%.1fB", number / 1000000000.0);
+    }
+
 }

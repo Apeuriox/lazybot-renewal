@@ -131,6 +131,17 @@ public class PlayerServiceImpl implements PlayerService
         playerInfoVO.setMode(params.getMode());
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoCard(playerInfoVO));
     }
+
+    @Override
+    public byte[] profile(GeneralParameter params) throws Exception {
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode()));
+        playerInfoVO.setMode(params.getMode());
+        List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());
+        List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+        playerInfoVO.setBps(scoreVOArray);
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoPanel(playerInfoVO,new int[]{192, 82, 85}));
+    }
+
     @Override
     public String nameToId(NameToIdParameter params) {
         StringBuilder builder = new StringBuilder();
