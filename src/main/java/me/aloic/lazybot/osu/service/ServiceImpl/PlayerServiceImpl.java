@@ -139,7 +139,7 @@ public class PlayerServiceImpl implements PlayerService
         List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         playerInfoVO.setBps(scoreVOArray);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoPanel(playerInfoVO,new int[]{192, 82, 85}));
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoPanel(playerInfoVO,192));
     }
 
     @Override

@@ -322,13 +322,13 @@
   </defs>
   <g id="Background">
       <image
-              xlink:href="assets/whitespace.png"
+              xlink:href="assets/whitespace_0.png"
               x="0"
               y="60"
               width="1900"
               height="1000"
               preserveAspectRatio="xMidYMid slice"
-              id="mapBg-right"/>
+              id="bg-0"/>
 
     <rect fill="#08afda" width="1920" height="62"/>
     <rect fill="#e6f2f4" width="1920" height="60"/>
@@ -336,11 +336,12 @@
     <rect fill="#f1f4f3" width="980" height="270" rx="20" ry="20" y="80"
     stroke-width="2" stroke-opacity="0.8" stroke="#92e8fc"/>
       <image
-              xlink:href="assets/whitespace.png"
+              xlink:href="assets/whitespace_0.png"
               x="0"
               y="60"
               width="1900"
               height="1000"
+              id="bg-1"
               preserveAspectRatio="xMidYMid slice"
               filter="url(#blur)"
               clip-path="url(#avatar-block-clip)" opacity="0.3"/>
@@ -348,11 +349,12 @@
     <rect fill="#e5eff0" width="940" height="270" rx="20" ry="20" y="230" 
     stroke-width="2" stroke-opacity="0.8" stroke="#f1f3f5"/>
       <image
-              xlink:href="assets/whitespace.png"
+              xlink:href="assets/whitespace_0.png"
               x="0"
               y="60"
               width="1900"
               height="1000"
+              id="bg-2"
               preserveAspectRatio="xMidYMid slice"
               filter="url(#blur)"
               clip-path="url(#status-block-clip)" opacity="0.2"/>
@@ -401,11 +403,12 @@
 
         <text class="cls-23"  transform="translate(30 555)">Best Performances</text>
         <image
-              xlink:href="assets/whitespace.png"
+              xlink:href="assets/whitespace_0.png"
               x="0"
               y="50"
               width="1900"
               height="1000"
+              id="bg-3"
               preserveAspectRatio="xMidYMid slice"
               filter="url(#blur)"
               clip-path="url(#performance-block-clip)" opacity="0.3"/>

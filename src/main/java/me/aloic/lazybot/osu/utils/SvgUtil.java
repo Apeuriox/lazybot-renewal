@@ -7,6 +7,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.util.CommonTool;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
@@ -2316,7 +2317,7 @@ public class SvgUtil
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
         return dateTime.format(outputFormatter);
     }
-    public static Document createInfoPanel(PlayerInfoVO playerInfo,int[] primaryColor) throws IOException
+    public static Document createInfoPanel(PlayerInfoVO playerInfo,int hue) throws IOException
     {
         Path filePath = ResourceMonitor.getResourcePath().resolve("static/InfoV2-WhiteSpace.svg");
         URI inputUri = filePath.toFile().toURI();
@@ -2343,14 +2344,14 @@ public class SvgUtil
             imageElement.setAttributeNS(xlinkns, "xlink:href", playerInfo.getAvatarUrl());
         }
         document.getElementById("levelProgressRect").setAttribute("width",String.valueOf(8.5*playerInfo.getLevelProgress()));
-        setupProfileRankGraph(document,playerInfo,primaryColor);
-        setupProfileBps(document,playerInfo,primaryColor);
+        setupProfileRankGraph(document,playerInfo,hue);
+        setupProfileBps(document,playerInfo,hue);
 
         return document;
     }
-    private static void setupProfileRankGraph(Document document,PlayerInfoVO playerInfo,int[] primaryColor)
+    private static void setupProfileRankGraph(Document document,PlayerInfoVO playerInfo,int hue)
     {
-        String mainColor="hsl("+primaryColor[0]+",95%, 36%)";
+        String mainColor="hsl("+hue+",95%, 36%)";
 
         Element rankGraphGroup=document.getElementById("rankGraphGroup");
         int size = playerInfo.getRankHistory().size();
@@ -2399,10 +2400,10 @@ public class SvgUtil
         document.getElementById("rankGraph-label-1").setTextContent(CommonTool.abbrNumber(dataMin));
         document.getElementById("rankGraph-label-2").setTextContent(CommonTool.abbrNumber(dataMax));
     }
-    private static void setupProfileBps(Document doc,PlayerInfoVO playerInfo,int[] primaryColor)
+    private static void setupProfileBps(Document doc,PlayerInfoVO playerInfo,int hue)
     {
-        String mainColorDeep="hsl("+primaryColor[0]+",95%, 36%)";
-        String middleColor ="hsl("+primaryColor[0]+",84%, 68%)";
+        String mainColorDeep="hsl("+hue+",95%, 36%)";
+        String middleColor ="hsl("+hue+",84%, 68%)";
 
         int listIndex=0;
         List<ScoreVO> scoreList = playerInfo.getBps();
@@ -2418,7 +2419,7 @@ public class SvgUtil
             totalBG.setAttribute("width", "415");
             totalBG.setAttribute("height", "100");
             totalBG.setAttribute("fill", "#000");
-            totalBG.setAttribute("opacity", "0.5");
+            totalBG.setAttribute("opacity", "0.1");
             totalBG.setAttribute("x", "25");
             totalBG.setAttribute("y", "580");
 
@@ -2508,8 +2509,6 @@ public class SvgUtil
             starAndSongShadowTitle.appendChild(titleShadow);
 
 
-
-
             Node bpmAndMapperNode = doc.createElementNS(namespaceSVG, "text");
             Element bpmAndMapper = (Element) bpmAndMapperNode;
             bpmAndMapper.setAttribute("class", "cls-130");
@@ -2596,8 +2595,8 @@ public class SvgUtil
             iffc.appendChild(iffcLabel);
             iffc.appendChild(iffcNumber);
 
-            sectionFull.appendChild(totalBG);
             sectionFull.appendChild(mapBGImage);
+            sectionFull.appendChild(totalBG);
             sectionFull.appendChild(totalBGMask);
             sectionFull.appendChild(rank);
             sectionFull.appendChild(starAndSongShadowTitle);
@@ -2642,6 +2641,33 @@ public class SvgUtil
             modSingle.setAttribute("transform", "translate(" + -25*i  + " 0)");
             sectionFull.appendChild(modSingleNode);
         }
+    }
+
+    private static void setupProfileBackground(Document doc,String filename,Boolean enableGlassEffect)
+    {
+        doc.getElementById("bg-0").setAttributeNS(xlinkns,"xlink:href", filename);
+        doc.getElementById("bg-1").setAttributeNS(xlinkns,"xlink:href", filename);
+        doc.getElementById("bg-2").setAttributeNS(xlinkns,"xlink:href", filename);
+        doc.getElementById("bg-3").setAttributeNS(xlinkns,"xlink:href", filename);
+        if (!enableGlassEffect) {
+            doc.getElementById("bg-1").setAttribute("opacity", "0");
+            doc.getElementById("bg-2").setAttribute("opacity", "0");
+            doc.getElementById("bg-3").setAttribute("opacity", "0");
+        }
+    }
+    private static void profileColorTheme(Document doc, ProfileTheme theme)
+    {
+        doc.getElementById("headerBorder").setAttribute("fill", theme.getHeaderBorderColor().toString());
+        doc.getElementById("header").setAttribute("fill", theme.getLightHeaderColor().toString());
+        doc.getElementById("avatar-block").setAttribute("fill", theme.getEvenBrighterMainColor().toString());
+        doc.getElementById("avatar-block").setAttribute("stroke", theme.getBorderColor().toString());
+        doc.getElementById("status-block").setAttribute("fill", theme.getBorderColor().toString());
+        doc.getElementById("status-block").setAttribute("stroke", theme.getEvenBrighterMainColor().toString());
+
+        doc.getElementById("levelProgressRect").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("levelPercentage").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("level").setAttribute("fill", theme.getMainColor().toString());
+
     }
 
 
