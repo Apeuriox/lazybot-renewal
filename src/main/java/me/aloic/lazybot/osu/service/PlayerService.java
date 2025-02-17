@@ -25,7 +25,7 @@ public interface PlayerService
 
     byte[] card(GeneralParameter params) throws Exception;
 
-    byte[] profile(GeneralParameter params) throws Exception;
+    byte[] profile(ProfileParameter params) throws Exception;
 
     String nameToId(NameToIdParameter params) throws Exception;
 }

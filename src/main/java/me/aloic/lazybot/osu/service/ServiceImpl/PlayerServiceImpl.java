@@ -135,7 +135,7 @@ public class PlayerServiceImpl implements PlayerService
     }
 
     @Override
-    public byte[] profile(GeneralParameter params) throws Exception {
+    public byte[] profile(ProfileParameter params) throws Exception {
         PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode()));
         playerInfoVO.setMode(params.getMode());
         List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());

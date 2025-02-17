@@ -8,11 +8,13 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
+import me.aloic.lazybot.parameter.ProfileParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -28,6 +30,8 @@ public class ProfileCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private TokenMapper tokenMapper;
+    @Resource
+    private CustomizationMapper customizationMapper;
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -40,11 +44,11 @@ public class ProfileCommand implements LazybotSlashCommand
         }
         tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
-        GeneralParameter params=new GeneralParameter(playerName,
+        ProfileParameter params=new ProfileParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.card(params));
+        ImageUploadUtil.uploadImageToDiscord(event,playerService.profile(params));
     }
 
     @Override
@@ -55,8 +59,8 @@ public class ProfileCommand implements LazybotSlashCommand
         if (tokenPO == null)
             throw new RuntimeException("请先使用/link绑定osu账号");
         tokenPO.setAccess_token(accessToken.getAccess_token());
-        GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
-        GeneralParameter.setupDefaultValue(params,tokenPO);
+        ProfileParameter params=ProfileParameter.analyzeParameter(event.getCommandParameters());
+        ProfileParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.setAccessToken(accessToken.getAccess_token());
