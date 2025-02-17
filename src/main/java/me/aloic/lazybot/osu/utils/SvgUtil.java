@@ -2317,7 +2317,7 @@ public class SvgUtil
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
         return dateTime.format(outputFormatter);
     }
-    public static Document createInfoPanel(PlayerInfoVO playerInfo,int hue) throws IOException
+    public static Document createInfoPanel(PlayerInfoVO playerInfo,ProfileTheme theme) throws IOException
     {
         Path filePath = ResourceMonitor.getResourcePath().resolve("static/InfoV2-WhiteSpace.svg");
         URI inputUri = filePath.toFile().toURI();
@@ -2344,14 +2344,14 @@ public class SvgUtil
             imageElement.setAttributeNS(xlinkns, "xlink:href", playerInfo.getAvatarUrl());
         }
         document.getElementById("levelProgressRect").setAttribute("width",String.valueOf(8.5*playerInfo.getLevelProgress()));
-        setupProfileRankGraph(document,playerInfo,hue);
-        setupProfileBps(document,playerInfo,hue);
+        setupProfileRankGraph(document,playerInfo,theme);
+        setupProfileBps(document,playerInfo,theme);
+        profileColorTheme(document,theme);
 
         return document;
     }
-    private static void setupProfileRankGraph(Document document,PlayerInfoVO playerInfo,int hue)
+    private static void setupProfileRankGraph(Document document,PlayerInfoVO playerInfo,ProfileTheme theme)
     {
-        String mainColor="hsl("+hue+",95%, 36%)";
 
         Element rankGraphGroup=document.getElementById("rankGraphGroup");
         int size = playerInfo.getRankHistory().size();
@@ -2385,7 +2385,7 @@ public class SvgUtil
             circle.setAttribute("cx", String.valueOf(x));
             circle.setAttribute("cy", String.valueOf(y));
             circle.setAttribute("r", "3.5");
-            circle.setAttribute("fill", mainColor);
+            circle.setAttribute("fill", theme.getMainColor().toString());
             rankGraphGroup.appendChild(circle);
         }
 
@@ -2393,18 +2393,15 @@ public class SvgUtil
         Element polyline = (Element) polylineNode;
         polyline.setAttribute("points", polylinePoints.toString());
         polyline.setAttribute("fill", "none");
-        polyline.setAttribute("stroke", mainColor);
+        polyline.setAttribute("stroke", theme.getMainColor().toString());
         polyline.setAttribute("stroke-width", "2");
         rankGraphGroup.appendChild(polyline);
 
         document.getElementById("rankGraph-label-1").setTextContent(CommonTool.abbrNumber(dataMin));
         document.getElementById("rankGraph-label-2").setTextContent(CommonTool.abbrNumber(dataMax));
     }
-    private static void setupProfileBps(Document doc,PlayerInfoVO playerInfo,int hue)
+    private static void setupProfileBps(Document doc,PlayerInfoVO playerInfo,ProfileTheme theme)
     {
-        String mainColorDeep="hsl("+hue+",95%, 36%)";
-        String middleColor ="hsl("+hue+",84%, 68%)";
-
         int listIndex=0;
         List<ScoreVO> scoreList = playerInfo.getBps();
         for (ScoreVO score : scoreList)
@@ -2466,7 +2463,7 @@ public class SvgUtil
 
             Node starNode = doc.createElementNS(namespaceSVG, "tspan");
             Element star = (Element) starNode;
-            star.setAttribute("fill", middleColor);
+            star.setAttribute("fill", theme.getMainMiddleColor().toString());
             star.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat("*"));
 
             Node divisorNode = doc.createElementNS(namespaceSVG, "tspan");
@@ -2480,8 +2477,6 @@ public class SvgUtil
             starAndSongTitle.appendChild(star);
             starAndSongTitle.appendChild(divisor);
             starAndSongTitle.appendChild(title);
-
-
 
             Node starAndSongTitleShadowNode = doc.createElementNS(namespaceSVG, "text");
             Element starAndSongShadowTitle = (Element) starAndSongTitleShadowNode;
@@ -2519,7 +2514,7 @@ public class SvgUtil
 
             Node bpmNode = doc.createElementNS(namespaceSVG, "tspan");
             Element bpm = (Element) bpmNode;
-            bpm.setAttribute("fill", middleColor);
+            bpm.setAttribute("fill", theme.getMainMiddleColor().toString());
             bpm.setTextContent(String.valueOf(Math.round(score.getBeatmap().getBpm())).concat(" BPM"));
 
             Node divisorNode2 = doc.createElementNS(namespaceSVG, "tspan");
@@ -2609,7 +2604,7 @@ public class SvgUtil
             setupModIconForProfileBps(score.getModJSON(), doc, sectionFull);
             sectionFull.setAttribute("opacity","0.9");
             sectionFull.setAttribute("transform", "translate("+ 435*(listIndex%2)+ "," + 120 * (int)(listIndex/2) + ")");
-            doc.getElementById("bp-block").appendChild(sectionFull);
+            doc.getElementById("bp-block-all").appendChild(sectionFull);
             listIndex++;
         }
     }
@@ -2661,12 +2656,41 @@ public class SvgUtil
         doc.getElementById("header").setAttribute("fill", theme.getLightHeaderColor().toString());
         doc.getElementById("avatar-block").setAttribute("fill", theme.getEvenBrighterMainColor().toString());
         doc.getElementById("avatar-block").setAttribute("stroke", theme.getBorderColor().toString());
-        doc.getElementById("status-block").setAttribute("fill", theme.getBorderColor().toString());
+        doc.getElementById("status-block").setAttribute("fill", theme.getBrightMainColor().toString());
         doc.getElementById("status-block").setAttribute("stroke", theme.getEvenBrighterMainColor().toString());
+        doc.getElementById("bp-block").setAttribute("fill", theme.getEvenBrighterMainColor().toString());
+        doc.getElementById("bp-block").setAttribute("fill", theme.getBorderColor().toString());
+        doc.getElementById("rankGraphBG").setAttribute("fill", theme.getEvenBrighterMainColor().toString());
+        doc.getElementById("mode-underline").setAttribute("fill", theme.getMainColor().toString());
 
         doc.getElementById("levelProgressRect").setAttribute("fill", theme.getMainColor().toString());
         doc.getElementById("levelPercentage").setAttribute("fill", theme.getMainColor().toString());
         doc.getElementById("level").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("contryBorder").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("countryAbbrv").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("globalRank").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("globalLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("rankedScoreLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("rankedScore").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("accuracyLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("accuracy").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("playCountLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("playCount").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("totalScoreLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("totalScore").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("totalHitsLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("totalHits").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("playTimeLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("playTime").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("rankGraph-label-1").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("rankGraph-label-2").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("bpLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("countryRankAll").setAttribute("fill", theme.getMainColor().toString());
+
+
+
+
+
 
     }
 

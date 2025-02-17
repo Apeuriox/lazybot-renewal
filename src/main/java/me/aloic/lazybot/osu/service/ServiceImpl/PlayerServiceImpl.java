@@ -8,6 +8,8 @@ import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.theme.preset.ProfileLightTheme;
+import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
@@ -139,7 +141,7 @@ public class PlayerServiceImpl implements PlayerService
         List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         playerInfoVO.setBps(scoreVOArray);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoPanel(playerInfoVO,192));
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoPanel(playerInfoVO, ProfileLightTheme.createInstance(192)));
     }
 
     @Override

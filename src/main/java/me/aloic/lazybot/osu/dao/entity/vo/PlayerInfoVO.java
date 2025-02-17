@@ -24,6 +24,7 @@ public class PlayerInfoVO
     private Long totalHitCount;
     private Long totalPlayTime;
     private String avatarUrl;
+    private String profileBackgroundUrl;
     private String fixedPPString;
     private Integer primaryColor;
 
