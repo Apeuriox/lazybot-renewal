@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
+import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -136,12 +137,25 @@ public class PlayerServiceImpl implements PlayerService
 
     @Override
     public byte[] profile(ProfileParameter params) throws Exception {
-        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode()));
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
         playerInfoVO.setMode(params.getMode());
         List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         playerInfoVO.setBps(scoreVOArray);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoPanel(playerInfoVO, ProfileLightTheme.createInstance(192)));
+        ProfileTheme theme;
+        if (params.getProfileCustomizationPO()!=null) {
+            playerInfoVO.setProfileBackgroundUrl(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerCustomization/profile/" + playerInfoVO.getId() +".jpg");
+            if(params.getProfileCustomizationPO().getHue()!=null)
+                theme=ProfileLightTheme.createInstance(params.getProfileCustomizationPO().getHue());
+            else
+                theme=ProfileLightTheme.createInstance(CommonTool.getDominantHueColorThief(new File(playerInfoVO.getProfileBackgroundUrl())));
+        }
+        else {
+            playerInfoVO.setProfileBackgroundUrl(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/static/assets/whitespace_" +CommonTool.randomNumberGenerator(3) +".png");
+            theme=ProfileLightTheme.createInstance(192);
+        }
+
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoPanel(playerInfoVO, theme));
     }
 
     @Override

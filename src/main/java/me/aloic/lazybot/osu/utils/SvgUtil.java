@@ -2338,7 +2338,7 @@ public class SvgUtil
         document.getElementById("playTime").setTextContent(CommonTool.formatSecondsToHours(playerInfo.getTotalPlayTime()).concat("h"));
         document.getElementById("level").setTextContent(String.valueOf(playerInfo.getLevel()));
         document.getElementById("levelPercentage").setTextContent(String.valueOf(playerInfo.getLevelProgress()).concat("%"));
-
+        document.getElementById(OsuMode.getMode(playerInfo.getMode()).getDescribe()).setAttribute("fill", theme.getMainColor().toString());
         Element imageElement = document.getElementById("avatar");
         if (playerInfo.getAvatarUrl()!= null) {
             imageElement.setAttributeNS(xlinkns, "xlink:href", playerInfo.getAvatarUrl());
@@ -2347,12 +2347,11 @@ public class SvgUtil
         setupProfileRankGraph(document,playerInfo,theme);
         setupProfileBps(document,playerInfo,theme);
         profileColorTheme(document,theme);
-
+        setupProfileBackground(document,playerInfo.getProfileBackgroundUrl(),true);
         return document;
     }
     private static void setupProfileRankGraph(Document document,PlayerInfoVO playerInfo,ProfileTheme theme)
     {
-
         Element rankGraphGroup=document.getElementById("rankGraphGroup");
         int size = playerInfo.getRankHistory().size();
         List<Integer> rankHistory;
@@ -2360,6 +2359,7 @@ public class SvgUtil
             rankHistory = playerInfo.getRankHistory().subList(size-8,size);
         }
         catch (Exception e) {
+            logger.info("Profile rank history invalid, use default rank history");
             rankHistory = List.of(0,0,0,0,0,0,0,0);
         }
         int[] data = rankHistory.stream().mapToInt(Integer::intValue).toArray();
@@ -2372,12 +2372,14 @@ public class SvgUtil
         for (int value : data) {
             if (value < dataMin) dataMin = value;
             if (value > dataMax) dataMax = value;
-
         }
         StringBuilder polylinePoints = new StringBuilder();
         for (int i = 0; i < data.length; i++) {
             int x = xPositions[i];
-            int y = (int) ((data[i] - dataMin) / (double) (dataMax - dataMin) * (yMax - yMin) + yMin);
+            int y;
+
+            if (dataMax <= dataMin) y=385;
+            else y = (int) ((data[i] - dataMin) / (double) (dataMax - dataMin) * (yMax - yMin) + yMin);
             polylinePoints.append(x).append(",").append(y).append(" ");
 
             Node circleNode = document.createElementNS(namespaceSVG, "circle");
@@ -2659,14 +2661,17 @@ public class SvgUtil
         doc.getElementById("status-block").setAttribute("fill", theme.getBrightMainColor().toString());
         doc.getElementById("status-block").setAttribute("stroke", theme.getEvenBrighterMainColor().toString());
         doc.getElementById("bp-block").setAttribute("fill", theme.getEvenBrighterMainColor().toString());
-        doc.getElementById("bp-block").setAttribute("fill", theme.getBorderColor().toString());
+        doc.getElementById("bp-block").setAttribute("stroke", theme.getBorderColor().toString());
         doc.getElementById("rankGraphBG").setAttribute("fill", theme.getEvenBrighterMainColor().toString());
         doc.getElementById("mode-underline").setAttribute("fill", theme.getMainColor().toString());
 
+        doc.getElementById("playername").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("requestTime").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("requestTimeLabel").setAttribute("fill", theme.getMainMiddleColor().toString());
         doc.getElementById("levelProgressRect").setAttribute("fill", theme.getMainColor().toString());
         doc.getElementById("levelPercentage").setAttribute("fill", theme.getMainColor().toString());
         doc.getElementById("level").setAttribute("fill", theme.getMainColor().toString());
-        doc.getElementById("contryBorder").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("contryBorder").setAttribute("stroke", theme.getMainColor().toString());
         doc.getElementById("countryAbbrv").setAttribute("fill", theme.getMainColor().toString());
         doc.getElementById("globalRank").setAttribute("fill", theme.getMainColor().toString());
         doc.getElementById("globalLabel").setAttribute("fill", theme.getMainColor().toString());

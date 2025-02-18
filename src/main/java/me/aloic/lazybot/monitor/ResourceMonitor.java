@@ -3,6 +3,7 @@ package me.aloic.lazybot.monitor;
 import me.aloic.lazybot.discord.config.DiscordBotRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.system.ApplicationHome;
 
 import java.io.*;
 import java.net.URL;
@@ -57,11 +58,11 @@ public class ResourceMonitor
      * @throws IOException 如果提取失败
      */
     private static void extractResources(String resourceDir, File targetDir) throws IOException {
-        String jarPath = DiscordBotRunner.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        File jarFile = jarPathVerifier(jarPath);
-        if (jarFile.isFile() && jarFile.getName().endsWith(".jar")) {
+        ApplicationHome home = new ApplicationHome(DiscordBotRunner.class);
+        File source = home.getSource();
+        if (source != null && source.isFile() && source.getName().endsWith(".jar")) {
             logger.info("正在从 JAR 文件中提取资源");
-            try (JarFile jar = new JarFile(jarFile)) {
+            try (JarFile jar = new JarFile(source)) {
                 Enumeration<JarEntry> entries = jar.entries();
                 while (entries.hasMoreElements()) {
                     JarEntry entry = entries.nextElement();
@@ -79,6 +80,9 @@ public class ResourceMonitor
             if (resourceUrl != null) {
                 File resourceFolder = new File(resourceUrl.getFile());
                 copyResourceFolder(resourceFolder, targetDir);
+            }
+            else {
+                logger.warn("未能在 classpath 中找到资源目录：{}", resourceDir);
             }
         }
     }
@@ -156,11 +160,15 @@ public class ResourceMonitor
         Path osuFilesDir = workingDir.resolve("osuFiles");
         Path playerAvatarDir = osuFilesDir.resolve("playerAvatar");
         Path mapBGDir = osuFilesDir.resolve("mapBG");
+        Path playerCustomizationDir = osuFilesDir.resolve("playerCustomization");
+        Path profileDir = playerCustomizationDir.resolve("profile");
         Path staticDir = workingDir.resolve("static");
         createDirectoryIfNotExists(osuFilesDir);
         createDirectoryIfNotExists(playerAvatarDir);
         createDirectoryIfNotExists(mapBGDir);
         createDirectoryIfNotExists(staticDir);
+        createDirectoryIfNotExists(playerCustomizationDir);
+        createDirectoryIfNotExists(profileDir);
     }
 
     /**
@@ -181,6 +189,10 @@ public class ResourceMonitor
             logger.info("目录已存在：{}", dir.getAbsolutePath());
         }
     }
+
+
+
+    //for spring 2.x using, cuz Spring 3.x added nested:// protocol
     private static File jarPathVerifier(String jarPath)
     {
         try {
