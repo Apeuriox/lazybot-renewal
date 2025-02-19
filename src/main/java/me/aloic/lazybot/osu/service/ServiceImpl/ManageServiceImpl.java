@@ -72,4 +72,11 @@ public class ManageServiceImpl implements ManageService
     {
         return "";
     }
+
+    @Override
+    public String showUnverifiedCustomization(GeneralParameter params)
+    {
+        return "";
+    }
+
 }

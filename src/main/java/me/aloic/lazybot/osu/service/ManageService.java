@@ -14,4 +14,6 @@ public interface ManageService
     String unlinkUser(GeneralParameter params);
 
     String verifyProfileCustomization(GeneralParameter params);
+
+    String showUnverifiedCustomization(GeneralParameter params);
 }

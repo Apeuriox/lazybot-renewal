@@ -17,7 +17,7 @@ public class CustomizationParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if(!this.getTargetUrl().startsWith("http://") || !this.getTargetUrl().startsWith("https://"))
+        if(!(this.getTargetUrl().startsWith("http://") || this.getTargetUrl().startsWith("https://")))
             throw new RuntimeException("超链接协议无效");
     }
     public CustomizationParameter(String playerName, String type) {

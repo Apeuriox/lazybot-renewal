@@ -6,14 +6,15 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="qq_code" jdbcType="BIGINT" property="qq_code"/>
         <result column="player_id" jdbcType="INTEGER" property="player_id"/>
-        <result column="discord_code" jdbcType="BIGINT" property="discord_code"/>
+        <result column="original_url" jdbcType="VARCHAR" property="original_url"/>
         <result column="verified" jdbcType="INTEGER" property="verified"/>
         <result column="preferred_type" jdbcType="INTEGER" property="preferred_type"/>
         <result column="player_name" jdbcType="VARCHAR" property="player_name"/>
+        <result column="last_updated" jdbcType="DATE" property="last_updated"/>
         <result column="hue" jdbcType="INTEGER" property="hue"/>
     </resultMap>
     <sql id = "Base_Column_List">
-        id, qq_code, player_id, discord_code, verified, preferred_type, hue, player_name
+        id, qq_code, player_id, original_url, verified, preferred_type, hue, player_name, last_updated
     </sql>
 
     <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -26,17 +27,17 @@
     <update id="updateVerifiedAndHue" parameterType="map">
         UPDATE profile_customization
         SET
-            verified = #{user.max_combo},
-            hue = #{user.hue}
-        where player_id =#{player_id}
+            verified = #{custom.verified},
+            hue = #{custom.hue}
+        where player_id =#{custom.player_id}
     </update>
 
     <update id="updateVerified" parameterType="map">
         update profile_customization
         <set>
-            verified=#{verified},
+            verified=#{custom.verified},
         </set>
-        where player_id =#{player_id}
+        where player_id =#{custom.player_id}
     </update>
 
     <delete id="deleteById" parameterType="java.lang.Integer">

@@ -243,7 +243,7 @@ public class AssertDownloadUtil
         while (attempt < MAX_RETRIES) {
             try {
                 attempt++;
-                logger.info("尝试下载文件 (第 {} 次)： {}", attempt, targetUrl);
+                logger.info("尝试下载文件 (第 {} 次)： {} to {}", attempt, targetUrl, desiredLocalPath);
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(targetUrl))
                         .timeout(Duration.ofSeconds(30))
