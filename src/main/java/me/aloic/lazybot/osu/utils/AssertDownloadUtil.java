@@ -53,7 +53,8 @@ public class AssertDownloadUtil
             delayQueue.offer(new DownloadTask(1000));
         }
     }
-    private static void downloadResourceQueue(String targetUrl, String desiredLocalPath) throws InterruptedException, ExecutionException {
+
+    public static void downloadResourceQueue(String targetUrl, String desiredLocalPath) throws InterruptedException, ExecutionException {
         Future<Void> downloadFuture = executor.submit(() -> {
             try {
                 delayQueue.take();
@@ -237,7 +238,7 @@ public class AssertDownloadUtil
     {
        return HttpUtil.downloadFile(targetUrl, FileUtil.file(desiredLocalPath));
     }
-    public static void fileDownloadJavaHttpClient(String targetUrl, String desiredLocalPath) throws Exception {
+    private static void fileDownloadJavaHttpClient(String targetUrl, String desiredLocalPath) throws Exception {
         int attempt = 0;
         while (attempt < MAX_RETRIES) {
             try {

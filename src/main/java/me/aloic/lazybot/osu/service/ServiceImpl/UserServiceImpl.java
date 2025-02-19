@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService
         BiConsumer<SlashCommandInteractionEvent, UserTokenPO> createBindError =  ErrorResultHandler::createBindError;
         if(event.getOption("username")==null)
             ErrorResultHandler.createParameterError(event);
+        isValidUsername(event.getOption("username").getAsString());
         Optional.ofNullable(discordTokenMapper.selectByDiscord(event.getUser().getIdLong()))
                 .ifPresentOrElse(
                         token -> createBindError.accept(event, token),
@@ -79,6 +80,7 @@ public class UserServiceImpl implements UserService
     public void linkUser(Bot bot, LazybotSlashCommandEvent event)
     {
         String username = String.join(" ", event.getCommandParameters());
+        isValidUsername(username);
         Optional.ofNullable(tokenMapper.selectByPlayername(username)).ifPresent(this::createAlreadyBindError);
         Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
                 .ifPresentOrElse(
@@ -133,6 +135,11 @@ public class UserServiceImpl implements UserService
                 );
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("成功绑定用户: " +username).build(),false);
     }
+
+
+
+
+
     private void createBindError(AccessTokenPO token){
         throw new RuntimeException("您已绑定用户: " +token.getPlayer_name());
     }
@@ -143,5 +150,12 @@ public class UserServiceImpl implements UserService
         {
             throw new RuntimeException("您并未绑定");
         }
+    }
+    public static boolean isValidUsername(String input) {
+        if(input.length()>15) throw new RuntimeException("用户名过长");
+        if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) {
+            throw new RuntimeException("已输入的用户名含有非法字符");
+        }
+        return true;
     }
 }

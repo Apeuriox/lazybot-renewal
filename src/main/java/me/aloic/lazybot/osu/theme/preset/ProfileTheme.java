@@ -6,7 +6,7 @@ import me.aloic.lazybot.osu.theme.Color.HSL;
 public abstract class ProfileTheme
 {
     public enum ThemeType{
-        LIGHT,DARK
+        LIGHT,DARK,SNOW_WHITE,HIGH_CONTRAST
     }
     private int hue;
     private HSL mainColor;

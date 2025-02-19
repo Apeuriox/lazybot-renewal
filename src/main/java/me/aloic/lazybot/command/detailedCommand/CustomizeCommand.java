@@ -1,5 +1,6 @@
 package me.aloic.lazybot.command.detailedCommand;
 
+import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
@@ -7,35 +8,29 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
-import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
-import me.aloic.lazybot.osu.service.PlayerService;
-import me.aloic.lazybot.osu.utils.OsuToolsUtil;
-import me.aloic.lazybot.parameter.GeneralParameter;
-import me.aloic.lazybot.parameter.ProfileParameter;
+import me.aloic.lazybot.osu.service.CustomizeService;
+import me.aloic.lazybot.osu.service.ManageService;
+import me.aloic.lazybot.parameter.CustomizationParameter;
+import me.aloic.lazybot.parameter.UpdateParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.DataObjectExtractor;
-import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
+@LazybotCommandMapping({"customize"})
 @Component
-@LazybotCommandMapping({"profile"})
-public class ProfileCommand implements LazybotSlashCommand
+public class CustomizeCommand implements LazybotSlashCommand
 {
     @Resource
-    private PlayerService playerService;
+    private CustomizeService customizeService;
     @Resource
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private TokenMapper tokenMapper;
-    @Resource
-    private CustomizationMapper customizationMapper;
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -48,11 +43,11 @@ public class ProfileCommand implements LazybotSlashCommand
         }
         tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
-        ProfileParameter params=new ProfileParameter(playerName,
-                OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
+        CustomizationParameter params=new CustomizationParameter(playerName,
+                OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("type"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.profile(params));
+        event.getHook().sendMessage(customizeService.customize(params)).queue();
     }
 
     @Override
@@ -61,17 +56,12 @@ public class ProfileCommand implements LazybotSlashCommand
         AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
         AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
         if (tokenPO == null)
-            throw new RuntimeException("请使用/link 你的用户名 进行绑定");
+            throw new RuntimeException("请先使用/link 你的用户名 绑定osu账号");
         tokenPO.setAccess_token(accessToken.getAccess_token());
-        ProfileParameter params=ProfileParameter.analyzeParameter(event.getCommandParameters());
-        ProfileParameter.setupDefaultValue(params,tokenPO);
-        if(event.getOsuMode()!=null)
-            params.setMode(event.getOsuMode().getDescribe());
+        CustomizationParameter params=CustomizationParameter.analyzeParameter(event.getCommandParameters());
+        CustomizationParameter.setupDefaultValue(params,tokenPO);
         params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
-        params.setInfoDTO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode()));
-        ProfileCustomizationPO customization=customizationMapper.selectById(params.getInfoDTO().getId());
-        params.setProfileCustomizationPO(customization);
-        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.profile(params));
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(customizeService.customize(params)).build(),false);
     }
 }

@@ -48,7 +48,7 @@ public class DataObjectExtractor
     public static String checkUserLink(UserTokenPO tokenPO)
     {
         if (tokenPO == null)
-            throw new RuntimeException("'未查到相关信息，请使用/link [你的用户名] 进行绑定  ");
+            throw new RuntimeException("'未查到相关信息，请使用/link 你的用户名 进行绑定  ");
         return tokenPO.getPlayer_name();
     }
 

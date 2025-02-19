@@ -6,6 +6,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.parameter.BeatmapParameter;
+import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.UpdateParameter;
 import me.aloic.lazybot.util.*;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,17 @@ public class ManageServiceImpl implements ManageService
             return "校验和不匹配: " + beatmapDTO.getChecksum() + " != " + checksum;
         }
         return "校验和正常: "+checksum;
+    }
+
+    @Override
+    public String unlinkUser(GeneralParameter params)
+    {
+        return "";
+    }
+
+    @Override
+    public String verifyProfileCustomization(GeneralParameter params)
+    {
+        return "";
     }
 }
