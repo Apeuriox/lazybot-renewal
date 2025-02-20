@@ -254,4 +254,9 @@ public class OsuToolsUtil
         }
         return modList;
     }
+    public static void linkedCheck(AccessTokenPO tokenPO)
+    {
+        if (tokenPO == null)
+            throw new RuntimeException("请先使用/link 你的osu用户名 绑定osu账号");
+    }
 }

@@ -6,6 +6,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
+import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.parameter.BeatmapParameter;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -35,6 +37,8 @@ public class ManageServiceImpl implements ManageService
 
     @Resource
     private CustomizationMapper customizationMapper;
+    @Resource
+    private TokenMapper tokenMapper;
 
     @Override
     public String update(UpdateParameter params)
@@ -80,6 +84,10 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String unlinkUser(GeneralParameter params)
     {
+//        Optional.ofNullable(tokenMapper.selectByQq_code())
+//                .ifPresentOrElse(
+//                        token -> tokenMapper.deleteByQQ(event.getMessageEvent().getSender().getUserId()),
+//                        this::createNotBindError);
         return "";
     }
     @Override

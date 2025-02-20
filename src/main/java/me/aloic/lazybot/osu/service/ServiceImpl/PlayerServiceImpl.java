@@ -145,6 +145,7 @@ public class PlayerServiceImpl implements PlayerService
         ProfileTheme theme;
         String defaultBackground=ResourceMonitor.getResourcePath().toAbsolutePath()+ "/static/assets/whitespace_" +CommonTool.randomNumberGenerator(3) +".png";
         if (params.getProfileCustomizationPO()!=null) {
+            CustomizeServiceImpl.validateProfileCustomizationCache(params.getProfileCustomizationPO());
             if(params.getProfileCustomizationPO().getVerified()>0){
                 playerInfoVO.setProfileBackgroundUrl(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerCustomization/profile/" + playerInfoVO.getId() +".jpg");
                 if(params.getProfileCustomizationPO().getHue()!=null)

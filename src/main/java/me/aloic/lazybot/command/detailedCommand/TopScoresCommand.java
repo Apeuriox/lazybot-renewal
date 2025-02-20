@@ -10,6 +10,7 @@ import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.TrackService;
+import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.TopScoresParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.ImageUploadUtil;
@@ -46,8 +47,7 @@ public class TopScoresCommand implements LazybotSlashCommand
     {
         AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
         AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-        if (tokenPO == null)
-            throw new RuntimeException("请先使用/link绑定osu账号");
+        OsuToolsUtil.linkedCheck(tokenPO);
         tokenPO.setAccess_token(accessToken.getAccess_token());
         TopScoresParameter params=TopScoresParameter.analyzeParameter(event.getCommandParameters());
         TopScoresParameter.setupDefaultValue(params,tokenPO);

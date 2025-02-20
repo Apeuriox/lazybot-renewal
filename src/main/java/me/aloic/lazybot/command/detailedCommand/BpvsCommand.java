@@ -12,6 +12,7 @@ import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.BpvsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.ImageUploadUtil;
@@ -53,8 +54,7 @@ public class BpvsCommand implements LazybotSlashCommand
     {
         AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
         AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-        if (tokenPO == null)
-            throw new RuntimeException("请先使用/link绑定osu账号");
+        OsuToolsUtil.linkedCheck(tokenPO);
         tokenPO.setAccess_token(accessToken.getAccess_token());
         BpvsParameter params=BpvsParameter.analyzeParameter(event.getCommandParameters());
         BpvsParameter.setupDefaultValue(params,tokenPO);

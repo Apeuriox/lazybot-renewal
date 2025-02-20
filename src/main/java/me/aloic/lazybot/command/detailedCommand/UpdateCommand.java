@@ -13,6 +13,7 @@ import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.ManageService;
+import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.UpdateParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -53,8 +54,7 @@ public class UpdateCommand implements LazybotSlashCommand
     {
         AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
         AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-        if (tokenPO == null)
-            throw new RuntimeException("请先使用/link绑定osu账号");
+        OsuToolsUtil.linkedCheck(tokenPO);
         tokenPO.setAccess_token(accessToken.getAccess_token());
         UpdateParameter params=UpdateParameter.analyzeParameter(event.getCommandParameters());
         UpdateParameter.setupDefaultValue(params,tokenPO);
