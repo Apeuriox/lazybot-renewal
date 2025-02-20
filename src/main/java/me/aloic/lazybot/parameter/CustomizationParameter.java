@@ -34,6 +34,7 @@ public class CustomizationParameter extends LazybotCommandParameter
             }
             else throw new RuntimeException("使用方法: /customize <类型> <图片链接>");
         }
+        else throw new RuntimeException("使用方法: /customize <类型> <图片链接>");
         return parameter;
     }
     public static void setupDefaultValue(CustomizationParameter parameter, AccessTokenPO accessTokenPO)

@@ -143,15 +143,22 @@ public class PlayerServiceImpl implements PlayerService
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         playerInfoVO.setBps(scoreVOArray);
         ProfileTheme theme;
+        String defaultBackground=ResourceMonitor.getResourcePath().toAbsolutePath()+ "/static/assets/whitespace_" +CommonTool.randomNumberGenerator(3) +".png";
         if (params.getProfileCustomizationPO()!=null) {
-            playerInfoVO.setProfileBackgroundUrl(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerCustomization/profile/" + playerInfoVO.getId() +".jpg");
-            if(params.getProfileCustomizationPO().getHue()!=null)
-                theme=ProfileLightTheme.createInstance(params.getProfileCustomizationPO().getHue());
-            else
-                theme=ProfileLightTheme.createInstance(CommonTool.getDominantHueColorThief(new File(playerInfoVO.getProfileBackgroundUrl())));
+            if(params.getProfileCustomizationPO().getVerified()>0){
+                playerInfoVO.setProfileBackgroundUrl(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerCustomization/profile/" + playerInfoVO.getId() +".jpg");
+                if(params.getProfileCustomizationPO().getHue()!=null)
+                    theme=ProfileLightTheme.createInstance(params.getProfileCustomizationPO().getHue());
+                else
+                    theme=ProfileLightTheme.createInstance(CommonTool.getDominantHueColorThief(new File(playerInfoVO.getProfileBackgroundUrl())));
+            }
+            else {
+                playerInfoVO.setProfileBackgroundUrl(defaultBackground);
+                theme=ProfileLightTheme.createInstance(192);
+            }
         }
         else {
-            playerInfoVO.setProfileBackgroundUrl(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/static/assets/whitespace_" +CommonTool.randomNumberGenerator(3) +".png");
+            playerInfoVO.setProfileBackgroundUrl(defaultBackground);
             theme=ProfileLightTheme.createInstance(192);
         }
 

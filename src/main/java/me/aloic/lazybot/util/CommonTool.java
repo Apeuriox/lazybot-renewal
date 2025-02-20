@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,12 +22,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 public class CommonTool {
     public static boolean isEmpty(String s) {
@@ -696,5 +695,39 @@ public class CommonTool {
         return ThreadLocalRandom.current().nextInt(max);
     }
 
+    public static void cropAndResize(String pathToFile, int targetWidth, int targetHeight) {
+        try {
+            BufferedImage originalImage = ImageIO.read(new File(pathToFile));
+            int originalWidth = originalImage.getWidth();
+            int originalHeight = originalImage.getHeight();
+            if(originalWidth== targetWidth && originalHeight == targetHeight) {
+                return;
+            }
+            double aspectRatio = (double) originalWidth / originalHeight;
+            double targetRatio = (double) targetWidth / targetHeight;
+
+            int scaledWidth, scaledHeight;
+            if (aspectRatio > targetRatio) {
+                scaledHeight = targetHeight;
+                scaledWidth = (int) (targetHeight * aspectRatio);
+            } else {
+                scaledWidth = targetWidth;
+                scaledHeight = (int) (targetWidth / aspectRatio);
+            }
+
+            Image scaledImage = originalImage.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+            BufferedImage scaledBufferedImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g2d = scaledBufferedImage.createGraphics();
+            g2d.drawImage(scaledImage, 0, 0, null);
+            g2d.dispose();
+            int cropX = (scaledWidth - targetWidth) / 2;
+            int cropY = (scaledHeight - targetHeight) / 2;
+            BufferedImage croppedImage = scaledBufferedImage.getSubimage(cropX, cropY, targetWidth, targetHeight);
+            ImageIO.write(croppedImage, "jpg", new File(pathToFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("图像缩放时出错: " + e);
+        }
+    }
 
 }

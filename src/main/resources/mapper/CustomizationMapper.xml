@@ -23,25 +23,34 @@
         where player_id =#{player_id}
     </select>
 
+    <select id="selectUnverified" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profile_customization
+        WHERE verified = 0
+        ORDER BY last_updated
+        LIMIT 3;
+    </select>
 
-    <update id="updateVerifiedAndHue" parameterType="map">
+    <update id="updateCustomize" parameterType="map">
         UPDATE profile_customization
         SET
             verified = #{custom.verified},
-            hue = #{custom.hue}
+            hue = #{custom.hue},
+            original_url = #{custom.original_url}
         where player_id =#{custom.player_id}
     </update>
 
     <update id="updateVerified" parameterType="map">
         update profile_customization
         <set>
-            verified=#{custom.verified},
+            verified=#{verified},
         </set>
-        where player_id =#{custom.player_id}
+        where id =#{id}
     </update>
 
     <delete id="deleteById" parameterType="java.lang.Integer">
         DELETE FROM profile_customization WHERE player_id =#{player_id}
     </delete>
+
 
 </mapper>

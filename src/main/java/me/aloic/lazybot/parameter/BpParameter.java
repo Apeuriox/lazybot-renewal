@@ -71,7 +71,7 @@ public class BpParameter extends LazybotCommandParameter
                 }
             }
             else {
-                throw new RuntimeException("Incorrect parameters: " + params);
+                bpParameter.setPlayerName(String.join(" ", params));
             }
         }
         else bpParameter.setIndex(1);

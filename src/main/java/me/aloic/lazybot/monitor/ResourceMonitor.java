@@ -162,7 +162,6 @@ public class ResourceMonitor
         Path mapBGDir = osuFilesDir.resolve("mapBG");
         Path playerCustomizationDir = osuFilesDir.resolve("playerCustomization");
         Path profileDir = playerCustomizationDir.resolve("profile");
-        Path unverifiedDir = profileDir.resolve("unverified");
         Path staticDir = workingDir.resolve("static");
         createDirectoryIfNotExists(osuFilesDir);
         createDirectoryIfNotExists(playerAvatarDir);
@@ -170,7 +169,6 @@ public class ResourceMonitor
         createDirectoryIfNotExists(staticDir);
         createDirectoryIfNotExists(playerCustomizationDir);
         createDirectoryIfNotExists(profileDir);
-        createDirectoryIfNotExists(unverifiedDir);
     }
 
     /**
