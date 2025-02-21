@@ -1,13 +1,13 @@
 package me.aloic.lazybot.osu.theme.preset;
 
 import lombok.Data;
-import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 @Data
 public abstract class ProfileTheme
 {
+    //other types can be considered as one of them
     public enum ThemeType{
-        LIGHT,DARK,SNOW_WHITE,HIGH_CONTRAST
+        LIGHT,DARK
     }
     private int hue;
     private HSL mainColor;

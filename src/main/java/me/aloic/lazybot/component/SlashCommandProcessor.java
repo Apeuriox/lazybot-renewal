@@ -7,7 +7,6 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.command.registry.LazybotSlashCommandRegistry;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.shiro.utils.MessageEventFactory;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ public class SlashCommandProcessor
 {
     @Resource
     private LazybotSlashCommandRegistry registry;
-
 
     private static final Logger logger = LoggerFactory.getLogger(SlashCommandProcessor.class);
 
@@ -42,24 +40,16 @@ public class SlashCommandProcessor
     @Async("asyncServiceExecutor")
     public void processQQ(Bot bot, LazybotSlashCommandEvent event)
     {
-        if (event.getIstSlashCommand())
-        {
-            try
-            {
+            try {
                 LazybotSlashCommand command = registry.getCommand(event.getCommandType());
-                if (command != null)
-                {
+                if (command != null) {
                     logger.info("正在处理 {} 命令(onebot)", event.getCommandType());
                     command.execute(bot,event);
                 }
-                else {
-                    return;
-                }
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
+                //todo: 处理异常
                 bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(),false);
             }
-        }
     }
 }

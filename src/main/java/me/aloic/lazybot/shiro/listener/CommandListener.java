@@ -15,6 +15,7 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.component.SlashCommandProcessor;
 import me.aloic.lazybot.discord.config.DiscordBotRunner;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.shiro.utils.MessageDeduplicator;
 import me.aloic.lazybot.shiro.utils.MessageEventFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class CommandListener
     private static final Logger logger = LoggerFactory.getLogger(CommandListener.class);
 
     @Resource
-    private SlashCommandProcessor slashCommandProcessor;
+    private MessageDeduplicator messageDeduplicator;
 
     @Resource
     private MessageEventFactory factory;
@@ -45,7 +46,7 @@ public class CommandListener
         }
         // 对于超过 2秒 的消息直接舍弃, 解决重新登陆后疯狂刷命令
         if (nowTime - event.getTime() > 25) return;
-        slashCommandProcessor.processQQ(bot,factory.setupSlashCommandEvent(event));
+        messageDeduplicator.replicateCheck(bot,factory.setupSlashCommandEvent(event));
     }
 
 }
