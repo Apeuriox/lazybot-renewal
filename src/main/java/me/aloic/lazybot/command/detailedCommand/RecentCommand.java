@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@LazybotCommandMapping({"re","recent","rs"})
+@LazybotCommandMapping({"recent","rs"})
 @Component
 public class RecentCommand implements LazybotSlashCommand
 {

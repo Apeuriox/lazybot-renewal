@@ -13,7 +13,7 @@ public class ProfileLightTheme extends ProfileTheme
     }
     private ProfileLightTheme(int hue) {
         this.setHue(hue);
-        this.setMainColor(new HSL(hue, 60, 53));
+        this.setMainColor(new HSL(hue, 60, 43));
         this.setMainMiddleColor(new HSL(hue, 84, 68));
         this.setLightFontColor(new HSL(hue, 100, 68));
         this.setHeaderColor(new HSL(hue, 39, 93));

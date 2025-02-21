@@ -28,13 +28,13 @@ public enum CommandEnum {
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
                     new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格", false, false))),
 
-    PLAY_RECENT(5, "pr", "查询用户最近pass的成绩", true,
+    PLAY_RECENT(5, "rp", "查询用户最近pass的成绩", true,
             List.of( new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
                     new CommandOption(OptionType.INTEGER, "index", "指定查询的位置", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
                     new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格", false, false))),
 
-    RECENT(6, "re", "查询用户最近的成绩", true,
+    RECENT(6, "rs", "查询用户最近的成绩", true,
             List.of( new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
                     new CommandOption(OptionType.INTEGER, "index", "指定查询的位置", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
