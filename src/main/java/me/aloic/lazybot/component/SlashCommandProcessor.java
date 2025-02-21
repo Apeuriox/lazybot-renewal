@@ -46,10 +46,20 @@ public class SlashCommandProcessor
                     logger.info("正在处理 {} 命令(onebot)", event.getCommandType());
                     command.execute(bot,event);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (RuntimeException e) {
+                logger.error(e.getMessage());
                 //todo: 处理异常
                 bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(),false);
             }
+            catch (Exception e) {
+                logger.error(e.getMessage());
+            }
     }
+//    private void errorHandle(Throwable e)
+//    {
+//        if(e instanceof RuntimeException)
+//        {
+//
+//        }
+//    }
 }
