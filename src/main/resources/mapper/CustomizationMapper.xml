@@ -40,6 +40,14 @@
         where player_id =#{custom.player_id}
     </update>
 
+    <update id="updatePreferredType" parameterType="map">
+        UPDATE profile_customization
+        <set>
+            preferred_type = #{preferred_type}
+        </set>
+        where player_id =#{player_id}
+    </update>
+
     <update id="updateVerified" parameterType="map">
         update profile_customization
         <set>

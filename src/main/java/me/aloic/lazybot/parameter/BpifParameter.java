@@ -38,9 +38,7 @@ public class BpifParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (this.getModList().isEmpty()) throw new RuntimeException("Mod在哪?");
-        if ((this.getModList().size()&1)!=0) throw new RuntimeException("Mod长度不为偶数,size=" + this.getModList().size());
-
+        if (this.getModList()==null || this.getModList().isEmpty()) throw new RuntimeException("Mod在哪? 现阶段不支持多步操作，比如+HD -HR");
     }
     public static BpifParameter analyzeParameter(List<String> params)
     {

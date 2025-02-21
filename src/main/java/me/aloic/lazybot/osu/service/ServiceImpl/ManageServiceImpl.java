@@ -23,6 +23,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
+
+// onebot protocol can be forged so no sensitive functions here
 @Service
 public class ManageServiceImpl implements ManageService
 {
@@ -103,13 +105,13 @@ public class ManageServiceImpl implements ManageService
         return "未知二级命令";
     }
 
-    public String verifyProfileCustomization(VerifyParameter params)
+    private String verifyProfileCustomization(VerifyParameter params)
     {
         customizationMapper.updateVerified(2,params.getCustomizeId());
         return "成功设置";
     }
 
-    public String showUnverifiedCustomization()
+    private String showUnverifiedCustomization()
     {
         List<ProfileCustomizationPO> profiles=customizationMapper.selectUnverified();
         StringBuffer sb = new StringBuffer("所有客制化请求均已完成审核");

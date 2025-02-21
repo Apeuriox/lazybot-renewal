@@ -149,9 +149,9 @@ public class PlayerServiceImpl implements PlayerService
             if(params.getProfileCustomizationPO().getVerified()>0){
                 playerInfoVO.setProfileBackgroundUrl(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerCustomization/profile/" + playerInfoVO.getId() +".jpg");
                 if(params.getProfileCustomizationPO().getHue()!=null)
-                    theme=ProfileLightTheme.createInstance(params.getProfileCustomizationPO().getHue());
+                    theme=ProfileTheme.getInstance(params.getProfileCustomizationPO().getPreferred_type(),params.getProfileCustomizationPO().getHue());
                 else
-                    theme=ProfileLightTheme.createInstance(CommonTool.getDominantHueColorThief(new File(playerInfoVO.getProfileBackgroundUrl())));
+                    theme=ProfileTheme.getInstance(params.getProfileCustomizationPO().getPreferred_type(),CommonTool.getDominantHueColorThief(new File(playerInfoVO.getProfileBackgroundUrl())));
             }
             else {
                 playerInfoVO.setProfileBackgroundUrl(defaultBackground);

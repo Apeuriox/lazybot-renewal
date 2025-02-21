@@ -16,6 +16,9 @@ public interface CustomizationMapper extends BaseMapper<ProfileCustomizationPO> 
     void updateVerified(@Param("verified")Integer verified,
                         @Param("id")Integer id);
 
+    void updatePreferredType(@Param("preferred_type")Integer preferred_type,
+                        @Param("player_id")Integer player_id);
+
     void updateCustomize(@Param("verified") Integer verified,
                               @Param("hue") Integer hue,
                               @Param("original_url") String original_url,

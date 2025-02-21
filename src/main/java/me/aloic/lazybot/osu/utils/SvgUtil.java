@@ -2338,7 +2338,13 @@ public class SvgUtil
         document.getElementById("playTime").setTextContent(CommonTool.formatSecondsToHours(playerInfo.getTotalPlayTime()).concat("h"));
         document.getElementById("level").setTextContent(String.valueOf(playerInfo.getLevel()));
         document.getElementById("levelPercentage").setTextContent(String.valueOf(playerInfo.getLevelProgress()).concat("%"));
+        document.getElementById("osu").setAttribute("fill", theme.getModeInactiveColor().toString());
+        document.getElementById("taiko").setAttribute("fill", theme.getModeInactiveColor().toString());
+        document.getElementById("mania").setAttribute("fill", theme.getModeInactiveColor().toString());
+        document.getElementById("fruits").setAttribute("fill", theme.getModeInactiveColor().toString());
+
         document.getElementById(OsuMode.getMode(playerInfo.getMode()).getDescribe()).setAttribute("fill", theme.getMainColor().toString());
+        document.getElementById("mode-underline").setAttribute("transform", "translate(" + 50*OsuMode.getMode(playerInfo.getMode()).getValue()  +" , 0)");
         Element imageElement = document.getElementById("avatar");
         if (playerInfo.getAvatarUrl()!= null) {
             imageElement.setAttributeNS(xlinkns, "xlink:href", playerInfo.getAvatarUrl());
@@ -2353,6 +2359,11 @@ public class SvgUtil
     private static void setupProfileRankGraph(Document document,PlayerInfoVO playerInfo,ProfileTheme theme)
     {
         Element rankGraphGroup=document.getElementById("rankGraphGroup");
+        if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
+            document.getElementById("line1").setAttribute("stroke", "#fff");
+            document.getElementById("line2").setAttribute("stroke", "#fff");
+            document.getElementById("line3").setAttribute("stroke", "#fff");
+        }
         int size = playerInfo.getRankHistory().size();
         List<Integer> rankHistory;
         try{
@@ -2418,6 +2429,8 @@ public class SvgUtil
             totalBG.setAttribute("width", "415");
             totalBG.setAttribute("height", "100");
             totalBG.setAttribute("fill", "#000");
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK)
+                totalBG.setAttribute("fill", "#2a2933");
             totalBG.setAttribute("opacity", "0.1");
             totalBG.setAttribute("x", "25");
             totalBG.setAttribute("y", "580");
@@ -2429,8 +2442,11 @@ public class SvgUtil
             mapBGImage.setAttribute("y", "580");
             mapBGImage.setAttribute("width", "415");
             mapBGImage.setAttribute("opacity", "0.9");
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK)
+                mapBGImage.setAttribute("opacity", "0.5");
+            else
+                mapBGImage.setAttribute("filter", "url(#bp-blur)");
             mapBGImage.setAttribute("height", "100");
-            mapBGImage.setAttribute("filter", "url(#bp-blur)");
             mapBGImage.setAttribute("clip-path", "url(#bpclip)");
             mapBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
 
@@ -2438,22 +2454,16 @@ public class SvgUtil
             Element totalBGMask = (Element) totalBGMaskNode;
             totalBGMask.setAttribute("width", "415");
             totalBGMask.setAttribute("height", "100");
-            totalBGMask.setAttribute("fill", "url(#opacityGraditent)");
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
+                totalBGMask.setAttribute("fill", "#2a2933");
+                totalBGMask.setAttribute("opacity", "0.5");
+            }
+            else
+                totalBGMask.setAttribute("fill", "url(#opacityGraditent)");
             totalBGMask.setAttribute("clip-path", "url(#bpclip)");
             totalBGMask.setAttribute("x", "25");
             totalBGMask.setAttribute("y", "580");
 
-            Node rankNode = doc.createElementNS(namespaceSVG, "text");
-            Element rank = (Element) rankNode;
-            rank.setAttribute("class", "cls-130");
-            rank.setAttribute("font-size", "100px");
-            rank.setAttribute("fill", rankColorIndictor(score.getRank()));
-            rank.setAttribute("clip-path", "url(#bpclip)");
-            rank.setAttribute("opacity", "0.5");
-            rank.setAttribute("font-weight", "600");
-            rank.setAttribute("x", "384");
-            rank.setAttribute("y", "685");
-            rank.setTextContent(score.getRank());
 
             Node starAndSongTitleNode = doc.createElementNS(namespaceSVG, "text");
             Element starAndSongTitle = (Element) starAndSongTitleNode;
@@ -2575,27 +2585,56 @@ public class SvgUtil
             iffc.setAttribute("class", "cls-130");
             iffc.setAttribute("font-size", "12px");
             iffc.setAttribute("font-weight", "600");
-            iffc.setAttribute("x", "435");
+            iffc.setAttribute("x", "430");
             iffc.setAttribute("y", "658");
             iffc.setAttribute("text-anchor", "end");
 
             Node iffcLabelNode = doc.createElementNS(namespaceSVG, "tspan");
             Element iffcLabel = (Element) iffcLabelNode;
-            iffcLabel.setAttribute("fill", "#333333");
+            if(theme.getThemeType()== ProfileTheme.ThemeType.LIGHT)
+                iffcLabel.setAttribute("fill", "#333333");
+            else
+                iffcLabel.setAttribute("fill", "#f3f3f3");
             iffcLabel.setTextContent("if fc ");
 
             Node iffcNumberNode = doc.createElementNS(namespaceSVG, "tspan");
             Element iffcNumber = (Element) iffcNumberNode;
             iffcNumber.setTextContent(String.valueOf(Math.round(score.getPpDetailsLocal().getIfFc())).concat("pp"));
             iffcNumber.setAttribute("fill", "#f269a1");
-
             iffc.appendChild(iffcLabel);
             iffc.appendChild(iffcNumber);
 
             sectionFull.appendChild(mapBGImage);
             sectionFull.appendChild(totalBG);
             sectionFull.appendChild(totalBGMask);
-            sectionFull.appendChild(rank);
+
+            if(theme.getThemeType()== ProfileTheme.ThemeType.LIGHT)
+            {
+                Node rankNode = doc.createElementNS(namespaceSVG, "text");
+                Element rank = (Element) rankNode;
+                rank.setAttribute("class", "cls-130");
+                rank.setAttribute("font-size", "100px");
+                rank.setAttribute("fill", rankColorIndictor(score.getRank()));
+                rank.setAttribute("clip-path", "url(#bpclip)");
+                rank.setAttribute("opacity", "0.5");
+                rank.setAttribute("font-weight", "600");
+                rank.setAttribute("x", "384");
+                rank.setAttribute("y", "685");
+                rank.setTextContent(score.getRank());
+                sectionFull.appendChild(rank);
+            }
+            else {
+                Node rankNode = doc.createElementNS(namespaceSVG, "rect");
+                Element rank = (Element) rankNode;
+                rank.setAttribute("width", "35");
+                rank.setAttribute("height", "3");
+                rank.setAttribute("fill", rankColorIndictor(score.getRank()));
+                rank.setAttribute("transform", "translate(50,579.5)");
+                rank.setAttribute("rx", "1.5");
+                rank.setAttribute("ry", "1.5");
+                rank.setTextContent(score.getRank());
+                sectionFull.appendChild(rank);
+            }
             sectionFull.appendChild(starAndSongShadowTitle);
             sectionFull.appendChild(bpmAndMapperShadow);
             sectionFull.appendChild(starAndSongTitle);
@@ -2655,15 +2694,16 @@ public class SvgUtil
     private static void profileColorTheme(Document doc, ProfileTheme theme)
     {
         doc.getElementById("headerBorder").setAttribute("fill", theme.getHeaderBorderColor().toString());
-        doc.getElementById("header").setAttribute("fill", theme.getLightHeaderColor().toString());
-        doc.getElementById("avatar-block").setAttribute("fill", theme.getEvenBrighterMainColor().toString());
+        doc.getElementById("header").setAttribute("fill", theme.getHeaderColor().toString());
+        doc.getElementById("avatar-block").setAttribute("fill", theme.getBlockColor().toString());
         doc.getElementById("avatar-block").setAttribute("stroke", theme.getBorderColor().toString());
-        doc.getElementById("status-block").setAttribute("fill", theme.getBrightMainColor().toString());
-        doc.getElementById("status-block").setAttribute("stroke", theme.getEvenBrighterMainColor().toString());
-        doc.getElementById("bp-block").setAttribute("fill", theme.getEvenBrighterMainColor().toString());
+        doc.getElementById("status-block").setAttribute("fill", theme.getBlockColorLighter().toString());
+        doc.getElementById("status-block").setAttribute("stroke", theme.getBlockColor().toString());
+        doc.getElementById("bp-block").setAttribute("fill", theme.getBlockColor().toString());
         doc.getElementById("bp-block").setAttribute("stroke", theme.getBorderColor().toString());
-        doc.getElementById("rankGraphBG").setAttribute("fill", theme.getEvenBrighterMainColor().toString());
+        doc.getElementById("rankGraphBG").setAttribute("fill", theme.getBlockColor().toString());
         doc.getElementById("mode-underline").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("levelProgressBG").setAttribute("fill", theme.getLevelProgressBackgroundColor().toString());
 
         doc.getElementById("playername").setAttribute("fill", theme.getMainColor().toString());
         doc.getElementById("requestTime").setAttribute("fill", theme.getMainColor().toString());
