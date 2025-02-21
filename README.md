@@ -1,11 +1,5 @@
 # lazybot-renewal
 ---
-### Planned
-
-- implement Tencent official Api support</br>
-- refactor Svg utils</br>
-- improve render pipeline, add some queue or sth</br>
----
 
 ### About Image Generation
 

@@ -2,12 +2,14 @@ package me.aloic.lazybot.osu.service;
 
 import me.aloic.lazybot.parameter.*;
 
+import java.io.IOException;
+
 public interface PlayerService
 {
 
     byte[] score(ScoreParameter params) throws Exception;
 
-    byte[] recent(RecentParameter params, Integer type);
+    byte[] recent(RecentParameter params, Integer type) throws IOException;
 
     byte[] bp(BpParameter params) throws Exception;
 
@@ -23,6 +25,7 @@ public interface PlayerService
 
     byte[] card(GeneralParameter params) throws Exception;
 
-    String nameToId(NameToIdParameter params) throws Exception;
+    byte[] profile(ProfileParameter params) throws Exception;
 
+    String nameToId(NameToIdParameter params) throws Exception;
 }

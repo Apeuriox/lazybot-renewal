@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
@@ -27,5 +29,6 @@ public class BeatmapDTO extends BeatmapCompactDTO
     private Integer playcount;
     private Integer ranked;
     private String url;
+    private List<MapOwnersDTO> owners;
 
 }

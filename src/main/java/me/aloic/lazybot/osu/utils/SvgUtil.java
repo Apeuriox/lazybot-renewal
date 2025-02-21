@@ -7,6 +7,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.util.CommonTool;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
@@ -30,6 +31,7 @@ import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -84,9 +86,9 @@ public class SvgUtil
         return outputName;
     }
 
-    public static OutputStream scoreToImageDarkApache(ScoreVO targetScore, int hue) throws TranscoderException, IOException
+    public static OutputStream scoreToImageDarkApache(ScoreVO targetScore, int[] primaryColor) throws TranscoderException, IOException
     {
-        Document doc = getScorePanelDarkModeDoc(targetScore,hue);
+        Document doc = getScorePanelDarkModeDoc(targetScore,primaryColor);
         long startingTime = System.currentTimeMillis();
         TranscoderInput input = new TranscoderInput(doc);
         OutputStream o =svgToPng(input);
@@ -94,9 +96,9 @@ public class SvgUtil
         return o;
     }
 
-    public static String scoreToImageDarkURLApache(ScoreVO targetScore, int hue) throws TranscoderException, IOException
+    public static String scoreToImageDarkURLApache(ScoreVO targetScore, int[] primaryColor) throws TranscoderException, IOException
     {
-        Document doc = getScorePanelDarkModeDoc(targetScore,hue);
+        Document doc = getScorePanelDarkModeDoc(targetScore,primaryColor);
         TranscoderInput input = new TranscoderInput(doc);
         String outputName = "score-dark-".concat(targetScore.getUser_name()).concat(".png");
         svgToPng(input, new File(outputName));
@@ -629,12 +631,93 @@ public class SvgUtil
             throw new RuntimeException(e);
         }
     }
+    public static Document getScorePanelMaterialDesign(ScoreVO targetScore,int[] primaryColor)
+    {
+        try{
+            List<Double> hsl = CommonTool.rgbToHslDetailed(primaryColor);
+            String color =String.format("hsl(%.0f, %.0f%%, %.0f%%)", hsl.get(0),  hsl.get(1) * 100,  (hsl.get(2) * 100)+20>94?94:(hsl.get(2) * 100)+20);
 
-    public static Document getScorePanelDarkModeDoc(ScoreVO targetScore,Integer hue)
+            Path filePath = ResourceMonitor.getResourcePath().resolve("static/ScorePanelMaterialDesign-Reranged.svg");
+            URI inputUri = filePath.toFile().toURI();
+            Document document = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
+            Element svgRoot = document.getDocumentElement();
+            document.getElementById("color-0").setAttribute("fill",color);
+            document.getElementById("color-1").setAttribute("fill",color);
+            document.getElementById("color-2").setAttribute("fill",color);
+            document.getElementById("color-3").setAttribute("fill",color);
+            document.getElementById("color-4").setAttribute("fill",color);
+            document.getElementById("color-5").setAttribute("fill",color);
+            document.getElementById("color-6").setAttribute("fill",color);
+            document.getElementById("color-7").setAttribute("fill",color);
+            document.getElementById("color-8").setAttribute("fill",color);
+            document.getElementById("color-9").setAttribute("fill",color);
+            document.getElementById("color-10").setAttribute("fill",color);
+            document.getElementById("mapBg").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
+            document.getElementById("mapBg-mask").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
+            document.getElementById("playername").setTextContent(targetScore.getUser_name());
+            document.getElementById("achievedTime").setTextContent(CommonTool.timestampSpilt(targetScore.getCreate_at())[0]);
+            document.getElementById("title").setTextContent(targetScore.getBeatmap().getTitle());
+            document.getElementById("artist").setTextContent(targetScore.getBeatmap().getArtist());
+            document.getElementById("mapper").setTextContent(targetScore.getBeatmap().getCreator());
+            document.getElementById("version").setTextContent(targetScore.getBeatmap().getVersion());
+            document.getElementById("genre").setTextContent(targetScore.getBeatmap().getGenre());
+            document.getElementById("language").setTextContent(targetScore.getBeatmap().getLanguage());
+            document.getElementById("starRating").setTextContent(CommonTool.toString(targetScore.getBeatmap().getDifficult_rating()));
+            document.getElementById("status").setTextContent(targetScore.getBeatmap().getStatus().toUpperCase());
+            document.getElementById("bid").setTextContent(String.valueOf(targetScore.getBeatmap().getBid()));
+            document.getElementById("sid").setTextContent(String.valueOf(targetScore.getBeatmap().getSid()));
+            document.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));
+            document.getElementById("length").setTextContent(CommonTool.formatHitLength(targetScore.getBeatmap().getAttributes().getLength()));
+            document.getElementById("ar").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getAr()));
+            document.getElementById("od").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getOd()));
+            document.getElementById("hp").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getHp()));
+            document.getElementById("cs").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getCs()));
+            document.getElementById("ok").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
+            document.getElementById("great").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
+            document.getElementById("meh").setTextContent(String.valueOf(targetScore.getStatistics().getMeh()));
+            document.getElementById("miss").setTextContent(String.valueOf(targetScore.getStatistics().getMiss()));
+            document.getElementById("rank").setTextContent(targetScore.getRank().toUpperCase());
+            if (targetScore.getPpDetailsLocal().getCurrentPP() != null) {
+                document.getElementById("pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getCurrentPP())));
+            }
+            document.getElementById("accuracy").setTextContent(CommonTool.toString(targetScore.getAccuracy() * 100).concat("%"));
+            document.getElementById("combo").setTextContent(CommonTool.toString(targetScore.getMaxCombo()).concat("x/")
+                    .concat(CommonTool.toString(targetScore.getBeatmap().getMax_combo())
+                            .concat("x")).concat(" (").
+                    concat(CommonTool.toString(((double) targetScore.getMaxCombo() / (double) targetScore.getBeatmap().getMax_combo()) * 100.0).concat("%)")));
+
+            if (targetScore.getPpDetailsLocal() != null)
+            {
+                document.getElementById("aimPPAll").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAimPPMax())));
+                document.getElementById("spdPPAll").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getSpdPPMax())));
+                document.getElementById("accPPAll").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPMax())));
+
+                document.getElementById("aimPPGet").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAimPP())));
+                document.getElementById("accPPGet").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPP())));
+                document.getElementById("spdPPGet").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getSpdPP())));
+                document.getElementById("iffc").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getIfFc())));
+
+                document.getElementById("95%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(95))));
+                document.getElementById("97%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(97))));
+                document.getElementById("98%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(98))));
+                document.getElementById("99%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(99))));
+                document.getElementById("100%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(100))));
+            }
+            document.getElementById(OsuMode.getMode(targetScore.getMode()).getDescribe()).setAttribute("class", "cls-23");
+            return document;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("生成图像时出错");
+        }
+    }
+    public static Document getScorePanelDarkModeDoc(ScoreVO targetScore,int[] primaryColor)
     {
         long startingTime = System.currentTimeMillis();
+
         try
         {
+            int hue=CommonTool.rgbToHue(primaryColor);
             Path filePath = ResourceMonitor.getResourcePath().resolve("static/scorePanelDarkmode_customize.svg");
             URI inputUri = filePath.toFile().toURI();
             Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
@@ -849,7 +932,7 @@ public class SvgUtil
                 case Osu:
                 {
                     logger.info("Score Type: Osu");
-                    doc.getElementById("osu").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("osu").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-osu").setAttribute("opacity","1");
                     doc.getElementById("osuStatistics").setAttribute("opacity","1");
                     doc.getElementById("100Count-o").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
@@ -871,7 +954,7 @@ public class SvgUtil
                 case Taiko:
                 {
                     logger.info("Score Type: Taiko");
-                    doc.getElementById("taiko").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("taiko").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-taiko").setAttribute("opacity","1");
                     doc.getElementById("taikoStatistics").setAttribute("opacity","1");
                     doc.getElementById("150Count-t").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
@@ -889,7 +972,7 @@ public class SvgUtil
                 case Catch:
                 {
                     logger.info("Score Type: CTB");
-                    doc.getElementById("ctb").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("ctb").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-ctb").setAttribute("opacity","1");
                     doc.getElementById("fruitsStatistics").setAttribute("opacity","1");
                     doc.getElementById("300Count-f").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -911,7 +994,7 @@ public class SvgUtil
                 case Mania:
                 {
                     logger.info("Score Type: Mania");
-                    doc.getElementById("mania").setAttribute("fill", hue==361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("mania").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-mania").setAttribute("opacity","1");
                     doc.getElementById("maniaStatistics").setAttribute("opacity","1");
                     doc.getElementById("maxCount-m").setTextContent(String.valueOf(targetScore.getStatistics().getPerfect()));
@@ -934,7 +1017,7 @@ public class SvgUtil
                     break;
                 }
             }
-            if(hue!=361)
+            if(hue<361)
                 setupoCustomColorForDarkmodeScore(doc,hue);
 
             doc.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));
@@ -1128,9 +1211,7 @@ public class SvgUtil
         sectionFull.appendChild(modBGNode3);
         sectionFull.appendChild(modNameNode);
 
-
-        if(mod.getAcronym().equals("DT")||mod.getAcronym().equals("NC")||mod.getAcronym().equals("HT")||mod.getAcronym().equals("DC"))
-        {
+        if(mod.getAcronym().equals("DT")||mod.getAcronym().equals("NC")||mod.getAcronym().equals("HT")||mod.getAcronym().equals("DC")) {
             Node modClockRateNode = doc.createElementNS(namespaceSVG, "text");
             Element modeClockRate = (Element) modClockRateNode;
             modeClockRate.setAttribute("class", "cls-125");
@@ -1140,7 +1221,11 @@ public class SvgUtil
             if(mod.getSettings().getSpeed_change()!=null) {
                 modeClockRate.setTextContent(CommonTool.toString(mod.getSettings().getSpeed_change()).concat("x"));
             }
-            sectionFull.appendChild(modClockRateNode);
+            else {
+                modeClockRate.setTextContent("1.50x");
+                modeClockRate.setAttribute("opacity", "0.2");
+            }
+            sectionFull.appendChild(modeClockRate);
         }
         svgRoot.appendChild(sectionFull);
     }
@@ -1217,7 +1302,7 @@ public class SvgUtil
         }
         return document;
     }
-    public static Document createScoreListDetailed(List<ScoreSequence> scorelist, String primaryColor, String type) throws IOException
+    public static Document createScoreListDetailed(List<ScoreSequence> scorelist, String primaryColor, String type,Integer offset) throws IOException
     {
         try
         {
@@ -1233,7 +1318,7 @@ public class SvgUtil
             doc.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("class", "cls-24");
             doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
-            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot);
+            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot,offset);
         }
         catch (Exception e)
         {
@@ -1241,7 +1326,7 @@ public class SvgUtil
             throw new RuntimeException("SVG 处理时出错");
         }
     }
-    public static Document createScoreListDetailed(List<ScoreSequence> scorelist,PlayerInfoVO info) throws IOException
+    public static Document createScoreListDetailed(List<ScoreSequence> scorelist,PlayerInfoVO info, Integer offset) throws IOException
     {
         try
         {
@@ -1261,7 +1346,7 @@ public class SvgUtil
             doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
             doc.getElementById("playernameLabel").setAttribute("fill", primaryColor);
             doc.getElementById("totalPpLabel").setAttribute("fill", primaryColor);
-            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot);
+            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot, offset);
         }
         catch (Exception e)
         {
@@ -1269,7 +1354,7 @@ public class SvgUtil
             throw new RuntimeException("SVG 处理时出错");
         }
     }
-    private static Document setupBpListDetailedSingle(List<ScoreSequence> scorelist, String primaryColor, Document doc, Element svgRoot)
+    private static Document setupBpListDetailedSingle(List<ScoreSequence> scorelist, String primaryColor, Document doc, Element svgRoot, Integer offset)
     {
         int listIndex=0;
         for (ScoreSequence score : scorelist)
@@ -1442,7 +1527,7 @@ public class SvgUtil
             index.setAttribute("text-anchor", "middle");
             index.setAttribute("fill", "#ffffff");
             index.setAttribute("transform", "translate(725 170)");
-            index.setTextContent("#".concat(String.valueOf((score.getPositionInList()+1))));
+            index.setTextContent("#".concat(String.valueOf((score.getPositionInList()+offset))));
 
             Node ppNode = doc.createElementNS(namespaceSVG, "text");
             Element pp = (Element) ppNode;
@@ -2232,4 +2317,427 @@ public class SvgUtil
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
         return dateTime.format(outputFormatter);
     }
+    public static Document createInfoPanel(PlayerInfoVO playerInfo,ProfileTheme theme) throws IOException
+    {
+        Path filePath = ResourceMonitor.getResourcePath().resolve("static/InfoV2-WhiteSpace.svg");
+        URI inputUri = filePath.toFile().toURI();
+        Document document = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
+        Element svgRoot = document.getDocumentElement();
+        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        document.getElementById("playername").setTextContent(playerInfo.getPlayerName());
+        document.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        document.getElementById("countryAbbrv").setTextContent(playerInfo.getCountryCode());
+        document.getElementById("countryRank").setTextContent(String.valueOf(playerInfo.getCountryRank()));
+        document.getElementById("globalRank").setTextContent("#".concat(String.valueOf(playerInfo.getGlobalRank())));
+        document.getElementById("ppValue").setTextContent(String.valueOf(Math.round(playerInfo.getPerformancePoint())));
+        document.getElementById("rankedScore").setTextContent(formatter.format(playerInfo.getRankTotalScore()));
+        document.getElementById("accuracy").setTextContent(CommonTool.toString(playerInfo.getAccuracy()).concat("%"));
+        document.getElementById("playCount").setTextContent(formatter.format(playerInfo.getPlayCount()));
+        document.getElementById("totalScore").setTextContent(formatter.format(playerInfo.getTotalScore()));
+        document.getElementById("totalHits").setTextContent(formatter.format(playerInfo.getTotalHitCount()));
+        document.getElementById("playTime").setTextContent(CommonTool.formatSecondsToHours(playerInfo.getTotalPlayTime()).concat("h"));
+        document.getElementById("level").setTextContent(String.valueOf(playerInfo.getLevel()));
+        document.getElementById("levelPercentage").setTextContent(String.valueOf(playerInfo.getLevelProgress()).concat("%"));
+        document.getElementById("osu").setAttribute("fill", theme.getModeInactiveColor().toString());
+        document.getElementById("taiko").setAttribute("fill", theme.getModeInactiveColor().toString());
+        document.getElementById("mania").setAttribute("fill", theme.getModeInactiveColor().toString());
+        document.getElementById("fruits").setAttribute("fill", theme.getModeInactiveColor().toString());
+
+        document.getElementById(OsuMode.getMode(playerInfo.getMode()).getDescribe()).setAttribute("fill", theme.getMainColor().toString());
+        document.getElementById("mode-underline").setAttribute("transform", "translate(" + 50*OsuMode.getMode(playerInfo.getMode()).getValue()  +" , 0)");
+        Element imageElement = document.getElementById("avatar");
+        if (playerInfo.getAvatarUrl()!= null) {
+            imageElement.setAttributeNS(xlinkns, "xlink:href", playerInfo.getAvatarUrl());
+        }
+        document.getElementById("levelProgressRect").setAttribute("width",String.valueOf(8.5*playerInfo.getLevelProgress()));
+        setupProfileRankGraph(document,playerInfo,theme);
+        setupProfileBps(document,playerInfo,theme);
+        profileColorTheme(document,theme);
+        setupProfileBackground(document,playerInfo.getProfileBackgroundUrl(),true);
+        return document;
+    }
+    private static void setupProfileRankGraph(Document document,PlayerInfoVO playerInfo,ProfileTheme theme)
+    {
+        Element rankGraphGroup=document.getElementById("rankGraphGroup");
+        if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
+            document.getElementById("line1").setAttribute("stroke", "#fff");
+            document.getElementById("line2").setAttribute("stroke", "#fff");
+            document.getElementById("line3").setAttribute("stroke", "#fff");
+        }
+        int size = playerInfo.getRankHistory().size();
+        List<Integer> rankHistory;
+        try{
+            rankHistory = playerInfo.getRankHistory().subList(size-8,size);
+        }
+        catch (Exception e) {
+            logger.info("Profile rank history invalid, use default rank history");
+            rankHistory = List.of(0,0,0,0,0,0,0,0);
+        }
+        int[] data = rankHistory.stream().mapToInt(Integer::intValue).toArray();
+
+        int[] xPositions = {90, 130, 170, 210, 250, 290, 330, 370};
+        int yMin = 350, yMax = 420;
+
+        int dataMin = Integer.MAX_VALUE;
+        int dataMax = Integer.MIN_VALUE;
+        for (int value : data) {
+            if (value < dataMin) dataMin = value;
+            if (value > dataMax) dataMax = value;
+        }
+        StringBuilder polylinePoints = new StringBuilder();
+        for (int i = 0; i < data.length; i++) {
+            int x = xPositions[i];
+            int y;
+
+            if (dataMax <= dataMin) y=385;
+            else y = (int) ((data[i] - dataMin) / (double) (dataMax - dataMin) * (yMax - yMin) + yMin);
+            polylinePoints.append(x).append(",").append(y).append(" ");
+
+            Node circleNode = document.createElementNS(namespaceSVG, "circle");
+            Element circle = (Element) circleNode;
+            circle.setAttribute("cx", String.valueOf(x));
+            circle.setAttribute("cy", String.valueOf(y));
+            circle.setAttribute("r", "3.5");
+            circle.setAttribute("fill", theme.getMainColor().toString());
+            rankGraphGroup.appendChild(circle);
+        }
+
+        Node polylineNode = document.createElementNS(namespaceSVG, "polyline");
+        Element polyline = (Element) polylineNode;
+        polyline.setAttribute("points", polylinePoints.toString());
+        polyline.setAttribute("fill", "none");
+        polyline.setAttribute("stroke", theme.getMainColor().toString());
+        polyline.setAttribute("stroke-width", "2");
+        rankGraphGroup.appendChild(polyline);
+
+        document.getElementById("rankGraph-label-1").setTextContent(CommonTool.abbrNumber(dataMin));
+        document.getElementById("rankGraph-label-2").setTextContent(CommonTool.abbrNumber(dataMax));
+    }
+    private static void setupProfileBps(Document doc,PlayerInfoVO playerInfo,ProfileTheme theme)
+    {
+        int listIndex=0;
+        List<ScoreVO> scoreList = playerInfo.getBps();
+        for (ScoreVO score : scoreList)
+        {
+            Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
+            Element sectionFull = (Element) sectionFullNode;
+
+            Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element totalBG = (Element) totalBGNode;
+            totalBG.setAttribute("rx", "15");
+            totalBG.setAttribute("ry", "15");
+            totalBG.setAttribute("width", "415");
+            totalBG.setAttribute("height", "100");
+            totalBG.setAttribute("fill", "#000");
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK)
+                totalBG.setAttribute("fill", "#2a2933");
+            totalBG.setAttribute("opacity", "0.1");
+            totalBG.setAttribute("x", "25");
+            totalBG.setAttribute("y", "580");
+
+            Node mapBGImageNode = doc.createElementNS(namespaceSVG, "image");
+            Element mapBGImage = (Element) mapBGImageNode;
+            mapBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBeatmap().getBgUrl());
+            mapBGImage.setAttribute("x", "25");
+            mapBGImage.setAttribute("y", "580");
+            mapBGImage.setAttribute("width", "415");
+            mapBGImage.setAttribute("opacity", "0.9");
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK)
+                mapBGImage.setAttribute("opacity", "0.5");
+            else
+                mapBGImage.setAttribute("filter", "url(#bp-blur)");
+            mapBGImage.setAttribute("height", "100");
+            mapBGImage.setAttribute("clip-path", "url(#bpclip)");
+            mapBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+
+            Node totalBGMaskNode = doc.createElementNS(namespaceSVG, "rect");
+            Element totalBGMask = (Element) totalBGMaskNode;
+            totalBGMask.setAttribute("width", "415");
+            totalBGMask.setAttribute("height", "100");
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
+                totalBGMask.setAttribute("fill", "#2a2933");
+                totalBGMask.setAttribute("opacity", "0.5");
+            }
+            else
+                totalBGMask.setAttribute("fill", "url(#opacityGraditent)");
+            totalBGMask.setAttribute("clip-path", "url(#bpclip)");
+            totalBGMask.setAttribute("x", "25");
+            totalBGMask.setAttribute("y", "580");
+
+
+            Node starAndSongTitleNode = doc.createElementNS(namespaceSVG, "text");
+            Element starAndSongTitle = (Element) starAndSongTitleNode;
+            starAndSongTitle.setAttribute("class", "cls-130");
+            starAndSongTitle.setAttribute("fill", "#f1f4f3");
+            starAndSongTitle.setAttribute("font-size", "15px");
+            starAndSongTitle.setAttribute("font-weight", "600");
+            starAndSongTitle.setAttribute("transform", "translate(40 623)");
+
+            Node starNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element star = (Element) starNode;
+            star.setAttribute("fill", theme.getMainMiddleColor().toString());
+            star.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat("*"));
+
+            Node divisorNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element divisor = (Element) divisorNode;
+            divisor.setTextContent(" | ");
+
+            Node titleNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element title = (Element) titleNode;
+            title.setTextContent(score.getBeatmap().getTitle());
+
+            starAndSongTitle.appendChild(star);
+            starAndSongTitle.appendChild(divisor);
+            starAndSongTitle.appendChild(title);
+
+            Node starAndSongTitleShadowNode = doc.createElementNS(namespaceSVG, "text");
+            Element starAndSongShadowTitle = (Element) starAndSongTitleShadowNode;
+            starAndSongShadowTitle.setAttribute("class", "cls-130");
+            starAndSongShadowTitle.setAttribute("fill", "#000000");
+            starAndSongShadowTitle.setAttribute("font-size", "15px");
+            starAndSongShadowTitle.setAttribute("font-weight", "600");
+            starAndSongShadowTitle.setAttribute("opacity", "0.4");
+            starAndSongShadowTitle.setAttribute("transform", "translate(41.5 624.5)");
+
+            Node starShadowNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element starShadow = (Element) starShadowNode;
+            starShadow.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat("*"));
+
+            Node divisorShadowNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element divisorShadow = (Element) divisorShadowNode;
+            divisorShadow.setTextContent(" | ");
+
+            Node titleShadowNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element titleShadow = (Element) titleShadowNode;
+            titleShadow.setTextContent(score.getBeatmap().getTitle());
+
+            starAndSongShadowTitle.appendChild(starShadow);
+            starAndSongShadowTitle.appendChild(divisorShadow);
+            starAndSongShadowTitle.appendChild(titleShadow);
+
+
+            Node bpmAndMapperNode = doc.createElementNS(namespaceSVG, "text");
+            Element bpmAndMapper = (Element) bpmAndMapperNode;
+            bpmAndMapper.setAttribute("class", "cls-130");
+            bpmAndMapper.setAttribute("fill", "#f1f4f3");
+            bpmAndMapper.setAttribute("font-size", "15px");
+            bpmAndMapper.setAttribute("font-weight", "600");
+            bpmAndMapper.setAttribute("transform", "translate(40 650)");
+
+            Node bpmNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element bpm = (Element) bpmNode;
+            bpm.setAttribute("fill", theme.getMainMiddleColor().toString());
+            bpm.setTextContent(String.valueOf(Math.round(score.getBeatmap().getBpm())).concat(" BPM"));
+
+            Node divisorNode2 = doc.createElementNS(namespaceSVG, "tspan");
+            Element divisor2 = (Element) divisorNode2;
+            divisor2.setTextContent(" | ");
+
+            Node mapperNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element mapper = (Element) mapperNode;
+            mapper.setTextContent(score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]"));
+
+            bpmAndMapper.appendChild(bpm);
+            bpmAndMapper.appendChild(divisor2);
+            bpmAndMapper.appendChild(mapper);
+
+
+            Node bpmAndMapperShadowNode = doc.createElementNS(namespaceSVG, "text");
+            Element bpmAndMapperShadow = (Element) bpmAndMapperShadowNode;
+            bpmAndMapperShadow.setAttribute("class", "cls-130");
+            bpmAndMapperShadow.setAttribute("fill", "#000000");
+            bpmAndMapperShadow.setAttribute("opacity", "0.4");
+            bpmAndMapperShadow.setAttribute("font-size", "15px");
+            bpmAndMapperShadow.setAttribute("font-weight", "600");
+            bpmAndMapperShadow.setAttribute("transform", "translate(41.5 651.5)");
+
+            Node bpmShadowNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element bpmShadow= (Element) bpmShadowNode;
+            bpmShadow.setTextContent(String.valueOf(Math.round(score.getBeatmap().getBpm())).concat(" BPM"));
+
+            Node divisorShadowNode2 = doc.createElementNS(namespaceSVG, "tspan");
+            Element divisor2Shadow = (Element) divisorShadowNode2;
+            divisor2Shadow.setTextContent(" | ");
+
+            Node mapperShadowNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element mapperShadow = (Element) mapperShadowNode;
+            mapperShadow.setTextContent(score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]"));
+
+            bpmAndMapperShadow.appendChild(bpmShadow);
+            bpmAndMapperShadow.appendChild(divisor2Shadow);
+            bpmAndMapperShadow.appendChild(mapperShadow);
+
+
+
+            Node ppNode = doc.createElementNS(namespaceSVG, "text");
+            Element pp = (Element) ppNode;
+            pp.setAttribute("class", "cls-130");
+            pp.setAttribute("font-size", "28px");
+            pp.setAttribute("fill", "#f269a1");
+            pp.setAttribute("font-weight", "600");
+            pp.setAttribute("x", "435");
+            pp.setAttribute("text-anchor", "end");
+            pp.setAttribute("y", "640");
+            pp.setTextContent(String.valueOf(Math.round(score.getPp())).concat("pp"));
+
+            Node iffcNode = doc.createElementNS(namespaceSVG, "text");
+            Element iffc = (Element) iffcNode;
+            iffc.setAttribute("class", "cls-130");
+            iffc.setAttribute("font-size", "12px");
+            iffc.setAttribute("font-weight", "600");
+            iffc.setAttribute("x", "430");
+            iffc.setAttribute("y", "658");
+            iffc.setAttribute("text-anchor", "end");
+
+            Node iffcLabelNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element iffcLabel = (Element) iffcLabelNode;
+            if(theme.getThemeType()== ProfileTheme.ThemeType.LIGHT)
+                iffcLabel.setAttribute("fill", "#333333");
+            else
+                iffcLabel.setAttribute("fill", "#f3f3f3");
+            iffcLabel.setTextContent("if fc ");
+
+            Node iffcNumberNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element iffcNumber = (Element) iffcNumberNode;
+            iffcNumber.setTextContent(String.valueOf(Math.round(score.getPpDetailsLocal().getIfFc())).concat("pp"));
+            iffcNumber.setAttribute("fill", "#f269a1");
+            iffc.appendChild(iffcLabel);
+            iffc.appendChild(iffcNumber);
+
+            sectionFull.appendChild(mapBGImage);
+            sectionFull.appendChild(totalBG);
+            sectionFull.appendChild(totalBGMask);
+
+            if(theme.getThemeType()== ProfileTheme.ThemeType.LIGHT)
+            {
+                Node rankNode = doc.createElementNS(namespaceSVG, "text");
+                Element rank = (Element) rankNode;
+                rank.setAttribute("class", "cls-130");
+                rank.setAttribute("font-size", "100px");
+                rank.setAttribute("fill", rankColorIndictor(score.getRank()));
+                rank.setAttribute("clip-path", "url(#bpclip)");
+                rank.setAttribute("opacity", "0.5");
+                rank.setAttribute("font-weight", "600");
+                rank.setAttribute("x", "384");
+                rank.setAttribute("y", "685");
+                rank.setTextContent(score.getRank());
+                sectionFull.appendChild(rank);
+            }
+            else {
+                Node rankNode = doc.createElementNS(namespaceSVG, "rect");
+                Element rank = (Element) rankNode;
+                rank.setAttribute("width", "35");
+                rank.setAttribute("height", "3");
+                rank.setAttribute("fill", rankColorIndictor(score.getRank()));
+                rank.setAttribute("transform", "translate(50,579.5)");
+                rank.setAttribute("rx", "1.5");
+                rank.setAttribute("ry", "1.5");
+                rank.setTextContent(score.getRank());
+                sectionFull.appendChild(rank);
+            }
+            sectionFull.appendChild(starAndSongShadowTitle);
+            sectionFull.appendChild(bpmAndMapperShadow);
+            sectionFull.appendChild(starAndSongTitle);
+            sectionFull.appendChild(bpmAndMapper);
+            sectionFull.appendChild(pp);
+            sectionFull.appendChild(iffc);
+
+            setupModIconForProfileBps(score.getModJSON(), doc, sectionFull);
+            sectionFull.setAttribute("opacity","0.9");
+            sectionFull.setAttribute("transform", "translate("+ 435*(listIndex%2)+ "," + 120 * (int)(listIndex/2) + ")");
+            doc.getElementById("bp-block-all").appendChild(sectionFull);
+            listIndex++;
+        }
+    }
+    private static void setupModIconForProfileBps(List<Mod> modList, Document doc, Element sectionFull) {
+        if (modList.isEmpty()) return;
+        modList=modList.reversed();
+        for(int i=0;i<modList.size();i++)
+        {
+            Node modSingleNode = doc.createElementNS(namespaceSVG, "g");
+            Element modSingle = (Element) modSingleNode;
+            Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element rectBG = (Element) rectBGNode;
+            rectBG.setAttribute("transform", "translate(408.5 595.5)");
+            rectBG.setAttribute("rx", "6");
+            rectBG.setAttribute("ry", "6");
+            rectBG.setAttribute("width", "22");
+            rectBG.setAttribute("height", "12");
+            rectBG.setAttribute("fill", getBplistCardModColor(modList.get(i)));
+
+            Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
+            Element modAcronym = (Element) modAcronymNode;
+            modAcronym.setAttribute("class", "cls-112");
+            modAcronym.setAttribute("transform", "translate(420 605)");
+            modAcronym.setAttribute("text-anchor", "middle");
+            modAcronym.setTextContent(modList.get(i).getAcronym());
+
+            modSingle.appendChild(rectBG);
+            modSingle.appendChild(modAcronym);
+            modSingle.setAttribute("transform", "translate(" + -25*i  + " 0)");
+            sectionFull.appendChild(modSingleNode);
+        }
+    }
+
+    private static void setupProfileBackground(Document doc,String filename,Boolean enableGlassEffect)
+    {
+        doc.getElementById("bg-0").setAttributeNS(xlinkns,"xlink:href", filename);
+        doc.getElementById("bg-1").setAttributeNS(xlinkns,"xlink:href", filename);
+        doc.getElementById("bg-2").setAttributeNS(xlinkns,"xlink:href", filename);
+        doc.getElementById("bg-3").setAttributeNS(xlinkns,"xlink:href", filename);
+        if (!enableGlassEffect) {
+            doc.getElementById("bg-1").setAttribute("opacity", "0");
+            doc.getElementById("bg-2").setAttribute("opacity", "0");
+            doc.getElementById("bg-3").setAttribute("opacity", "0");
+        }
+    }
+    private static void profileColorTheme(Document doc, ProfileTheme theme)
+    {
+        doc.getElementById("headerBorder").setAttribute("fill", theme.getHeaderBorderColor().toString());
+        doc.getElementById("header").setAttribute("fill", theme.getHeaderColor().toString());
+        doc.getElementById("avatar-block").setAttribute("fill", theme.getBlockColor().toString());
+        doc.getElementById("avatar-block").setAttribute("stroke", theme.getBorderColor().toString());
+        doc.getElementById("status-block").setAttribute("fill", theme.getBlockColorLighter().toString());
+        doc.getElementById("status-block").setAttribute("stroke", theme.getBlockColor().toString());
+        doc.getElementById("bp-block").setAttribute("fill", theme.getBlockColor().toString());
+        doc.getElementById("bp-block").setAttribute("stroke", theme.getBorderColor().toString());
+        doc.getElementById("rankGraphBG").setAttribute("fill", theme.getBlockColor().toString());
+        doc.getElementById("mode-underline").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("levelProgressBG").setAttribute("fill", theme.getLevelProgressBackgroundColor().toString());
+
+        doc.getElementById("playername").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("requestTime").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("requestTimeLabel").setAttribute("fill", theme.getMainMiddleColor().toString());
+        doc.getElementById("levelProgressRect").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("levelPercentage").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("level").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("contryBorder").setAttribute("stroke", theme.getMainColor().toString());
+        doc.getElementById("countryAbbrv").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("globalRank").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("globalLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("rankedScoreLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("rankedScore").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("accuracyLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("accuracy").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("playCountLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("playCount").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("totalScoreLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("totalScore").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("totalHitsLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("totalHits").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("playTimeLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("playTime").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("rankGraph-label-1").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("rankGraph-label-2").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("bpLabel").setAttribute("fill", theme.getMainColor().toString());
+        doc.getElementById("countryRankAll").setAttribute("fill", theme.getMainColor().toString());
+
+
+
+
+
+
+    }
+
+
 }

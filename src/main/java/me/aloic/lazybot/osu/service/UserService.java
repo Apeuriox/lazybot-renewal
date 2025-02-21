@@ -6,8 +6,12 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Service;
 
 @Service
-public interface DiscordUserService
+public interface UserService
 {
+    void updateDefaultMode(SlashCommandInteractionEvent event);
+
+    void updateDefaultMode(Bot bot, LazybotSlashCommandEvent event);
+
     void linkUser(SlashCommandInteractionEvent event);
 
     void linkUser(Bot bot, LazybotSlashCommandEvent event);

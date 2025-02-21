@@ -45,7 +45,7 @@ public class ImageUploadUtil
     }
     public static void uploadImageToOnebot(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray) {
         try {
-            File tempFile = saveBytesToFile(imageByteArray, event.getMessageEvent().getSender().getNickname());
+            File tempFile = saveBytesToFile(imageByteArray, String.valueOf(event.getMessageEvent().getSender().getUserId()));
             try  {
                 String filePath = "file:///".concat(tempFile.getAbsolutePath());
                 bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().img(filePath).build(), false);

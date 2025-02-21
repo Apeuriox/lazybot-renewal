@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -12,7 +14,7 @@ public class PlayerInfoVO
 {
     private String playerName;
     private String mode;
-    private double performancePoint;
+    private Double performancePoint;
     private Integer globalRank;
     private String country;
     private Integer countryRank;
@@ -22,6 +24,17 @@ public class PlayerInfoVO
     private Long totalHitCount;
     private Long totalPlayTime;
     private String avatarUrl;
+    private String profileBackgroundUrl;
     private String fixedPPString;
     private Integer primaryColor;
+
+    private Integer level;
+    private Integer levelProgress;
+    private String countryCode;
+    private Long totalScore;
+    private List<Integer> rankHistory;
+    private List<ScoreVO> bps;
+    private Integer id;
+
+
 }

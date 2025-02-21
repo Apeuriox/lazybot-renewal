@@ -60,8 +60,7 @@ public class BpIfCommand implements LazybotSlashCommand
     {
         AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
         AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-        if (tokenPO == null)
-            throw new RuntimeException("请先使用/link绑定osu账号");
+        OsuToolsUtil.linkedCheck(tokenPO);
         tokenPO.setAccess_token(accessToken.getAccess_token());
         BpifParameter params=BpifParameter.analyzeParameter(event.getCommandParameters());
         BpifParameter.setupDefaultValue(params,tokenPO);

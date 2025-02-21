@@ -33,8 +33,8 @@ public class BpParameter extends LazybotCommandParameter
         if (index<=0||index>100) {
             throw new IllegalArgumentException("index must be between 1 and 100");
         }
-        if(version!=0) {
-            version=1;
+        if(version==null) {
+            version=0;
         }
     }
     public static BpParameter analyzeParameter(List<String> params)
@@ -71,7 +71,7 @@ public class BpParameter extends LazybotCommandParameter
                 }
             }
             else {
-                throw new RuntimeException("Incorrect parameters: " + params);
+                bpParameter.setPlayerName(String.join(" ", params));
             }
         }
         else bpParameter.setIndex(1);
@@ -84,7 +84,7 @@ public class BpParameter extends LazybotCommandParameter
         if (bpParameter.getMode() == null)
             bpParameter.setMode(accessTokenPO.getDefault_mode());
         if (bpParameter.getVersion() == null)
-            bpParameter.setVersion(1);
+            bpParameter.setVersion(0);
         if (bpParameter.getIndex()==null)
             bpParameter.setIndex(0);
 

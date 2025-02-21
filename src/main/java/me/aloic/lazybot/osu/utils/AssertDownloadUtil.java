@@ -53,7 +53,8 @@ public class AssertDownloadUtil
             delayQueue.offer(new DownloadTask(1000));
         }
     }
-    private static void downloadResourceQueue(String targetUrl, String desiredLocalPath) throws InterruptedException, ExecutionException {
+
+    public static void downloadResourceQueue(String targetUrl, String desiredLocalPath) throws InterruptedException, ExecutionException {
         Future<Void> downloadFuture = executor.submit(() -> {
             try {
                 delayQueue.take();
@@ -82,11 +83,11 @@ public class AssertDownloadUtil
         downloadFuture.get();
         logger.info("Download completed for: {}", targetUrl);
     }
-    public static boolean beatmapDownload(Integer bid)
+    public static boolean beatmapDownload(Integer bid,Boolean override)
     {
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/" + bid +".osu";
         File saveFilePath = new File(desiredLocalPath);
-        if (saveFilePath.exists()) {
+        if (saveFilePath.exists() && !override) {
             logger.info("地图.osu文件已存在: {}", saveFilePath.getAbsolutePath());
             return false;
         }
@@ -140,14 +141,14 @@ public class AssertDownloadUtil
     }
 
 
-    public static Path beatmapPath(Integer bid)
+    public static Path beatmapPath(Integer bid,Boolean override)
     {
-        beatmapDownload(bid);
+        beatmapDownload(bid,override);
         return Paths.get(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/" +bid +".osu");
     }
-    public static Path beatmapPath(ScoreVO scoreVO)
+    public static Path beatmapPath(ScoreVO scoreVO, Boolean override)
     {
-        beatmapDownload(scoreVO.getBeatmap().getBid());
+        beatmapDownload(scoreVO.getBeatmap().getBid(),override);
         return Paths.get(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/" +scoreVO.getBeatmap().getBid() +".osu");
     }
     public static String svgAbsolutePath(Integer sid)
@@ -237,12 +238,12 @@ public class AssertDownloadUtil
     {
        return HttpUtil.downloadFile(targetUrl, FileUtil.file(desiredLocalPath));
     }
-    public static void fileDownloadJavaHttpClient(String targetUrl, String desiredLocalPath) throws Exception {
+    private static void fileDownloadJavaHttpClient(String targetUrl, String desiredLocalPath) throws Exception {
         int attempt = 0;
         while (attempt < MAX_RETRIES) {
             try {
                 attempt++;
-                logger.info("尝试下载文件 (第 {} 次)： {}", attempt, targetUrl);
+                logger.info("尝试下载文件 (第 {} 次)： {} to {}", attempt, targetUrl, desiredLocalPath);
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(targetUrl))
                         .timeout(Duration.ofSeconds(30))

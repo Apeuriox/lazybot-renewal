@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: lazybot-jda
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      database: 2
+      password: your-redis-password
+      timeout: 5000ms
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: url-to-your-database
+    username: root
+    password: database-url
+    hikari:
+      max-lifetime: 120000
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  web:
+    resources:
+      add-mappings: false
+
+server:
+  port: 9001
+
+shiro:
+  ws:
+    server:
+      enable: true
+      url: /lazybot
+    timeout: 10
+    max-binary-message-buffer-size: 5120000
+    max-text-message-buffer-size: 512000
+  limiter:
+    enable: true
+    rate: 10
+    capacity: 30
+    awaitTask: true
+    timeout: 10
+
+//if you disabled discord then it will not affect anything
+discord:
+  bot:
+    key: your-discord-bot-key
+    id: your-discord-bot-id
+    secret: your-discord-bot-secret
+    token: your-discord-bot-token
+
+lazybot:
+  prefix: /
+  client_id: your-osu-client-id
+  response_type: code
+  scopes: friends.read identify public
+  client_secret: your-osu-client-secret
+  grant_type: authorization_code
+  global:
+    discord:
+      enabled: false
+    tencent:
+      enabled: true
+
+async:
+  executor:
+    thread:
+      core_pool_size: 5
+      max_pool_size: 5
+      queue_capacity: 1000
+      name:
+        prefix: api_request_pool-

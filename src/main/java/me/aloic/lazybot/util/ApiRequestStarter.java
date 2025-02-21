@@ -224,7 +224,7 @@ public class ApiRequestStarter
                         }
                     }
                     else {
-                        throw new RuntimeException("Failed to execute HTTP REQUEST GET after " +reties +" retries:" + e.getMessage());
+                        throw new RuntimeException("HTTP请求重试" +reties +"次后仍失败:" + e.getMessage());
                     }
                 }
             }

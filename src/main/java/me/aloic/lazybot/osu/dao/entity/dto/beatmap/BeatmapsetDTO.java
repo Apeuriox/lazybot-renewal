@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class BeatmapsetDTO implements Serializable {
     private String artist;
     private String artist_unicode;
-    private Covers covers;
+    private CoversDTO covers;
     private String  creator;
     private Integer favourite_count;
     private Long id;
@@ -32,9 +32,9 @@ public class BeatmapsetDTO implements Serializable {
 //    private String description;
 //    private String discussions;
 //    private String events;
-//    private String genre;
+    private String genre;
 //    private Boolean has_favourited;
-//    private String language;
+    private String language;
 //    private String nominations;
 //    private String[] pack_tags;
 //    private Float ratings;

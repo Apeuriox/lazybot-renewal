@@ -8,4 +8,9 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface BeatmapCompactMapper extends BaseMapper<BeatmapCompactPO> {
     BeatmapCompactPO selectByBid(@Param("bid")Integer bid);
+    BeatmapCompactPO selectByBidAndRuleset(@Param("bid")Integer bid, @Param("ruleset_id")Integer ruleset);
+    int updateByBidAndRuleset(@Param("bid") Integer bid,
+                               @Param("ruleset_id") Integer ruleset,
+                               @Param("beatmap") BeatmapCompactPO beatmap);
+
 }

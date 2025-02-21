@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
+import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -8,69 +9,65 @@ import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.theme.preset.ProfileLightTheme;
+import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class PlayerServiceImpl implements PlayerService
 {
-
+    private static final Logger logger = LoggerFactory.getLogger(PlayerServiceImpl.class);
     @Override
-    public byte[] score(ScoreParameter params) throws Exception {
+    public byte[] score(ScoreParameter params) throws Exception
+    {
         BeatmapUserScoreLazer beatmapUserScoreLazer = DataObjectExtractor.extractBeatmapUserScore(params.getAccessToken(),
-                String.valueOf(params.getBeatmapId()),params.getPlayerId(),params.getMode(),params.getModCombination());
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()),params.getMode())
-                ,beatmapUserScoreLazer.getScore());
-        int imageAverageHue=CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
-        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),imageAverageHue);
+                String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
+            ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                    DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()), params.getMode()),
+                    beatmapUserScoreLazer.getScore(),
+                    false);
+            verifyBeatmapsCache(scoreVO);
+            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
     }
 
     @Override
-    public byte[] recent(RecentParameter params, Integer type){
+    public byte[] recent(RecentParameter params, Integer type) throws IOException
+    {
         List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractRecentScoreList(params.getAccessToken(), params.getPlayerId(), type, params.getMode());
         if(params.getIndex()>scoreList.size()) {
             throw new RuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " +scoreList.size());
         }
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(DataObjectExtractor.extractBeatmap(
-                params.getAccessToken(),
-                String.valueOf(scoreList.get(params.getIndex()-1).getBeatmap_id()),params.getMode()),
-                scoreList.get(params.getIndex()-1));
-        try{
-            int imageAverageHue=CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),imageAverageHue);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException("计算主色调时出错");
-        }
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
+                scoreList.get(params.getIndex() - 1),
+                false);
+        verifyBeatmapsCache(scoreVO);
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
 
     }
     @Override
-    public byte[] bp(BpParameter params)
+    public byte[] bp(BpParameter params) throws IOException
     {
         List<ScoreLazerDTO> scoreDTO = DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(params.getPlayerId()),params.getIndex()-1,params.getMode());
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(DataObjectExtractor.extractBeatmap(
-                        params.getAccessToken(),
-                        String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
-                scoreDTO.getFirst());
-        try{
-            int imageAverageHue=CommonTool.getDominantColorHue(new File(scoreVO.getBeatmap().getBgUrl()));
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(),imageAverageHue);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException("计算主色调时出错");
-        }
+            ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                    DataObjectExtractor.extractBeatmap(params.getAccessToken(),String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
+                    scoreDTO.getFirst(),
+                    false);
+            verifyBeatmapsCache(scoreVO);
+            return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(), getDominantColorArray(scoreVO));
     }
     @Override
     public byte[] bplistCardView(BplistParameter params) throws Exception
@@ -137,6 +134,38 @@ public class PlayerServiceImpl implements PlayerService
         playerInfoVO.setMode(params.getMode());
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoCard(playerInfoVO));
     }
+
+    @Override
+    public byte[] profile(ProfileParameter params) throws Exception {
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
+        playerInfoVO.setMode(params.getMode());
+        List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());
+        List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+        playerInfoVO.setBps(scoreVOArray);
+        ProfileTheme theme;
+        String defaultBackground=ResourceMonitor.getResourcePath().toAbsolutePath()+ "/static/assets/whitespace_" +CommonTool.randomNumberGenerator(3) +".png";
+        if (params.getProfileCustomizationPO()!=null) {
+            CustomizeServiceImpl.validateProfileCustomizationCache(params.getProfileCustomizationPO());
+            if(params.getProfileCustomizationPO().getVerified()>0){
+                playerInfoVO.setProfileBackgroundUrl(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerCustomization/profile/" + playerInfoVO.getId() +".jpg");
+                if(params.getProfileCustomizationPO().getHue()!=null)
+                    theme=ProfileTheme.getInstance(params.getProfileCustomizationPO().getPreferred_type(),params.getProfileCustomizationPO().getHue());
+                else
+                    theme=ProfileTheme.getInstance(params.getProfileCustomizationPO().getPreferred_type(),CommonTool.getDominantHueColorThief(new File(playerInfoVO.getProfileBackgroundUrl())));
+            }
+            else {
+                playerInfoVO.setProfileBackgroundUrl(defaultBackground);
+                theme=ProfileLightTheme.createInstance(192);
+            }
+        }
+        else {
+            playerInfoVO.setProfileBackgroundUrl(defaultBackground);
+            theme=ProfileLightTheme.createInstance(192);
+        }
+
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoPanel(playerInfoVO, theme));
+    }
+
     @Override
     public String nameToId(NameToIdParameter params) {
         StringBuilder builder = new StringBuilder();
@@ -168,7 +197,24 @@ public class PlayerServiceImpl implements PlayerService
                 params.getMode());
         List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS);
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,info));
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,info,params.getFrom()));
     }
+
+
+
+    private boolean verifyBeatmapsCache(ScoreVO scoreVO) {
+        String checksum=CommonTool.calculateMD5(new File(AssertDownloadUtil.beatmapPath(scoreVO,false).toUri()));
+        if (!checksum.equals(scoreVO.getBeatmap().getChecksum())) {
+            logger.warn("Checksum mismatch, downloading beatmap: {} != {}", scoreVO.getBeatmap().getChecksum(), checksum);
+            AssertDownloadUtil.beatmapPath(scoreVO, true);
+            return false;
+        }
+        return true;
+    }
+
+    private int[] getDominantColorArray(ScoreVO scoreVO) throws IOException {
+        return CommonTool.getDominantColorColorThief(new File(scoreVO.getBeatmap().getBgUrl()));
+    }
+
 
 }

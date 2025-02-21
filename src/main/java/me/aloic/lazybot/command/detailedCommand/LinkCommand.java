@@ -4,7 +4,7 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
-import me.aloic.lazybot.osu.service.DiscordUserService;
+import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class LinkCommand implements LazybotSlashCommand
 {
     @Resource
-    private DiscordUserService userService;
+    private UserService userService;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {

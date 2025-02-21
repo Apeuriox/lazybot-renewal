@@ -33,6 +33,17 @@ public class TransformerUtil
         playerInfoVO.setPerformancePoint(playerInfoDTO.getStatistics().getPp());
         playerInfoVO.setAccuracy(playerInfoDTO.getStatistics().getHit_accuracy());
         playerInfoVO.setCountry(playerInfoDTO.getCountry().getName());
+        playerInfoVO.setCountryCode(playerInfoDTO.getCountry().getCode());
+        playerInfoVO.setLevel(playerInfoDTO.getStatistics().getLevel().getCurrent());
+        playerInfoVO.setLevelProgress(playerInfoDTO.getStatistics().getLevel().getProgress());
+        playerInfoVO.setTotalScore(playerInfoDTO.getStatistics().getTotal_score());
+        try{
+            playerInfoVO.setRankHistory(List.of(playerInfoDTO.getRank_history().getData()));
+        }
+        catch (Exception e){
+            playerInfoVO.setRankHistory(List.of(0,0,0,0,0,0,0,0));
+        }
+
         playerInfoVO.setCountryRank(playerInfoDTO.getStatistics().getCountry_rank());
         playerInfoVO.setPlayCount(playerInfoDTO.getStatistics().getPlay_count());
         playerInfoVO.setGlobalRank(playerInfoDTO.getStatistics().getGlobal_rank());
@@ -41,6 +52,7 @@ public class TransformerUtil
         playerInfoVO.setPlayerName(playerInfoDTO.getUsername());
         playerInfoVO.setTotalPlayTime(playerInfoDTO.getStatistics().getPlay_time());
         playerInfoVO.setAvatarUrl(playerInfoDTO.getAvatar_url());
+        playerInfoVO.setId(playerInfoDTO.getId());
         playerInfoVO.setPrimaryColor(Optional.ofNullable(playerInfoDTO.getProfile_hue()).orElse(333));
         return playerInfoVO;
 
@@ -161,8 +173,33 @@ public class TransformerUtil
         beatmapVO.setBeatmapset_id(beatmapDTO.getBeatmapset_id());
         beatmapVO.setBid(beatmapDTO.getId());
         beatmapVO.setMode_int(beatmapDTO.getMode_int());
+        beatmapVO.setChecksum(beatmapDTO.getChecksum());
+        beatmapVO.setGenre(beatmapDTO.getBeatmapset().getGenre());
+        beatmapVO.setLanguage(beatmapDTO.getBeatmapset().getLanguage());
         return beatmapVO;
     }
+    public static BeatmapVO beatmapTransformCompact(BeatmapDTO beatmapDTO){
+        BeatmapVO beatmapVO=new BeatmapVO();
+        beatmapVO.setAccuracy(beatmapDTO.getAccuracy()); //od
+        beatmapVO.setAr(beatmapDTO.getAr()); //ar
+        beatmapVO.setCs(beatmapDTO.getCs());  //cs
+        beatmapVO.setDrain(beatmapDTO.getDrain()); //hp
+        beatmapVO.setDifficult_rating(beatmapDTO.getDifficulty_rating());  //star rating
+        beatmapVO.setBpm(beatmapDTO.getBpm());
+        beatmapVO.setHit_length(beatmapDTO.getHit_length());
+        beatmapVO.setTotal_length(beatmapDTO.getTotal_length());
+        beatmapVO.setVersion(beatmapDTO.getVersion()); //diff name
+        beatmapVO.setStatus(beatmapDTO.getStatus());  //ranked or loved something
+        beatmapVO.setMax_combo(beatmapDTO.getMax_combo());
+        beatmapVO.setSid(beatmapDTO.getBeatmapset_id());
+        beatmapVO.setBeatmapset_id(beatmapDTO.getBeatmapset_id());
+        beatmapVO.setBid(beatmapDTO.getId());
+        beatmapVO.setMode_int(beatmapDTO.getMode_int());
+        beatmapVO.setChecksum(beatmapDTO.getChecksum());
+        return beatmapVO;
+    }
+
+
     public static BeatmapVO beatmapTransform(BeatmapDTO beatmapDTO, BeatmapsetDTO beatmapsetDTO){
         beatmapDTO.setBeatmapset(beatmapsetDTO);
         BeatmapVO beatmapVO=new BeatmapVO();
@@ -288,13 +325,19 @@ public class TransformerUtil
         return new BeatmapCompactPO(beatmapDTO.getId(),
                 beatmapDTO.getBeatmapset_id(),
                 beatmapDTO.getMax_combo(),
-                beatmapDTO.getMode_int());
+                beatmapDTO.getMode_int(),
+                beatmapDTO.getChecksum());
     }
     public static BeatmapCompactPO reverseBeatmapPO(BeatmapVO beatmapVO)
     {
         return new BeatmapCompactPO(beatmapVO.getBid(),
                 beatmapVO.getBeatmapset_id(),
                 beatmapVO.getMax_combo(),
-                beatmapVO.getMode_int());
+                beatmapVO.getMode_int(),
+                beatmapVO.getHue(),
+                beatmapVO.getChecksum(),
+                beatmapVO.getArtist(),
+                beatmapVO.getTitle(),
+                beatmapVO.getCreator());
     }
 }

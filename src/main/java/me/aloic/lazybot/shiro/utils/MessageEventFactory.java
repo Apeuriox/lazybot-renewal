@@ -17,12 +17,16 @@ public class MessageEventFactory
 
     private static final Map<String, OsuMode> modeMap;
 
+    private static final List<String> NON_OSU_COMMAND;
+
     static{
         modeMap =  Map.of(
                 ":0",OsuMode.Osu,
                 ":1",OsuMode.Taiko,
                 ":2",OsuMode.Catch,
                 ":3",OsuMode.Mania);
+
+        NON_OSU_COMMAND = List.of("help", "customize","addtips","tips");
     }
 
 
@@ -40,21 +44,27 @@ public class MessageEventFactory
     private static void analyzeCommand(LazybotSlashCommandEvent slashCommandEvent)
     {
         String s = convertString(slashCommandEvent.getMessageEvent().getMessage());
-        s = formatCommand(s);
-        if(s.contains("&")) slashCommandEvent.setScorePanelVersion(0);
-        else  slashCommandEvent.setScorePanelVersion(1);
-        s=s.replace("&", "");
-
+        s=s.substring(1);
         List<String> information = new java.util.ArrayList<>(List.of(s.split(" ")));
-        for(String str:information) {
-          if(str.startsWith(":")) {
-              if (modeMap.containsKey(str)) {
-                  slashCommandEvent.setOsuMode(modeMap.get(str));
-                  information.remove(str);
-                  break;
-              }
-              else information.remove(str);
-          }
+        if (!NON_OSU_COMMAND.contains(information.getFirst().toLowerCase().trim())) {
+            s = formatCommand(s);
+            slashCommandEvent.setScorePanelVersion(countOccurrences(s, '&'));
+            s = s.replace("&", "");
+
+            information = new java.util.ArrayList<>(List.of(s.split(" ")));
+            for (String str : information)
+            {
+                if (str.startsWith(":"))
+                {
+                    if (modeMap.containsKey(str))
+                    {
+                        slashCommandEvent.setOsuMode(modeMap.get(str));
+                        information.remove(str);
+                        break;
+                    }
+                    else information.remove(str);
+                }
+            }
         }
         slashCommandEvent.setCommandType(information.getFirst());
         slashCommandEvent.setCommandParameters(information.subList(1, information.size()));
@@ -64,7 +74,6 @@ public class MessageEventFactory
         s = s.replace("！","!");
         s = s.replace("：",":");
         StringBuffer sb = new StringBuffer(s);
-        sb.deleteCharAt(0);
         for (int i = 0; i < sb.length(); i++) {
             if((sb.charAt(i) == ':' && sb.charAt(i - 1) != ' ')||(sb.charAt(i) == '&' && sb.charAt(i - 1) != ' ')){
                 sb.insert(i, ' ');
@@ -87,4 +96,14 @@ public class MessageEventFactory
                 .replace("&amp;", "&")
                 .replace("&#44;", ",");
     }
+    public static int countOccurrences(String originalStr, char target) {
+        int count = 0;
+        for (char c : originalStr.toCharArray()) {
+            if (c == target) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

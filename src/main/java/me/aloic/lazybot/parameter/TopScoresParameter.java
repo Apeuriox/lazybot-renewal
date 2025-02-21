@@ -47,7 +47,7 @@ public class TopScoresParameter extends LazybotCommandParameter
     public static void setupDefaultValue(TopScoresParameter parameter, AccessTokenPO accessTokenPO)
     {
         if (parameter.getMode() == null)
-            parameter.setMode(accessTokenPO.getDefault_mode());
+            parameter.setRuleset(OsuMode.getMode(accessTokenPO.getDefault_mode()));
         if (parameter.getLimit() == null)
             parameter.setLimit(10);
     }

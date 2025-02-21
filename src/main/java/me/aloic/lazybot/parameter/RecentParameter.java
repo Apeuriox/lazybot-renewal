@@ -29,8 +29,8 @@ public class RecentParameter extends LazybotCommandParameter
         if (index<=0||index>100) {
             throw new IllegalArgumentException("index must be between 1 and 100");
         }
-        if(version!=0) {
-            version=1;
+        if(version==null) {
+            version=0;
         }
     }
 
@@ -90,7 +90,7 @@ public class RecentParameter extends LazybotCommandParameter
         if (recentParameter.getMode() == null)
             recentParameter.setMode(accessTokenPO.getDefault_mode());
         if (recentParameter.getVersion() == null)
-            recentParameter.setVersion(1);
+            recentParameter.setVersion(0);
         if (recentParameter.getIndex()==null)
             recentParameter.setIndex(0);
     }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.CustomizationMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="qq_code" jdbcType="BIGINT" property="qq_code"/>
+        <result column="player_id" jdbcType="INTEGER" property="player_id"/>
+        <result column="original_url" jdbcType="VARCHAR" property="original_url"/>
+        <result column="verified" jdbcType="INTEGER" property="verified"/>
+        <result column="preferred_type" jdbcType="INTEGER" property="preferred_type"/>
+        <result column="player_name" jdbcType="VARCHAR" property="player_name"/>
+        <result column="last_updated" jdbcType="DATE" property="last_updated"/>
+        <result column="hue" jdbcType="INTEGER" property="hue"/>
+    </resultMap>
+    <sql id = "Base_Column_List">
+        id, qq_code, player_id, original_url, verified, preferred_type, hue, player_name, last_updated
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from profile_customization
+        where player_id =#{player_id}
+    </select>
+
+    <select id="selectUnverified" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profile_customization
+        WHERE verified = 0
+        ORDER BY last_updated
+        LIMIT 3;
+    </select>
+
+    <update id="updateCustomize" parameterType="map">
+        UPDATE profile_customization
+        SET
+            verified = #{custom.verified},
+            hue = #{custom.hue},
+            original_url = #{custom.original_url}
+        where player_id =#{custom.player_id}
+    </update>
+
+    <update id="updatePreferredType" parameterType="map">
+        UPDATE profile_customization
+        <set>
+            preferred_type = #{preferred_type}
+        </set>
+        where player_id =#{player_id}
+    </update>
+
+    <update id="updateVerified" parameterType="map">
+        update profile_customization
+        <set>
+            verified=#{verified},
+        </set>
+        where id =#{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM profile_customization WHERE player_id =#{player_id}
+    </delete>
+
+
+</mapper>

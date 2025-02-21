@@ -477,6 +477,13 @@
       font-variation-settings: 'wght' 700;
       font-weight: 700;
       }
+      .cls-125{
+      fill:white;
+      font-size:15px;
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      }
       .cls-277{
       font-size: 40px;
       font-family: Rubik-Regular, Rubik;
@@ -997,6 +1004,7 @@
       <rect id="modBG1-1" x="1520" y="550" rx="10" ry="10" fill="#a32f4a" width="70" height="50"  transform="skewX(-20)" />
       <rect id="modBG1-2" x="1470" y="530" rx="10" ry="10" fill="#911833" width="50" height="30"  transform="skewX(-20)" />
       <text id="modText1" class="cls-124" x="1495" y="580" transform="skewX(-20)">HR</text>
+  
     </g>
     <g id="mod2" opacity="0">
       <rect id="modBG2-0" x="1570" y="530" rx="10" ry="10" fill="#bda400" width="120" height="70"  transform="skewX(-20)" />
@@ -1009,7 +1017,7 @@
       <rect id="modBG3-1" x="1720" y="550" rx="10" ry="10" fill="#4f38ab" width="70" height="50"  transform="skewX(-20)" />
       <rect id="modBG3-2" x="1670" y="530" rx="10" ry="10" fill="#45339c" width="50" height="30"  transform="skewX(-20)" />
       <text id="modText3" class="cls-124" x="1695" y="580" transform="skewX(-20)">DT</text>
-    </g>
+   </g>
     <g id="mod4" opacity="0">
       <rect id="modBG4-0" x="1770" y="530" rx="10" ry="10" fill="#0071a5" width="120" height="70"  transform="skewX(-20)" />
       <rect id="modBG4-1" x="1820" y="550" rx="10" ry="10" fill="#237ca5" width="70" height="50"  transform="skewX(-20)" />
@@ -1044,80 +1052,4 @@
     height="110"
     id="lazer"/>
   </g>
-
-  <!-- <g transform="translate(0,-189)" opacity="0">
-    <rect
-            id="modBG1"
-            fill="#ff3535"
-            x="17" y="950"
-            width="110" height="60"
-            rx="12" ry="12"/>
-    <text
-            id="modText1"
-            class="cls-124"
-            x="40" y="993"
-    >HR</text>
-
-    <rect
-            id="modBG2"
-            fill="#ffef13"
-            x="33" y="1000"
-            width="110" height="60"
-            rx="12" ry="12"/>
-    <text
-            id="modText2"
-            class="cls-124"
-            x="56" y="1043"
-    >HD</text>
-
-    <rect
-            id="modBG3"
-            fill="#2eb3ff"
-            x="17" y="1050"
-            width="110" height="60"
-            rx="12" ry="12"/>
-    <text
-            id="modText3"
-            class="cls-124"
-            x="40" y="1093"
-    >SO</text>
-
-    <rect
-            id="modBG4"
-            fill="#6428ff"
-            x="33" y="1100"
-            width="110" height="60"
-            rx="12" ry="12"/>
-    <text
-            id="modText4"
-            class="cls-124"
-            x="56" y="1143"
-    >DT</text>
-
-    <rect
-            id="modBG5"
-            fill="#070707"
-            x="17" y="1150"
-            width="110" height="60"
-            rx="12" ry="12"/>
-    <text
-            id="modText5"
-            class="cls-124"
-            x="40" y="1193"
-    >FL</text>
-
-    <rect
-            id="modBG6"
-            fill="#606079"
-            x="33" y="1200"
-            width="110" height="60"
-            rx="12" ry="12"/>
-    <text
-            id="modText6"
-            class="cls-124"
-            x="56" y="1243"
-    >NF</text>
-
-
-  </g> -->
 </svg>

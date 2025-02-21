@@ -26,19 +26,19 @@ public enum CommandEnum {
                     new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
                     new CommandOption(OptionType.STRING, "mod", "指定查询的Mod", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
-                    new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格(输入0为老版设计，其他任何值为新版)", false, false))),
+                    new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格", false, false))),
 
-    PLAY_RECENT(5, "pr", "查询用户最近pass的成绩", true,
+    PLAY_RECENT(5, "rp", "查询用户最近pass的成绩", true,
             List.of( new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
                     new CommandOption(OptionType.INTEGER, "index", "指定查询的位置", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
-                    new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格(输入0为老版设计，其他任何值为新版)", false, false))),
+                    new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格", false, false))),
 
-    RECENT(6, "re", "查询用户最近的成绩", true,
+    RECENT(6, "rs", "查询用户最近的成绩", true,
             List.of( new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
                     new CommandOption(OptionType.INTEGER, "index", "指定查询的位置", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
-                    new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格(输入0为老版设计，其他任何值为新版)", false, false))),
+                    new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格", false, false))),
 
     BP_LIST(7, "bplist", "查询指定用户的指定from到to的bp", true,
             List.of(new CommandOption(OptionType.INTEGER, "from", "指定开始的位置", true, false),
@@ -89,6 +89,15 @@ public enum CommandEnum {
                     new CommandOption(OptionType.INTEGER, "to", "指定结束的位置", true, false),
                     new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
+    UPDATE(19, "update", "更新指定类型缓存数据", true,
+            List.of(new CommandOption(OptionType.INTEGER, "type", "指定类型", true, false),
+                    new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false))),
+    TIPS(19, "tips", "获取一个Aloic的小提示", true,
+            List.of(new CommandOption(OptionType.INTEGER, "id", "指定id", false, false))),
+    SET_MODE(20, "setmode", "更新默认模式", true,
+            List.of(new CommandOption(OptionType.STRING, "mode", "指定模式", true, false))),
+    VERIFY_MAP(20, "verifymap", "(需要权限) 验证.osu缓存是否过期", true,
+            List.of(new CommandOption(OptionType.INTEGER, "bid", "指定bid", true, false))),
     ;
     private final Integer id;
 

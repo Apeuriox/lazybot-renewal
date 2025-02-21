@@ -19,7 +19,9 @@ import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"pr","playrecent"})
+import java.io.IOException;
+
+@LazybotCommandMapping({"rp","recentpass","playrecent"})
 @Component
 public class PlayRecentCommand implements LazybotSlashCommand
 {
@@ -30,7 +32,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
     @Resource
     private TokenMapper tokenMapper;
     @Override
-    public void execute(SlashCommandInteractionEvent event)
+    public void execute(SlashCommandInteractionEvent event) throws IOException
     {
         event.deferReply().queue();
         UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
@@ -51,17 +53,17 @@ public class PlayRecentCommand implements LazybotSlashCommand
     }
 
     @Override
-    public void execute(Bot bot, LazybotSlashCommandEvent event)
+    public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
         AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
         AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-        if (tokenPO == null)
-            throw new RuntimeException("请先使用/link绑定osu账号");
+        OsuToolsUtil.linkedCheck(tokenPO);
         tokenPO.setAccess_token(accessToken.getAccess_token());
         RecentParameter params=RecentParameter.analyzeParameter(event.getCommandParameters());
         RecentParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
+        params.setVersion(event.getScorePanelVersion());
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
         params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
