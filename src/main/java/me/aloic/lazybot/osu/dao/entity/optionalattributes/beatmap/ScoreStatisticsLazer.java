@@ -2,6 +2,7 @@ package me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -48,7 +49,7 @@ public class ScoreStatisticsLazer implements Serializable
             }
             catch (IllegalAccessException e)
             {
-                throw new RuntimeException("reInitialize failed in ScoreStatisticsLazer");
+                throw new LazybotRuntimeException("reInitialize failed in ScoreStatisticsLazer");
             }
         }
     }

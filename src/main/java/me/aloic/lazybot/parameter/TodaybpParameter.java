@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.CommonTool;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -47,7 +48,7 @@ public class TodaybpParameter extends LazybotCommandParameter
                     if (CommonTool.isPositiveInteger(paras[1]))
                         parameter.setMaxDays(Integer.parseInt(paras[1]));
                     else
-                        throw new RuntimeException("参数解析错误, index不为正整数，length=1");
+                        throw new LazybotRuntimeException("参数解析错误, index不为正整数，length=1");
                 }
                 else if(CommonTool.isPositiveInteger(params.getFirst()))
                     parameter.setMaxDays(Integer.parseInt(params.getFirst()));
@@ -63,7 +64,7 @@ public class TodaybpParameter extends LazybotCommandParameter
                     if (CommonTool.isPositiveInteger(paras[1]))
                         parameter.setMaxDays(Integer.parseInt(paras[1]));
                     else
-                        throw new RuntimeException("参数解析错误, index不为正整数,length=2");
+                        throw new LazybotRuntimeException("参数解析错误, index不为正整数,length=2");
                 }
                 else if(CommonTool.isPositiveInteger(params.get(1))) {
                     parameter.setPlayerName(params.getFirst());
@@ -71,7 +72,7 @@ public class TodaybpParameter extends LazybotCommandParameter
                 }
             }
             else {
-                throw new RuntimeException("Incorrect parameters: " + params);
+                throw new LazybotRuntimeException("Incorrect parameters: " + params);
             }
         }
         else {

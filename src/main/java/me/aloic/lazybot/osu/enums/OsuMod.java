@@ -2,6 +2,7 @@ package me.aloic.lazybot.osu.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import org.spring.osu.model.LazerMod;
 
 import java.util.Arrays;
@@ -291,7 +292,7 @@ public enum OsuMod
             case "MR":
                 return new LazerMod.Mirror();
         }
-        throw new RuntimeException("No such mods");
+        throw new LazybotRuntimeException("No such mods");
     }
 
 

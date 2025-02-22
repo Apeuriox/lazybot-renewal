@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.utils;
 
 import me.aloic.ResvgJNI;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class SVGRenderUtil
             doc = SvgUtil.getScorePanelWhiteModeDoc(targetScore);
         else if (version==2)
             doc = SvgUtil.getScorePanelMaterialDesign(targetScore,primaryColor);
-        else throw new RuntimeException("不支持的面板版本: " + version);
+        else throw new LazybotRuntimeException("不支持的面板版本: " + version);
         return renderSVGToOutputstream(doc);
     }
     public static byte[] renderScoreToByteArray(ScoreVO targetScore, int version,int[] primaryColor)
@@ -45,7 +46,7 @@ public class SVGRenderUtil
             doc = SvgUtil.getScorePanelWhiteModeDoc(targetScore);
         else if (version==2)
             doc = SvgUtil.getScorePanelMaterialDesign(targetScore,primaryColor);
-        else throw new RuntimeException("不支持的面板版本: " + version);
+        else throw new LazybotRuntimeException("不支持的面板版本: " + version);
         return renderSVGDocumentToByteArray(doc);
     }
     public static OutputStream renderSVGToOutputstream(Document document)
@@ -57,7 +58,7 @@ public class SVGRenderUtil
         }
         catch (Exception e) {
             logger.error(e.getMessage());
-            throw new RuntimeException("渲染成绩图时出错");
+            throw new LazybotRuntimeException("渲染成绩图时出错");
         }
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
         return convertByteArrayToOutputStream(result);
@@ -71,7 +72,7 @@ public class SVGRenderUtil
         }
         catch (Exception e){
             logger.error(e.getMessage());
-            throw new RuntimeException("渲染成绩图时出错");
+            throw new LazybotRuntimeException("渲染成绩图时出错");
         }
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
         return result;
@@ -83,7 +84,7 @@ public class SVGRenderUtil
         }
         catch (Exception e)
         {
-            throw new RuntimeException("Error convert Byte Array into Output Stream");
+            throw new LazybotRuntimeException("Error convert Byte Array into Output Stream");
         }
         return outputStream;
     }

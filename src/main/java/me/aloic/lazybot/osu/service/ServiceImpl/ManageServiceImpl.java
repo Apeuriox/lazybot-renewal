@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -66,7 +67,7 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String verifyBeatmap(BeatmapParameter params)
     {
-        if(!adminMap.containsKey(params.getUserIdentity())) throw new RuntimeException("你没有权限");
+        if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("你没有权限");
         File beatmapFile;
         try{
             beatmapFile = new File(AssertDownloadUtil.beatmapPath(params.getBid(),false).toUri());
@@ -95,7 +96,7 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String verify(VerifyParameter params)
     {
-        if(!adminMap.containsKey(params.getQqCode())) throw new RuntimeException("你没有权限");
+        if(!adminMap.containsKey(params.getQqCode())) throw new LazybotRuntimeException("你没有权限");
         if(Objects.equals(params.getType(), "view")) {
             return showUnverifiedCustomization();
         }

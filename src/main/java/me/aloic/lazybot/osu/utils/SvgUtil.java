@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.utils;
 
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
@@ -62,7 +63,8 @@ public class SvgUtil
             transformer = TransformerFactory.newInstance().newTransformer();
         } catch (TransformerConfigurationException e)
         {
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("Batik转换器初始化失败");
         }
     }
 
@@ -152,9 +154,8 @@ public class SvgUtil
             modText.setAttribute("x", "626.5");
             modText.setAttribute("y", "146.5");
         }
-        else
-        {
-            throw new RuntimeException("error when wiring mod icon");
+        else {
+            throw new LazybotRuntimeException("创建List样式的Mod图标时出错: 类型越界=" +type);
         }
         modText.setTextContent(modName);
         modFull.appendChild(modBGNode);
@@ -627,8 +628,8 @@ public class SvgUtil
             return doc;
         } catch (Exception e)
         {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+           logger.error("Error while generating score panel: {}",e);
+            throw new LazybotRuntimeException("亮色模式Score panel生成失败");
         }
     }
     public static Document getScorePanelMaterialDesign(ScoreVO targetScore,int[] primaryColor)
@@ -707,8 +708,8 @@ public class SvgUtil
             return document;
         }
         catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("生成图像时出错");
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("生成Material Score图像时出错");
         }
     }
     public static Document getScorePanelDarkModeDoc(ScoreVO targetScore,int[] primaryColor)
@@ -1048,8 +1049,8 @@ public class SvgUtil
             return doc;
         } catch (Exception e)
         {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("暗黑模式Score panel生成失败");
         }
 
     }
@@ -1323,7 +1324,7 @@ public class SvgUtil
         catch (Exception e)
         {
             e.printStackTrace();
-            throw new RuntimeException("SVG 处理时出错");
+            throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
     public static Document createScoreListDetailed(List<ScoreSequence> scorelist,PlayerInfoVO info, Integer offset) throws IOException
@@ -1351,7 +1352,7 @@ public class SvgUtil
         catch (Exception e)
         {
             e.printStackTrace();
-            throw new RuntimeException("SVG 处理时出错");
+            throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
     private static Document setupBpListDetailedSingle(List<ScoreSequence> scorelist, String primaryColor, Document doc, Element svgRoot, Integer offset)
@@ -2152,8 +2153,8 @@ public class SvgUtil
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("Info卡片生成失败");
         }
     }
     private static void appendBpCardModIcon(Document document, Mod mod, Element sectionFull, int index, int panelVersion) {

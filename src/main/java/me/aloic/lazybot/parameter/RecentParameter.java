@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.CommonTool;
 import java.util.List;
@@ -39,7 +40,7 @@ public class RecentParameter extends LazybotCommandParameter
         RecentParameter recentParameter=new RecentParameter();
         if (params != null && !params.isEmpty()) {
             if (params.size() > 2)
-                throw new RuntimeException("最高参数长度为2（如果你名字有空格请把空格换成下划线），使用例：/pr userName #1");
+                throw new LazybotRuntimeException("最高参数长度为2（如果你名字有空格请把空格换成下划线），使用例：/pr userName #1");
             else if (params.size() == 1) {
                 if (params.getFirst().contains("#") && CommonTool.isPositiveInteger(params.getFirst().substring(1))) {
                     int targetIndex = Integer.parseInt(params.getFirst().substring(1));
@@ -51,7 +52,7 @@ public class RecentParameter extends LazybotCommandParameter
                     recentParameter.setIndex(1);
                 }
                 else
-                    throw new RuntimeException("参数错误，含有非数字，使用例：/pr userName #10");
+                    throw new LazybotRuntimeException("参数错误，含有非数字，使用例：/pr userName #10");
             }
             else if (params.size() == 2) {
                 if(params.get(1).contains("#")) {
@@ -64,7 +65,7 @@ public class RecentParameter extends LazybotCommandParameter
                     }
                     else
                     {
-                        throw new RuntimeException("参数解析错误，使用例：/pr userName #10");
+                        throw new LazybotRuntimeException("参数解析错误，使用例：/pr userName #10");
                     }
                 }
                 else {
@@ -75,7 +76,7 @@ public class RecentParameter extends LazybotCommandParameter
                         recentParameter.setIndex(targetIndex);
                     }
                     else {
-                        throw new RuntimeException("参数解析错误，使用例：/pr userName #10");
+                        throw new LazybotRuntimeException("参数解析错误，使用例：/pr userName #10");
                     }
                 }
             }

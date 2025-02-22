@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.CommonTool;
 
@@ -47,7 +48,7 @@ public class BpParameter extends LazybotCommandParameter
                     if (CommonTool.isPositiveInteger(paras[1]) && Integer.parseInt(paras[1]) <= 100)
                         bpParameter.setIndex(Integer.parseInt(paras[1]));
                     else
-                        throw new RuntimeException("输入参数不为正整数: " + paras[1]);
+                        throw new LazybotRuntimeException("输入参数不为正整数: " + paras[1]);
                 }
                 else if(CommonTool.isPositiveInteger(params.getFirst()) && Integer.parseInt(params.getFirst())<=100)
                     bpParameter.setIndex(Integer.parseInt(params.getFirst()));
@@ -63,7 +64,7 @@ public class BpParameter extends LazybotCommandParameter
                     if (CommonTool.isPositiveInteger(paras[1]) && Integer.parseInt(paras[1]) <= 100)
                         bpParameter.setIndex(Integer.parseInt(paras[1]));
                     else
-                        throw new RuntimeException("输入参数不为正整数: " + paras[1]);
+                        throw new LazybotRuntimeException("输入参数不为正整数: " + paras[1]);
                 }
                 else if(CommonTool.isPositiveInteger(params.get(1)) && Integer.parseInt(params.get(1))<=100) {
                     bpParameter.setPlayerName(params.getFirst());

@@ -1,6 +1,7 @@
 package me.aloic.lazybot.monitor;
 
 import me.aloic.lazybot.discord.config.DiscordBotRunner;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.system.ApplicationHome;
@@ -46,8 +47,8 @@ public class ResourceMonitor
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-            throw new RuntimeException("释放静态资源时出错: " + e.getMessage());
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("释放静态资源时出错: " + e.getMessage());
         }
     }
     /**
@@ -226,8 +227,8 @@ public class ResourceMonitor
             return jarFile;
         }
         catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Decode URL failed", e);
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("Decode URL failed", e);
         }
     }
 }

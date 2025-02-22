@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.CommonTool;
 
@@ -21,7 +22,7 @@ public class TipsParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if (id==null) id=0;
-        if (id<0) throw new RuntimeException("{id} 必须大于 0");
+        if (id<0) throw new LazybotRuntimeException("{id} 必须大于 0");
     }
     public TipsParameter(Integer id) {
         this.id=id;

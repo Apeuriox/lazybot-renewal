@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class UpdateParameter extends LazybotCommandParameter
                 parameter.setType(params.getFirst());
                 parameter.setPlayerName(params.get(1));
             }
-            else throw new RuntimeException("update avatar ${user_name} or Update track ${user_name}");
+            else throw new LazybotRuntimeException("update avatar ${user_name} or Update track ${user_name}");
         }
         return parameter;
     }

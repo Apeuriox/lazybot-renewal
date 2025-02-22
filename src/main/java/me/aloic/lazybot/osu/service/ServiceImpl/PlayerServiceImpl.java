@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
@@ -48,7 +49,7 @@ public class PlayerServiceImpl implements PlayerService
     {
         List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractRecentScoreList(params.getAccessToken(), params.getPlayerId(), type, params.getMode());
         if(params.getIndex()>scoreList.size()) {
-            throw new RuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " +scoreList.size());
+            throw new LazybotRuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " +scoreList.size());
         }
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
                 DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
@@ -98,7 +99,7 @@ public class PlayerServiceImpl implements PlayerService
                 })
                 .collect(Collectors.toList());
         if(scoreVOList.isEmpty()) {
-            throw new RuntimeException("没有找到符合条件的bp");
+            throw new LazybotRuntimeException("没有找到符合条件的bp");
         }
         OsuToolsUtil.setUpImageStatic(scoreVOList);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOList,0,4,
