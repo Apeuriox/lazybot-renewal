@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.CompletableFuture;
+
 @Component
 public class SlashCommandProcessor
 {
@@ -42,22 +44,22 @@ public class SlashCommandProcessor
         }
     }
     @Async("asyncServiceExecutor")
-    public void processQQ(Bot bot, LazybotSlashCommandEvent event)
-    {
+    public CompletableFuture<Void> processQQ(Bot bot, LazybotSlashCommandEvent event) {
+        return CompletableFuture.runAsync(() -> {
             try {
                 LazybotSlashCommand command = registry.getCommand(event.getCommandType());
                 if (command != null) {
                     logger.info("正在处理 {} 命令(Onebot)", event.getCommandType());
-                    command.execute(bot,event);
+                    command.execute(bot, event);
                 }
             } catch (LazybotRuntimeException e) {
                 logger.error(e.getMessage());
-                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(),false);
-            }
-            catch (Exception e) {
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(), false);
+            } catch (Exception e) {
                 logger.error(e.getMessage());
-                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("出现未知错误").build(),false);
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("出现未知错误").build(), false);
             }
+        });
     }
 
 }
