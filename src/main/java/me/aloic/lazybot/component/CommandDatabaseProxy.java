@@ -30,13 +30,13 @@ public class CommandDatabaseProxy
     {
         AccessTokenPO accessToken, tokenPO;
         try {
+            tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
+            if (tokenPO == null) throw new LazybotRuntimeException("请先使用/link 你的osu用户名 绑定osu账号");
             accessToken= tokenMapper.selectByQq_code(0L);
             if(accessToken == null) {
                 tokenMonitor.refreshClientToken();
                 throw new LazybotRuntimeException("Osu api token失效，正在重获取");
             }
-            tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-            if (tokenPO == null) throw new LazybotRuntimeException("请先使用/link 你的osu用户名 绑定osu账号");
             tokenPO.setAccess_token(accessToken.getAccess_token());
             return tokenPO;
         }

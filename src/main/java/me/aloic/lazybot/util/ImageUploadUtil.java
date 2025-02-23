@@ -2,6 +2,7 @@ package me.aloic.lazybot.util;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
+import me.aloic.lazybot.osu.monitor.TokenMonitor;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -12,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -43,26 +45,23 @@ public class ImageUploadUtil
         logger.info("Saving image to file cost: {}ms", System.currentTimeMillis() - startTime);
         return tempFile;
     }
+
     public static void uploadImageToOnebot(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray) {
-        try {
-            File tempFile = saveBytesToFile(imageByteArray, String.valueOf(event.getMessageEvent().getSender().getUserId()));
             try  {
-                String filePath = "file:///".concat(tempFile.getAbsolutePath());
-                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().img(filePath).build(), false);
+                String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().img("base64://"+base64Image).build(), false);
             }
-            finally {
-                tempFile.delete();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            catch (Exception e) {
+                logger.error(e.getMessage());
         }
     }
+
     public static void uploadImageToOnebot(Bot bot, LazybotSlashCommandEvent event, String filePath) {
         try {
             filePath = "file:///".concat(filePath);
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().img(filePath).build(), false);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 //    public static File saveBytesToFile(byte[] imageBytes, String fileName) throws IOException {
