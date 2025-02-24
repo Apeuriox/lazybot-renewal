@@ -37,9 +37,9 @@ public class DataObjectExtractor
     }
 
 
-    public static List<ScoreLazerDTO> extractRecentScoreList(String accessToken, Integer playerId, Integer type, String mode)
+    public static List<ScoreLazerDTO> extractRecentScoreList(String accessToken, Integer playerId, Integer type,Integer limit ,String mode)
     {
-        List<ScoreLazerDTO> scoreLazerDTOS =  new ApiRequestStarter(URLBuildUtil.buildURLOfRecentCommand(playerId,type,mode),accessToken)
+        List<ScoreLazerDTO> scoreLazerDTOS =  new ApiRequestStarter(URLBuildUtil.buildURLOfRecentCommand(playerId,type,limit,mode),accessToken)
                 .executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, ScoreLazerDTO.class);
         if(scoreLazerDTOS==null|| scoreLazerDTOS.isEmpty()) {
             throw new LazybotRuntimeException("小妹妹打都没打在这查哪个成绩呢");

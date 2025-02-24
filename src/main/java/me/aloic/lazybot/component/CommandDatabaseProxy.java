@@ -40,6 +40,9 @@ public class CommandDatabaseProxy
             tokenPO.setAccess_token(accessToken.getAccess_token());
             return tokenPO;
         }
+        catch (LazybotRuntimeException e) {
+            throw e;
+        }
         catch (MybatisPlusException e) {
             logger.error("数据库查询出错: {}", e.getMessage());
             throw new LazybotRuntimeException("数据库查询出错，详情请见log");

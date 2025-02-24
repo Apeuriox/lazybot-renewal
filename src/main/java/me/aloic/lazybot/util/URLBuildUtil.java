@@ -97,10 +97,18 @@ public class URLBuildUtil
                 .addQuery("mode", mode);
         return builder.build();
     }
-    public static String buildURLOfRecentCommand(Integer playerId, Integer type ,String mode)
+    public static String buildURLOfRecentCommand(Integer playerId, Integer type, Integer limit ,String mode)
     {
-        return type==1? ContentUtil.BASE_URL + "/users/" + playerId + "/scores/recent?mode="+mode:
-                        ContentUtil.BASE_URL + "/users/" + playerId + "/scores/recent?include_fails=1&mode="+mode;
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("users")
+                .addPath(String.valueOf(playerId))
+                .addPath("scores")
+                .addPath("recent")
+                .addQuery("mode", mode)
+                .addQuery("limit", limit);
+                if(type!=1)
+                     builder.addQuery("include_fails", 1);
+        return builder.build();
     }
     public static String buildURLOfPlayerInfo(String playerNameOrId,String mode,String key)
     {
