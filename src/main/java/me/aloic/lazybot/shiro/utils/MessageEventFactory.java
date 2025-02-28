@@ -71,7 +71,7 @@ public class MessageEventFactory
     }
     private static String formatCommand(String s)
     {
-        s = s.replace("！","!");
+        s = s.replace("！","!").trim();
         s = s.replace("：",":");
         StringBuffer sb = new StringBuffer(s);
         for (int i = 0; i < sb.length(); i++) {

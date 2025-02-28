@@ -258,11 +258,11 @@ public class TransformerUtil
             hitScoreVOs.get(i).setScore(hitScores.get(i).getScore());
             hitScoreVOs.get(i).setScoreTimeJSON(hitScores.get(i).getScore_time());
             hitScoreVOs.get(i).setAchievedTime(CommonTool.tranfromDate(
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(0, 4)),
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(5, 7))-1,
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(8, 10)),
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(11, 13)),
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(14, 16)),0));
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(0, 4)),
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(5, 7))-1,
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(8, 10)),
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(11, 13)),
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(14, 16)),0));
         }
         return hitScoreVOs;
     }

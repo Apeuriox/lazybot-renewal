@@ -30,7 +30,7 @@ public class CustomizeServiceImpl implements CustomizeService
     private static final Logger logger = LoggerFactory.getLogger(CustomizeServiceImpl.class);
 
     static{
-        PROFILE_RELATIVE_PATH = "\\osuFiles\\playerCustomization\\profile\\";
+        PROFILE_RELATIVE_PATH = "/osuFiles/playerCustomization/profile/";
     }
     @Override
     public String customize(CustomizationParameter params)

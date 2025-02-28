@@ -33,7 +33,6 @@ public class ResourceMonitor
             if (workingDir == null || workingDir.isEmpty()) {
                 workingDir = String.valueOf(Files.createTempDirectory("lazybot_working_dir"));
             }
-
             File targetDir = new File(workingDir);
             if (!targetDir.exists() && !targetDir.mkdirs()) {
                 throw new IOException("无法创建目标目录：" + workingDir);
@@ -67,10 +66,16 @@ public class ResourceMonitor
                 Enumeration<JarEntry> entries = jar.entries();
                 while (entries.hasMoreElements()) {
                     JarEntry entry = entries.nextElement();
-                    if (entry.getName().startsWith(resourceDir + "/") && !entry.isDirectory()) {
+                    if (entry.getName().startsWith(resourceDir + "/")) {
                         String relativePath = entry.getName().substring(resourceDir.length() + 1);
                         File targetFile = new File(targetDir, relativePath);
-                        copyResourceFromJar(jar, entry, targetFile);
+                        if (entry.isDirectory()) {
+                            if (!targetFile.exists() && !targetFile.mkdirs()) {
+                                throw new IOException("无法创建目录：" + targetFile.getAbsolutePath());
+                            }
+                        } else {
+                            copyResourceFromJar(jar, entry, targetFile);
+                        }
                     }
                 }
             }
@@ -164,12 +169,19 @@ public class ResourceMonitor
         Path playerCustomizationDir = osuFilesDir.resolve("playerCustomization");
         Path profileDir = playerCustomizationDir.resolve("profile");
         Path staticDir = workingDir.resolve("static");
+        Path assetsDir = staticDir.resolve("assets");
+        Path osuResDir = assetsDir.resolve("osuResources");
+        Path fonts = staticDir.resolve("fonts");
+
         createDirectoryIfNotExists(osuFilesDir);
         createDirectoryIfNotExists(playerAvatarDir);
         createDirectoryIfNotExists(mapBGDir);
         createDirectoryIfNotExists(staticDir);
         createDirectoryIfNotExists(playerCustomizationDir);
         createDirectoryIfNotExists(profileDir);
+        createDirectoryIfNotExists(assetsDir);
+        createDirectoryIfNotExists(osuResDir);
+        createDirectoryIfNotExists(fonts);
     }
 
     /**
