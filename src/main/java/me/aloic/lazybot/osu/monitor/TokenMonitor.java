@@ -72,7 +72,7 @@ public class TokenMonitor
             logger.info("successfully created client token: {}", tokenPO.getAccess_token());
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

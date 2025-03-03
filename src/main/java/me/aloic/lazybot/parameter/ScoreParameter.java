@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.CommonTool;
 
@@ -45,7 +46,7 @@ public class ScoreParameter extends LazybotCommandParameter
     {
         ScoreParameter scoreParameter=new ScoreParameter();
         if (params == null || params.size() > 2)
-            throw new RuntimeException("参数输入错误");
+            throw new LazybotRuntimeException("参数输入错误");
         //如果参数只有一个，并且包含+，说明是mod+bid的形式
         else if (params.size() == 1) {
             if(params.getFirst().contains("+")) {
@@ -56,13 +57,13 @@ public class ScoreParameter extends LazybotCommandParameter
                    scoreParameter.setModCombination(paras[1]);
                 }
                 else
-                    throw new RuntimeException("参数解析错误,para=1, mod=true");
+                    throw new LazybotRuntimeException("参数解析错误,para=1, mod=true");
             }
             else {
                 if(CommonTool.isPositiveInteger(params.getFirst()))
                     scoreParameter.setBeatmapId(Integer.valueOf(params.getFirst()));
                 else
-                    throw new RuntimeException("参数解析错误, para=1, mod=false");
+                    throw new LazybotRuntimeException("参数解析错误, para=1, mod=false");
             }
         }
         //两个参数，有+代表有mod
@@ -77,7 +78,7 @@ public class ScoreParameter extends LazybotCommandParameter
                     scoreParameter.setModCombination(paras[1]);
                 }
                 else {
-                    throw new RuntimeException("参数解析错误, para=2,mod=true");
+                    throw new LazybotRuntimeException("参数解析错误, para=2,mod=true");
                 }
             }
             else {
@@ -86,14 +87,14 @@ public class ScoreParameter extends LazybotCommandParameter
                     scoreParameter.setBeatmapId(Integer.valueOf(params.get(1)));
                 }
                 else {
-                    throw new RuntimeException("参数解析错误, para=2, mods=false");
+                    throw new LazybotRuntimeException("参数解析错误, para=2, mods=false");
                 }
             }
         }
         //只有一个参数，且没有指定mod，那就看参数是不是正整数，不是就滚犊子
         else
         {
-            throw new RuntimeException("未知错误, 可能为para>=3");
+            throw new LazybotRuntimeException("未知错误, 可能为para>=3");
         }
         return scoreParameter;
     }

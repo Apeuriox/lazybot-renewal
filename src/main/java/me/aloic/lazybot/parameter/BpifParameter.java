@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 
 import java.util.Arrays;
@@ -38,13 +39,13 @@ public class BpifParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (this.getModList()==null || this.getModList().isEmpty()) throw new RuntimeException("Mod在哪? 现阶段不支持多步操作，比如+HD -HR");
+        if (this.getModList()==null || this.getModList().isEmpty()) throw new LazybotRuntimeException("Mod在哪? 现阶段不支持多步操作，比如+HD -HR");
     }
     public static BpifParameter analyzeParameter(List<String> params)
     {
         BpifParameter parameter=new BpifParameter();
         String modStr;
-        if (params == null||params.isEmpty()) throw new RuntimeException("参数呢?");
+        if (params == null||params.isEmpty()) throw new LazybotRuntimeException("参数呢?");
         else {
             if (params.size() == 1) {
                 modStr=params.getFirst();
@@ -65,7 +66,7 @@ public class BpifParameter extends LazybotCommandParameter
         String operator=modStr.substring(0,1);
         if ( modStr.endsWith("!")) operator="!";
         if(!operator.equals("+") && !operator.equals("-") && !operator.equals("!")) {
-            throw new RuntimeException("不支持的运算符: " + operator);
+            throw new LazybotRuntimeException("不支持的运算符: " + operator);
         }
         else {
             parameter.setOperator(operator);

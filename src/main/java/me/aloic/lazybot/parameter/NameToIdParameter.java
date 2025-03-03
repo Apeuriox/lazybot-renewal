@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.CommonTool;
 
@@ -33,7 +34,7 @@ public class NameToIdParameter extends LazybotCommandParameter
     public static NameToIdParameter analyzeParameter(List<String> params)
     {
         NameToIdParameter parameter=new NameToIdParameter();
-        if(params == null || params.isEmpty()) throw new RuntimeException("此方法必须有参数");
+        if(params == null || params.isEmpty()) throw new LazybotRuntimeException("此方法必须有参数");
         parameter.setTargets(List.of(String.join(" ", params).split(",")));
         return parameter;
     }

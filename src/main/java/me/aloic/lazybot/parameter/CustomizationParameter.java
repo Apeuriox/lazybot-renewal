@@ -3,6 +3,7 @@ package me.aloic.lazybot.parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class CustomizationParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if (otherParams==null)
-            throw new RuntimeException("三级参数无效");
+            throw new LazybotRuntimeException("三级参数无效");
     }
     public CustomizationParameter(String playerName, String type) {
         this.setPlayerName(playerName);
@@ -34,9 +35,9 @@ public class CustomizationParameter extends LazybotCommandParameter
                 parameter.setTargetUrl(String.join(" ", params.subList(1, params.size())));
                 parameter.setOtherParams(String.join(" ", params.subList(1, params.size())));
             }
-            else throw new RuntimeException("使用方法: /customize <类型> <图片链接>");
+            else throw new LazybotRuntimeException("使用方法: /customize <类型> <图片链接>");
         }
-        else throw new RuntimeException("使用方法: /customize <类型> <图片链接>");
+        else throw new LazybotRuntimeException("使用方法: /customize <类型> <图片链接>");
         return parameter;
     }
     public static void setupDefaultValue(CustomizationParameter parameter, AccessTokenPO accessTokenPO)

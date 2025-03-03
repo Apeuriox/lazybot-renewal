@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.theme.preset;
 
 import lombok.Data;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 @Data
 public abstract class ProfileTheme
@@ -26,15 +27,15 @@ public abstract class ProfileTheme
         if(type== 0) return ProfileLightTheme.createInstance(hue);
         else if (type == 1) return ProfileDarkTheme.createInstance(hue);
         else if (type == 2) return ProfileLighterTheme.createInstance(hue);
-        else throw new RuntimeException("Unknown theme type: " + type);
+        else throw new LazybotRuntimeException("Unknown theme type: " + type);
     }
     public static Integer getTypeInt(String input) {
-        if (input == null) throw new RuntimeException("Null type provided");
+        if (input == null) throw new LazybotRuntimeException("Null type provided");
         return switch (input.toLowerCase().trim()) {
             case "light", "l", "0","day" -> 0;
             case "dark", "d", "night", "1" -> 1;
             case "lighter", "2" -> 2;
-            default -> throw new RuntimeException("Invalid type provided: " + input);
+            default -> throw new LazybotRuntimeException("Invalid type provided: " + input);
         };
     }
 }

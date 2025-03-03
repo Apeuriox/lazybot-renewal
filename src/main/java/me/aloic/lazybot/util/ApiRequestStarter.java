@@ -7,6 +7,7 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -163,11 +164,12 @@ public class ApiRequestStarter
                         }
                         catch (InterruptedException ie) {
                             Thread.currentThread().interrupt();
-                            throw new RuntimeException("Thread interrupted while retrying", ie);
+                            throw new LazybotRuntimeException("Thread interrupted while retrying", ie);
                         }
                     }
                     else {
-                        throw new RuntimeException("Failed to execute HTTP REQUEST GET after " +reties +" retries:" + e.getMessage());
+                        logger.error(e.getMessage());
+                        throw new LazybotRuntimeException("HTTP请求重试" +reties +"次后仍失败:" + e.getMessage());
                     }
                 }
             }
@@ -220,11 +222,12 @@ public class ApiRequestStarter
                         }
                         catch (InterruptedException ie) {
                             Thread.currentThread().interrupt();
-                            throw new RuntimeException("Thread interrupted while retrying", ie);
+                            throw new LazybotRuntimeException("Thread interrupted while retrying", ie);
                         }
                     }
                     else {
-                        throw new RuntimeException("HTTP请求重试" +reties +"次后仍失败:" + e.getMessage());
+                        logger.error(e.getMessage());
+                        throw new LazybotRuntimeException("HTTP请求重试" +reties +"次后仍失败:" + e.getMessage());
                     }
                 }
             }

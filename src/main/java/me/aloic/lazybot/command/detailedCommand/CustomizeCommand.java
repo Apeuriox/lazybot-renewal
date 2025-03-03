@@ -5,6 +5,7 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
@@ -29,7 +30,7 @@ public class CustomizeCommand implements LazybotSlashCommand
     @Resource
     private DiscordTokenMapper discordTokenMapper;
     @Resource
-    private TokenMapper tokenMapper;
+    private CommandDatabaseProxy proxy;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -53,14 +54,10 @@ public class CustomizeCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
-        AccessTokenPO tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-        if (tokenPO == null)
-            throw new RuntimeException("请先使用/link 你的用户名 绑定osu账号");
-        tokenPO.setAccess_token(accessToken.getAccess_token());
+        AccessTokenPO tokenPO=proxy.getAccessToken(event);
         CustomizationParameter params=CustomizationParameter.analyzeParameter(event.getCommandParameters());
         CustomizationParameter.setupDefaultValue(params,tokenPO);
-        params.setAccessToken(accessToken.getAccess_token());
+        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(customizeService.customize(params)).build(),false);
     }

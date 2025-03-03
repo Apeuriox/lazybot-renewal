@@ -1,5 +1,6 @@
 package me.aloic.lazybot.util;
 
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
@@ -21,7 +22,7 @@ public class DataObjectExtractor
         ApiRequestStarter requestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerInfo(playerName,mode),accessToken);
         PlayerInfoDTO playerInfoDTO = requestStarter.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
         if(playerInfoDTO.getId()==null) {
-            throw new RuntimeException("没这B人: " + playerName);
+            throw new LazybotRuntimeException("没这B人: " + playerName);
         }
         return playerInfoDTO;
     }
@@ -30,25 +31,25 @@ public class DataObjectExtractor
         ApiRequestStarter requestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerInfo(playerId,mode),accessToken);
         PlayerInfoDTO playerInfoDTO = requestStarter.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
         if(playerInfoDTO.getId()==null) {
-            throw new RuntimeException("没这B人: " + playerId);
+            throw new LazybotRuntimeException("没这B人: " + playerId);
         }
         return playerInfoDTO;
     }
 
 
-    public static List<ScoreLazerDTO> extractRecentScoreList(String accessToken, Integer playerId, Integer type, String mode)
+    public static List<ScoreLazerDTO> extractRecentScoreList(String accessToken, Integer playerId, Integer type,Integer limit ,String mode)
     {
-        List<ScoreLazerDTO> scoreLazerDTOS =  new ApiRequestStarter(URLBuildUtil.buildURLOfRecentCommand(playerId,type,mode),accessToken)
+        List<ScoreLazerDTO> scoreLazerDTOS =  new ApiRequestStarter(URLBuildUtil.buildURLOfRecentCommand(playerId,type,limit,mode),accessToken)
                 .executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, ScoreLazerDTO.class);
         if(scoreLazerDTOS==null|| scoreLazerDTOS.isEmpty()) {
-            throw new RuntimeException("小妹妹打都没打在这查哪个成绩呢");
+            throw new LazybotRuntimeException("小妹妹打都没打在这查哪个成绩呢");
         }
         return scoreLazerDTOS;
     }
     public static String checkUserLink(UserTokenPO tokenPO)
     {
         if (tokenPO == null)
-            throw new RuntimeException("'未查到相关信息，请使用/link 你的用户名 进行绑定  ");
+            throw new LazybotRuntimeException("'未查到相关信息，请使用/link 你的用户名 进行绑定  ");
         return tokenPO.getPlayer_name();
     }
 
@@ -65,7 +66,7 @@ public class DataObjectExtractor
         }
         BeatmapUserScoreLazer beatmapUserScoreLazer = scoreApiRequestStarter.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, BeatmapUserScoreLazer.class);
         if(beatmapUserScoreLazer==null||beatmapUserScoreLazer.getScore()==null)
-            throw new RuntimeException("没这成绩: BID=" +beatmapId + " player=" + playerId);
+            throw new LazybotRuntimeException("没这成绩: BID=" +beatmapId + " player=" + playerId +" mode="+mode);
         return beatmapUserScoreLazer;
     }
 
@@ -80,7 +81,7 @@ public class DataObjectExtractor
         BeatmapDTO beatmapDTO = new ApiRequestStarter(URLBuildUtil.buildURLOfBeatmap(beatmapId,mode),accessToken)
                 .executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, BeatmapDTO.class);
         if(beatmapDTO.getId()==null) {
-            throw new RuntimeException("没这地图: BID=" +beatmapId);
+            throw new LazybotRuntimeException("没这地图: BID=" + beatmapId + " mode=" +mode);
         }
         return beatmapDTO;
     }
@@ -89,7 +90,7 @@ public class DataObjectExtractor
         List<ScoreLazerDTO> scoreLazerDTOS =  new ApiRequestStarter(URLBuildUtil.buildURLOfUserBest(playerId,offset,mode),accessToken)
                 .executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, ScoreLazerDTO.class);
         if(scoreLazerDTOS==null|| scoreLazerDTOS.isEmpty()) {
-            throw new RuntimeException("没这成绩: " +"index=" + offset+1 + " player=" + playerId);
+            throw new LazybotRuntimeException("没这成绩: " +"index=" + offset+1 + " player=" + playerId);
         }
         return scoreLazerDTOS;
     }
@@ -98,7 +99,7 @@ public class DataObjectExtractor
         List<ScoreLazerDTO> scoreLazerDTOS =  new ApiRequestStarter(URLBuildUtil.buildURLOfUserBest(playerId,limit,offset,mode),accessToken)
                 .executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, ScoreLazerDTO.class);
         if(scoreLazerDTOS==null|| scoreLazerDTOS.isEmpty()) {
-            throw new RuntimeException("没这成绩: " +"index=" + (offset+1) + " player=" + playerId);
+            throw new LazybotRuntimeException("没这成绩: " +"index=" + (offset+1) + " player=" + playerId + " mode=" +mode);
         }
         return scoreLazerDTOS;
     }
@@ -107,7 +108,7 @@ public class DataObjectExtractor
         ApiRequestStarter apiRequestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackScore(playerId, OsuMode.getMode(mode).getValue()));
         java.util.List<HitScoreVO> hitScoreVOs= TransformerUtil.HitScoreTransform(apiRequestStarter.executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, HitScore.class));
         if(hitScoreVOs.isEmpty()) {
-            throw new RuntimeException("暂无数据");
+            throw new LazybotRuntimeException("暂无数据");
         }
         return hitScoreVOs;
     }
@@ -116,7 +117,7 @@ public class DataObjectExtractor
         ApiRequestStarter apiRequestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackBestPlays(limit,mode));
         List<BestPlay> bestPlayList= apiRequestStarter.executeRequestForList(ContentUtil.HTTP_REQUEST_TYPE_GET, BestPlay.class);
         if(bestPlayList.isEmpty()) {
-            throw new RuntimeException("暂无数据");
+            throw new LazybotRuntimeException("暂无数据");
         }
         return bestPlayList;
     }

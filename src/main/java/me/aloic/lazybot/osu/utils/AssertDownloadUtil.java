@@ -2,6 +2,7 @@ package me.aloic.lazybot.osu.utils;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.http.HttpUtil;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
@@ -40,7 +41,7 @@ public class AssertDownloadUtil
         MAX_DOWNLOADS_PER_MINUTE=64;
         ONE_MINUTE_IN_MS=60*1000;
         delayQueue=new DelayQueue<>();
-        executor=Executors.newScheduledThreadPool(3);
+        executor=Executors.newScheduledThreadPool(4);
         httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
@@ -61,8 +62,8 @@ public class AssertDownloadUtil
                 fileDownloadJavaHttpClient(targetUrl, desiredLocalPath);
                 delayQueue.offer(new DownloadTask(ONE_MINUTE_IN_MS));
             } catch (InterruptedException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Download thread was interrupted: " +e.getMessage());
+                logger.error(e.getMessage());
+                throw new LazybotRuntimeException("Download thread was interrupted: " +e.getMessage());
             }
             return null;
         });
@@ -135,7 +136,7 @@ public class AssertDownloadUtil
         catch (Exception e)
         {
             logger.error("头像下载失败: {}", e.getMessage());
-            throw new RuntimeException("下载线程出错: "+ e.getMessage());
+            throw new LazybotRuntimeException("下载线程出错: "+ e.getMessage());
         }
         return Paths.get(desiredLocalPath);
     }
@@ -179,8 +180,7 @@ public class AssertDownloadUtil
         } catch (Exception e)
         {
             logger.error("下载小型文件时出错:{}", e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("下载时出错: " +e.getMessage() +" 如果出现此消息请重试 ");
+            throw new LazybotRuntimeException("下载时出错: " +e.getMessage() +" 如果出现此消息请重试 ");
         }
         finally{
             logger.info("下载完成（小型文件）: {}", desiredLocalPath);
@@ -224,9 +224,8 @@ public class AssertDownloadUtil
             }
             connection.disconnect();
         }catch (Exception e){
-            e.printStackTrace();
             logger.error("下载时出错:{}", e.getMessage());
-            throw new RuntimeException("下载时出错:" +e.getMessage() +" 如果出现此消息请重试 ");
+            throw new LazybotRuntimeException("下载时出错:" +e.getMessage() +" 如果出现此消息请重试 ");
 
         }finally {
             logger.info("下载完成: {}", desiredLocalPath);
@@ -255,13 +254,13 @@ public class AssertDownloadUtil
                     logger.info("文件下载成功，保存路径：{}", desiredLocalPath);
                     return;
                 } else {
-                    throw new RuntimeException("HTTP 状态码：" + response.statusCode());
+                    throw new LazybotRuntimeException("HTTP 状态码：" + response.statusCode());
                 }
             } catch (Exception e) {
                 logger.warn("下载失败 (第 {} 次): {}", attempt, e.getMessage());
                 if (attempt >= MAX_RETRIES) {
                     logger.error("重试三次后仍无法下载");
-                    throw new RuntimeException("三次重试后仍下载失败: " + e.getMessage());
+                    throw new LazybotRuntimeException("三次重试后仍下载失败: " + e.getMessage());
                 }
                 Thread.sleep(2000);
             }

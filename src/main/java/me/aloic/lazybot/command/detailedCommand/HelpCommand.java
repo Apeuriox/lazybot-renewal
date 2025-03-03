@@ -3,6 +3,7 @@ package me.aloic.lazybot.command.detailedCommand;
 import com.mikuac.shiro.core.Bot;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.ImageUploadUtil;
@@ -28,6 +29,12 @@ public class HelpCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
         Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
-        ImageUploadUtil.uploadImageToOnebot(bot,event,filePath.toAbsolutePath().toString());
+        try{
+            ImageUploadUtil.uploadImageToOnebot(bot,event,Files.readAllBytes(Paths.get(filePath.toUri())));
+        }
+        catch (Exception e) {
+            throw new LazybotRuntimeException("读取Help页面失败");
+        }
+
     }
 }

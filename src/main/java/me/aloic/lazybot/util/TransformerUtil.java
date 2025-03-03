@@ -5,7 +5,6 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import me.aloic.lazybot.osu.dao.entity.po.BeatmapCompactPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import org.w3c.dom.Document;
@@ -240,11 +239,11 @@ public class TransformerUtil
         hitScoreVO.setRank(hitScore.getRank());
         hitScoreVO.setScore(hitScore.getScore());
         hitScoreVO.setAchievedTime(CommonTool.tranfromDate(
-                    Integer.valueOf(hitScore.getScore_time().substring(0,4)),
-                Integer.valueOf(hitScore.getScore_time().substring(5,7))-1,
-                    Integer.valueOf(hitScore.getScore_time().substring(8,10)),
-                    Integer.valueOf(hitScore.getScore_time().substring(11,13)),
-                    Integer.valueOf(hitScore.getScore_time().substring(14,16)),0));
+                    Integer.parseInt(hitScore.getScore_time().substring(0,4)),
+                Integer.parseInt(hitScore.getScore_time().substring(5,7))-1,
+                    Integer.parseInt(hitScore.getScore_time().substring(8,10)),
+                    Integer.parseInt(hitScore.getScore_time().substring(11,13)),
+                    Integer.parseInt(hitScore.getScore_time().substring(14,16)),0));
         return hitScoreVO;
     }
     public static List<HitScoreVO> HitScoreTransform(List<HitScore> hitScores) {
@@ -259,11 +258,11 @@ public class TransformerUtil
             hitScoreVOs.get(i).setScore(hitScores.get(i).getScore());
             hitScoreVOs.get(i).setScoreTimeJSON(hitScores.get(i).getScore_time());
             hitScoreVOs.get(i).setAchievedTime(CommonTool.tranfromDate(
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(0, 4)),
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(5, 7))-1,
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(8, 10)),
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(11, 13)),
-                    Integer.valueOf(hitScores.get(i).getScore_time().substring(14, 16)),0));
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(0, 4)),
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(5, 7))-1,
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(8, 10)),
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(11, 13)),
+                    Integer.parseInt(hitScores.get(i).getScore_time().substring(14, 16)),0));
         }
         return hitScoreVOs;
     }
@@ -320,24 +319,5 @@ public class TransformerUtil
         score.setIsPerfectCombo(scoreLazer.getIs_perfect_combo());
         return score;
     }
-    public static BeatmapCompactPO reverseBeatmapPO(BeatmapDTO beatmapDTO)
-    {
-        return new BeatmapCompactPO(beatmapDTO.getId(),
-                beatmapDTO.getBeatmapset_id(),
-                beatmapDTO.getMax_combo(),
-                beatmapDTO.getMode_int(),
-                beatmapDTO.getChecksum());
-    }
-    public static BeatmapCompactPO reverseBeatmapPO(BeatmapVO beatmapVO)
-    {
-        return new BeatmapCompactPO(beatmapVO.getBid(),
-                beatmapVO.getBeatmapset_id(),
-                beatmapVO.getMax_combo(),
-                beatmapVO.getMode_int(),
-                beatmapVO.getHue(),
-                beatmapVO.getChecksum(),
-                beatmapVO.getArtist(),
-                beatmapVO.getTitle(),
-                beatmapVO.getCreator());
-    }
+
 }

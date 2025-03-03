@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.utils;
 
 import jakarta.annotation.Nonnull;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -86,7 +87,7 @@ public class OsuToolsUtil
             scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,override), scoreVO));
         }
         catch (Exception e) {
-            throw new RuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
+            throw new LazybotRuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
         }
         if (CommonTool.modsContainsAnyOfStarChanging(scoreVO.getMods()))
             scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
@@ -107,7 +108,7 @@ public class OsuToolsUtil
                     scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
             }
             catch (Exception e) {
-                throw new RuntimeException("重算成绩详情时出错: " + e.getMessage());
+                throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
             }
         }
         return scoreVOList;
@@ -127,7 +128,7 @@ public class OsuToolsUtil
             }
 
             catch (Exception e) {
-                throw new RuntimeException("重算成绩详情时出错: " + e.getMessage());
+                throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
             }
         }
         return scoreSequences;
@@ -149,7 +150,7 @@ public class OsuToolsUtil
                 }
             } catch (Exception e)
             {
-                throw new RuntimeException("重算成绩详情时出错, 请重试");
+                throw new LazybotRuntimeException("重算成绩详情时出错, 请重试");
             }
         }
     }
@@ -212,7 +213,7 @@ public class OsuToolsUtil
                         .distinct()
                         .collect(Collectors.toList()));
                 case "-" -> scoreVO.getModJSON().removeIf(modEntities::contains);
-                default -> throw new RuntimeException("Operator invalid: " + params.getOperator());
+                default -> throw new LazybotRuntimeException("Operator invalid: " + params.getOperator());
             }
             scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,false), scoreVO));
             if (scoreVO.getPpDetailsLocal().getStar() != null)
@@ -247,16 +248,11 @@ public class OsuToolsUtil
         for (String modStr : modStrList) {
             modStr=modStr.toUpperCase();
             if(modStr.length()!=2) {
-                throw new RuntimeException("Mods invalid: " + modStr);
+                throw new LazybotRuntimeException("Mods invalid: " + modStr);
             }
             Mod mod = new Mod(modStr,null);
             modList.add(mod);
         }
         return modList;
-    }
-    public static void linkedCheck(AccessTokenPO tokenPO)
-    {
-        if (tokenPO == null)
-            throw new RuntimeException("请先使用/link 你的osu用户名 绑定osu账号");
     }
 }

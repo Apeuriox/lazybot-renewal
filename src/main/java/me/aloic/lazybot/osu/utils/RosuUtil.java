@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.utils;
 
 import cn.hutool.json.JSONUtil;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
@@ -41,7 +42,7 @@ public class RosuUtil
         resultPerformance.setIfFc(getIfFc(beatmap,modJSON,statistics,mode,isLazerScore));
         List<Double> maxStats=getMaxStatsList(beatmap,modJSON,mode,isLazerScore);
         if(maxStats.isEmpty()||maxStats.size()<4) {
-            throw new RuntimeException("Error when calculating max stats with path of " + pathToOsuFile);
+            throw new LazybotRuntimeException("Error when calculating max stats with path of " + pathToOsuFile);
         }
         return setUpMapStatics(rosuResult,resultPerformance,maxStats);
     }

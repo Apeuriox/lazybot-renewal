@@ -1,6 +1,7 @@
 package me.aloic.lazybot.util;
 
 import de.androidpit.colorthief.ColorThief;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import org.w3c.dom.Document;
@@ -166,7 +167,7 @@ public class CommonTool {
             catch (Exception e)
             {
                 e.printStackTrace();
-                throw new RuntimeException("Invalid mod combination: "+ modCombination);
+                throw new LazybotRuntimeException("Invalid mod combination: "+ modCombination);
             }
         }
         else
@@ -193,7 +194,7 @@ public class CommonTool {
         catch (Exception e)
         {
             e.printStackTrace();
-            throw new RuntimeException("Incorrect timestamp format: "+ timestamp);
+            throw new LazybotRuntimeException("Incorrect timestamp format: "+ timestamp);
         }
     }
     public static String formatHitLength(int hitLength)
@@ -680,7 +681,7 @@ public class CommonTool {
             return hexString.toString();
         }
         catch (Exception e) {
-            throw new RuntimeException("计算MD5时出错: " + e.getMessage());
+            throw new LazybotRuntimeException("计算MD5时出错: " + e.getMessage());
         }
     }
 
@@ -726,7 +727,7 @@ public class CommonTool {
             ImageIO.write(croppedImage, "jpg", new File(pathToFile));
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("图像缩放时出错: " + e);
+            throw new LazybotRuntimeException("图像缩放时出错: " + e);
         }
     }
 

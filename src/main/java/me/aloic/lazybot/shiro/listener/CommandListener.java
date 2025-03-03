@@ -1,20 +1,11 @@
 package me.aloic.lazybot.shiro.listener;
 
-import com.mikuac.shiro.annotation.AnyMessageHandler;
 import com.mikuac.shiro.annotation.GroupMessageHandler;
 import com.mikuac.shiro.annotation.common.Shiro;
-
-import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.core.Bot;
-
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
-import com.mikuac.shiro.enums.ReplyEnum;
 import jakarta.annotation.Resource;
-import me.aloic.lazybot.component.SlashCommandProcessor;
-import me.aloic.lazybot.discord.config.DiscordBotRunner;
-import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.shiro.utils.MessageDeduplicator;
 import me.aloic.lazybot.shiro.utils.MessageEventFactory;
 import org.slf4j.Logger;
@@ -36,7 +27,7 @@ public class CommandListener
     private MessageEventFactory factory;
 
     @GroupMessageHandler
-    @Async
+    @Async("virtualThreadExecutor")
     public void onSlashCommandInteraction(Bot bot, GroupMessageEvent event) {
         //嘿嘿，抄点Yumu的代码
         logger.trace("收到消息[{}] -> {}", event.getGroupId(), ShiroUtils.unescape(event.getRawMessage()));
@@ -48,6 +39,7 @@ public class CommandListener
         if (nowTime - event.getTime() > 25) return;
         messageDeduplicator.replicateCheck(bot,factory.setupSlashCommandEvent(event));
     }
+
 
 }
 
