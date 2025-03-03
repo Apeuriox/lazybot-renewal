@@ -41,7 +41,7 @@ public class AssertDownloadUtil
         MAX_DOWNLOADS_PER_MINUTE=64;
         ONE_MINUTE_IN_MS=60*1000;
         delayQueue=new DelayQueue<>();
-        executor=Executors.newScheduledThreadPool(3);
+        executor=Executors.newScheduledThreadPool(4);
         httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();

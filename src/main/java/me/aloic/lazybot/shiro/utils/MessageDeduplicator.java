@@ -1,17 +1,14 @@
 package me.aloic.lazybot.shiro.utils;
 
 import com.mikuac.shiro.core.Bot;
-import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.component.SlashCommandProcessor;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
 
 @Component
 public class MessageDeduplicator

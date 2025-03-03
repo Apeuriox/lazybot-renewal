@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 @Component
 public class SlashCommandProcessor
@@ -24,7 +25,7 @@ public class SlashCommandProcessor
 
     private static final Logger logger = LoggerFactory.getLogger(SlashCommandProcessor.class);
 
-    @Async("asyncServiceExecutor")
+    @Async("virtualThreadExecutor")
     public void processDiscord(SlashCommandInteractionEvent event)
     {
         try {
@@ -43,7 +44,7 @@ public class SlashCommandProcessor
             logger.error(e.getMessage());
         }
     }
-    @Async("asyncServiceExecutor")
+    @Async("virtualThreadExecutor")
     public CompletableFuture<Void> processQQ(Bot bot, LazybotSlashCommandEvent event) {
         return CompletableFuture.runAsync(() -> {
             try {
@@ -59,7 +60,7 @@ public class SlashCommandProcessor
                 logger.error(e.getMessage());
                 bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("出现未知错误").build(), false);
             }
-        });
+        }, Executors.newVirtualThreadPerTaskExecutor());
     }
 
 }
