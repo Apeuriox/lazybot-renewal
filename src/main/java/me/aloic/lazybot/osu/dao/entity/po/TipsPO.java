@@ -21,4 +21,8 @@ public class TipsPO implements Serializable {
     private LocalDateTime last_updated;
     private String content;
     private String updated_by;
+
+    public String builderContent(){
+        return "No."+id+": "+content;
+    }
 }
