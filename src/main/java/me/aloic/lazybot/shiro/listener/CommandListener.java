@@ -29,7 +29,6 @@ public class CommandListener
     @GroupMessageHandler
     @Async("virtualThreadExecutor")
     public void onSlashCommandInteraction(Bot bot, GroupMessageEvent event) {
-        //嘿嘿，抄点Yumu的代码
         logger.trace("收到消息[{}] -> {}", event.getGroupId(), ShiroUtils.unescape(event.getRawMessage()));
         var nowTime = System.currentTimeMillis();
         if (event.getTime() < 1e10) {

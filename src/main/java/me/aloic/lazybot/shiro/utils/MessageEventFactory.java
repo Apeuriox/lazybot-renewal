@@ -1,8 +1,12 @@
 package me.aloic.lazybot.shiro.utils;
 
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +23,7 @@ public class MessageEventFactory
 
     private static final List<String> NON_OSU_COMMAND;
 
+    private static final Logger logger = LoggerFactory.getLogger(MessageEventFactory.class);
     static{
         modeMap =  Map.of(
                 ":0",OsuMode.Osu,
@@ -33,12 +38,18 @@ public class MessageEventFactory
     public LazybotSlashCommandEvent setupSlashCommandEvent(GroupMessageEvent event)
     {
         LazybotSlashCommandEvent slashCommandEvent = new LazybotSlashCommandEvent(event);
-        if (event.getMessage().startsWith(commandPrefix)) {
-            slashCommandEvent.setIstSlashCommand(true);
-            analyzeCommand(slashCommandEvent);
-
+        try{
+            if (event.getMessage().startsWith(commandPrefix)) {
+                slashCommandEvent.setIstSlashCommand(true);
+                analyzeCommand(slashCommandEvent);
+            }
+            return slashCommandEvent;
         }
-        return slashCommandEvent;
+        catch (Exception e){
+            logger.error("解析参数时出错",e);
+            throw new LazybotRuntimeException("解析参数时出错");
+        }
+
     }
 
     private static void analyzeCommand(LazybotSlashCommandEvent slashCommandEvent)

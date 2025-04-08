@@ -153,10 +153,9 @@ public class UserServiceImpl implements UserService
         }
     }
     public static boolean isValidUsername(String input) {
-        if(input.length()>15) throw new LazybotRuntimeException("用户名过长");
-        if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) {
-            throw new LazybotRuntimeException("已输入的用户名含有非法字符");
-        }
+        if (input==null||input.trim().isEmpty()) throw new LazybotRuntimeException("输入用户名为空");
+        if(input.trim().length()>15) throw new LazybotRuntimeException("输入用户名过长");
+        if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) throw new LazybotRuntimeException("已输入的用户名含有非法字符");
         return true;
     }
 }

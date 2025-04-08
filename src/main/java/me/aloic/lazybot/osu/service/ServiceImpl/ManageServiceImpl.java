@@ -6,18 +6,21 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
+import me.aloic.lazybot.osu.dao.entity.po.TipsPO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
+import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
-import me.aloic.lazybot.parameter.BeatmapParameter;
-import me.aloic.lazybot.parameter.GeneralParameter;
-import me.aloic.lazybot.parameter.UpdateParameter;
-import me.aloic.lazybot.parameter.VerifyParameter;
+import me.aloic.lazybot.osu.utils.SvgUtil;
+import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,7 +45,9 @@ public class ManageServiceImpl implements ManageService
     private CustomizationMapper customizationMapper;
     @Resource
     private TokenMapper tokenMapper;
-
+    @Resource
+    private TipsMapper tipsMapper;
+    private static final Logger logger = LoggerFactory.getLogger(ManageServiceImpl.class);
     @Override
     public String update(UpdateParameter params)
     {
@@ -104,6 +109,30 @@ public class ManageServiceImpl implements ManageService
             return verifyProfileCustomization(params);
         }
         return "未知二级命令";
+    }
+
+    @Override
+    public String addTips(ContentParameter params)
+    {
+            if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("你没有权限");
+            try{
+                TipsPO tipsPO=new TipsPO();
+                tipsPO.setContent(params.getContent());
+                tipsPO.setCreated_by(String.valueOf(params.getUserIdentity()));
+                tipsPO.setUpdated_by(String.valueOf(params.getUserIdentity()));
+                tipsPO.setLast_updated(LocalDateTime.now());
+                try{
+                    tipsMapper.insert(tipsPO);
+                }
+                catch (Exception e){
+                    throw new RuntimeException("添加提示时失败" + e.getMessage());
+                }
+            }
+            catch (Exception e) {
+                logger.error("添加提示时失败",e);
+                return "添加tips失败，详情请见log";
+            }
+            return "成功添加";
     }
 
     private String verifyProfileCustomization(VerifyParameter params)
