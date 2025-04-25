@@ -26,4 +26,10 @@ public class SetmodeCommand implements LazybotSlashCommand
     {
         userService.updateDefaultMode(bot, event);
     }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        //not implemented
+    }
 }

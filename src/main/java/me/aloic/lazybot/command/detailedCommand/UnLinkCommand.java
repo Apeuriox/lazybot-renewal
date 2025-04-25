@@ -26,4 +26,10 @@ public class UnLinkCommand implements LazybotSlashCommand
     {
         userService.unlinkUser(bot, event);
     }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        //not implemented
+    }
 }

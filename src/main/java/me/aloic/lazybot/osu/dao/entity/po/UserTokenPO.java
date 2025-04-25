@@ -9,7 +9,7 @@ import lombok.Data;
 import java.io.Serializable;
 @AllArgsConstructor
 @Data
-@TableName(value = "user_token", autoResultMap = true)
+@TableName(value = "user_token_discord", autoResultMap = true)
 public class UserTokenPO implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;

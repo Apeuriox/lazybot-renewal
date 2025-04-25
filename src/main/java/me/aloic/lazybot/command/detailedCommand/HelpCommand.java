@@ -1,8 +1,10 @@
 package me.aloic.lazybot.command.detailedCommand;
 
 import com.mikuac.shiro.core.Bot;
+import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -18,6 +20,9 @@ import java.nio.file.Paths;
 @Component
 public class HelpCommand implements LazybotSlashCommand
 {
+    @Resource
+    private TestOutputTool testOutputTool;
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
         event.deferReply().queue();
@@ -36,5 +41,12 @@ public class HelpCommand implements LazybotSlashCommand
             throw new LazybotRuntimeException("读取Help页面失败");
         }
 
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
+        testOutputTool.saveImageToLocal(Files.readAllBytes(Paths.get(filePath.toUri())));
     }
 }

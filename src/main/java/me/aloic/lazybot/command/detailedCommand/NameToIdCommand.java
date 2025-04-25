@@ -5,6 +5,8 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.component.CommandDatabaseProxy;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
@@ -30,6 +32,10 @@ public class NameToIdCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private TokenMapper tokenMapper;
+
+    @Resource
+    private TestOutputTool testOutputTool;
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -56,10 +62,28 @@ public class NameToIdCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
+                MsgUtils.builder().text(
+                        playerService.nameToId(
+                                setupParameter(event,accessToken))
+                ).build(),false);
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        testOutputTool.writeStringToFile(
+                playerService.nameToId(
+                        setupParameter(event,tokenMapper.selectByQq_code(0L))
+                )
+        );
+    }
+    private NameToIdParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    {
         NameToIdParameter params=NameToIdParameter.analyzeParameter(event.getCommandParameters());
-        NameToIdParameter.setupDefaultValue(params,accessToken);
-        params.setAccessToken(accessToken.getAccess_token());
+        NameToIdParameter.setupDefaultValue(params,tokenPO);
+        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(playerService.nameToId(params)).build(),false);
+        return params;
     }
 }

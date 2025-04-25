@@ -18,7 +18,7 @@ it will release static files (svg, png, etc) from the jar package to environment
 
 * [Rosu-JNI by HollisMeynell](https://github.com/HollisMeynell)</br>
     to install it, use the following command in maven:
-  ```mvn install:install-file -Dfile=lib/rosu-jni-all-jdk17.jar -DgroupId=org.rosu -DartifactId=rosu-java -Dversion=0.1.7 -Dpackaging=jar```
+  ```mvn install:install-file -Dfile=lib/rosu-jni-0.1.8.jar -DgroupId=org.rosu -DartifactId=rosu-java -Dversion=0.1.8 -Dpackaging=jar```
 
 * [Resvg-JNI by Zh_jk](https://github.com/fantasyzhjk)</br>
     to install it, use the following command in maven:

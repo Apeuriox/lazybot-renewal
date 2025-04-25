@@ -13,14 +13,14 @@ import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.TransformerUtil;
+import me.aloic.lazybot.util.VirtualThreadExecutorHolder;
 import org.jetbrains.annotations.NotNull;
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -100,38 +100,51 @@ public class OsuToolsUtil
 
     public static List<ScoreVO> setUpImageStatic(List<ScoreVO> scoreVOList)
     {
-        for(ScoreVO scoreVO:scoreVOList) {
-            scoreVO.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
-            try{
-                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,false),scoreVO));
-                if(scoreVO.getPpDetailsLocal().getStar()!=null)
-                    scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
-            }
-            catch (Exception e) {
-                throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
-            }
-        }
-        return scoreVOList;
+        List<CompletableFuture<ScoreVO>> futureList = scoreVOList.stream()
+                .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
+                    scoreVO.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
+                    try {
+                        scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(
+                                AssertDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+                        if (scoreVO.getPpDetailsLocal().getStar() != null) {
+                            scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
+                        }
+                    } catch (Exception e) {
+                        throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
+                    }
+                    return scoreVO;
+                }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
+                .toList();
+
+        return futureList.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
     }
 
     public static List<ScoreSequence> setUpImageStaticSequence(List<ScoreSequence> scoreSequences)
     {
-        for(ScoreSequence scoreSequence:scoreSequences)
-        {
-            scoreSequence.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreSequence.getBeatmap().getBeatmapset_id()));
-            ModCalculatorUtil.setupBpmChange(scoreSequence);
-            try{
-                scoreSequence.setPpDetails(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(),false), scoreSequence));
-                if (scoreSequence.getPpDetails().getStar() != null) {
-                    scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
-                }
-            }
+        List<CompletableFuture<ScoreSequence>> futureList = scoreSequences.stream()
+                .map(scoreSequence -> CompletableFuture.supplyAsync(() -> {
+                    scoreSequence.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreSequence.getBeatmap().getBeatmapset_id()));
+                    ModCalculatorUtil.setupBpmChange(scoreSequence);
+                    try
+                    {
+                        scoreSequence.setPpDetails(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(), false), scoreSequence));
+                        if (scoreSequence.getPpDetails().getStar() != null)
+                        {
+                            scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
+                        }
+                    } catch (Exception e)
+                    {
+                        throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
+                    }
+                    return scoreSequence;
+                }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
+                .toList();
 
-            catch (Exception e) {
-                throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
-            }
-        }
-        return scoreSequences;
+        return futureList.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
     }
 
 
@@ -165,16 +178,24 @@ public class OsuToolsUtil
     {
         NoChokeListVO noChokeListVO=new NoChokeListVO();
         double originalRawPp= CommonTool.totalPpCalculator(scoreList);
-        if(type==1) {
-            for (ScoreVO scoreVO : scoreList) {
-                setupFixedPPStats(scoreVO,!scoreVO.getIsPerfectCombo() && scoreVO.getStatistics().getMiss() <= 1);
-            }
-        }else {
-            for (ScoreVO scoreVO : scoreList) {
-                setupFixedPPStats(scoreVO,!scoreVO.getIsPerfectCombo());
-            }
-        }
-        scoreList=scoreList.stream().sorted(Comparator.comparing(ScoreVO::getPp).reversed()).collect(Collectors.toList());
+        List<CompletableFuture<ScoreVO>> futureList = scoreList.stream()
+                    .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
+                        try {
+                            boolean condition = type == 1
+                                    ? !scoreVO.getIsPerfectCombo() && scoreVO.getStatistics().getMiss() <= 1
+                                    : !scoreVO.getIsPerfectCombo();
+                            setupFixedPPStats(scoreVO, condition);
+
+                        } catch (Exception e) {
+                            throw new LazybotRuntimeException("[NoChoke指令] 发现异常ScoreVO对象: " + scoreVO);
+                        }
+                        return scoreVO;
+                    }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR)).toList();
+
+        scoreList = futureList.stream()
+                .map(CompletableFuture::join)
+                .sorted(Comparator.comparing(ScoreVO::getPp).reversed()).collect(Collectors.toList());
+
         double fixedRawPp=CommonTool.totalPpCalculator(scoreList);
         fixedRawPp+=Math.abs(info.getPerformancePoint()-originalRawPp);
         StringBuilder sb=new StringBuilder(String.valueOf(Math.round(info.getPerformancePoint())));
@@ -204,26 +225,7 @@ public class OsuToolsUtil
         List<ScoreVO> scoreList=TransformerUtil.scoreTransformForList(scoreLazerDTOS);
         double originalRawPp=CommonTool.totalPpCalculator(scoreList);
         List<Mod> modEntities = wireModEntities(params.getModList());
-        for (ScoreVO scoreVO : scoreList)
-        {
-            switch (params.getOperator())
-            {
-                case "!","！" -> scoreVO.setModJSON(modEntities.stream().distinct().collect(Collectors.toList()));
-                case "+" -> scoreVO.setModJSON(Stream.concat(scoreVO.getModJSON().stream(), modEntities.stream())
-                        .distinct()
-                        .collect(Collectors.toList()));
-                case "-" -> scoreVO.getModJSON().removeIf(modEntities::contains);
-                default -> throw new LazybotRuntimeException("Operator invalid: " + params.getOperator());
-            }
-            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,false), scoreVO));
-            if (scoreVO.getPpDetailsLocal().getStar() != null)
-            {
-                scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
-                double currentPp = scoreVO.getPpDetailsLocal().getCurrentPP();
-                scoreVO.getPpDetailsLocal().setCurrentPP(scoreVO.getPp());
-                scoreVO.setPp(currentPp);
-            }
-        }
+        processScoreListConcurrently(scoreList,modEntities,params);
         scoreList=scoreList.stream().sorted(Comparator.comparing(ScoreVO::getPp).reversed()).toList();
         for(int i=0;i<params.getRenderSize();i++) {
             scoreList.get(i).getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreList.get(i).getBeatmap().getBeatmapset_id()));
@@ -254,5 +256,37 @@ public class OsuToolsUtil
             modList.add(mod);
         }
         return modList;
+    }
+    public static List<ScoreVO> processScoreListConcurrently(List<ScoreVO> scoreList, List<Mod> modEntities, BpifParameter params) {
+        List<CompletableFuture<ScoreVO>> futures = scoreList.stream()
+                .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
+                    switch (params.getOperator()) {
+                        case "!", "！" -> scoreVO.setModJSON(modEntities.stream().distinct().collect(Collectors.toList()));
+                        case "+" -> scoreVO.setModJSON(Stream.concat(scoreVO.getModJSON().stream(), modEntities.stream())
+                                .distinct()
+                                .collect(Collectors.toList()));
+                        case "-" -> scoreVO.getModJSON().removeIf(modEntities::contains);
+                        default -> throw new LazybotRuntimeException("Operator invalid: " + params.getOperator());
+                    }
+                    try {
+                        scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+                    }
+                    catch (IOException e) {
+                        throw new LazybotRuntimeException("重算成绩时出错");
+                    }
+                    if (scoreVO.getPpDetailsLocal().getStar() != null) {
+                        scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
+
+                        double currentPp = scoreVO.getPpDetailsLocal().getCurrentPP();
+                        scoreVO.getPpDetailsLocal().setCurrentPP(scoreVO.getPp());
+                        scoreVO.setPp(currentPp);
+                    }
+                    return scoreVO;
+                }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
+                .toList();
+
+        return futures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
     }
 }

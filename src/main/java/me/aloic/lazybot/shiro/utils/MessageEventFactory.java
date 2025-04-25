@@ -1,8 +1,12 @@
 package me.aloic.lazybot.shiro.utils;
 
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +23,7 @@ public class MessageEventFactory
 
     private static final List<String> NON_OSU_COMMAND;
 
+    private static final Logger logger = LoggerFactory.getLogger(MessageEventFactory.class);
     static{
         modeMap =  Map.of(
                 ":0",OsuMode.Osu,
@@ -33,17 +38,33 @@ public class MessageEventFactory
     public LazybotSlashCommandEvent setupSlashCommandEvent(GroupMessageEvent event)
     {
         LazybotSlashCommandEvent slashCommandEvent = new LazybotSlashCommandEvent(event);
-        if (event.getMessage().startsWith(commandPrefix)) {
-            slashCommandEvent.setIstSlashCommand(true);
-            analyzeCommand(slashCommandEvent);
-
+        try{
+            if (event.getMessage().startsWith(commandPrefix)) {
+                slashCommandEvent.setIstSlashCommand(true);
+                analyzeCommand(slashCommandEvent,slashCommandEvent.getMessageEvent().getMessage());
+            }
+            return slashCommandEvent;
         }
-        return slashCommandEvent;
+        catch (Exception e){
+            logger.error("解析参数时出错",e);
+            throw new LazybotRuntimeException("解析参数时出错");
+        }
+    }
+    public LazybotSlashCommandEvent setupSlashCommandEvent(String command) {
+        LazybotSlashCommandEvent slashCommandEvent = new LazybotSlashCommandEvent(command);
+        try{
+            analyzeCommand(slashCommandEvent,command);
+            return slashCommandEvent;
+        }
+        catch (Exception e) {
+            logger.error("[TEST]解析参数时出错", e);
+            throw new LazybotRuntimeException("[TEST]解析参数时出错");
+        }
     }
 
-    private static void analyzeCommand(LazybotSlashCommandEvent slashCommandEvent)
+    private static void analyzeCommand(LazybotSlashCommandEvent slashCommandEvent,String command)
     {
-        String s = convertString(slashCommandEvent.getMessageEvent().getMessage());
+        String s = convertString(command);
         s=s.substring(1);
         List<String> information = new java.util.ArrayList<>(List.of(s.split(" ")));
         if (!NON_OSU_COMMAND.contains(information.getFirst().toLowerCase().trim())) {

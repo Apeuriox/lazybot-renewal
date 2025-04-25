@@ -190,29 +190,34 @@ public class TrackServiceImpl implements TrackService
         List<ScoreLazerDTO> listOfScores=new ArrayList<>();
         for(BestPlay bestPlay:bestPlayListDistinct)
         {
-            List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractBeatmapUserScoreAll(
-                    params.getAccessToken(),
-                    bestPlay.getBeatmap_id(),
-                    bestPlay.getUser(),
-                    params.getRuleset().getDescribe());
-            if(scoreList!=null && !scoreList.isEmpty())
-            {
-                scoreList.sort(Comparator.comparing(ScoreLazerDTO::getPp).reversed());
-                BeatmapDTO beatmapDTO=DataObjectExtractor.extractBeatmap(
+            try{
+                List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractBeatmapUserScoreAll(
                         params.getAccessToken(),
-                        String.valueOf(bestPlay.getBeatmap_id()),
+                        bestPlay.getBeatmap_id(),
+                        bestPlay.getUser(),
                         params.getRuleset().getDescribe());
-                scoreList.getFirst().setBeatmap(beatmapDTO);
-                scoreList.getFirst().setBeatmapset(beatmapDTO.getBeatmapset());
-                scoreList.getFirst().setUser(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),bestPlay.getUser(),params.getRuleset().getDescribe()));
-                listOfScores.add(scoreList.getFirst());
+                if(scoreList!=null && !scoreList.isEmpty())
+                {
+                    scoreList.sort(Comparator.comparing(ScoreLazerDTO::getPp).reversed());
+                    BeatmapDTO beatmapDTO=DataObjectExtractor.extractBeatmap(
+                            params.getAccessToken(),
+                            String.valueOf(bestPlay.getBeatmap_id()),
+                            params.getRuleset().getDescribe());
+                    scoreList.getFirst().setBeatmap(beatmapDTO);
+                    scoreList.getFirst().setBeatmapset(beatmapDTO.getBeatmapset());
+                    scoreList.getFirst().setUser(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),bestPlay.getUser(),params.getRuleset().getDescribe()));
+                    listOfScores.add(scoreList.getFirst());
+                }
+            }
+            catch (Exception e) {
+                continue;
             }
         }
         logger.info("存在成绩长度为: {}",listOfScores.size());
         List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores).stream().filter(scoreSequence -> scoreSequence.getDifferenceBetweenNextScore()>=0).toList();
         logger.info("最终过滤长度为: {}",scoreSequences.size());
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned",0));
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned",1));
     }
 
 }

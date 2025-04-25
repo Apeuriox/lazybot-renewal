@@ -5,6 +5,7 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.parameter.TipsParameter;
@@ -18,6 +19,8 @@ public class TipsCommand implements LazybotSlashCommand
 {
     @Resource
     private FunService funService;
+    @Resource
+    private TestOutputTool testOutputTool;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -34,5 +37,13 @@ public class TipsCommand implements LazybotSlashCommand
         TipsParameter params=TipsParameter.analyzeParameter(event.getCommandParameters());
         params.validateParams();
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(funService.tips(params)).build(),false);
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        TipsParameter params=TipsParameter.analyzeParameter(event.getCommandParameters());
+        params.validateParams();
+        testOutputTool.writeStringToFile(funService.tips(params));
     }
 }

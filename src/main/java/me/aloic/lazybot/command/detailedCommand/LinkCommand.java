@@ -26,4 +26,10 @@ public class LinkCommand implements LazybotSlashCommand
     {
         userService.linkUser(bot, event);
     }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        //do not implement
+    }
 }

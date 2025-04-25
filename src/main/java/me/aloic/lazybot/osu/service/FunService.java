@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.service;
 
+import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 
 public interface FunService

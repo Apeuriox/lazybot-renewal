@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
@@ -30,6 +31,8 @@ public class NoChokeCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private CommandDatabaseProxy proxy;
+    @Resource
+    private TestOutputTool testOutputTool;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -54,14 +57,18 @@ public class NoChokeCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
-        GeneralParameter.setupDefaultValue(params,tokenPO);
-        if(event.getOsuMode()!=null)
-            params.setMode(event.getOsuMode().getDescribe());
-        params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(params.getPlayerName(),tokenPO));
-        params.setAccessToken(tokenPO.getAccess_token());
-        params.validateParams();
-        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.noChoke(params,0));
+        ImageUploadUtil.uploadImageToOnebot(bot,event,
+                playerService.noChoke(
+                        GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 0)
+        );
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        testOutputTool.saveImageToLocal(
+                playerService.noChoke(
+                        GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 0)
+        );
     }
 }
