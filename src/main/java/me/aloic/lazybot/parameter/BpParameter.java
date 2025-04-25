@@ -45,12 +45,12 @@ public class BpParameter extends LazybotCommandParameter
             if (params.size() == 1) {
                 if(params.getFirst().contains("#")) {
                     String[] paras = params.getFirst().split("#");
-                    if (CommonTool.isPositiveInteger(paras[1]) && Integer.parseInt(paras[1]) <= 100)
+                    if (CommonTool.isPositiveInteger(paras[1]) && Integer.parseInt(paras[1]) <= 200)
                         bpParameter.setIndex(Integer.parseInt(paras[1]));
                     else
                         throw new LazybotRuntimeException("输入参数不为正整数: " + paras[1]);
                 }
-                else if(CommonTool.isPositiveInteger(params.getFirst()) && Integer.parseInt(params.getFirst())<=100)
+                else if(CommonTool.isPositiveInteger(params.getFirst()) && Integer.parseInt(params.getFirst())<=200)
                     bpParameter.setIndex(Integer.parseInt(params.getFirst()));
                 else {
                     bpParameter.setPlayerName(params.getFirst());
@@ -61,12 +61,12 @@ public class BpParameter extends LazybotCommandParameter
                 if(params.get(1).contains("#")) {
                     String[] paras =params.get(1).split("#");
                     bpParameter.setPlayerName(params.getFirst());
-                    if (CommonTool.isPositiveInteger(paras[1]) && Integer.parseInt(paras[1]) <= 100)
+                    if (CommonTool.isPositiveInteger(paras[1]) && Integer.parseInt(paras[1]) <= 200)
                         bpParameter.setIndex(Integer.parseInt(paras[1]));
                     else
                         throw new LazybotRuntimeException("输入参数不为正整数: " + paras[1]);
                 }
-                else if(CommonTool.isPositiveInteger(params.get(1)) && Integer.parseInt(params.get(1))<=100) {
+                else if(CommonTool.isPositiveInteger(params.get(1)) && Integer.parseInt(params.get(1))<=200) {
                     bpParameter.setPlayerName(params.getFirst());
                     bpParameter.setIndex(Integer.parseInt(params.get(1)));
                 }
