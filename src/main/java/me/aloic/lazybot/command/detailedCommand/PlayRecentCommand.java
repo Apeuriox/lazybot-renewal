@@ -65,7 +65,9 @@ public class PlayRecentCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equals("rp")||event.getCommandType().equals("pr")||event.getCommandType().equals("playrecent"))
+        if (event.getCommandType().equalsIgnoreCase("rp")||
+                event.getCommandType().equalsIgnoreCase("pr")||
+                event.getCommandType().equalsIgnoreCase("playrecent"))
             ImageUploadUtil.uploadImageToOnebot(bot,event,
                     playerService.recent(
                             setupParameter(event,tokenPO),
