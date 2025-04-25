@@ -68,7 +68,7 @@ public class SVGRenderUtil
         long startingTime = System.currentTimeMillis();
         byte[] result;
         try{
-            result = renderer.RenderPng(SvgUtil.documentToString(document));
+            result = renderer.RenderJpg(SvgUtil.documentToString(document));
         }
         catch (Exception e){
             logger.error(e.getMessage());

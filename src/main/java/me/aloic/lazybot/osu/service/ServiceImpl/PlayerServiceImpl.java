@@ -25,6 +25,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +37,7 @@ public class PlayerServiceImpl implements PlayerService
     {
         BeatmapUserScoreLazer beatmapUserScoreLazer = DataObjectExtractor.extractBeatmapUserScore(params.getAccessToken(),
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
+
             ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
                     DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()), params.getMode()),
                     beatmapUserScoreLazer.getScore(),
@@ -62,13 +64,18 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] bp(BpParameter params) throws IOException
     {
-        List<ScoreLazerDTO> scoreDTO = DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(params.getPlayerId()),params.getIndex()-1,params.getMode());
-            ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
-                    DataObjectExtractor.extractBeatmap(params.getAccessToken(),String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
-                    scoreDTO.getFirst(),
-                    false);
-            verifyBeatmapsCache(scoreVO);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(), getDominantColorArray(scoreVO));
+        List<ScoreLazerDTO> scoreDTO = DataObjectExtractor.extractUserBestScoreList(
+                params.getAccessToken(),
+                String.valueOf(params.getPlayerId()),
+                params.getIndex()-1,
+                params.getMode());
+
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                DataObjectExtractor.extractBeatmap(params.getAccessToken(),String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
+                scoreDTO.getFirst(),
+                false);
+        verifyBeatmapsCache(scoreVO);
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(), getDominantColorArray(scoreVO));
     }
     @Override
     public byte[] bplistCardView(BplistParameter params) throws Exception
@@ -88,7 +95,10 @@ public class PlayerServiceImpl implements PlayerService
     public byte[] todayBp(TodaybpParameter params) throws Exception
     {
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
-        List<ScoreLazerDTO> scoreDTOList=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(params.getInfoDTO().getId()),100,0,params.getMode());
+        List<ScoreLazerDTO> scoreDTOList=DataObjectExtractor.extractUserBestScoreList(
+                params.getAccessToken(),
+                String.valueOf(params.getInfoDTO().getId()),
+                100,0,params.getMode());
         //Why not directly filter scoreDTOs? cuz we need this procedure to wire Indexes
         List<ScoreVO> scoreVOList=TransformerUtil.scoreTransformForList(scoreDTOList);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC+0"));
@@ -96,11 +106,9 @@ public class PlayerServiceImpl implements PlayerService
                 .filter(score -> {
                     ZonedDateTime scoreTime = ZonedDateTime.parse(score.getCreate_at(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
                     return scoreTime.isAfter(now.minusDays(params.getMaxDays()));
-                })
-                .collect(Collectors.toList());
-        if(scoreVOList.isEmpty()) {
-            throw new LazybotRuntimeException("没有找到符合条件的bp");
-        }
+                }).collect(Collectors.toList());
+        if(scoreVOList.isEmpty()) throw new LazybotRuntimeException("没有找到符合条件的bp");
+
         OsuToolsUtil.setUpImageStatic(scoreVOList);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOList,0,4,
                 "Current command: /todayBp. Showing new Bps within " + params.getMaxDays() +" day(s)"));
@@ -108,19 +116,64 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] bpvs(BpvsParameter params)throws Exception
     {
-        PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
-        playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,false)));
-        PlayerInfoDTO comparePlayerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getComparePlayerName(),params.getMode());
-        comparePlayerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(comparePlayerInfoDTO,false)));
-        List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoDTO.getId()),100,0,params.getMode());
-        List<ScoreLazerDTO> compareScoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(comparePlayerInfoDTO.getId()),100,0,params.getMode());
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createCompareBpList(playerInfoDTO,comparePlayerInfoDTO,TransformerUtil.scoreTransformForArray(scoreDTOS),TransformerUtil.scoreTransformForArray(compareScoreDTOS)));
+        CompletableFuture<PlayerInfoDTO> playerInfoFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                PlayerInfoDTO dto = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(), params.getPlayerName(), params.getMode());
+                dto.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(dto, false));
+                return dto;
+            } catch (Exception e) {
+                throw new LazybotRuntimeException("[bpvs指令] 异步获取玩家" + params.getPlayerName() + "数据失败"+ e.getMessage());
+            }
+        });
+
+        CompletableFuture<PlayerInfoDTO> comparePlayerInfoFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                PlayerInfoDTO dto = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(), params.getComparePlayerName(), params.getMode());
+                dto.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(dto, false));
+                return dto;
+            } catch (Exception e) {
+                throw new LazybotRuntimeException("[bpvs指令] 异步获取玩家" + params.getComparePlayerName() + "数据失败"+ e.getMessage());
+            }
+        });
+
+        CompletableFuture<byte[]> resultFuture = playerInfoFuture.thenCombineAsync(comparePlayerInfoFuture, (playerInfoDTO, comparePlayerInfoDTO) -> {
+            try {
+                CompletableFuture<List<ScoreLazerDTO>> scoreFuture = CompletableFuture.supplyAsync(() ->
+                        DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoDTO.getId()), 100, 0, params.getMode()));
+
+                CompletableFuture<List<ScoreLazerDTO>> compareScoreFuture = CompletableFuture.supplyAsync(() ->
+                        DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(comparePlayerInfoDTO.getId()), 100, 0, params.getMode()));
+
+                List<ScoreLazerDTO> scoreDTOS = scoreFuture.get();
+                List<ScoreLazerDTO> compareScoreDTOS = compareScoreFuture.get();
+
+                return SVGRenderUtil.renderSVGDocumentToByteArray(
+                        SvgUtil.createCompareBpList(
+                                playerInfoDTO,
+                                comparePlayerInfoDTO,
+                                TransformerUtil.scoreTransformForArray(scoreDTOS),
+                                TransformerUtil.scoreTransformForArray(compareScoreDTOS)
+                        )
+                );
+            } catch (Exception e) {
+                throw new LazybotRuntimeException("[bpvs指令] 异步获取玩家" + params.getPlayerName() + " bp数据失败"+ e.getMessage());
+            }
+        });
+        return resultFuture.get();
     }
     @Override
     public byte[] noChoke(GeneralParameter params, int type) throws Exception
     {
-        List<ScoreLazerDTO> originalScoreArray=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(params.getInfoDTO().getId()),100,0,params.getMode());
-        NoChokeListVO noChokeListVO=OsuToolsUtil.setupNoChokeList(OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO()),TransformerUtil.scoreTransformForList(originalScoreArray),type);
+        List<ScoreLazerDTO> originalScoreArray=DataObjectExtractor.extractUserBestScoreList(
+                params.getAccessToken(),
+                String.valueOf(params.getInfoDTO().getId()),
+                100,0,params.getMode());
+
+        NoChokeListVO noChokeListVO=OsuToolsUtil.setupNoChokeList(
+                OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO()),
+                TransformerUtil.scoreTransformForList(originalScoreArray),
+                type);
+
         if(type==1) {
             return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,2));
         }
