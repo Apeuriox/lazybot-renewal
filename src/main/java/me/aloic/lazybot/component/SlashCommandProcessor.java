@@ -54,7 +54,7 @@ public class SlashCommandProcessor
                 logger.info("正在处理 {} 命令(Onebot)", event.getCommandType());
                 command.execute(bot, event);
             }
-        } catch (LazybotRuntimeException e) {
+        } catch (LazybotRuntimeException | IllegalArgumentException e) {
             logger.error(e.getMessage());
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(), false);
         } catch (Exception e) {

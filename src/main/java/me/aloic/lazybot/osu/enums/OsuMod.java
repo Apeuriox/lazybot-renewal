@@ -309,7 +309,7 @@ public enum OsuMod
     public static List<String> getAllModAcronym(String acronyms) {
         if (acronyms.trim().isEmpty()) return Collections.emptyList();
         String modsStr = acronyms.toUpperCase(Locale.getDefault()).replaceAll("\\s+", "");
-        if (modsStr.length() % 2 != 0) throw new IllegalArgumentException("Invalid mods combination input: " + acronyms);
+        if (modsStr.length() % 2 != 0) throw new LazybotRuntimeException("无效mod组合: " + acronyms);
         List<String> modStrList = Arrays.stream(modsStr.split("(?<=\\G.{2})"))
                 .collect(Collectors.toList());
         return modStrList;
@@ -330,7 +330,7 @@ public enum OsuMod
     public static List<OsuMod> getAllMod(String acronyms) {
         if (acronyms.trim().isEmpty()) return Collections.emptyList();
         String modsStr = acronyms.toUpperCase(Locale.getDefault()).replaceAll("\\s+", "");
-        if (modsStr.length() % 2 != 0) throw new IllegalArgumentException("Invalid mods combination input: " + acronyms);
+        if (modsStr.length() % 2 != 0) throw new LazybotRuntimeException("Invalid mods combination input: " + acronyms);
         List<String> modStrList = Arrays.stream(modsStr.split("(?<=\\G.{2})"))
                 .collect(Collectors.toList());
         return getAllMod(modStrList);
@@ -338,7 +338,7 @@ public enum OsuMod
     public static List<org.spring.osu.model.OsuMod> getAllModJNI(String acronyms) {
         if (acronyms.trim().isEmpty()) return Collections.emptyList();
         String modsStr = acronyms.toUpperCase(Locale.getDefault()).replaceAll("\\s+", "");
-        if (modsStr.length() % 2 != 0) throw new IllegalArgumentException("Invalid mods combination input: " + acronyms);
+        if (modsStr.length() % 2 != 0) throw new LazybotRuntimeException("Invalid mods combination input: " + acronyms);
         List<String> modStrList = Arrays.stream(modsStr.split("(?<=\\G.{2})"))
                 .collect(Collectors.toList());
         return getAllModJNI(modStrList);

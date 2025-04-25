@@ -31,8 +31,8 @@ public class BpParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (index<=0||index>100) {
-            throw new IllegalArgumentException("index must be between 1 and 100");
+        if (index<=0||index>200) {
+            throw new LazybotRuntimeException("Bp查询区间为 1 到 200");
         }
         if(version==null) {
             version=0;

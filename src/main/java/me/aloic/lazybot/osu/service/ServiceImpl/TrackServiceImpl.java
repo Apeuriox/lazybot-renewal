@@ -13,6 +13,7 @@ import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TopScoresParameter;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.TransformerUtil;
+import me.aloic.lazybot.util.VirtualThreadExecutorHolder;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -34,6 +35,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -186,35 +188,50 @@ public class TrackServiceImpl implements TrackService
                         ))
                         .values());
         logger.info("过滤后数据长度为: {}",bestPlayListDistinct.size());
-        bestPlayListDistinct.sort(Comparator.comparing(BestPlay::getPp).reversed());
-        List<ScoreLazerDTO> listOfScores=new ArrayList<>();
-        for(BestPlay bestPlay:bestPlayListDistinct)
-        {
-            try{
-                List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractBeatmapUserScoreAll(
-                        params.getAccessToken(),
-                        bestPlay.getBeatmap_id(),
-                        bestPlay.getUser(),
-                        params.getRuleset().getDescribe());
-                if(scoreList!=null && !scoreList.isEmpty())
-                {
-                    scoreList.sort(Comparator.comparing(ScoreLazerDTO::getPp).reversed());
-                    BeatmapDTO beatmapDTO=DataObjectExtractor.extractBeatmap(
-                            params.getAccessToken(),
-                            String.valueOf(bestPlay.getBeatmap_id()),
-                            params.getRuleset().getDescribe());
-                    scoreList.getFirst().setBeatmap(beatmapDTO);
-                    scoreList.getFirst().setBeatmapset(beatmapDTO.getBeatmapset());
-                    scoreList.getFirst().setUser(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),bestPlay.getUser(),params.getRuleset().getDescribe()));
-                    listOfScores.add(scoreList.getFirst());
-                }
-            }
-            catch (Exception e) {
-                continue;
-            }
-        }
+        List<CompletableFuture<ScoreLazerDTO>> futures = bestPlayListDistinct.stream()
+                .map(bestPlay -> CompletableFuture.supplyAsync(() -> {
+                    try {
+                        List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractBeatmapUserScoreAll(
+                                params.getAccessToken(),
+                                bestPlay.getBeatmap_id(),
+                                bestPlay.getUser(),
+                                params.getRuleset().getDescribe());
+
+                        if (scoreList != null && !scoreList.isEmpty()) {
+                            scoreList.sort(Comparator.comparing(ScoreLazerDTO::getPp).reversed());
+
+                            BeatmapDTO beatmapDTO = DataObjectExtractor.extractBeatmap(
+                                    params.getAccessToken(),
+                                    String.valueOf(bestPlay.getBeatmap_id()),
+                                    params.getRuleset().getDescribe());
+
+                            ScoreLazerDTO topScore = scoreList.getFirst();
+                            topScore.setBeatmap(beatmapDTO);
+                            topScore.setBeatmapset(beatmapDTO.getBeatmapset());
+
+                            topScore.setUser(DataObjectExtractor.extractPlayerInfo(
+                                    params.getAccessToken(),
+                                    bestPlay.getUser(),
+                                    params.getRuleset().getDescribe()));
+                            return topScore;
+                        }
+                    } catch (Exception e) {
+                        logger.warn("获取单个BestPlay数据失败: {}", e.getMessage());
+                    }
+                    return null;
+                }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
+                .toList();
+        List<ScoreLazerDTO> listOfScores = futures.stream()
+                .map(CompletableFuture::join)
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparing(ScoreLazerDTO::getPp).reversed())
+                .collect(Collectors.toList());
+
         logger.info("存在成绩长度为: {}",listOfScores.size());
-        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores).stream().filter(scoreSequence -> scoreSequence.getDifferenceBetweenNextScore()>=0).toList();
+        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores);
+//                listOfScores).stream().
+//                filter(scoreSequence -> scoreSequence.getDifferenceBetweenNextScore()>=0)
+//                .toList();
         logger.info("最终过滤长度为: {}",scoreSequences.size());
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned",1));
