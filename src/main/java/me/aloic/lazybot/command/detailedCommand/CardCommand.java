@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
@@ -14,6 +15,7 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
+import me.aloic.lazybot.parameter.BpvsParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.ImageUploadUtil;
@@ -30,6 +32,10 @@ public class CardCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private CommandDatabaseProxy proxy;
+    @Resource
+    private TestOutputTool testOutputTool;
+
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -52,13 +58,30 @@ public class CardCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        ImageUploadUtil.uploadImageToOnebot(bot,event,
+                playerService.card(
+                        setupParameter(event, proxy.getAccessToken(event))
+                )
+        );
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        testOutputTool.saveImageToLocal(
+                playerService.card(
+                        setupParameter(event, proxy.getAccessToken(event))
+                )
+        );
+    }
+    private GeneralParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    {
         GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
         GeneralParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
-        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.card(params));
+        return params;
     }
 }

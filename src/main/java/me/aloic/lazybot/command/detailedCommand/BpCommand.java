@@ -1,17 +1,16 @@
 package me.aloic.lazybot.command.detailedCommand;
 
-import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
@@ -20,8 +19,6 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 
 @LazybotCommandMapping({"bp","best"})
 @Component
@@ -33,6 +30,8 @@ public class BpCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private CommandDatabaseProxy proxy;
+    @Resource
+    private TestOutputTool testOutputTool;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -60,6 +59,18 @@ public class BpCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bp(setupParameter(event,tokenPO)));
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        testOutputTool.saveImageToLocal(playerService.bp(setupParameter(event,tokenPO)));
+    }
+
+    private BpParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    {
         BpParameter params=BpParameter.analyzeParameter(event.getCommandParameters());
         BpParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
@@ -68,7 +79,8 @@ public class BpCommand implements LazybotSlashCommand
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
         params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
-        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bp(params));
+        return params;
     }
+
 
 }

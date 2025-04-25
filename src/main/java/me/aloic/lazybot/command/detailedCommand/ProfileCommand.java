@@ -5,18 +5,16 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
-import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.ProfileParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -37,6 +35,9 @@ public class ProfileCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private CustomizationMapper customizationMapper;
+    @Resource
+    private TestOutputTool testOutputTool;
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -59,7 +60,25 @@ public class ProfileCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        ImageUploadUtil.uploadImageToOnebot(bot,event,
+                playerService.profile(
+                        setupParameter(event,
+                                proxy.getAccessToken(event))
+                )
+        );
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        testOutputTool.saveImageToLocal(playerService.profile(
+                        setupParameter(event,
+                                proxy.getAccessToken(event))
+                )
+        );
+    }
+    private ProfileParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    {
         ProfileParameter params=ProfileParameter.analyzeParameter(event.getCommandParameters());
         ProfileParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
@@ -69,6 +88,7 @@ public class ProfileCommand implements LazybotSlashCommand
         params.setInfoDTO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode()));
         ProfileCustomizationPO customization=customizationMapper.selectById(params.getInfoDTO().getId());
         params.setProfileCustomizationPO(customization);
-        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.profile(params));
+        return params;
     }
+
 }

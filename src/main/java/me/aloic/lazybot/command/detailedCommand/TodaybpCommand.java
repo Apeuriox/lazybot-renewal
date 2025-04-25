@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
@@ -30,6 +31,8 @@ public class TodaybpCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private CommandDatabaseProxy proxy;
+    @Resource
+    private TestOutputTool testOutputTool;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -55,7 +58,25 @@ public class TodaybpCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        ImageUploadUtil.uploadImageToOnebot(bot,event,
+                playerService.todayBp(
+                        setupParameter(event,
+                                proxy.getAccessToken(event))
+                )
+        );
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        testOutputTool.saveImageToLocal(playerService.todayBp(
+                        setupParameter(event,
+                                proxy.getAccessToken(event))
+                )
+        );
+    }
+    private TodaybpParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    {
         TodaybpParameter params=TodaybpParameter.analyzeParameter(event.getCommandParameters());
         TodaybpParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
@@ -63,6 +84,6 @@ public class TodaybpCommand implements LazybotSlashCommand
         params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(params.getPlayerName(),tokenPO));
         params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
-        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.todayBp(params));
+        return params;
     }
 }

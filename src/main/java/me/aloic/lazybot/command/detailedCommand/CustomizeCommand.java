@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
@@ -31,6 +32,8 @@ public class CustomizeCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private CommandDatabaseProxy proxy;
+    @Resource
+    private TestOutputTool testOutputTool;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -54,11 +57,32 @@ public class CustomizeCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
+                MsgUtils.builder().text(
+                        customizeService.customize(
+                                setupParameter(event,
+                                        proxy.getAccessToken(event))
+                        )
+                ).build(),false);
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        testOutputTool.writeStringToFile(
+                customizeService.customize(
+                        setupParameter(event,
+                                proxy.getAccessToken(event))
+                )
+        );
+    }
+    private CustomizationParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    {
         CustomizationParameter params=CustomizationParameter.analyzeParameter(event.getCommandParameters());
         CustomizationParameter.setupDefaultValue(params,tokenPO);
         params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(customizeService.customize(params)).build(),false);
+        return params;
     }
+
 }

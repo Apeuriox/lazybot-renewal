@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.utils.OsuToolsUtil;
+import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 
 import java.util.List;
 
@@ -36,6 +38,17 @@ public class GeneralParameter extends LazybotCommandParameter
             parameter.setPlayerName(accessTokenPO.getPlayer_name());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
+    }
+
+    public static GeneralParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    {
+        GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
+        GeneralParameter.setupDefaultValue(params,tokenPO);
+        if(event.getOsuMode()!=null)
+            params.setMode(event.getOsuMode().getDescribe());
+        params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(params.getPlayerName(),tokenPO));
+        params.setAccessToken(tokenPO.getAccess_token());
+        return params;
     }
 
 }

@@ -62,5 +62,21 @@ public class SlashCommandProcessor
             }
         }, Executors.newVirtualThreadPerTaskExecutor());
     }
+    @Async("virtualThreadExecutor")
+    public CompletableFuture<Void> processTest(LazybotSlashCommandEvent event) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                LazybotSlashCommand command = registry.getCommand(event.getCommandType());
+                if (command != null) {
+                    logger.info("正在处理 {} 命令(TEST CASE)", event.getCommandType());
+                    command.execute(event);
+                }
+            } catch (LazybotRuntimeException e) {
+                logger.error("捕获到预期内exception: {}", e.getMessage());
+            } catch (Exception e) {
+                logger.error("预期外exception发生: {}",e.getMessage());
+            }
+        }, Executors.newVirtualThreadPerTaskExecutor());
+    }
 
 }

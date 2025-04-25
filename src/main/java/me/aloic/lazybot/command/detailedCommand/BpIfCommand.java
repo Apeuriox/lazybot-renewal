@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
@@ -32,6 +33,8 @@ public class BpIfCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private CommandDatabaseProxy proxy;
+    @Resource
+    private TestOutputTool testOutputTool;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -60,6 +63,18 @@ public class BpIfCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        ImageUploadUtil.uploadImageToOnebot(bot,event,analysisService.bpIf(setupParameter(event,tokenPO)));
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        testOutputTool.saveImageToLocal(analysisService.bpIf(setupParameter(event,tokenPO)));
+    }
+
+    private BpifParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    {
         BpifParameter params=BpifParameter.analyzeParameter(event.getCommandParameters());
         BpifParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
@@ -67,6 +82,6 @@ public class BpIfCommand implements LazybotSlashCommand
         params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(params.getPlayerName(),tokenPO));
         params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
-        ImageUploadUtil.uploadImageToOnebot(bot,event,analysisService.bpIf(params));
+        return params;
     }
 }

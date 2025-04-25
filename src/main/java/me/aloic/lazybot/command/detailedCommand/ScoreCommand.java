@@ -5,12 +5,12 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
+import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
@@ -19,7 +19,6 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
-
 import java.util.Optional;
 
 @LazybotCommandMapping({"score"})
@@ -32,6 +31,9 @@ public class ScoreCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private CommandDatabaseProxy proxy;
+    @Resource
+    private TestOutputTool testOutputTool;
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
         event.deferReply().queue();
@@ -57,13 +59,31 @@ public class ScoreCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        ImageUploadUtil.uploadImageToOnebot(bot,event,
+                playerService.score(
+                        setupParameter(event,
+                                proxy.getAccessToken(event))
+                )
+        );
+    }
+
+    @Override
+    public void execute(LazybotSlashCommandEvent event) throws Exception
+    {
+        testOutputTool.saveImageToLocal(playerService.score(
+                        setupParameter(event,
+                                proxy.getAccessToken(event))
+                )
+        );
+    }
+    private ScoreParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    {
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
         ScoreParameter.setupDefaultValue(params,tokenPO);
         params.setVersion(event.getScorePanelVersion());
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
         params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
-        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.score(params));
+        return params;
     }
 }

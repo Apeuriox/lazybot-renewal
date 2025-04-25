@@ -41,7 +41,7 @@ public class MessageEventFactory
         try{
             if (event.getMessage().startsWith(commandPrefix)) {
                 slashCommandEvent.setIstSlashCommand(true);
-                analyzeCommand(slashCommandEvent);
+                analyzeCommand(slashCommandEvent,slashCommandEvent.getMessageEvent().getMessage());
             }
             return slashCommandEvent;
         }
@@ -49,12 +49,22 @@ public class MessageEventFactory
             logger.error("解析参数时出错",e);
             throw new LazybotRuntimeException("解析参数时出错");
         }
-
+    }
+    public LazybotSlashCommandEvent setupSlashCommandEvent(String command) {
+        LazybotSlashCommandEvent slashCommandEvent = new LazybotSlashCommandEvent(command);
+        try{
+            analyzeCommand(slashCommandEvent,command);
+            return slashCommandEvent;
+        }
+        catch (Exception e) {
+            logger.error("[TEST]解析参数时出错", e);
+            throw new LazybotRuntimeException("[TEST]解析参数时出错");
+        }
     }
 
-    private static void analyzeCommand(LazybotSlashCommandEvent slashCommandEvent)
+    private static void analyzeCommand(LazybotSlashCommandEvent slashCommandEvent,String command)
     {
-        String s = convertString(slashCommandEvent.getMessageEvent().getMessage());
+        String s = convertString(command);
         s=s.substring(1);
         List<String> information = new java.util.ArrayList<>(List.of(s.split(" ")));
         if (!NON_OSU_COMMAND.contains(information.getFirst().toLowerCase().trim())) {

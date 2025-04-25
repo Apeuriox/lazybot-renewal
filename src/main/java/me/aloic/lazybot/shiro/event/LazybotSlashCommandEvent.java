@@ -18,10 +18,16 @@ public class LazybotSlashCommandEvent
    private GroupMessageEvent messageEvent;
    private Integer scorePanelVersion;
    private OsuMode osuMode;
+   //only for test use
+   private String commandString;
 
    public LazybotSlashCommandEvent(GroupMessageEvent event) {
       this.messageEvent = event;
       this.istSlashCommand = false;
       this.scorePanelVersion=1;
+   }
+   public LazybotSlashCommandEvent(String command) {
+      this.commandString = command;
+      this.istSlashCommand=true;
    }
 }

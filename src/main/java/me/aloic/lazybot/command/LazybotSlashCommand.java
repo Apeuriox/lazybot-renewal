@@ -8,4 +8,5 @@ public interface LazybotSlashCommand
 {
     void execute(SlashCommandInteractionEvent event) throws Exception;
     void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception;
+    void execute(LazybotSlashCommandEvent event) throws Exception;
 }
