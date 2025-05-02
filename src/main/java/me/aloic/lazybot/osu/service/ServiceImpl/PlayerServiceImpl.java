@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,7 +101,7 @@ public class PlayerServiceImpl implements PlayerService
                 params.getAccessToken(),
                 String.valueOf(params.getInfoDTO().getId()),
                 100,0,params.getMode());
-        //Why not directly filter scoreDTOs? cuz we need this procedure to wire Indexes
+        //Why not directly filter scoreDTOs? cuz we need this procedure to set up Indexes
         List<ScoreVO> scoreVOList=TransformerUtil.scoreTransformForList(scoreDTOList);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC+0"));
         scoreVOList = scoreVOList.stream()
@@ -158,10 +159,22 @@ public class PlayerServiceImpl implements PlayerService
                         )
                 );
             }
+            catch (LazybotRuntimeException e) {
+                throw e;
+            }
             catch (Exception e) {
-                throw new LazybotRuntimeException("[bpvs指令] 异步获取玩家" + params.getPlayerName() + " bp数据失败"+ e.getMessage());
+                throw new LazybotRuntimeException("[bpvs指令] 异步获取玩家" + params.getPlayerName() + " bp数据失败: "+ e.getMessage());
             }
         });
+        try {
+            return resultFuture.get();
+        }
+        catch (CompletionException e) {
+            Throwable rootCause = e.getCause();
+            if (rootCause instanceof LazybotRuntimeException) {
+                throw e;
+            }
+        }
         return resultFuture.get();
     }
     @Override
