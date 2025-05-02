@@ -25,6 +25,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -138,6 +139,7 @@ public class PlayerServiceImpl implements PlayerService
 
         CompletableFuture<byte[]> resultFuture = playerInfoFuture.thenCombineAsync(comparePlayerInfoFuture, (playerInfoDTO, comparePlayerInfoDTO) -> {
             try {
+                if (Objects.equals(playerInfoDTO.getId(), comparePlayerInfoDTO.getId())) throw new LazybotRuntimeException("你不能和自己对比");
                 CompletableFuture<List<ScoreLazerDTO>> scoreFuture = CompletableFuture.supplyAsync(() ->
                         DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoDTO.getId()), 100, 0, params.getMode()));
 
@@ -155,7 +157,8 @@ public class PlayerServiceImpl implements PlayerService
                                 TransformerUtil.scoreTransformForArray(compareScoreDTOS)
                         )
                 );
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new LazybotRuntimeException("[bpvs指令] 异步获取玩家" + params.getPlayerName() + " bp数据失败"+ e.getMessage());
             }
         });

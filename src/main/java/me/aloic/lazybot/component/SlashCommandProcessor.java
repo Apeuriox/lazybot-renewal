@@ -8,7 +8,6 @@ import me.aloic.lazybot.command.registry.LazybotSlashCommandRegistry;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.VirtualThreadExecutorHolder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 @Component
 public class SlashCommandProcessor
@@ -72,7 +70,7 @@ public class SlashCommandProcessor
                     logger.info("正在处理 {} 命令(TEST CASE)", event.getCommandString());
                     command.execute(event);
                 }
-            } catch (LazybotRuntimeException e) {
+            } catch (LazybotRuntimeException | IllegalArgumentException e)  {
                 logger.error("捕获到预期内exception: {}", e.getMessage());
             } catch (Exception e) {
                 logger.error("预期外exception发生: {}",e.getMessage());

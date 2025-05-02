@@ -3,8 +3,10 @@ package me.aloic.lazybot.parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,14 +27,23 @@ public class BpvsParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if(comparePlayerName.equals(this.getPlayerName())) {
-            throw new IllegalArgumentException("You cannot compare with yourself");
+            throw new IllegalArgumentException("你不能和你自己比");
         }
     }
     public static BpvsParameter analyzeParameter(List<String> params)
     {
         BpvsParameter parameter=new BpvsParameter();
         if (params != null && !params.isEmpty()) {
-            parameter.setComparePlayerName(String.join(" ", params));
+            String combinedParas=String.join(" ", params);
+            if (combinedParas.contains("#")) {
+                String[] names = combinedParas.split("#");
+                if (names.length == 2) {
+                   parameter.setPlayerName(names[0].trim());
+                   parameter.setComparePlayerName(names[1].trim());
+                }
+                else throw new LazybotRuntimeException("参数处理错误: " + Arrays.toString(names));
+            }
+            else parameter.setComparePlayerName(String.join(" ", params));
         }
         return parameter;
     }
