@@ -166,15 +166,6 @@ public class PlayerServiceImpl implements PlayerService
                 throw new LazybotRuntimeException("[bpvs指令] 异步获取玩家" + params.getPlayerName() + " bp数据失败: "+ e.getMessage());
             }
         });
-        try {
-            return resultFuture.get();
-        }
-        catch (CompletionException e) {
-            Throwable rootCause = e.getCause();
-            if (rootCause instanceof LazybotRuntimeException) {
-                throw e;
-            }
-        }
         return resultFuture.get();
     }
     @Override

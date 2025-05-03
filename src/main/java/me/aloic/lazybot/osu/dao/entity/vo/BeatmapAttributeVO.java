@@ -14,4 +14,18 @@ public class BeatmapAttributeVO
     private Double bpm;
     private String mode;
     private Integer length;
+
+    @Override
+    public String toString()
+    {
+        return "BeatmapAttributeVO{" +
+                "ar=" + ar +
+                ", od=" + od +
+                ", cs=" + cs +
+                ", hp=" + hp +
+                ", bpm=" + bpm +
+                ", mode='" + mode + '\'' +
+                ", length=" + length +
+                '}';
+    }
 }

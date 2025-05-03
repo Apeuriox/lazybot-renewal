@@ -55,11 +55,11 @@ public class ModCalculatorUtil
 
     public static BeatmapAttributeVO calcAllValues(BeatmapAttributeVO attributes, List<Mod> mods, OsuMode mode) {
         for(Mod mod: mods) {
-            if (mod.getAcronym().equals("DA")) {
-                attributes.setAr(mod.getSettings().getApproach_rate());
-                attributes.setOd(mod.getSettings().getOverall_Difficulty());
-                attributes.setCs(mod.getSettings().getCircle_size());
-                attributes.setHp(mod.getSettings().getDrain_rate());
+            if (mod.getAcronym().equals("DA") && mod.getSettings()!=null) {
+                Optional.ofNullable(mod.getSettings().getApproach_rate()).ifPresent(attributes::setAr);
+                Optional.ofNullable(mod.getSettings().getOverall_Difficulty()).ifPresent(attributes::setOd);
+                Optional.ofNullable(mod.getSettings().getCircle_size()).ifPresent(attributes::setCs);
+                Optional.ofNullable(mod.getSettings().getDrain_rate()).ifPresent(attributes::setHp);
             }
         }
         for(Mod mod: mods) {

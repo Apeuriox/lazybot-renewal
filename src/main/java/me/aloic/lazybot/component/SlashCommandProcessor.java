@@ -15,6 +15,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class SlashCommandProcessor
@@ -55,7 +57,15 @@ public class SlashCommandProcessor
         } catch (LazybotRuntimeException | IllegalArgumentException e) {
             logger.error(e.getMessage());
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(), false);
-        } catch (Exception e) {
+        }
+        catch (ExecutionException e) {
+            Throwable rootCause = e.getCause();
+            if (rootCause instanceof LazybotRuntimeException) {
+                logger.error(e.getMessage());
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(), false);
+            }
+        }
+        catch (Exception e) {
             logger.error(e.getMessage());
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("出现未知错误").build(), false);
         }
@@ -72,7 +82,14 @@ public class SlashCommandProcessor
                 }
             } catch (LazybotRuntimeException | IllegalArgumentException e)  {
                 logger.error("捕获到预期内exception: {}", e.getMessage());
-            } catch (Exception e) {
+            }
+            catch (ExecutionException e) {
+                Throwable rootCause = e.getCause();
+                if (rootCause instanceof LazybotRuntimeException) {
+                    logger.error("捕获到多线程处理中的预期内exception: {}", e.getMessage());
+                }
+            }
+            catch (Exception e) {
                 logger.error("预期外exception发生: {}",e.getMessage());
                 e.printStackTrace();
             }
