@@ -15,7 +15,7 @@ public enum OsuMod
     NoFail(1, "NF", List.of("NoFail")),
     Easy(1 << 1, "EZ", List.of("E")),
     TouchDevice(1 << 2, "TD",List.of("Touch")),
-    Hidden(1 << 3, "HD", List.of("Hide")),
+    Hidden(1 << 3, "HD", List.of("Hide","HiddenIsFun","HIS")),
     HardRock(1 << 4, "HR", List.of("Hard")),
     SuddenDeath(1 << 5, "SD", List.of("Sudden","Death")),
     DoubleTime(1 << 6, "DT", List.of("Double")),
@@ -56,6 +56,33 @@ public enum OsuMod
     DifficultyAdjust(-1, "DA", List.of("Adjust")),
     SingleTap(-1, "SG", List.of("SteinsGate", "Steins")),
     Daycore(-1, "DC", List.of("Day")),
+    Cover(-1, "CO", List.of("Covers")),
+    Classic(-1, "CL", List.of("Stable")),
+    Alternate(-1, "AL", List.of("Alt")),
+    Swap(-1, "SW", List.of("Exchange")),
+    Invert(-1, "IN", List.of("Hold")),
+    ConstantSpeed(-1, "CS", List.of("Speed", "Constant")),
+    HoldOff(-1, "HO", List.of("Off")),
+    Transform(-1, "TR", List.of("Trans","TF")),
+    Wiggle(-1, "WG", List.of("Wig")),
+    SpinIn(-1, "SI", List.of("Spin")),
+    Grow(-1, "GR", List.of("Grows")),
+    Deflate(-1, "DF", List.of("Flate")),
+    WindUp(-1, "WU", List.of("Up")),
+    WindDown(-1, "WD", List.of("Down")),
+    Traceable(-1, "TC", List.of("Trace")),
+    BarrelRoll(-1, "BR", List.of("Roll")),
+    ApproachDifferent(-1, "AD", List.of("Different")),
+    FloatingFruits(-1, "FF", List.of("Fruits")),
+    NoScope(-1, "NS", List.of("Scope")),
+    Magnetised(-1, "MG", List.of("AimAssist","Magnet")),
+    Repel(-1, "RP", List.of("Repels")),
+    AdaptiveSpeed(-1, "AS", List.of("Adaptive")),
+    FreezeFrame(-1, "FF", List.of("Freeze")),
+    Bubbles(-1, "BU", List.of("Bubble")),
+    Synesthesia(-1, "SY", List.of("Syn")),
+    Depth(-1, "DP", List.of("Deep")),
+    Bloom(-1, "BM", List.of("Boom")),
     NoRelease(-1, "NR", List.of("Release"));
 
 
@@ -419,7 +446,7 @@ public enum OsuMod
 
     public static String findAcronym(String input) {
         if (input == null) return null;
-        OsuMod match = lookupMap.get(input.toLowerCase());
+        OsuMod match = lookupMap.get(input.toLowerCase().replaceAll("\\s+", ""));
         return match != null ? match.getAcronym() : null;
     }
 }
