@@ -1223,7 +1223,9 @@ public class SvgUtil
                 modeClockRate.setTextContent(CommonTool.toString(mod.getSettings().getSpeed_change()).concat("x"));
             }
             else {
-                modeClockRate.setTextContent("1.50x");
+                if(mod.getAcronym().equals("DT")||mod.getAcronym().equals("NC")) modeClockRate.setTextContent("1.50x");
+                else modeClockRate.setTextContent("0.75x");
+
                 modeClockRate.setAttribute("opacity", "0.2");
             }
             sectionFull.appendChild(modeClockRate);

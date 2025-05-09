@@ -76,11 +76,13 @@ public class ScoreCommand implements LazybotSlashCommand
                 )
         );
     }
-    private ScoreParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
     {
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
         ScoreParameter.setupDefaultValue(params,tokenPO);
         params.setVersion(event.getScorePanelVersion());
+        if(event.getOsuMode()!=null)
+            params.setMode(event.getOsuMode().getDescribe());
         params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
         params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();

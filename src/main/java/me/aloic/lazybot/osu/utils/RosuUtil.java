@@ -15,10 +15,7 @@ import org.spring.osu.extended.rosu.OsuPerformanceAttributes;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RosuUtil
@@ -53,8 +50,7 @@ public class RosuUtil
         resultPerformance.setSpdPPMax(maxStats.get(1));
         resultPerformance.setAccPPMax(maxStats.get(2));
         resultPerformance.setFlashlightPP(maxStats.get(3));
-        if (rosuResult instanceof OsuPerformanceAttributes) {
-            OsuPerformanceAttributes osu=(OsuPerformanceAttributes) rosuResult;
+        if (rosuResult instanceof OsuPerformanceAttributes osu) {
             resultPerformance.setAimPP(osu.getPpAim());
             resultPerformance.setAccPP(osu.getPpAcc());
             resultPerformance.setSpdPP(osu.getPpSpeed());
@@ -113,6 +109,7 @@ public class RosuUtil
             case Catch:
                 performance.setN300(Optional.ofNullable(statistics.getGreat()).orElse(0));
                 performance.setLargeTick(Optional.ofNullable(statistics.getLarge_tick_hit()).orElse(0));
+                performance.setSmallTick(Optional.ofNullable(statistics.getSmall_tick_hit()).orElse(0));
                 if(maxCombo!=0)
                     performance.setMisses(Optional.ofNullable(statistics.getSmall_bonus()).orElse(0));
                 rosuResult= performance.calculate();

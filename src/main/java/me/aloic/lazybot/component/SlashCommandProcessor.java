@@ -62,7 +62,9 @@ public class SlashCommandProcessor
             Throwable rootCause = e.getCause();
             if (rootCause instanceof LazybotRuntimeException) {
                 logger.error(e.getMessage());
-                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(), false);
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(
+                        e.getMessage().replaceFirst("^.*?:\\s*", "")
+                ).build(), false);
             }
         }
         catch (Exception e) {

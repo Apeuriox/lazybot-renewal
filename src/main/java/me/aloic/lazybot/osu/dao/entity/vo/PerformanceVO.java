@@ -28,18 +28,19 @@ public class PerformanceVO
     @Override
     public String toString()
     {
-        return "PerformanceVO{" + "\n" +
-                "ifFc=" + ifFc +"\n" +
-                ", currentPP=" + currentPP +"\n" +
-                ", accPPList=" + accPPList +"\n" +
-                ", aimPP=" + aimPP +"\n" +
-                ", spdPP=" + spdPP +"\n" +
-                ", accPP=" + accPP +"\n" +
-                ", aimPPMax=" + aimPPMax +"\n" +
-                ", spdPPMax=" + spdPPMax +"\n" +
-                ", accPPMax=" + accPPMax +"\n" +
-                ", flashlightPP=" + flashlightPP +"\n" +
-                ", star=" + star +"\n" +
+        return "PerformanceVO{" +
+                "ifFc=" + ifFc +
+                ", currentPP=" + currentPP +
+                ", accPPList=" + accPPList +
+                ", aimPP=" + aimPP +
+                ", spdPP=" + spdPP +
+                ", accPP=" + accPP +
+                ", flashlightPP=" + flashlightPP +
+                ", aimPPMax=" + aimPPMax +
+                ", spdPPMax=" + spdPPMax +
+                ", accPPMax=" + accPPMax +
+                ", flashlightPPMax=" + flashlightPPMax +
+                ", star=" + star +
                 ", taikoDifficulty=" + taikoDifficulty +
                 '}';
     }

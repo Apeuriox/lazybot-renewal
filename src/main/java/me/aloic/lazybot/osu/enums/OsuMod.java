@@ -5,58 +5,86 @@ import lombok.Getter;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import org.spring.osu.model.LazerMod;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Getter
 public enum OsuMod
 {
-    None(0, "NM"),
-    NoFail(1, "NF"),
-    Easy(1 << 1, "EZ"),
-    TouchDevice(1 << 2, "TD"),
-    Hidden(1 << 3, "HD"),
-    HardRock(1 << 4, "HR"),
-    SuddenDeath(1 << 5, "SD"),
-    DoubleTime(1 << 6, "DT"),
-    Relax(1 << 7, "RX"),
-    HalfTime(1 << 8, "HT"),
-    Nightcore((1 << 9) + (DoubleTime.value), "NC"),
-    Flashlight(1 << 10, "FL"),
-    Autoplay(1 << 11, "AT"),
-    SpunOut(1 << 12, "SO"),
-    Autopilot(1 << 13, "AP"),
-    Perfect(1 << 14, "PF"),
-    Key4(1 << 15, "4K"),
-    Key5(1 << 16, "5K"),
-    Key6(1 << 17, "6K"),
-    Key7(1 << 18, "7K"),
-    Key8(1 << 19, "8K"),
-    FadeIn(1 << 20, "FI"),
-    Random(1 << 21, "RD"),
-    Cinema(1 << 22, "CM"),
-    TargetPractice(1 << 23, "TP"),
-    Key9(1 << 24, "9K"),
-    KeyCoop(1 << 25, "CP"),
-    Key1(1 << 26, "1K"),
-    Key3(1 << 27, "3K"),
-    Key2(1 << 28, "2K"),
-    ScoreV2(1 << 29, "V2"),
-    Mirror(1 << 30, "MR"),
-    KeyMod(521109504, "KEY"),
-    FreeMod(522171579, "FM"),
-    ScoreIncreaseMods(1049688, "IM"),
-    Other(-1, "OTHER");
+    None(0, "NM", List.of("NoMod")),
+    NoFail(1, "NF", List.of("NoFail")),
+    Easy(1 << 1, "EZ", List.of("E")),
+    TouchDevice(1 << 2, "TD",List.of("Touch")),
+    Hidden(1 << 3, "HD", List.of("Hide")),
+    HardRock(1 << 4, "HR", List.of("Hard")),
+    SuddenDeath(1 << 5, "SD", List.of("Sudden","Death")),
+    DoubleTime(1 << 6, "DT", List.of("Double")),
+    Relax(1 << 7, "RX", List.of("RL")),
+    HalfTime(1 << 8, "HT", List.of("HALF")),
+    Nightcore((1 << 9) + (DoubleTime.value), "NC", List.of("Night")),
+    Flashlight(1 << 10, "FL", List.of("Flash")),
+    Autoplay(1 << 11, "AT", List.of("Auto")),
+    SpunOut(1 << 12, "SO",List.of("SpinOut","NoSpin")),
+    Autopilot(1 << 13, "AP", List.of("NoClick")),
+    Perfect(1 << 14, "PF",List.of("Perfectly")),
+    Key4(1 << 15, "4K", List.of("4Keys", "4Key", "K4")),
+    Key5(1 << 16, "5K", List.of("5Keys", "5Key", "K5")),
+    Key6(1 << 17, "6K", List.of("6Keys", "6Key", "K6")),
+    Key7(1 << 18, "7K", List.of("7Keys", "7Key", "K7")),
+    Key8(1 << 19, "8K", List.of("8Keys", "8Key", "K8")),
+    FadeIn(1 << 20, "FI", List.of("Fade")),
+    Random(1 << 21, "RD", List.of("Rand")),
+    Cinema(1 << 22, "CN", List.of("CM")),
+    TargetPractice(1 << 23, "TP", List.of("Target", "Practice")),
+    Key9(1 << 24, "9K", List.of("9Keys", "9Key", "K9")),
+    KeyCoop(1 << 25, "CP", List.of("KC", "Coop")),
+    Key1(1 << 26, "1K", List.of("1Keys", "1Key", "K1")),
+    Key3(1 << 27, "3K", List.of("3Keys", "3Key", "K3")),
+    Key2(1 << 28, "2K", List.of("2Keys", "2Key", "K2")),
+    ScoreV2(1 << 29, "V2", List.of("SV2")),
+    Mirror(1 << 30, "MR", List.of("Mir")),
+    KeyMod(521109504, "KEY", List.of("KM")),
+    FreeMod(522171579, "FM", List.of("Free","Unlock")),
+    ScoreIncreaseMods(1049688, "IM", List.of("SIM")),
+    //not existing
+    Other(-1, "OTHER", List.of("Others")),
+
+    Muted(-1, "MU", List.of("Mute")),
+    Blinds(-1, "BL", List.of("BoyLove")),
+    StrictTracking(-1, "ST", List.of("Track", "Strict")),
+    AccuracyChallenge(-1, "AC", List.of("Accuracy", "Challenge")),
+    DifficultyAdjust(-1, "DA", List.of("Adjust")),
+    SingleTap(-1, "SG", List.of("SteinsGate", "Steins")),
+    Daycore(-1, "DC", List.of("Day")),
+    NoRelease(-1, "NR", List.of("Release"));
+
 
     @Getter
     private final int value;
     private final String acronym;
+    private final List<String> alias;
+    public static final Map<String, OsuMod> lookupMap;
+
+    static {
+        Map<String, OsuMod> map = new HashMap<>();
+        for (OsuMod e : OsuMod.values()) {
+            map.put(e.acronym.toLowerCase(), e);
+            for (String a : e.alias) {
+                map.put(a.toLowerCase(), e);
+            }
+        }
+        lookupMap = Collections.unmodifiableMap(map);
+    }
 
 
+
+    OsuMod(int value, String acronym, List<String> alias) {
+        this.value = value;
+        this.acronym = acronym;
+        List<String> allAliases = new ArrayList<>(alias);
+        allAliases.add(this.name());
+        this.alias = Collections.unmodifiableList(allAliases);
+    }
     public String getModEnum() {
         return acronym;
     }
@@ -76,80 +104,45 @@ public enum OsuMod
 
     public static OsuMod getModEnum(String acronym) {
         String modAcronym = acronym.trim().toUpperCase();
-        switch (modAcronym) {
-            case "NM":
-                return None;
-            case "NF":
-                return NoFail;
-            case "EZ":
-                return Easy;
-            case "TD":
-                return TouchDevice;
-            case "HD":
-                return Hidden;
-            case "HR":
-                return HardRock;
-            case "SD":
-                return SuddenDeath;
-            case "DT":
-                return DoubleTime;
-            case "RX":
-                return Relax;
-            case "HT":
-                return HalfTime;
-            case "NC":
-                return Nightcore;
-            case "FL":
-                return Flashlight;
-            case "AT":
-                return Autoplay;
-            case "SO":
-                return SpunOut;
-            case "AP":
-                return Autopilot;
-            case "PF":
-                return Perfect;
-            case "4K":
-                return Key4;
-            case "5K":
-                return Key5;
-            case "6K":
-                return Key6;
-            case "7K":
-                return Key7;
-            case "8K":
-                return Key8;
-            case "FI":
-                return FadeIn;
-            case "RD":
-                return Random;
-            case "CM":
-                return Cinema;
-            case "TP":
-                return TargetPractice;
-            case "9K":
-                return Key9;
-            case "CP":
-                return KeyCoop;
-            case "1K":
-                return Key1;
-            case "3K":
-                return Key3;
-            case "2K":
-                return Key2;
-            case "V2":
-                return ScoreV2;
-            case "MR":
-                return Mirror;
-            case "KEY":
-                return KeyMod;
-            case "FM":
-                return FreeMod;
-            case "IM":
-                return ScoreIncreaseMods;
-            default:
-                return Other;
-        }
+        return switch (modAcronym)
+        {
+            case "NM" -> None;
+            case "NF" -> NoFail;
+            case "EZ" -> Easy;
+            case "TD" -> TouchDevice;
+            case "HD" -> Hidden;
+            case "HR" -> HardRock;
+            case "SD" -> SuddenDeath;
+            case "DT" -> DoubleTime;
+            case "RX" -> Relax;
+            case "HT" -> HalfTime;
+            case "NC" -> Nightcore;
+            case "FL" -> Flashlight;
+            case "AT" -> Autoplay;
+            case "SO" -> SpunOut;
+            case "AP" -> Autopilot;
+            case "PF" -> Perfect;
+            case "4K" -> Key4;
+            case "5K" -> Key5;
+            case "6K" -> Key6;
+            case "7K" -> Key7;
+            case "8K" -> Key8;
+            case "FI" -> FadeIn;
+            case "RD" -> Random;
+            case "CM" -> Cinema;
+            case "TP" -> TargetPractice;
+            case "9K" -> Key9;
+            case "CP" -> KeyCoop;
+            case "1K" -> Key1;
+            case "3K" -> Key3;
+            case "2K" -> Key2;
+            case "V2" -> ScoreV2;
+            case "MR" -> Mirror;
+            case "KEY" -> KeyMod;
+            case "FM" -> FreeMod;
+            case "IM" -> ScoreIncreaseMods;
+            default -> Other;
+        };
     }
     public static org.spring.osu.model.OsuMod getModEnumJNI(String acronym) {
         String modAcronym = acronym.trim().toUpperCase();
@@ -422,6 +415,12 @@ public enum OsuMod
 
     public static int plus(int value, OsuMod mod) {
         return value | mod.getValue();
+    }
+
+    public static String findAcronym(String input) {
+        if (input == null) return null;
+        OsuMod match = lookupMap.get(input.toLowerCase());
+        return match != null ? match.getAcronym() : null;
     }
 }
 

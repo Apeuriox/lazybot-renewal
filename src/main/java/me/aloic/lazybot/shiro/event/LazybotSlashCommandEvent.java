@@ -30,4 +30,18 @@ public class LazybotSlashCommandEvent
       this.commandString = command;
       this.istSlashCommand=true;
    }
+
+   @Override
+   public String toString()
+   {
+      return "LazybotSlashCommandEvent{" +
+              "istSlashCommand=" + istSlashCommand +
+              ", commandType='" + commandType + '\'' +
+              ", commandParameters=" + commandParameters +
+              ", messageEvent=" + messageEvent +
+              ", scorePanelVersion=" + scorePanelVersion +
+              ", osuMode=" + osuMode +
+              ", commandString='" + commandString + '\'' +
+              '}';
+   }
 }

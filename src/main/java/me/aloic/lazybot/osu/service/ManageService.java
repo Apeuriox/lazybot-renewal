@@ -14,4 +14,6 @@ public interface ManageService
     String verify(VerifyParameter params);
 
     String addTips(ContentParameter params);
+
+    String ppTest(ScoreParameter params);
 }
