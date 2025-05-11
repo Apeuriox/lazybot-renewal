@@ -145,7 +145,7 @@
       letter-spacing: -.03em;
       }
 
-    
+
 
       .cls-41 {
       fill: #29abe2;
@@ -538,8 +538,8 @@
       font-size:20px;
       }
       .cls-217{
-        letter-spacing: .08em;
-        font-size:35px;
+      letter-spacing: .08em;
+      font-size:35px;
       }
     </style>
     <linearGradient id="darkGraditent"  x1="553.71" y1="1444.87" x2="1798.94" y2="199.64" gradientUnits="userSpaceOnUse">
@@ -547,12 +547,12 @@
       <stop offset="1" stop-color="#000" stop-opacity="0"/>
 
     </linearGradient>
-      <linearGradient id="maniaMAXGraditent" x1="600" y1="670" x2="670" y2="700"  gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#702a17"/>
-        <stop offset="0.3" stop-color="#f5c238"/>
-        <stop offset="0.7" stop-color="#6e975f"/>
-        <stop offset="1" stop-color="#429886"/>
-      </linearGradient>
+    <linearGradient id="maniaMAXGraditent" x1="600" y1="670" x2="670" y2="700"  gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#702a17"/>
+      <stop offset="0.3" stop-color="#f5c238"/>
+      <stop offset="0.7" stop-color="#6e975f"/>
+      <stop offset="1" stop-color="#429886"/>
+    </linearGradient>
     <filter id="blur">
       <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
 
@@ -580,24 +580,24 @@
             preserveAspectRatio="xMidYMid slice"
             filter="url(#blur)"
             id="mapBg-right"/>
-    <rect class="cls-56" id="label-left-background" fill="#35323f" width="540" height="1080"/>
-    <rect class="cls-40" fill="#1f1e26" id="label-left-left-background" width="160" height="1080"/>
+    <rect class="cls-56" id="label-left-background" fill="hsl(0,0%,22%)" width="540" height="1080"/>
+    <rect class="cls-40" fill="hsl(0,0%,13%)" id="label-left-left-background" width="160" height="1080"/>
 
-    <rect class="cls-54" fill="#191919" id="label-header-bg" width="1920" height="80"/>
+    <rect class="cls-54" fill="hsl(0,0%,10%)" id="label-header-bg" width="1920" height="80"/>
     <path id="osu" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1655,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1655,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1655,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15Z"/>
     <path id="taiko" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1722.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1722.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1722.5,217.34c6.2,0,11.25,5.05,11.25,11.25s-5.05,11.25-11.25,11.25-11.25-5.05-11.25-11.25,5.05-11.25,11.25-11.25M1722.5,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1724.38,214.34h-3.75v28.5h3.75v-28.5Z"/>
     <path id="ctb" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1790,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1790,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1791.88,221.09c0,2.07-1.68,3.75-3.75,3.75s-3.75-1.68-3.75-3.75,1.68-3.75,3.75-3.75,3.75,1.68,3.75,3.75ZM1788.12,232.34c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75ZM1795.62,224.84c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75Z"/>
     <path id="mania" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1857.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1857.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1859.38,243.59v-30c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v30c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1866.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1851.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88Z"/>
-    
+
     <rect fill="#e6e6e6" opacity="0" id="label-osu" transform="translate(1638.5,73)" width="35" height="5" rx="2.5" ry="2.5"/>
     <rect fill="#e6e6e6" opacity="0" id="label-taiko" transform="translate(1706,73)" width="35" height="5" rx="2.5" ry="2.5"/>
     <rect fill="#e6e6e6" opacity="0" id="label-ctb" transform="translate(1773.5,73)" width="35" height="5" rx="2.5" ry="2.5"/>
     <rect fill="#e6e6e6" opacity="0" id="label-mania" transform="translate(1841,73)" width="35" height="5" rx="2.5" ry="2.5"/>
-   
 
-    <rect class="cls-135" fill="#2a2933" id="label-mask-1" x="0" y="77.89" width="540" height="60"/>
-    <rect class="cls-135" fill="#2a2933" id="label-mask-2" x="0" y="197.89" width="540" height="60"/>
-    <rect class="cls-135" fill="#2a2933" id="label-mask-3" x="0" y="317.89" width="540" height="430"/>
+
+    <rect class="cls-135" fill="hsl(0,0%,18%)" id="label-mask-1" x="0" y="77.89" width="540" height="60"/>
+    <rect class="cls-135" fill="hsl(0,0%,18%)" id="label-mask-2" x="0" y="197.89" width="540" height="60"/>
+    <rect class="cls-135" fill="hsl(0,0%,18%)" id="label-mask-3" x="0" y="317.89" width="540" height="430"/>
     <rect id="starRatingBG" class="cls-122" fill="#4829ff" x="180" y="349" width="130" height="40" rx="20" ry="20"/>
     <polygon id="starRatingStar" transform="translate(4,-2)"  fill="#f3b814" class="cls-123" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
 
@@ -609,11 +609,11 @@
 
 
   <g id="Text" transform="translate(0,-189)">
-    <text class="cls-12" fill="#988fcc" id="label-artist" transform="translate(30 368.59)">Artist</text>
-    <text class="cls-20" fill="#988fcc" id="label-mapper" transform="translate(30 428.59)">Mapper</text>
-    <text class="cls-20" fill="#988fcc" id="label-mapInfo" transform="translate(30 548.59)">Map Infos</text>
-    <text class="cls-20" fill="#988fcc" id="label-diff" transform="translate(30 488.59)">Difficulty</text>
-    <text class="cls-20" fill="#988fcc" id="label-title" transform="translate(30 308.59)">Title</text>
+    <text class="cls-12" fill="hsl(0,0%,68%)" id="label-artist" transform="translate(30 368.59)">Artist</text>
+    <text class="cls-20" fill="hsl(0,0%,68%)" id="label-mapper" transform="translate(30 428.59)">Mapper</text>
+    <text class="cls-20" fill="hsl(0,0%,68%)" id="label-mapInfo" transform="translate(30 548.59)">Map Infos</text>
+    <text class="cls-20" fill="hsl(0,0%,68%)" id="label-diff" transform="translate(30 488.59)">Difficulty</text>
+    <text class="cls-20" fill="hsl(0,0%,68%)" id="label-title" transform="translate(30 308.59)">Title</text>
     <g id="songTitle1">
       <text id="songTitle" class="cls-23" transform="translate(180 308.59)">*Song Name</text>
     </g>
@@ -641,7 +641,7 @@
     <g>
       <text id="length" class="cls-23" transform="translate(390 768.59)">00:00</text>
     </g>
-    <g id="attribute-osu" opacity="0"> 
+    <g id="attribute-osu" opacity="0">
       <text class="cls-121" transform="translate(180 808.59)">AR</text>
       <text id="AR-osu" class="cls-23" transform="translate(180 838.59)">000</text>
       <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">OD</tspan></text>
@@ -651,15 +651,15 @@
       <text class="cls-121" transform="translate(390 878.59)">HP</text>
       <text id="HP-osu" class="cls-23" transform="translate(390 908.59)">000</text>
     </g>
-    <g id="attribute-taiko" opacity="0"> 
+    <g id="attribute-taiko" opacity="0">
       <text class="cls-121" transform="translate(180 808.59)">OD</text>
       <text id="OD-taiko" class="cls-23" transform="translate(180 838.59)">000</text>
       <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">HP</tspan></text>
       <text id="HP-taiko" class="cls-23" transform="translate(390 838.59)">000</text>
 
     </g>
-     <g id="attribute-catch" opacity="0"> 
-    <text class="cls-121" transform="translate(180 808.59)">AR</text>
+    <g id="attribute-catch" opacity="0">
+      <text class="cls-121" transform="translate(180 808.59)">AR</text>
       <text id="AR-catch" class="cls-23" transform="translate(180 838.59)">000</text>
       <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">OD</tspan></text>
       <text id="OD-catch" class="cls-23" transform="translate(390 838.59)">000</text>
@@ -669,15 +669,15 @@
       <text id="HP-catch" class="cls-23" transform="translate(390 908.59)">000</text>
     </g>
 
-    <g id="attribute-mania" opacity="0"> 
-    <text class="cls-121" transform="translate(180 808.59)">KEY</text>
+    <g id="attribute-mania" opacity="0">
+      <text class="cls-121" transform="translate(180 808.59)">KEY</text>
       <text id="Key-mania" class="cls-23" transform="translate(180 838.59)">000</text>
       <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">OD</tspan></text>
       <text id="OD-mania" class="cls-23" transform="translate(390 838.59)">000</text>
       <text class="cls-121" transform="translate(180 878.59)">HP</text>
       <text id="HP-mania" class="cls-23" transform="translate(180 908.59)">000</text>
     </g>
-   
+
     <g id="avatarGroup">
 
       <rect class="cls-45" transform="translate(10 199)" width="60" height="60" rx="5" ry="5"/>
@@ -782,11 +782,11 @@
       <text class="cls-210" fill="#ffffff" stroke="#999999" transform="translate(610 691)"><tspan class="cls-71" x="0" y="0">MAX</tspan></text>
       <text id="maxCount-Shadow-m" fill="black" opacity="0.4" class="cls-217" transform="translate(608 746)">0000</text>
       <text id="maxCount-m" x="600" y="670" class="cls-217" fill="url(#maniaMAXGraditent)" stroke="#fff" transform="translate(5 73)">0000</text>
-            
+
       <text class="cls-210" fill="#ffffff" transform="translate(913 691.5)"><tspan class="cls-71" x="0" y="0">300</tspan></text>
       <text id="300Count-Shadow-m" class="cls-217" fill="black" opacity="0.4" transform="translate(908 746)">0000</text>
       <text id="300Count-m" class="cls-217" fill="#f3b814" transform="translate(905 743)">0000</text>
-      
+
       <text class="cls-210" fill="#ffffff" transform="translate(612.5 792)"><tspan class="cls-71" x="0" y="0">200</tspan></text>
       <text id="200Count-Shadow-m" fill="black" opacity="0.4" class="cls-217" transform="translate(608 846.5)">0000</text>
       <text id="200Count-m" class="cls-217" fill="#39b54a" transform="translate(605 843.5)">0000</text>
@@ -1004,7 +1004,7 @@
       <rect id="modBG1-1" x="1520" y="550" rx="10" ry="10" fill="#a32f4a" width="70" height="50"  transform="skewX(-20)" />
       <rect id="modBG1-2" x="1470" y="530" rx="10" ry="10" fill="#911833" width="50" height="30"  transform="skewX(-20)" />
       <text id="modText1" class="cls-124" x="1495" y="580" transform="skewX(-20)">HR</text>
-  
+
     </g>
     <g id="mod2" opacity="0">
       <rect id="modBG2-0" x="1570" y="530" rx="10" ry="10" fill="#bda400" width="120" height="70"  transform="skewX(-20)" />
@@ -1017,7 +1017,7 @@
       <rect id="modBG3-1" x="1720" y="550" rx="10" ry="10" fill="#4f38ab" width="70" height="50"  transform="skewX(-20)" />
       <rect id="modBG3-2" x="1670" y="530" rx="10" ry="10" fill="#45339c" width="50" height="30"  transform="skewX(-20)" />
       <text id="modText3" class="cls-124" x="1695" y="580" transform="skewX(-20)">DT</text>
-   </g>
+    </g>
     <g id="mod4" opacity="0">
       <rect id="modBG4-0" x="1770" y="530" rx="10" ry="10" fill="#0071a5" width="120" height="70"  transform="skewX(-20)" />
       <rect id="modBG4-1" x="1820" y="550" rx="10" ry="10" fill="#237ca5" width="70" height="50"  transform="skewX(-20)" />
@@ -1045,11 +1045,11 @@
   </g>
   <g id="lazer-label" opacity="0">
     <image
-    xlink:href="assets/lazer-label.png"
-    x="20"
-    y="950"
-    width="110"
-    height="110"
-    id="lazer"/>
+            xlink:href="assets/lazer-label.png"
+            x="20"
+            y="950"
+            width="110"
+            height="110"
+            id="lazer"/>
   </g>
 </svg>

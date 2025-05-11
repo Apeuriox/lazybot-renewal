@@ -27,21 +27,21 @@ public enum OsuMod
     SpunOut(1 << 12, "SO",List.of("SpinOut","NoSpin")),
     Autopilot(1 << 13, "AP", List.of("NoClick")),
     Perfect(1 << 14, "PF",List.of("Perfectly")),
-    Key4(1 << 15, "4K", List.of("4Keys", "4Key", "K4")),
-    Key5(1 << 16, "5K", List.of("5Keys", "5Key", "K5")),
-    Key6(1 << 17, "6K", List.of("6Keys", "6Key", "K6")),
-    Key7(1 << 18, "7K", List.of("7Keys", "7Key", "K7")),
-    Key8(1 << 19, "8K", List.of("8Keys", "8Key", "K8")),
+    Key4(1 << 15, "Keys", List.of("4Keys", "4Key", "K4", "4K")),
+    Key5(1 << 16, "Keys", List.of("5Keys", "5Key", "K5", "5K")),
+    Key6(1 << 17, "Keys", List.of("6Keys", "6Key", "K6", "6K")),
+    Key7(1 << 18, "Keys", List.of("7Keys", "7Key", "K7", "7K")),
+    Key8(1 << 19, "Keys", List.of("8Keys", "8Key", "K8", "8K")),
     FadeIn(1 << 20, "FI", List.of("Fade")),
     Random(1 << 21, "RD", List.of("Rand")),
     Cinema(1 << 22, "CN", List.of("CM")),
     TargetPractice(1 << 23, "TP", List.of("Target", "Practice")),
-    Key9(1 << 24, "9K", List.of("9Keys", "9Key", "K9")),
+    Key9(1 << 24, "Keys", List.of("9Keys", "9Key", "K9", "K9")),
     KeyCoop(1 << 25, "CP", List.of("KC", "Coop")),
-    Key1(1 << 26, "1K", List.of("1Keys", "1Key", "K1")),
-    Key3(1 << 27, "3K", List.of("3Keys", "3Key", "K3")),
-    Key2(1 << 28, "2K", List.of("2Keys", "2Key", "K2")),
-    ScoreV2(1 << 29, "V2", List.of("SV2")),
+    Key1(1 << 26, "Keys", List.of("1Keys", "1Key", "K1", "1K")),
+    Key3(1 << 27, "Keys", List.of("3Keys", "3Key", "K3", "3K")),
+    Key2(1 << 28, "Keys", List.of("2Keys", "2Key", "K2", "2K")),
+    ScoreV2(1 << 29, "SV2", List.of("SV2")),
     Mirror(1 << 30, "MR", List.of("Mir")),
     KeyMod(521109504, "KEY", List.of("KM")),
     FreeMod(522171579, "FM", List.of("Free","Unlock")),
@@ -54,7 +54,7 @@ public enum OsuMod
     StrictTracking(-1, "ST", List.of("Track", "Strict")),
     AccuracyChallenge(-1, "AC", List.of("Accuracy", "Challenge")),
     DifficultyAdjust(-1, "DA", List.of("Adjust")),
-    SingleTap(-1, "SG", List.of("SteinsGate", "Steins")),
+    SingleTap(-1, "SG", List.of("SteinsGate", "Steins", "Single")),
     Daycore(-1, "DC", List.of("Day")),
     Cover(-1, "CO", List.of("Covers")),
     Classic(-1, "CL", List.of("Stable")),
@@ -95,7 +95,7 @@ public enum OsuMod
     static {
         Map<String, OsuMod> map = new HashMap<>();
         for (OsuMod e : OsuMod.values()) {
-            map.put(e.acronym.toLowerCase(), e);
+            map.putIfAbsent(e.acronym.toLowerCase(), e);
             for (String a : e.alias) {
                 map.put(a.toLowerCase(), e);
             }

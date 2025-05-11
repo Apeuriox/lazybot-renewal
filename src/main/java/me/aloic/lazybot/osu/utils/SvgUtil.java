@@ -933,7 +933,7 @@ public class SvgUtil
                 case Osu:
                 {
                     logger.info("Score Type: Osu");
-                    doc.getElementById("osu").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("osu").setAttribute("fill", hue>360?"hsl(160, 100%, 50%)":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-osu").setAttribute("opacity","1");
                     doc.getElementById("osuStatistics").setAttribute("opacity","1");
                     doc.getElementById("100Count-o").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
@@ -955,7 +955,7 @@ public class SvgUtil
                 case Taiko:
                 {
                     logger.info("Score Type: Taiko");
-                    doc.getElementById("taiko").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("taiko").setAttribute("fill", hue>360?"hsl(160, 100%, 50%)":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-taiko").setAttribute("opacity","1");
                     doc.getElementById("taikoStatistics").setAttribute("opacity","1");
                     doc.getElementById("150Count-t").setTextContent(String.valueOf(targetScore.getStatistics().getOk()));
@@ -973,7 +973,7 @@ public class SvgUtil
                 case Catch:
                 {
                     logger.info("Score Type: CTB");
-                    doc.getElementById("ctb").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("ctb").setAttribute("fill", hue>360?"hsl(160, 100%, 50%)":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-ctb").setAttribute("opacity","1");
                     doc.getElementById("fruitsStatistics").setAttribute("opacity","1");
                     doc.getElementById("300Count-f").setTextContent(String.valueOf(targetScore.getStatistics().getGreat()));
@@ -995,7 +995,7 @@ public class SvgUtil
                 case Mania:
                 {
                     logger.info("Score Type: Mania");
-                    doc.getElementById("mania").setAttribute("fill", hue>361?"#988fcc":CommonTool.hsvToHex(hue,0.4F,1F));
+                    doc.getElementById("mania").setAttribute("fill", hue>360?"hsl(160, 100%, 50%)":CommonTool.hsvToHex(hue,0.4F,1F));
                     doc.getElementById("label-mania").setAttribute("opacity","1");
                     doc.getElementById("maniaStatistics").setAttribute("opacity","1");
                     doc.getElementById("maxCount-m").setTextContent(String.valueOf(targetScore.getStatistics().getPerfect()));
@@ -1018,8 +1018,7 @@ public class SvgUtil
                     break;
                 }
             }
-            if(hue<361)
-                setupoCustomColorForDarkmodeScore(doc,hue);
+            if(hue<361) setupoCustomColorForDarkmodeScore(doc,hue);
 
             doc.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));
             doc.getElementById("length").setTextContent(CommonTool.formatHitLength(targetScore.getBeatmap().getAttributes().getLength()));
@@ -1067,6 +1066,8 @@ public class SvgUtil
         doc.getElementById("label-mask-3").setAttribute("fill",CommonTool.hslFormat(hue,11,18));
         doc.getElementById("label-header-bg").setAttribute("fill",CommonTool.hslFormat(hue,7,10));
     }
+
+
     private static void wireModIconForDarkScore(Document doc, ScoreVO targetScore)
     {
         for (int i = 0; i < targetScore.getModJSON().size(); i++)
