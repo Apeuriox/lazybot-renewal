@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.dao.entity.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.spring.osu.extended.rosu.JniPerformanceAttributes;
 
 import java.util.Map;
 
@@ -24,6 +25,7 @@ public class PerformanceVO
     private Double flashlightPPMax;
     private Double star;
     private Double taikoDifficulty;
+    private JniPerformanceAttributes original;
 
     @Override
     public String toString()

@@ -147,7 +147,7 @@ public class ManageServiceImpl implements ManageService
                 DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()), params.getMode()),
                 beatmapUserScoreLazer.getScore(),
                 false);
-        return scoreVO.getPpDetailsLocal().toString();
+        return scoreVO.getPpDetailsLocal().getOriginal().toString();
     }
 
     private String verifyProfileCustomization(VerifyParameter params)

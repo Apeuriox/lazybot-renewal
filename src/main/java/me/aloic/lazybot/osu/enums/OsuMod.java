@@ -41,7 +41,7 @@ public enum OsuMod
     Key1(1 << 26, "Keys", List.of("1Keys", "1Key", "K1", "1K")),
     Key3(1 << 27, "Keys", List.of("3Keys", "3Key", "K3", "3K")),
     Key2(1 << 28, "Keys", List.of("2Keys", "2Key", "K2", "2K")),
-    ScoreV2(1 << 29, "SV2", List.of("SV2")),
+    ScoreV2(1 << 29, "SV2", List.of("V2")),
     Mirror(1 << 30, "MR", List.of("Mir")),
     KeyMod(521109504, "KEY", List.of("KM")),
     FreeMod(522171579, "FM", List.of("Free","Unlock")),

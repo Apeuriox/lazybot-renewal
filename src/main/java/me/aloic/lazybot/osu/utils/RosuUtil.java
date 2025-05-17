@@ -37,6 +37,7 @@ public class RosuUtil
         resultPerformance.setCurrentPP(rosuResult.getPP());
         resultPerformance.setAccPPList(getAccPPList(beatmap,modJSON,mode,isLazerScore));
         resultPerformance.setIfFc(getIfFc(beatmap,modJSON,statistics,mode,isLazerScore));
+        resultPerformance.setOriginal(rosuResult);
         List<Double> maxStats=getMaxStatsList(beatmap,modJSON,mode,isLazerScore);
         if(maxStats.isEmpty()||maxStats.size()<4) {
             throw new LazybotRuntimeException("Error when calculating max stats with path of " + pathToOsuFile);
