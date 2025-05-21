@@ -2,6 +2,7 @@ package me.aloic.lazybot.osu.dao.entity.dto.beatmap;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.MaximumStatistics;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
@@ -54,6 +55,8 @@ public class ScoreLazerDTO implements Serializable
     {
         return mods.stream().map(Mod::getAcronym).toArray(String[]::new);
     }
+
+
 
 
 }

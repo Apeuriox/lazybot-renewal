@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.dao.entity.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.spring.osu.extended.rosu.JniPerformanceAttributes;
 
 import java.util.Map;
 
@@ -24,22 +25,24 @@ public class PerformanceVO
     private Double flashlightPPMax;
     private Double star;
     private Double taikoDifficulty;
+    private JniPerformanceAttributes original;
 
     @Override
     public String toString()
     {
-        return "PerformanceVO{" + "\n" +
-                "ifFc=" + ifFc +"\n" +
-                ", currentPP=" + currentPP +"\n" +
-                ", accPPList=" + accPPList +"\n" +
-                ", aimPP=" + aimPP +"\n" +
-                ", spdPP=" + spdPP +"\n" +
-                ", accPP=" + accPP +"\n" +
-                ", aimPPMax=" + aimPPMax +"\n" +
-                ", spdPPMax=" + spdPPMax +"\n" +
-                ", accPPMax=" + accPPMax +"\n" +
-                ", flashlightPP=" + flashlightPP +"\n" +
-                ", star=" + star +"\n" +
+        return "PerformanceVO{" +
+                "ifFc=" + ifFc +
+                ", currentPP=" + currentPP +
+                ", accPPList=" + accPPList +
+                ", aimPP=" + aimPP +
+                ", spdPP=" + spdPP +
+                ", accPP=" + accPP +
+                ", flashlightPP=" + flashlightPP +
+                ", aimPPMax=" + aimPPMax +
+                ", spdPPMax=" + spdPPMax +
+                ", accPPMax=" + accPPMax +
+                ", flashlightPPMax=" + flashlightPPMax +
+                ", star=" + star +
                 ", taikoDifficulty=" + taikoDifficulty +
                 '}';
     }

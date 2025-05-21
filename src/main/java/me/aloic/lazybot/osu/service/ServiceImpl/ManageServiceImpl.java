@@ -4,14 +4,17 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
+import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.po.TipsPO;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.osu.utils.SvgUtil;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
@@ -133,6 +136,18 @@ public class ManageServiceImpl implements ManageService
                 return "添加tips失败，详情请见log";
             }
             return "成功添加";
+    }
+
+    @Override
+    public String ppTest(ScoreParameter params)
+    {
+        BeatmapUserScoreLazer beatmapUserScoreLazer = DataObjectExtractor.extractBeatmapUserScore(params.getAccessToken(),
+                String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()), params.getMode()),
+                beatmapUserScoreLazer.getScore(),
+                false);
+        return scoreVO.getPpDetailsLocal().getOriginal().toString();
     }
 
     private String verifyProfileCustomization(VerifyParameter params)

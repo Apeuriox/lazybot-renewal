@@ -21,7 +21,7 @@ import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"nochoke","nc"})
+@LazybotCommandMapping({"nochoke","nc","no1miss"})
 @Component
 public class NoChokeCommand implements LazybotSlashCommand
 {
@@ -51,13 +51,20 @@ public class NoChokeCommand implements LazybotSlashCommand
         params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
         params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.noChoke(params,0));
+        if (event.getFullCommandName().equalsIgnoreCase("no1miss"))
+            ImageUploadUtil.uploadImageToDiscord(event,playerService.noChoke(params,1));
+        else ImageUploadUtil.uploadImageToDiscord(event,playerService.noChoke(params,0));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        ImageUploadUtil.uploadImageToOnebot(bot,event,
+        if (event.getCommandType().equalsIgnoreCase("no1miss"))
+            ImageUploadUtil.uploadImageToOnebot(bot,event,
+                    playerService.noChoke(
+                            GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 1)
+            );
+        else  ImageUploadUtil.uploadImageToOnebot(bot,event,
                 playerService.noChoke(
                         GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 0)
         );
@@ -66,7 +73,12 @@ public class NoChokeCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(
+        if (event.getCommandType().equalsIgnoreCase("no1miss"))
+            testOutputTool.saveImageToLocal(
+                    playerService.noChoke(
+                            GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 1)
+            );
+        else testOutputTool.saveImageToLocal(
                 playerService.noChoke(
                         GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 0)
         );

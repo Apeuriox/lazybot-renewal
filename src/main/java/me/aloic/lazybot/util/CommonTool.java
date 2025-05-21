@@ -66,7 +66,7 @@ public class CommonTool {
         try {
             res = Integer.parseInt(s);
         }catch (Exception e) {
-            System.out.println("parseIntError, s:" + s );
+            throw new RuntimeException("parseIntError, s:" + s );
         }
         return res;
     }
@@ -598,8 +598,13 @@ public class CommonTool {
         double min = Math.min(r, Math.min(g, b));
         double delta = max - min;
         double l = (max + min) / 2;
-        if (l<0.04) return 361;
+        if (l<0.05) return 361;
         if (l>0.92) return 361;
+        double s = 0;
+        if (delta != 0) {
+            s = delta / (1 - Math.abs(2 * l - 1));
+        }
+        if (s<0.07) return 361;
         double h = 0;
         if (delta != 0) {
             if (max == r) {
@@ -628,8 +633,14 @@ public class CommonTool {
         double min = Math.min(r, Math.min(g, b));
         double delta = max - min;
         double l = (max + min) / 2;
-        if (l<0.04) return 361;
-        if (l>0.95) return 361;
+        if (l<0.05) return 361;
+        if (l>0.92) return 361;
+        double s = 0;
+        if (delta != 0) {
+            s = delta / (1 - Math.abs(2 * l - 1));
+        }
+        if (s<0.07) return 361;
+
         double h = 0;
         if (delta != 0) {
             if (max == r) {

@@ -8,7 +8,6 @@ import me.aloic.lazybot.command.registry.LazybotSlashCommandRegistry;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.VirtualThreadExecutorHolder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class SlashCommandProcessor
@@ -54,10 +54,20 @@ public class SlashCommandProcessor
                 logger.info("正在处理 {} 命令(Onebot)", event.getCommandType());
                 command.execute(bot, event);
             }
-        } catch (LazybotRuntimeException e) {
+        } catch (LazybotRuntimeException | IllegalArgumentException e) {
             logger.error(e.getMessage());
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(), false);
-        } catch (Exception e) {
+        }
+        catch (ExecutionException e) {
+            Throwable rootCause = e.getCause();
+            if (rootCause instanceof LazybotRuntimeException) {
+                logger.error(e.getMessage());
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(
+                        e.getMessage().replaceFirst("^.*?:\\s*", "")
+                ).build(), false);
+            }
+        }
+        catch (Exception e) {
             logger.error(e.getMessage());
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("出现未知错误").build(), false);
         }
@@ -72,9 +82,16 @@ public class SlashCommandProcessor
                     logger.info("正在处理 {} 命令(TEST CASE)", event.getCommandString());
                     command.execute(event);
                 }
-            } catch (LazybotRuntimeException e) {
+            } catch (LazybotRuntimeException | IllegalArgumentException e)  {
                 logger.error("捕获到预期内exception: {}", e.getMessage());
-            } catch (Exception e) {
+            }
+            catch (ExecutionException e) {
+                Throwable rootCause = e.getCause();
+                if (rootCause instanceof LazybotRuntimeException) {
+                    logger.error("捕获到多线程处理中的预期内exception: {}", e.getMessage());
+                }
+            }
+            catch (Exception e) {
                 logger.error("预期外exception发生: {}",e.getMessage());
                 e.printStackTrace();
             }

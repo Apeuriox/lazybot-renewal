@@ -108,4 +108,5 @@ public class ScoreParameter extends LazybotCommandParameter
             scoreParameter.setVersion(1);
 
     }
+
 }

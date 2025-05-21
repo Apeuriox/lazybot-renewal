@@ -32,8 +32,9 @@ public class TopScoresParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if(limit<=0) {
-            throw new IllegalArgumentException("{Limit} must be greater than 0");
+            throw new LazybotRuntimeException("{Limit} must be greater than 0");
         }
+        if (limit > 50) throw new LazybotRuntimeException("最多支持查询50位");
     }
 
     public static TopScoresParameter analyzeParameter(List<String> params)

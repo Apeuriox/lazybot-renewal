@@ -245,4 +245,20 @@ public class ApiRequestStarter
 //            logger.info("401 Unauthorized/客户端API Token过期，正在重新获取");
 //        }
 //    }
+    public static Integer excuteInteger(String url)
+    {
+        try (HttpResponse response = HttpRequest.get(url).execute())
+        {
+            if (response.getStatus() == 200) {
+                String responseString = response.body();
+                return Integer.parseInt(responseString);
+            } else {
+                logger.error("Error: {}", response.getStatus());
+                throw new LazybotRuntimeException("HTTP请求失败:" + response.getStatus());
+            }
+        }
+        catch (Exception e) {
+            throw new LazybotRuntimeException("HTTP请求失败:" + e.getMessage());
+        }
+    }
 }
