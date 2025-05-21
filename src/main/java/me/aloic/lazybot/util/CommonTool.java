@@ -66,7 +66,7 @@ public class CommonTool {
         try {
             res = Integer.parseInt(s);
         }catch (Exception e) {
-            System.out.println("parseIntError, s:" + s );
+            throw new RuntimeException("parseIntError, s:" + s );
         }
         return res;
     }

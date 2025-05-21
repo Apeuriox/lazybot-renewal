@@ -21,6 +21,7 @@ import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.URLBuildUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
@@ -42,6 +43,8 @@ public class FunServiceImpl implements FunService
     @Resource
     private TipsMapper tipsMapper;
     private static final Logger logger = LoggerFactory.getLogger(FunServiceImpl.class);
+    @Value("${lazybot.command.whatif_calc_max_count}")
+    private Integer MAX_CALC;
 
 
 
@@ -98,18 +101,13 @@ public class FunServiceImpl implements FunService
                 .flatMap(entry -> IntStream.range(0, entry.getValue())
                         .mapToObj(i -> new ScoreIf(entry.getKey())))
                 .toList();
-
         List<ScoreIf> finalScores = Stream.concat(fictionalScores.stream(), existingScores.stream())
                 .sorted(Comparator.comparing(ScoreIf::getPp).reversed())
-                .limit(100)
+                .limit(MAX_CALC)
                 .toList();
-
         Double totalPp = totalPpCalc(finalScores);
-        System.out.println(finalScores.size());
-
         Integer rankFictional =ApiRequestStarter.excuteInteger(URLBuildUtil.buildURLOfPpRank(OsuMode.getMode(params.getMode()).getValue(), (int) Math.round(totalPp+bonusPp)));
         String rankDifference = originalRank-rankFictional>0?"+"+(originalRank-rankFictional):" - ";
-
         StringBuilder result= new StringBuilder(playerInfo.getUsername() + "的pp变化情况：\n")
                 .append("原pp: ").append(df.format(originalTotalPp+bonusPp)).append("\n")
                 .append("现pp: ").append(df.format(totalPp+bonusPp))
