@@ -8,6 +8,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.util.CommonTool;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
@@ -2479,7 +2480,12 @@ public class SvgUtil
 
             Node starNode = doc.createElementNS(namespaceSVG, "tspan");
             Element star = (Element) starNode;
-            star.setAttribute("fill", theme.getMainMiddleColor().toString());
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
+                star.setAttribute("fill", new HSL(theme.getHue(), 80, 85).toString());
+            }
+            else{
+                star.setAttribute("fill", theme.getMainMiddleColor().toString());
+            }
             star.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat("*"));
 
             Node divisorNode = doc.createElementNS(namespaceSVG, "tspan");
@@ -2488,7 +2494,9 @@ public class SvgUtil
 
             Node titleNode = doc.createElementNS(namespaceSVG, "tspan");
             Element title = (Element) titleNode;
-            title.setTextContent(score.getBeatmap().getTitle());
+            String titleStr=score.getBeatmap().getTitle();
+            if (titleStr.length() > 30) titleStr=titleStr.substring(0, 29).concat("...");
+            title.setTextContent(titleStr);
 
             starAndSongTitle.appendChild(star);
             starAndSongTitle.appendChild(divisor);
@@ -2513,7 +2521,7 @@ public class SvgUtil
 
             Node titleShadowNode = doc.createElementNS(namespaceSVG, "tspan");
             Element titleShadow = (Element) titleShadowNode;
-            titleShadow.setTextContent(score.getBeatmap().getTitle());
+            titleShadow.setTextContent(titleStr);
 
             starAndSongShadowTitle.appendChild(starShadow);
             starAndSongShadowTitle.appendChild(divisorShadow);
@@ -2530,7 +2538,12 @@ public class SvgUtil
 
             Node bpmNode = doc.createElementNS(namespaceSVG, "tspan");
             Element bpm = (Element) bpmNode;
-            bpm.setAttribute("fill", theme.getMainMiddleColor().toString());
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
+                bpm.setAttribute("fill", new HSL(theme.getHue(), 80, 85).toString());
+            }
+            else {
+                bpm.setAttribute("fill", theme.getMainMiddleColor().toString());
+            }
             bpm.setTextContent(String.valueOf(Math.round(score.getBeatmap().getBpm())).concat(" BPM"));
 
             Node divisorNode2 = doc.createElementNS(namespaceSVG, "tspan");
@@ -2539,7 +2552,9 @@ public class SvgUtil
 
             Node mapperNode = doc.createElementNS(namespaceSVG, "tspan");
             Element mapper = (Element) mapperNode;
-            mapper.setTextContent(score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]"));
+            String mapperDiffStr=score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]");
+            if (mapperDiffStr.length() > 29) mapperDiffStr=mapperDiffStr.substring(0, 28).concat("...");
+            mapper.setTextContent(mapperDiffStr);
 
             bpmAndMapper.appendChild(bpm);
             bpmAndMapper.appendChild(divisor2);
@@ -2565,7 +2580,7 @@ public class SvgUtil
 
             Node mapperShadowNode = doc.createElementNS(namespaceSVG, "tspan");
             Element mapperShadow = (Element) mapperShadowNode;
-            mapperShadow.setTextContent(score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]"));
+            mapperShadow.setTextContent(mapperDiffStr);
 
             bpmAndMapperShadow.appendChild(bpmShadow);
             bpmAndMapperShadow.appendChild(divisor2Shadow);
