@@ -15,7 +15,6 @@ import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
-import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.ProfileParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.DataObjectExtractor;
@@ -24,7 +23,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 
 @Component
-@LazybotCommandMapping({"profile"})
+@LazybotCommandMapping({"profile","info"})
 public class ProfileCommand implements LazybotSlashCommand
 {
     @Resource

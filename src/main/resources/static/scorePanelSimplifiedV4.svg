@@ -535,19 +535,25 @@
         <text class="cls-5" transform="translate(1780.11 328.25)">PP</text>
     </g>
     <g class="cls-29">
-        <text id="aimPPget" class="cls-9" text-anchor="end" transform="translate(1245 355.75)">180</text>
-        <text class="cls-9" transform="translate(1246 355.75)">/</text>
-        <text id="aimPPtotal" class="cls-5" transform="translate(1262 355.75)">100</text>
+        <text class="cls-9" transform="translate(1200 355.75)">
+            <tspan id="aimPPget">100</tspan>
+            <tspan>/</tspan>
+            <tspan class="cls-5" id="aimPPtotal">100</tspan>
+        </text>
     </g>
     <g class="cls-29">
-        <text id="spdPPget" class="cls-9" text-anchor="end" transform="translate(1510 355.75)">100</text>
-        <text class="cls-9" transform="translate(1511 355.75)">/</text>
-        <text id="spdPPtotal" class="cls-5" transform="translate(1527 355.75)">000</text>
+        <text class="cls-9" transform="translate(1465 355.75)">
+            <tspan id="spdPPget">100</tspan>
+            <tspan>/</tspan>
+            <tspan class="cls-5" id="spdPPtotal">100</tspan>
+        </text>
     </g>
     <g class="cls-29">
-        <text id="accPPget" class="cls-9" text-anchor="end" transform="translate(1770 355.75)">100</text>
-        <text class="cls-9" transform="translate(1773 355.75)">/</text>
-        <text id="accPPtotal" class="cls-5" transform="translate(1790 355.75)">000</text>
+        <text class="cls-9" transform="translate(1725 355.75)">
+            <tspan id="accPPget">100</tspan>
+            <tspan>/</tspan>
+            <tspan class="cls-5" id="accPPtotal">100</tspan>
+        </text>
     </g>
     <g class="cls-29">
         <text class="cls-11" transform="translate(420 300)">
@@ -649,6 +655,7 @@
     <line class="cls-73" x1="60" y1="220" x2="300" y2="220"/>
     <text class="cls-106" transform="translate(1380 900)">Enabled Modifiers:</text>
     <text id="mods" class="cls-14" transform="translate(1380 970)">HD HR DT SO FL</text>
+    <text id="mods-2" class="cls-14" transform="translate(1380 1030)"> </text>
     <rect class="cls-45" x="360" width="61.6" height="1080"/>
 
 

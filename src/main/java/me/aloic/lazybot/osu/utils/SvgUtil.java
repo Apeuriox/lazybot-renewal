@@ -611,12 +611,10 @@ public class SvgUtil
             doc.getElementById("HP").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getHp()));
             doc.getElementById("CS").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getCs()));
             doc.getElementById("mods").setTextContent(CommonTool.modArrayToString(targetScore.getMods()));
-            if (targetScore.getBeatmap().getTitle().length() < 24)
-            {
+            if (targetScore.getBeatmap().getTitle().length() < 24) {
                 doc.getElementById("songTitle1").setTextContent(targetScore.getBeatmap().getTitle());
             }
-            else
-            {
+            else {
                 doc.getElementById("songTitle1").setTextContent(targetScore.getBeatmap().getTitle().substring(0, 23).concat("..."));
             }
             doc.getElementById(targetScore.getBeatmap().getStatus() + "Status").setAttribute("opacity", "1");
