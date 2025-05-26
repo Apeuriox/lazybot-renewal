@@ -42,7 +42,6 @@ public class TransformerUtil
         catch (Exception e){
             playerInfoVO.setRankHistory(List.of(0,0,0,0,0,0,0,0));
         }
-
         playerInfoVO.setCountryRank(playerInfoDTO.getStatistics().getCountry_rank());
         playerInfoVO.setPlayCount(playerInfoDTO.getStatistics().getPlay_count());
         playerInfoVO.setGlobalRank(playerInfoDTO.getStatistics().getGlobal_rank());

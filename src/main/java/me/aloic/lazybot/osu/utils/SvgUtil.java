@@ -4,6 +4,7 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.dao.entity.vo.PPPlusVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
@@ -12,6 +13,9 @@ import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.util.CommonTool;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
+import org.apache.batik.anim.dom.SVGDOMImplementation;
+import org.apache.batik.bridge.*;
+import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -29,6 +33,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
@@ -58,6 +63,12 @@ public class SvgUtil
     private static final Logger logger = LoggerFactory.getLogger(SvgUtil.class);
     private static final String namespaceSVG = "http://www.w3.org/2000/svg";
     private static final String xlinkns = "http://www.w3.org/1999/xlink";
+    private static final Map<Integer,Integer> ppplusRangeMap=Map.of(0,10000,
+            1,2000,
+            2,3000,
+            3,4000,
+            4, 5000,
+            5,6000);
     static{
          transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_ALLOW_EXTERNAL_RESOURCES, Boolean.TRUE);
         try {
@@ -2416,6 +2427,36 @@ public class SvgUtil
         document.getElementById("rankGraph-label-1").setTextContent(CommonTool.abbrNumber(dataMin));
         document.getElementById("rankGraph-label-2").setTextContent(CommonTool.abbrNumber(dataMax));
     }
+    public static Document createPPPlusPanel(PPPlusVO player, ProfileTheme theme) throws IOException
+    {
+        Path filePath = ResourceMonitor.getResourcePath().resolve("static/InfoV2-WhiteSpace.svg");
+        URI inputUri = filePath.toFile().toURI();
+        Document document = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
+        Element svgRoot = document.getDocumentElement();
+        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        HSL mainColor = new HSL(player.getPlayer().getPrimaryColor(), 100, 64);
+        HSL alternativeColor = new HSL(((player.getPlayer().getPrimaryColor() - 120) % 360 + 360) % 360, 86, 52);
+
+        document.getElementById("username").setTextContent(player.getPlayer().getPlayerName());
+        document.getElementById("global-label").setAttribute("fill",mainColor.toString());
+        document.getElementById("country-label").setAttribute("fill",mainColor.toString());
+        document.getElementById("background").setAttribute("fill",mainColor.toString());
+        document.getElementById("global").setTextContent(String.valueOf(player.getPlayer().getGlobalRank()));
+        document.getElementById("country").setTextContent(String.valueOf(player.getPlayer().getCountryRank()));
+        document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getPlayer().getAvatarUrl());
+
+
+        return document;
+    }
+
+
+
+
+
+
+
+
+
     private static void setupProfileBps(Document doc,PlayerInfoVO playerInfo,ProfileTheme theme)
     {
         int listIndex=0;
@@ -2754,6 +2795,36 @@ public class SvgUtil
 
 
 
+    }
+    private static void textElementBackgournd(Document doc, String elementId, int padding, int borderRadius, String color)
+    {
+        UserAgent userAgent = new UserAgentAdapter();
+        DocumentLoader loader = new DocumentLoader(userAgent);
+        BridgeContext ctx = new BridgeContext(userAgent, loader);
+        GVTBuilder builder = new GVTBuilder();
+        GraphicsNode rootNode = builder.build(ctx, doc);
+
+        Element textElement = doc.getElementById(elementId);
+        GraphicsNode textNode = ctx.getGraphicsNode(textElement);
+
+        if (textNode != null) {
+            Rectangle2D bounds = textNode.getBounds();
+            logger.trace("Text bounds: " + bounds);
+            Element rect = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "rect");
+            rect.setAttribute("x", String.valueOf(bounds.getX() - padding));
+            rect.setAttribute("y", String.valueOf(bounds.getY() - padding));
+            rect.setAttribute("width", String.valueOf(bounds.getWidth() + padding + padding));
+            rect.setAttribute("height", String.valueOf(bounds.getHeight() + padding + padding));
+            rect.setAttribute("fill", color);
+            rect.setAttribute("rx", String.valueOf(borderRadius));
+            rect.setAttribute("ry", String.valueOf(borderRadius));
+
+            Node parent = textElement.getParentNode();
+            parent.insertBefore(rect, textElement);
+
+        } else {
+            logger.warn(elementId + ": 无法获取文本节点");
+        }
     }
 
 

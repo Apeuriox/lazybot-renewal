@@ -60,13 +60,18 @@ public class ManageServiceImpl implements ManageService
 
     private static String updateAvatar(UpdateParameter params)
     {
-        PlayerInfoDTO playerInfoDTO= DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(), params.getMode());
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
+        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+
         playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true)));
         return "已更新用户"+playerInfoDTO.getUsername()+"的头像缓存";
     }
     private static String updateOsuTrack(UpdateParameter params)
     {
-        PlayerInfoDTO playerInfoDTO= DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(), params.getMode());
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
+        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
         ApiRequestStarter trackApiRequest = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackUpdate(playerInfoDTO.getId(),params.getMode()));
         UserDifference userDifference = trackApiRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_POST, UserDifference.class);
         return "已更新用户"+playerInfoDTO.getUsername()+"的Osu Track数据";

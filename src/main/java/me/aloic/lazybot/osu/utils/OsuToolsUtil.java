@@ -51,6 +51,14 @@ public class OsuToolsUtil
     {
         return getUserInfoByUsername(username,tokenPO.getAccess_token(),"osu");
     }
+    public static PlayerInfoDTO getUserInfoByUserId(@Nonnull Integer userId, @Nonnull AccessTokenPO tokenPO)
+    {
+        return DataObjectExtractor.extractPlayerInfo(tokenPO.getAccess_token(),userId,"osu");
+    }
+    public static PlayerInfoDTO getUserInfoByUserId(@Nonnull Integer userId, @Nonnull AccessTokenPO tokenPO, String mode)
+    {
+        return DataObjectExtractor.extractPlayerInfo(tokenPO.getAccess_token(),userId,mode);
+    }
     public static PlayerInfoDTO getUserInfoByUsername(@Nonnull String username, @Nonnull String tokenPO,String mode)
     {
         return DataObjectExtractor.extractPlayerInfo(tokenPO,username,mode);

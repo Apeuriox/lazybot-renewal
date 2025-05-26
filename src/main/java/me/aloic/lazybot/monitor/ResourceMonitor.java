@@ -58,6 +58,7 @@ public class ResourceMonitor
      * @throws IOException 如果提取失败
      */
     private static void extractResources(String resourceDir, File targetDir) throws IOException {
+        resourceDir = "BOOT-INF/classes/" + resourceDir;
         ApplicationHome home = new ApplicationHome(DiscordBotRunner.class);
         File source = home.getSource();
         if (source != null && source.isFile() && source.getName().endsWith(".jar")) {
@@ -74,8 +75,12 @@ public class ResourceMonitor
                                 throw new IOException("无法创建目录：" + targetFile.getAbsolutePath());
                             }
                         } else {
+                            logger.info("正在提取资源：{}", targetFile.getAbsolutePath());
                             copyResourceFromJar(jar, entry, targetFile);
                         }
+                    }
+                    else {
+                        logger.info("跳过资源：{}", entry.getName());
                     }
                 }
             }

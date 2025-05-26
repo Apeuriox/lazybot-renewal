@@ -81,7 +81,10 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] bplistCardView(BplistParameter params) throws Exception
     {
-        PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
+        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
         List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(
                 params.getAccessToken(),
@@ -190,7 +193,10 @@ public class PlayerServiceImpl implements PlayerService
     }
     @Override
     public byte[] card(GeneralParameter params) throws Exception {
-        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode()));
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
+        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
         playerInfoVO.setMode(params.getMode());
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoCard(playerInfoVO));
     }
@@ -247,7 +253,9 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] bplistListView(BplistParameter params) throws Exception
     {
-        PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
+        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
         List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(
                 params.getAccessToken(),
