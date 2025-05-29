@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.oauth.AccessTokenDTO;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
@@ -73,6 +74,7 @@ public class TokenMonitor
         }
         catch (Exception e) {
             logger.error("{} : {}", e.getClass(), e.getMessage());
+            throw new LazybotRuntimeException("数据库操作失败，请检查数据库服务是否正常");
         }
     }
 

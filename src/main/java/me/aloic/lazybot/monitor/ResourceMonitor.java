@@ -58,13 +58,13 @@ public class ResourceMonitor
      * @throws IOException 如果提取失败
      */
     private static void extractResources(String resourceDir, File targetDir) throws IOException {
-        resourceDir = "BOOT-INF/classes/" + resourceDir;
         ApplicationHome home = new ApplicationHome(DiscordBotRunner.class);
         File source = home.getSource();
         if (source != null && source.isFile() && source.getName().endsWith(".jar")) {
             logger.info("正在从 JAR 文件中提取资源");
             try (JarFile jar = new JarFile(source)) {
                 Enumeration<JarEntry> entries = jar.entries();
+                resourceDir = "BOOT-INF/classes/" + resourceDir;
                 while (entries.hasMoreElements()) {
                     JarEntry entry = entries.nextElement();
                     if (entry.getName().startsWith(resourceDir + "/")) {
