@@ -35,7 +35,10 @@ public class GeneralParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(GeneralParameter parameter, AccessTokenPO accessTokenPO)
     {
-        if (parameter.getPlayerName() == null) parameter.setPlayerId(accessTokenPO.getPlayer_id());
+        if (parameter.getPlayerName() == null){
+            parameter.setPlayerId(accessTokenPO.getPlayer_id());
+            parameter.setPlayerName(accessTokenPO.getPlayer_name());
+        }
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
     }

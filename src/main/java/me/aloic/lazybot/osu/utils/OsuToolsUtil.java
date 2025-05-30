@@ -10,6 +10,7 @@ import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.parameter.BpifParameter;
+import me.aloic.lazybot.parameter.LazybotCommandParameter;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.TransformerUtil;
@@ -45,6 +46,18 @@ public class OsuToolsUtil
         if(!Objects.equals(username, tokenPO.getPlayer_name()))
             playerId= OsuToolsUtil.getUserIdByUsername(username, tokenPO.getAccess_token());
         return playerId;
+    }
+    public static void setUserStats(@Nonnull String username, @Nonnull AccessTokenPO tokenPO, LazybotCommandParameter parameter) {
+        if(!Objects.equals(username, tokenPO.getPlayer_name())) {
+            PlayerInfoDTO playerInfoDTO = DataObjectExtractor.extractPlayerInfo(tokenPO.getAccess_token(),username,"osu");
+            parameter.setPlayerName(playerInfoDTO.getUsername());
+            parameter.setPlayerId(playerInfoDTO.getId());
+        }
+        else {
+            parameter.setPlayerName(tokenPO.getPlayer_name());
+            parameter.setPlayerId(tokenPO.getPlayer_id());
+        }
+
     }
 
     public static PlayerInfoDTO getUserInfoByUsername(@Nonnull String username, @Nonnull AccessTokenPO tokenPO)
