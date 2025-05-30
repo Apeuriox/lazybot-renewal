@@ -80,7 +80,7 @@ public class ResourceMonitor
                         }
                     }
                     else {
-                        logger.info("跳过资源：{}", entry.getName());
+                        logger.trace("跳过资源：{}", entry.getName());
                     }
                 }
             }
