@@ -88,6 +88,26 @@ public class OsuToolsUtil
         beatmapVO.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapVO.getBeatmapset_id()));
         return beatmapVO;
     }
+    public static MapScore setupPlayerStatics(MapScore mapScore, PlayerInfoDTO player)
+    {
+        String bannerUrl = AssertDownloadUtil.bannerAbsolutePath(player,false);
+        String avatarUrl = AssertDownloadUtil.avatarAbsolutePath(player,false);
+        mapScore.setAvatarUrl(avatarUrl);
+        mapScore.setBannerUrl(bannerUrl);
+        return mapScore;
+    }
+    public static List<MapScore> setupPlayerStatics(List<MapScore> mapScore, PlayerInfoDTO player)
+    {
+        String bannerUrl = AssertDownloadUtil.bannerAbsolutePath(player,false);
+        String avatarUrl = AssertDownloadUtil.avatarAbsolutePath(player,false);
+        for (MapScore score : mapScore)
+        {
+            score.setPlayerName(player.getUsername());
+            score.setAvatarUrl(avatarUrl);
+            score.setBannerUrl(bannerUrl);
+        }
+        return mapScore;
+    }
 
     public static ScoreVO setupScoreVO(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override)
     {

@@ -1,0 +1,387 @@
+<svg width="800" height="700" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<style>
+			  .cls-1 {
+        font-family: Torus-Regular, Torus;
+      }
+	
+	       .cls-2 {
+		font-family: Rubik-Bold, Rubik;
+		font-variation-settings: 'wght' 700;
+		font-weight: 700;
+      }
+	  .cls-3{
+		font-family: Rubik-Regular, Rubik;
+	  }
+	  .cls-4 {
+        font-family: Outfit-Regular, Outfit;
+      }
+		</style>
+		<filter id="filter_18_5_dd" x="1" y="0" width="808" height="58" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.33333"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
+		</filter>
+		<filter id="filter_18_290_dd" x="2" y="-2176" width="0" height="0" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.33333"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
+		</filter>
+		<filter id="filter_18_41_dd" x="31.426891" y="182.732666" width="219.547958" height="38.659180" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.33333"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
+		</filter>
+		<filter id="filter_18_42_dd" x="32.692436" y="232.951904" width="127.533791" height="29.684326" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.33333"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
+		</filter>
+		<filter id="filter_18_59_dd" x="0" y="337" width="237.399002" height="43" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.66667"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
+		</filter>
+		<filter id="filter_18_70_dd" x="226.101791" y="337" width="169.626999" height="43" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.66667"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
+		</filter>
+		<filter id="filter_18_80_dd" x="385.101807" y="337" width="260.136475" height="43" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.66667"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
+		</filter>
+		<filter id="filter_18_90_dd" x="636.101746" y="337" width="166.398254" height="43" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+			<feOffset dx="0" dy="4"/>
+			<feGaussianBlur stdDeviation="1.66667"/>
+			<feComposite in2="hardAlpha" operator="out" k2="-1" k3="1"/>
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+			<feBlend mode="normal" in2="BackgroundImageFix" result="effect_dropShadow_1"/>
+			<feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
+		</filter>
+		<linearGradient x1="752" y1="428" x2="571.5" y2="428" id="rank-border-A" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#88DA20"/>
+			<stop offset="1" stop-color="#88DA20" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="571.5" y2="428" id="rank-border-B" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#e9b941"/>
+			<stop offset="1" stop-color="#e9b941" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="571.5" y2="428" id="rank-border-C" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#fa8a59"/>
+			<stop offset="1" stop-color="#fa8a59" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="571.5" y2="428" id="rank-border-D" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#f55757"/>
+			<stop offset="1" stop-color="#f55757" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="571.5" y2="428" id="rank-border-X" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#ce1c9d"/>
+			<stop offset="1" stop-color="#ce1c9d" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="571.5" y2="428" id="rank-border-S" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#02b5c3"/>
+			<stop offset="1" stop-color="#02b5c3" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="571.5" y2="428" id="rank-border-SH" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#02b5c3"/>
+			<stop offset="1" stop-color="#02b5c3" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="571.5" y2="428" id="rank-border-XH" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#ce1c9d"/>
+			<stop offset="1" stop-color="#ce1c9d" stop-opacity="0"/>
+		</linearGradient>
+
+		<linearGradient x1="752" y1="428" x2="574" y2="428" id="rank-filler-A" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#88DA20"/>
+			<stop offset="1" stop-color="#88DA20" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="574" y2="428" id="rank-filler-B" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#e9b941"/>
+			<stop offset="1" stop-color="#e9b941" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="574" y2="428" id="rank-filler-C" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#fa8a59"/>
+			<stop offset="1" stop-color="#fa8a59" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="574" y2="428" id="rank-filler-D" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#f55757"/>
+			<stop offset="1" stop-color="#f55757" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="574" y2="428" id="rank-filler-X" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#ce1c9d"/>
+			<stop offset="1" stop-color="#ce1c9d" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="574" y2="428" id="rank-filler-S" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#02b5c3"/>
+			<stop offset="1" stop-color="#02b5c3" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="574" y2="428" id="rank-filler-SH" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#02b5c3"/>
+			<stop offset="1" stop-color="#02b5c3" stop-opacity="0"/>
+		</linearGradient>
+		<linearGradient x1="752" y1="428" x2="574" y2="428" id="rank-filler-XH" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#ce1c9d"/>
+			<stop offset="1" stop-color="#ce1c9d" stop-opacity="0"/>
+		</linearGradient>
+
+
+
+
+		<pattern id="pattern_29_1060" patternContentUnits="objectBoundingBox" width="1" height="1">
+			<use xlink:href="#image29_106_0" transform="matrix(0.000488,0,0,0.004533,0,-0.737476)"/>
+		</pattern>
+		<linearGradient x1="636.000671" y1="428" x2="306.712036" y2="428" id="gray-1" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#444444" stop-opacity="0.701961"/>
+			<stop offset="1" stop-color="" stop-opacity="0"/>
+		</linearGradient>
+
+
+
+    <clipPath id="rankClip">
+        	<rect x="745" y="398" rx="10" width="25" height="60"/>
+    </clipPath>
+    <clipPath id="bannerClip">
+        	<rect x="74" y="398" rx="10" width="557" height="60"/>
+	
+    </clipPath>
+	<clipPath id="avatarClip">
+        <rect x="30" y="398" rx="10" width="60" height="60"/>
+    </clipPath>
+
+
+	</defs>
+	<rect id="container" width="800" height="700" fill="#1F1E26"/>
+	<image
+              xlink:href="assets/mutsumichan.png"
+              preserveAspectRatio="xMidYMid slice"
+              y="0" width="800" height="305" id="map-bg"/>
+	<rect id="map-bg-dim" y="0" width="800" height="305" fill="#2A2933" opacity="0.5"/>
+	
+	<!-- <g filter="url(#filter_18_5_dd)">
+		<rect id="header-bg" width="800" height="50" fill="#2E3835"/>
+	</g>
+	<rect id="avatar" x="10" y="5" rx="5" width="40" height="40" fill="#C4C4C4"/>
+ 	<text class="cls-1" x="65" y="18" font-size="6px" fill="#fff">Playername</text>
+	<text class="cls-1" x="178" y="18" font-size="6px" fill="#fff">Performance</text>
+    <text class="cls-1" x="65" y="35" font-weight="600" id="playername" font-size="16px" fill="#fff">Playername</text>
+    <text class="cls-1" x="178" y="35" font-weight="600" id="perforance" font-size="16px" fill="#fff">0000pp</text>
+     
+	<rect id="mode-bg" x="623" width="182" height="50" fill="#222A27"/>
+	<path id="mania" d="M770.5 14.91C775.78 14.91 780.08 19.21 780.08 24.5C780.08 29.78 775.78 34.08 770.5 34.08C765.21 34.08 760.91 29.78 760.91 24.5C760.91 19.21 765.21 14.91 770.5 14.91ZM770.5 13C764.15 13 759 18.15 759 24.5C759 30.84 764.15 36 770.5 36C776.84 36 782 30.84 782 24.5C782 18.15 776.84 13 770.5 13ZM771.45 32.16L771.45 16.83C771.45 16.3 771.02 15.87 770.5 15.87C769.97 15.87 769.54 16.3 769.54 16.83L769.54 32.16C769.54 32.69 769.97 33.12 770.5 33.12C771.02 33.12 771.45 32.69 771.45 32.16ZM775.29 28.33L775.29 20.66C775.29 20.13 774.86 19.7 774.33 19.7C773.8 19.7 773.37 20.13 773.37 20.66L773.37 28.33C773.37 28.86 773.8 29.29 774.33 29.29C774.86 29.29 775.29 28.86 775.29 28.33ZM767.62 28.33L767.62 20.66C767.62 20.13 767.19 19.7 766.66 19.7C766.13 19.7 765.7 20.13 765.7 20.66L765.7 28.33C765.7 28.86 766.13 29.29 766.66 29.29C767.19 29.29 767.62 28.86 767.62 28.33Z" fill="#E6E6E6" fill-opacity="1" fill-rule="nonzero"/>
+	<path id="osu" d="M655.5 14.91C660.78 14.91 665.08 19.21 665.08 24.5C665.08 29.78 660.78 34.08 655.5 34.08C650.21 34.08 645.91 29.78 645.91 24.5C645.91 19.21 650.21 14.91 655.5 14.91ZM655.5 13C649.15 13 644 18.15 644 24.5C644 30.84 649.15 36 655.5 36C661.84 36 667 30.84 667 24.5C667 18.15 661.84 13 655.5 13ZM655.5 16.83C651.26 16.83 647.83 20.26 647.83 24.5C647.83 28.73 651.26 32.16 655.5 32.16C659.73 32.16 663.16 28.73 663.16 24.5C663.16 20.26 659.73 16.83 655.5 16.83Z" fill="#00FFAA" fill-opacity="1" fill-rule="nonzero"/>
+	<path id="taiko" d="M693.83 14.91C699.11 14.91 703.41 19.21 703.41 24.5C703.41 29.78 699.11 34.08 693.83 34.08C688.55 34.08 684.25 29.78 684.25 24.5C684.25 19.21 688.55 14.91 693.83 14.91ZM693.83 13C687.48 13 682.33 18.15 682.33 24.5C682.33 30.84 687.48 36 693.83 36C700.18 36 705.33 30.84 705.33 24.5C705.33 18.15 700.18 13 693.83 13ZM693.83 18.75C697 18.75 699.58 21.32 699.58 24.5C699.58 27.67 697 30.25 693.83 30.25C690.65 30.25 688.08 27.67 688.08 24.5C688.08 21.32 690.65 18.75 693.83 18.75ZM693.83 16.83C689.6 16.83 686.16 20.26 686.16 24.5C686.16 28.73 689.6 32.16 693.83 32.16C698.06 32.16 701.5 28.73 701.5 24.5C701.5 20.26 698.06 16.83 693.83 16.83ZM694.79 17.21L692.87 17.21L692.87 31.78L694.79 31.78L694.79 17.21Z" fill="#E6E6E6" fill-opacity="1" fill-rule="nonzero"/>
+	<path id="fruits" d="M732.16 14.91C737.44 14.91 741.75 19.21 741.75 24.5C741.75 29.78 737.44 34.08 732.16 34.08C726.88 34.08 722.58 29.78 722.58 24.5C722.58 19.21 726.88 14.91 732.16 14.91ZM732.16 13C725.81 13 720.66 18.15 720.66 24.5C720.66 30.84 725.81 36 732.16 36C738.51 36 743.66 30.84 743.66 24.5C743.66 18.15 738.51 13 732.16 13ZM733.12 20.66C733.12 21.72 732.26 22.58 731.2 22.58C730.15 22.58 729.29 21.72 729.29 20.66C729.29 19.6 730.15 18.75 731.2 18.75C732.26 18.75 733.12 19.6 733.12 20.66ZM731.2 26.41C730.15 26.41 729.29 27.27 729.29 28.33C729.29 29.39 730.15 30.25 731.2 30.25C732.26 30.25 733.12 29.39 733.12 28.33C733.12 27.27 732.26 26.41 731.2 26.41ZM735.04 22.58C733.98 22.58 733.12 23.44 733.12 24.5C733.12 25.55 733.98 26.41 735.04 26.41C736.1 26.41 736.95 25.55 736.95 24.5C736.95 23.44 736.1 22.58 735.04 22.58Z" fill="#E6E6E6" fill-opacity="1" fill-rule="nonzero"/>
+	 -->
+	
+	<rect id="map-stats-bg" y="302" rx="10" width="800" height="78" fill="#FD9A68"/>
+	<rect id="star-left-bg"  y="302" width="12" height="78" fill="#FD9A68"/>
+	<rect id="stats-all-bg"  y="332" rx="10" width="798" height="46" fill="#222A26"/>
+	<rect id="stats-left-bg"  y="332" width="12" height="46" fill="#222A26"/>
+	<rect id="star-all-bg" x="60" y="307" rx="10" width="54" height="20" fill="#3F271A"/>
+	<g transform="translate(-5,0)">
+		<path id="star-all-icon" d="M75.41 313.05C75.42 313.01 75.45 313 75.49 313C75.54 313 75.57 313.01 75.58 313.05L76.59 315.19C76.6 315.22 76.63 315.24 76.66 315.25L78.91 315.59C78.95 315.6 78.98 315.62 78.99 315.66C79 315.7 78.99 315.74 78.96 315.77L77.34 317.43C77.31 317.46 77.31 317.49 77.31 317.52L77.69 319.87C77.7 319.92 77.69 319.95 77.66 319.98C77.62 320 77.59 320 77.55 319.98L75.54 318.87C75.51 318.86 75.48 318.86 75.45 318.87L73.44 319.98C73.4 320 73.37 320 73.33 319.98C73.3 319.95 73.29 319.92 73.3 319.87L73.68 317.52C73.68 317.49 73.68 317.46 73.65 317.43L72.03 315.77C72 315.74 71.99 315.7 72 315.66C72.01 315.62 72.04 315.6 72.08 315.59L74.33 315.25C74.36 315.24 74.39 315.22 74.4 315.19L75.41 313.05Z" fill="#FD9A68" fill-opacity="1" fill-rule="nonzero"/>
+	</g>
+	<text class="cls-1" x="92" y="320.9" text-anchor="middle" font-weight="600" id="star-all-num" font-size="13px" fill="#FD9A68">8.74</text>
+    <text class="cls-1" x="205" y="320.9" fill="#3F271A" id="allversion">
+		<tspan font-size="12px" id="version" font-weight="600">Cruelty Gives Birth to Beauty, and the World Crawls for the Heavenly Euphoria</tspan>
+		<tspan font-size="10px">mapped by</tspan>
+		<tspan font-size="10px" font-weight="600" id="mapper">Livermorium</tspan>
+	</text>
+ 
+    <rect id="star-aim-bg" x="122" y="315" rx="6" width="34" height="12" fill="#3F271A"/>
+	<g transform="translate(-5,0)">
+	
+		<path id="star-aim-icon" d="M134.22 318.54C134.23 318.51 134.25 318.5 134.28 318.5C134.31 318.5 134.33 318.51 134.34 318.54L135.04 320.06C135.05 320.09 135.07 320.1 135.09 320.1L136.65 320.35C136.68 320.35 136.7 320.37 136.71 320.4C136.72 320.43 136.71 320.45 136.69 320.48L135.56 321.66C135.54 321.68 135.54 321.7 135.54 321.73L135.81 323.41C135.81 323.44 135.8 323.46 135.78 323.48C135.76 323.5 135.73 323.5 135.71 323.49L134.31 322.69C134.29 322.68 134.27 322.68 134.25 322.69L132.86 323.49C132.83 323.5 132.81 323.5 132.78 323.48C132.76 323.46 132.75 323.44 132.75 323.41L133.02 321.73C133.03 321.7 133.02 321.68 133 321.66L131.87 320.48C131.85 320.45 131.85 320.43 131.86 320.4C131.86 320.37 131.88 320.35 131.91 320.35L133.47 320.1C133.49 320.1 133.51 320.09 133.52 320.06L134.22 318.54Z" fill="#FD9A68" fill-opacity="1" fill-rule="nonzero"/>
+	</g>
+	<text class="cls-1" x="142.5" y="323.5" text-anchor="middle" font-weight="600" id="star-aim-num" font-size="8px" fill="#FD9A68">4.61</text>
+    <text class="cls-1" x="126.3" y="312" font-weight="600" id="star-aim-num" font-size="6px" fill="#3F271A">Stars Aim</text>
+
+	<rect id="star-spd-bg" x="160" y="315" rx="6" width="34" height="12" fill="#3F271A"/>
+	<g transform="translate(-5,0)">
+		<path id="star-spd-icon" d="M172.22 318.54C172.23 318.51 172.25 318.5 172.28 318.5C172.31 318.5 172.33 318.51 172.34 318.54L173.04 320.06C173.05 320.09 173.07 320.1 173.09 320.1L174.65 320.35C174.68 320.35 174.7 320.37 174.71 320.4C174.72 320.43 174.71 320.45 174.69 320.48L173.56 321.66C173.54 321.68 173.54 321.7 173.54 321.73L173.81 323.41C173.81 323.44 173.8 323.46 173.78 323.48C173.76 323.5 173.73 323.5 173.71 323.49L172.31 322.69C172.29 322.68 172.27 322.68 172.25 322.69L170.86 323.49C170.83 323.5 170.81 323.5 170.78 323.48C170.76 323.46 170.75 323.44 170.75 323.41L171.02 321.73C171.03 321.7 171.02 321.68 171 321.66L169.87 320.48C169.85 320.45 169.85 320.43 169.86 320.4C169.86 320.37 169.88 320.35 169.91 320.35L171.47 320.1C171.49 320.1 171.51 320.09 171.52 320.06L172.22 318.54Z" fill="#FD9A68" fill-opacity="1" fill-rule="nonzero"/>
+	</g>
+	<text class="cls-1" x="180" y="323.5" text-anchor="middle" font-weight="600" id="star-spd-num" font-size="8px" fill="#FD9A68">3.58</text>
+    <text class="cls-1" x="160" y="312" font-weight="600" id="star-spd-num" font-size="6px" fill="#3F271A">Stars Speed</text>
+
+	<g transform="translate(-5,0)">
+		<path id="stats-mode" d="M40.44 308.62Q41.65 308.23 43 308.23Q44.19 308.23 45.29 308.55Q45.8 308.69 46.3 308.9Q47.59 309.45 48.59 310.35Q48.79 310.53 48.97 310.72Q49.5 311.25 49.93 311.86Q50.44 312.59 50.8 313.42Q50.93 313.73 51.04 314.05Q51.45 315.31 51.45 316.7Q51.45 317.89 51.14 319Q51 319.51 50.79 320Q50.23 321.3 49.34 322.29Q49.16 322.49 48.97 322.67Q48.44 323.2 47.84 323.63Q47.11 324.14 46.27 324.5Q45.93 324.64 45.59 324.76Q44.36 325.16 43 325.16Q41.83 325.16 40.74 324.86Q40.2 324.71 39.69 324.49Q38.38 323.93 37.37 323.01Q37.19 322.85 37.02 322.67Q36.49 322.15 36.07 321.55Q35.55 320.82 35.19 319.97Q35.05 319.65 34.94 319.32Q34.54 318.08 34.54 316.7Q34.54 315.46 34.87 314.32Q35.01 313.85 35.2 313.39Q35.78 312.04 36.72 311.03Q36.86 310.87 37.02 310.72Q37.57 310.17 38.2 309.73Q38.91 309.24 39.72 308.89Q40.07 308.74 40.44 308.62ZM44.91 309.93Q43.99 309.68 43 309.68Q42 309.68 41.08 309.93Q40.23 310.17 39.45 310.63Q38.66 311.1 38.03 311.73Q37.4 312.36 36.93 313.15Q36.48 313.92 36.24 314.75Q35.98 315.69 35.98 316.7Q35.98 317.71 36.24 318.64Q36.48 319.47 36.93 320.24Q37.41 321.05 38.05 321.68Q38.67 322.3 39.45 322.76Q40.23 323.22 41.08 323.46Q42 323.72 43 323.72Q43.99 323.72 44.91 323.46Q45.76 323.22 46.54 322.76Q47.32 322.3 47.94 321.68Q48.58 321.05 49.06 320.24Q49.51 319.47 49.75 318.64Q50.01 317.71 50.01 316.7Q50.01 315.69 49.75 314.75Q49.51 313.92 49.06 313.15Q48.59 312.36 47.96 311.73Q47.33 311.1 46.54 310.63Q45.76 310.17 44.91 309.93ZM41.86 312.56Q42.41 312.41 43 312.41Q43.6 312.41 44.16 312.57Q44.66 312.71 45.14 312.99Q45.64 313.28 46.04 313.69Q46.42 314.07 46.7 314.55Q46.97 315.01 47.11 315.5Q47.28 316.08 47.28 316.7Q47.28 317.3 47.12 317.86Q46.98 318.37 46.7 318.84Q46.42 319.32 46.04 319.7Q45.64 320.11 45.14 320.4Q44.66 320.68 44.16 320.82Q43.6 320.98 43 320.98Q42.41 320.98 41.86 320.83Q41.34 320.68 40.85 320.4Q40.36 320.11 39.97 319.72Q39.57 319.33 39.29 318.84Q39.01 318.37 38.87 317.86Q38.71 317.3 38.71 316.7Q38.71 316.08 38.88 315.5Q39.02 315.01 39.29 314.55Q39.57 314.06 39.97 313.67Q40.36 313.28 40.85 312.99Q41.34 312.71 41.86 312.56Z" fill="#3F271A" fill-opacity="1" fill-rule="evenodd"/>
+	</g>
+
+	<g id="ranked" transform="translate(0,-120)">
+		<rect x="733" y="138" rx="6.5" width="47" height="13" fill="#B2FF66"/>
+		<text class="cls-2" x="736" y="148" font-weight="800" font-size="10px" fill="#394642">RANKED</text>
+	</g>
+
+	<text class="cls-1" x="30" y="205" font-weight="600" font-size="35px" id="title" fill="#FFF">Symbol I  Fire</text>
+	<text class="cls-1" x="31" y="250" font-weight="600" font-size="25px" id="artist" fill="#FFF">Ave Mujica</text>
+	
+	<rect id="basic-bg" x="35" y="273" rx="2" width="153" height="20" fill="#222A26" fill-opacity="0.5"/>
+	<text class="cls-1" x="44" y="286.8" font-weight="600" font-size="12px" fill="#FFF">Length</text>
+	<text class="cls-1" id="length" x="89" y="286.8" font-weight="600" font-size="12px" fill="#DBF0E9">5:07</text>
+	
+	<text class="cls-1" x="130" y="286.8" font-weight="600" font-size="12px" fill="#FFF">BPM</text>
+	<text class="cls-1" id="bpm" x="161" y="286.8" font-weight="600" font-size="12px" fill="#DBF0E9">236</text>
+	
+	<rect id="basic-bg-2" x="197" y="273" rx="2" width="200" height="20" fill="#222A26" fill-opacity="0.5"/>
+	<text class="cls-1" x="202" y="286.8" font-weight="600" font-size="12px" fill="#FFF">Playcount</text>
+	<text class="cls-1" id="playcount" x="268" y="286.8" font-weight="600" font-size="12px" fill="#DBF0E9">7,106</text>
+	<text class="cls-1" x="313" y="286.8" font-weight="600" font-size="12px" fill="#FFF">Favourite</text>
+	<text class="cls-1" id="favourite" x="376" y="286.8" font-weight="600" font-size="12px" fill="#DBF0E9">87</text>
+	
+	
+	<g filter="url(#filter_18_59_dd)" transform="translate(-5.0)">
+		<path id="stats-left-bg" d="M10 338L227.39 338C230.85 338 233.26 341.43 232.1 344.68L223.85 367.68C223.13 369.67 221.25 371 219.14 371L10 371C7.23 371 5 368.76 5 366L5 343C5 340.23 7.23 338 10 338Z" fill="#2E3835" fill-opacity="1" fill-rule="evenodd"/>
+	
+	
+	</g>
+	<rect id="stats-left-bg-2" y="338" width="10" height="33" fill="#2E3835"/>
+	<text class="cls-1" x="32" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Combo</text>
+	<text class="cls-1" x="85" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Circles</text>
+	<text class="cls-1" x="132" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Sliders</text>
+	<text class="cls-1" x="178" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Spinners</text>
+
+	<text class="cls-1" x="32" y="365" font-size="12px" fill="#fff" id="max-combo">2153x</text>
+	<text class="cls-1" x="85" y="365" font-size="12px" fill="#fff" id="circles">1527</text>
+	<text class="cls-1" x="132" y="365" font-size="12px" fill="#fff" id="sliders">285</text>
+	<text class="cls-1" x="178" y="365" font-size="12px" fill="#fff" id="spinners">1</text>
+
+	
+	<g filter="url(#filter_18_70_dd)" transform="translate(-5.0)">
+		<path id="stats-middle-1-bg" d="M244.35 338L385.72 338C389.18 338 391.59 341.43 390.43 344.68L382.18 367.68C381.46 369.67 379.58 371 377.47 371L236.1 371C232.64 371 230.23 367.56 231.4 364.31L239.65 341.31C240.36 339.32 242.24 338 244.35 338Z" fill="#2E3835" fill-opacity="1" fill-rule="evenodd"/>
+	</g>
+
+	<text class="cls-1" x="240.7" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">CS</text>
+	<text class="cls-1" x="279.3" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">AR</text>
+	<text class="cls-1" x="317" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">OD</text>
+	<text class="cls-1" x="355" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">HP</text>
+
+	<text class="cls-1" x="240.7" y="365" font-size="12px" fill="#fff" id="cs">4.2</text>
+	<text class="cls-1" x="279.3" y="365" font-size="12px" fill="#fff" id="ar">9.8</text>
+	<text class="cls-1" x="317" y="365" font-size="12px" fill="#fff" id="od">9.8</text>
+	<text class="cls-1" x="355" y="365" font-size="12px" fill="#fff" id="hp">5.5</text>
+
+	<g filter="url(#filter_18_80_dd)" transform="translate(-5.0)">
+		<path id="stats-middle-2-bg" d="M403.35 338L635.23 338C638.69 338 641.1 341.43 639.94 344.68L631.68 367.68C630.97 369.67 629.09 371 626.98 371L395.1 371C391.64 371 389.23 367.56 390.4 364.31L398.65 341.31C399.36 339.32 401.24 338 403.35 338Z" fill="#2E3835" fill-opacity="1" fill-rule="evenodd"/>
+	</g>
+	<text class="cls-1" x="403" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">AimStrain</text>
+	<text class="cls-1" x="453" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">SpeedStrain</text>
+	<text class="cls-1" x="515" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">SliderFactor</text>
+	<text class="cls-1" x="576" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">SpeedNote</text>
+
+	<text class="cls-1" x="403" y="365" font-size="12px" fill="#fff" id="aimstrain">160</text>
+	<text class="cls-1" x="453" y="365" font-size="12px" fill="#fff" id="speedstrain">148</text>
+	<text class="cls-1" x="515" y="365" font-size="12px" fill="#fff" id="sliderfactor">99.94%</text>
+	<text class="cls-1" x="576" y="365" font-size="12px" fill="#fff" id="speednote">613</text>
+
+    <g filter="url(#filter_18_90_dd)" transform="translate(-5.0)">
+		<path id="stats-right-bg" d="M654.35 338L792.5 338C795.26 338 797.5 340.23 797.5 343L797.5 366C797.5 368.76 795.26 371 792.5 371L646.1 371C642.64 371 640.23 367.56 641.4 364.31L649.65 341.31C650.36 339.32 652.24 338 654.35 338Z" fill="#2E3835" fill-opacity="1" fill-rule="evenodd"/>
+	</g>
+	<text class="cls-1" x="659" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Beatmap ID</text>
+	<text class="cls-1" x="714" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Beatmap Set ID</text>
+
+	<text class="cls-1" x="659" y="365" font-size="12px" fill="#fff" id="bid">5068198</text>
+	<text class="cls-1" x="714" y="365" font-size="12px" fill="#fff" id="sid">2354215</text>
+
+
+
+
+
+
+
+	<rect id="list-all-bg" x="30" y="398" rx="10" width="740" height="60" fill="#88DA20"/>
+	<rect id="left" x="30" y="398" rx="10" width="717" height="60" fill="#414141"/>
+	<rect id="border" x="32" y="399" rx="10" width="715" fill="none" height="58" stroke="url(#rank-border-A)" stroke-width="2"/>
+	<rect id="grad" x="30" y="398" rx="10" width="717" height="60" fill="url(#rank-filler-A)" fill-opacity="0.5"/>
+	<g clip-path="url(#rankClip)">
+		<text class="cls-3" transform="rotate(-30,753,450)" font-weight="700" x="753" y="450" font-size="38px" opacity="0.8" fill="#36570D" id="list-rank">A</text>
+	</g>
+
+	<rect id="dim1" x="54" y="400" rx="8" width="691" height="56" fill="" fill-opacity="0.3"/>
+	<text class="cls-1" x="646" font-weight="300" y="444" font-size="28px" fill="#fff" id="list-pp">4321pp</text>
+
+	<g>
+		<rect id="list-mod-bg" x="715" y="408" rx="5" width="19" height="10" fill="#FF6666"/>
+		<text class="cls-4" x="719" font-weight="719" y="416" font-size="8px" fill="#6B2E2E" id="list-mod-name">HD</text>
+
+	</g>
+	
+	<g transform="translate(-22,0)">
+		<rect id="list-mod-bg" x="715" y="408" rx="5" width="19" height="10" fill="#FF6666"/>
+		<text class="cls-4" x="719" font-weight="719" y="416" font-size="8px" fill="#6B2E2E" id="list-mod-name">HR</text>
+	</g>
+
+	<rect id="divisor" x="30" y="398" rx="10" width="604" height="60" fill="#262626"/>
+		<image
+              xlink:href="assets/banner.jpeg"
+              preserveAspectRatio="xMidYMid slice"
+              x="74" y="398" width="557" height="60" id="player-bg"
+			  clip-path="url(#bannerClip)" opacity="0.3"/>
+	<rect id="banner-dim" x="74" y="398" rx="10" width="557" height="60" fill-opacity="0.250000"/>
+	<rect id="idkwhat" x="54" y="398" rx="10" width="577" height="60" fill="url(#gray-1)"/>
+	
+	<text class="cls-1" x="104" font-weight="600" y="423" font-size="18px" fill="#fff">Apeuriox</text>
+	<text class="cls-1" x="104" y="435" font-size="8px" fill="#fff">Mar. 15th 2025 // 3 days ago</text>
+	<text class="cls-1" x="104" font-weight="600" y="450" font-size="12px" fill="#F3F3F3" opacity="0.9">#1</text>
+	
+	<text class="cls-1" x="505" y="412" font-size="6px" fill="#B9C1C6" >Accuracy</text>
+	<text class="cls-1" x="582" y="412" font-size="6px" fill="#B9C1C6" >Combo</text>
+	<text class="cls-1" x="505" y="427" font-size="15px" fill="#fff" >100.00%</text>
+	<text class="cls-1" x="582" y="427" font-size="15px" fill="#fff" >2121x</text>
+
+	<text class="cls-1" x="485" y="437.8" font-size="6px" fill="#B9C1C6" >300</text>
+	<text class="cls-1" x="521" y="437.8" font-size="6px" fill="#B9C1C6" >100</text>
+	<text class="cls-1" x="551" y="437.8" font-size="6px" fill="#B9C1C6" >50</text>
+	<text class="cls-1" x="579" y="437.8" font-size="6px" fill="#B9C1C6" >Miss</text>
+
+	<text class="cls-1" x="485" y="450" font-size="12px" fill="#fff" >1807</text>
+	<text class="cls-1" x="521" y="450" font-size="12px" fill="#fff" >16</text>
+	<text class="cls-1" x="551" y="450" font-size="12px" fill="#fff" >0</text>
+	<text class="cls-1" x="579" y="450" font-size="12px" fill="#fff" >1</text>
+
+	<image
+              xlink:href="assets/avatar.jpg"
+              preserveAspectRatio="xMidYMid slice"
+              x="30" y="398" width="60" height="60" id="player-avatar"
+			  clip-path="url(#avatarClip)"/>
+	<rect x="30" y="398" rx="10" width="60" height="60" opacity="0.1"/>
+	
+</svg>

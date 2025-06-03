@@ -4,10 +4,7 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import me.aloic.lazybot.osu.dao.entity.vo.PPPlusVO;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
@@ -24,6 +21,7 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spring.osu.extended.rosu.OsuDifficultyAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -69,6 +67,8 @@ public class SvgUtil
             3,4000,
             4, 5000,
             5,6000);
+    private static final Map<String, String> rankColorPeppyMap;
+    private static final Map<String, String> rankIconPeppyMap;
     static{
          transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_ALLOW_EXTERNAL_RESOURCES, Boolean.TRUE);
         try {
@@ -78,6 +78,26 @@ public class SvgUtil
             logger.error(e.getMessage());
             throw new LazybotRuntimeException("Batik转换器初始化失败");
         }
+        rankColorPeppyMap = Map.of(
+                "A", "#88DA20",
+                "B", "#e9b941",
+                "C", "#fa8a59",
+                "D", "#f55757",
+                "S", "#02b5c3",
+                "X", "#ce1c9d",
+                "SH", "#02b5c3",
+                "XH", "#ce1c9d"
+        );
+        rankIconPeppyMap = Map.of(
+                "A", "#36570d",
+                "B", "#553a2b",
+                "C", "#473625",
+                "D", "#512525",
+                "S", "#ffd362",
+                "X", "#ffd362",
+                "SH", "#ddf3f9",
+                "XH", "#ddf3f9"
+        );
     }
 
     public static OutputStream scoreToImageApache(ScoreVO targetScore) throws TranscoderException, IOException
@@ -1368,6 +1388,88 @@ public class SvgUtil
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
+
+    public static Document createMapScoreList(List<MapScore> scorelist, BeatmapPerformance beatmap) throws IOException
+    {
+        try
+        {
+            Path filePath = ResourceMonitor.getResourcePath().resolve("static/MapScoresPanel.svg");
+            Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(filePath.toFile().toURI().toString());
+            Element svgRoot = doc.getDocumentElement();
+            String totalHeight = String.valueOf(400 + 80 * scorelist.size());
+            svgRoot.setAttribute("height", totalHeight);
+            doc.getElementById("map-bg").setAttributeNS(xlinkns, "xlink:href", beatmap.getBgUrl());
+            doc.getElementById("container").setAttribute("height", totalHeight);
+
+            doc.getElementById("star-all-icon").setAttribute("fill","black");
+            doc.getElementById("version").setTextContent(beatmap.getVersion());
+            doc.getElementById("mapper").setTextContent(beatmap.getCreator());
+            doc.getElementById("title").setTextContent(beatmap.getTitle());
+            doc.getElementById("artist").setTextContent(beatmap.getArtist());
+
+            doc.getElementById("length").setTextContent(CommonTool.formatHitLength(beatmap.getHit_length()));
+            doc.getElementById("bpm").setTextContent(String.valueOf(Math.round(beatmap.getBpm())));
+            doc.getElementById("playcount").setTextContent(CommonTool.formatNumber(beatmap.getPlayCount()));
+            doc.getElementById("favourite").setTextContent(String.valueOf(beatmap.getFavouriteCount()));
+
+            doc.getElementById("max-combo").setTextContent(beatmap.getMax_combo()+"x");
+            doc.getElementById("circles").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNCircles()));
+            doc.getElementById("sliders").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNSliders()));
+            doc.getElementById("spinners").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNSpinners()));
+
+            doc.getElementById("cs").setTextContent(CommonTool.toString(beatmap.getCs(),1));
+            doc.getElementById("ar").setTextContent(CommonTool.toString(beatmap.getAr(),1));
+            doc.getElementById("od").setTextContent(CommonTool.toString(beatmap.getAccuracy(),1));
+            doc.getElementById("hp").setTextContent(CommonTool.toString(beatmap.getDrain(),1));
+
+            doc.getElementById("aimstrain").setTextContent(String.valueOf(Math.round(beatmap.getPerformanceAttributes().getAimDifficultStrainCount())));
+            doc.getElementById("speedstrain").setTextContent(String.valueOf(Math.round(beatmap.getPerformanceAttributes().getSpeedDifficultStrainCount())));
+            doc.getElementById("sliderfactor").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getSliderFactor() * 100).concat("%"));
+            doc.getElementById("speednote").setTextContent(String.valueOf(Math.round(beatmap.getPerformanceAttributes().getSpeedNoteCount())));
+
+            doc.getElementById("bid").setTextContent(String.valueOf(beatmap.getBid()));
+            doc.getElementById("sid").setTextContent(String.valueOf(beatmap.getSid()));
+
+            doc.getElementById("star-all-num").setTextContent(CommonTool.toString(beatmap.getDifficult_rating()));
+            doc.getElementById("star-aim-num").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getAim()));
+            doc.getElementById("star-spd-num").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getSpeed()));
+
+            int hue = CommonTool.rgbToHue(
+                    CommonTool.hexToRgb(
+                            CommonTool.calcDiffColor(beatmap.getDifficult_rating()
+                            )
+                    )
+            );
+            hue = hue>360?241:hue;
+            HSL lighterStar=new HSL(hue,97,70);
+            HSL darkerStar=new HSL(hue,42,17);
+
+            doc.getElementById("star-all-num").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-aim-num").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-spd-num").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-all-icon").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-aim-icon").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-spd-icon").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-left-bg").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("map-stats-bg").setAttribute("fill", lighterStar.toString());
+
+            doc.getElementById("star-all-bg").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("star-aim-bg").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("star-spd-bg").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("allversion").setAttribute("fill", darkerStar.toString());
+
+
+
+            return setupAllScoreListElement(scorelist, doc, svgRoot);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new LazybotRuntimeException("SVG 处理时出错");
+        }
+    }
+
+
     private static Document setupBpListDetailedSingle(List<ScoreSequence> scorelist, String primaryColor, Document doc, Element svgRoot, Integer offset)
     {
         int listIndex=0;
@@ -1595,6 +1697,328 @@ public class SvgUtil
         }
         return doc;
     }
+    private static Document setupAllScoreListElement(List<MapScore> scorelist, Document doc, Element svgRoot) throws Exception
+    {
+        int listIndex=0;
+        for (MapScore score : scorelist)
+        {
+            Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
+            Element sectionFull = (Element) sectionFullNode;
+
+            Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element totalBG = (Element) totalBGNode;
+            totalBG.setAttribute("rx", "10");
+            totalBG.setAttribute("x", "30");
+            totalBG.setAttribute("y", "398");
+            totalBG.setAttribute("width", "740");
+            totalBG.setAttribute("height", "60");
+            totalBG.setAttribute("fill", rankColorPeppyMap.get(score.getRank()));
+
+            Node leftBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element leftBG = (Element) leftBGNode;
+            leftBG.setAttribute("rx", "10");
+            leftBG.setAttribute("x", "30");
+            leftBG.setAttribute("y", "398");
+            leftBG.setAttribute("width", "717");
+            leftBG.setAttribute("height", "60");
+            leftBG.setAttribute("fill", "#414141");
+
+            Node borderNode = doc.createElementNS(namespaceSVG, "rect");
+            Element borderBG = (Element) borderNode;
+            borderBG.setAttribute("rx", "10");
+            borderBG.setAttribute("x", "32");
+            borderBG.setAttribute("y", "399");
+            borderBG.setAttribute("width", "715");
+            borderBG.setAttribute("height", "58");
+            borderBG.setAttribute("stroke", "url(#rank-border-"+score.getRank()+")");
+            borderBG.setAttribute("stroke-width", "2");
+            borderBG.setAttribute("fill", "none");
+
+            Node gradNode = doc.createElementNS(namespaceSVG, "rect");
+            Element gradBG = (Element) gradNode;
+            gradBG.setAttribute("rx", "10");
+            gradBG.setAttribute("x", "30");
+            gradBG.setAttribute("y", "398");
+            gradBG.setAttribute("width", "717");
+            gradBG.setAttribute("height", "60");
+            gradBG.setAttribute("fill", "url(#rank-filler-"+score.getRank()+")");
+            gradBG.setAttribute("fill-opacity", "0.5");
+
+            Node rankGroupNode = doc.createElementNS(namespaceSVG, "g");
+            Element rankGroup = (Element) rankGroupNode;
+            rankGroup.setAttribute("clip-path", "url(#rankClip)");
+
+            Node rankTextNode = doc.createElementNS(namespaceSVG, "text");
+            Element rankText = (Element) rankTextNode;
+            rankText.setAttribute("class", "cls-3");
+            rankText.setAttribute("transform", "rotate(-30,753,450)");
+            rankText.setAttribute("x", "753");
+            rankText.setAttribute("y", "450");
+            rankText.setAttribute("font-weight", "700");
+            rankText.setAttribute("font-size", "38px");
+            rankText.setAttribute("fill", rankIconPeppyMap.get(score.getRank()));
+            rankText.setTextContent(score.getRank());
+
+            rankGroup.appendChild(rankText);
+
+            Node bgDimNode = doc.createElementNS(namespaceSVG, "rect");
+            Element bgDim = (Element) bgDimNode;
+            bgDim.setAttribute("rx", "8");
+            bgDim.setAttribute("x", "54");
+            bgDim.setAttribute("y", "400");
+            bgDim.setAttribute("width", "691");
+            bgDim.setAttribute("height", "56");
+            bgDim.setAttribute("fill-opacity", "0.3");
+
+
+            HSL ppColor=new HSL(CommonTool.rgbToHue(CommonTool.hexToRgb(rankColorPeppyMap.get(score.getRank()).substring(1))),41,80);
+            Node ppNode = doc.createElementNS(namespaceSVG, "text");
+            Element pp = (Element) ppNode;
+            pp.setAttribute("class", "cls-1");
+            pp.setAttribute("x", "735");
+            pp.setAttribute("y", "440");
+            if (score.getModList().isEmpty())
+                pp.setAttribute("y", "436");
+            pp.setAttribute("font-size", "25px");
+            pp.setAttribute("text-anchor", "end");
+            pp.setAttribute("fill",ppColor.toString());
+            pp.setTextContent(String.valueOf(Math.round(score.getPp())).concat("pp"));
+
+            Node divisorNode = doc.createElementNS(namespaceSVG, "rect");
+            Element divisor = (Element) divisorNode;
+            divisor.setAttribute("rx", "10");
+            divisor.setAttribute("x", "30");
+            divisor.setAttribute("y", "398");
+            divisor.setAttribute("width", "604");
+            divisor.setAttribute("height", "60");
+            divisor.setAttribute("fill", "#262626");
+
+            Node playerBGImageNode = doc.createElementNS(namespaceSVG, "image");
+            Element playerBGImage = (Element) playerBGImageNode;
+            playerBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBannerUrl());
+            playerBGImage.setAttribute("x", "74");
+            playerBGImage.setAttribute("y", "398");
+            playerBGImage.setAttribute("width", "557");
+            playerBGImage.setAttribute("height", "60");
+            playerBGImage.setAttribute("opacity", "0.3");
+            playerBGImage.setAttribute("clip-path", "url(#bannerClip)");
+            playerBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+
+            Node totalBGMaskNode = doc.createElementNS(namespaceSVG, "rect");
+            Element totalBGMask = (Element) totalBGMaskNode;
+            totalBGMask.setAttribute("rx", "10");
+            totalBGMask.setAttribute("x", "74");
+            totalBGMask.setAttribute("y", "398");
+            totalBGMask.setAttribute("width", "557");
+            totalBGMask.setAttribute("height", "60");
+            totalBGMask.setAttribute("fill-opacity", "0.25");
+
+            Node gradGrayNode = doc.createElementNS(namespaceSVG, "rect");
+            Element gradGray = (Element) gradGrayNode;
+            gradGray.setAttribute("rx", "10");
+            gradGray.setAttribute("x", "54");
+            gradGray.setAttribute("y", "398");
+            gradGray.setAttribute("width", "577");
+            gradGray.setAttribute("height", "60");
+            gradGray.setAttribute("fill", "url(#gray-1)");
+
+            Node playerNameNode = doc.createElementNS(namespaceSVG, "text");
+            Element playerName = (Element) playerNameNode;
+            playerName.setAttribute("class", "cls-1");
+            playerName.setAttribute("x", "104");
+            playerName.setAttribute("y", "423");
+            playerName.setAttribute("font-weight", "600");
+            playerName.setAttribute("font-size", "18px");
+            playerName.setAttribute("fill", "#ffffff");
+            playerName.setTextContent(score.getPlayerName());
+
+            Node timeNode = doc.createElementNS(namespaceSVG, "text");
+            Element time = (Element) timeNode;
+            time.setAttribute("class", "cls-1");
+            time.setAttribute("x", "104");
+            time.setAttribute("y", "435");
+            time.setAttribute("font-size", "8px");
+            time.setAttribute("fill", "#ffffff");
+            time.setTextContent(convertDate(score.getAchievedTime()));
+
+            Node indexNode = doc.createElementNS(namespaceSVG, "text");
+            Element index = (Element) indexNode;
+            index.setAttribute("class", "cls-1");
+            index.setAttribute("x", "104");
+            index.setAttribute("y", "450");
+            index.setAttribute("font-weight", "600");
+            index.setAttribute("font-size", "12px");
+            index.setAttribute("fill", "#F3F3F3");
+            index.setAttribute("opacity", "0.9");
+            index.setTextContent("#"+(listIndex+1));
+
+            Node accuracyLabelNode = doc.createElementNS(namespaceSVG, "text");
+            Element accuracyLabel = (Element) accuracyLabelNode;
+            accuracyLabel.setAttribute("class", "cls-1");
+            accuracyLabel.setAttribute("x", "505");
+            accuracyLabel.setAttribute("y", "412");
+            accuracyLabel.setAttribute("font-size", "6px");
+            accuracyLabel.setAttribute("fill", "#B9C1C6");
+            accuracyLabel.setTextContent("Accuracy");
+
+            Node ComboLabelNode = doc.createElementNS(namespaceSVG, "text");
+            Element ComboLabel = (Element) ComboLabelNode;
+            ComboLabel.setAttribute("class", "cls-1");
+            ComboLabel.setAttribute("x", "582");
+            ComboLabel.setAttribute("y", "412");
+            ComboLabel.setAttribute("font-size", "6px");
+            ComboLabel.setAttribute("fill", "#B9C1C6");
+            ComboLabel.setTextContent("Combo");
+
+            Node accuracyNode = doc.createElementNS(namespaceSVG, "text");
+            Element accuracy = (Element) accuracyNode;
+            accuracy.setAttribute("class", "cls-1");
+            accuracy.setAttribute("x", "505");
+            accuracy.setAttribute("y", "427");
+            accuracy.setAttribute("font-size", "15px");
+            accuracy.setAttribute("fill", accuracyColorMid(score.getAccuracy()));
+            accuracy.setTextContent(CommonTool.toString(score.getAccuracy() * 100).concat("%"));
+
+            Node comboNode = doc.createElementNS(namespaceSVG, "text");
+            Element combo = (Element) comboNode;
+            combo.setAttribute("class", "cls-1");
+            combo.setAttribute("x", "582");
+            combo.setAttribute("y", "427");
+            combo.setAttribute("font-size", "15px");
+            combo.setAttribute("fill", "#ffffff");
+            if (score.getIsPerfectCombo())
+                combo.setAttribute("fill", "#B9FD9B");
+            combo.setTextContent(score.getMaxCombo()+"x");
+
+            Node label300Node = doc.createElementNS(namespaceSVG, "text");
+            Element label300 = (Element) label300Node;
+            label300.setAttribute("class", "cls-1");
+            label300.setAttribute("x", "485");
+            label300.setAttribute("y", "437.8");
+            label300.setAttribute("font-size", "6px");
+            label300.setAttribute("fill", "#B9C1C6");
+            label300.setTextContent("300");
+
+            Node label100Node = doc.createElementNS(namespaceSVG, "text");
+            Element label100 = (Element) label100Node;
+            label100.setAttribute("class", "cls-1");
+            label100.setAttribute("x", "521");
+            label100.setAttribute("y", "437.8");
+            label100.setAttribute("font-size", "6px");
+            label100.setAttribute("fill", "#B9C1C6");
+            label100.setTextContent("100");
+
+            Node label50Node = doc.createElementNS(namespaceSVG, "text");
+            Element label50 = (Element) label50Node;
+            label50.setAttribute("class", "cls-1");
+            label50.setAttribute("x", "551");
+            label50.setAttribute("y", "437.8");
+            label50.setAttribute("font-size", "6px");
+            label50.setAttribute("fill", "#B9C1C6");
+            label50.setTextContent("50");
+
+            Node labelMissNode = doc.createElementNS(namespaceSVG, "text");
+            Element labelMiss = (Element) labelMissNode;
+            labelMiss.setAttribute("class", "cls-1");
+            labelMiss.setAttribute("x", "579");
+            labelMiss.setAttribute("y", "437.8");
+            labelMiss.setAttribute("font-size", "6px");
+            labelMiss.setAttribute("fill", "#B9C1C6");
+            labelMiss.setTextContent("Miss");
+
+            Node countOf300Node = doc.createElementNS(namespaceSVG, "text");
+            Element countOf300 = (Element) countOf300Node;
+            countOf300.setAttribute("class", "cls-1");
+            countOf300.setAttribute("x", "485");
+            countOf300.setAttribute("y", "450");
+            countOf300.setAttribute("font-size", "12px");
+            countOf300.setAttribute("fill", "#ffffff");
+            countOf300.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGreat()).orElse(0)));
+
+            Node countOf100Node = doc.createElementNS(namespaceSVG, "text");
+            Element countOf100 = (Element) countOf100Node;
+            countOf100.setAttribute("class", "cls-1");
+            countOf100.setAttribute("x", "521");
+            countOf100.setAttribute("y", "450");
+            countOf100.setAttribute("font-size", "12px");
+            countOf100.setAttribute("fill", "#ffffff");
+            countOf100.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGood()).orElse(0)));
+
+            Node countOf50Node = doc.createElementNS(namespaceSVG, "text");
+            Element countOf50 = (Element) countOf50Node;
+            countOf50.setAttribute("class", "cls-1");
+            countOf50.setAttribute("x", "551");
+            countOf50.setAttribute("y", "450");
+            countOf50.setAttribute("font-size", "12px");
+            countOf50.setAttribute("fill", "#ffffff");
+            countOf50.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMeh()).orElse(0)));
+
+            Node countOfMissNode = doc.createElementNS(namespaceSVG, "text");
+            Element countOfMiss = (Element) countOfMissNode;
+            countOfMiss.setAttribute("class", "cls-1");
+            countOfMiss.setAttribute("x", "579");
+            countOfMiss.setAttribute("y", "450");
+            countOfMiss.setAttribute("font-size", "12px");
+            countOfMiss.setAttribute("fill", "#ffffff");
+            countOfMiss.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMiss()).orElse(0)));
+
+            Node avatarNode = doc.createElementNS(namespaceSVG, "image");
+            Element avatar = (Element) avatarNode;
+            avatar.setAttributeNS(xlinkns, "xlink:href", score.getAvatarUrl());
+            avatar.setAttribute("preserveAspectRatio", "xMidYMid slice");
+            avatar.setAttribute("x", "30");
+            avatar.setAttribute("y", "398");
+            avatar.setAttribute("width", "60");
+            avatar.setAttribute("height", "60");
+            avatar.setAttribute("clip-path", "url(#avatarClip)");
+
+
+            sectionFull.appendChild(totalBG);
+            sectionFull.appendChild(leftBG);
+            sectionFull.appendChild(borderBG);
+            sectionFull.appendChild(gradBG);
+            sectionFull.appendChild(rankGroup);
+            sectionFull.appendChild(bgDim);
+            sectionFull.appendChild(divisor);
+            sectionFull.appendChild(playerBGImage);
+            sectionFull.appendChild(totalBGMask);
+            sectionFull.appendChild(gradGray);
+            sectionFull.appendChild(playerName);
+            sectionFull.appendChild(time);
+            sectionFull.appendChild(index);
+            sectionFull.appendChild(pp);
+            sectionFull.appendChild(accuracyLabel);
+            sectionFull.appendChild(ComboLabel);
+            sectionFull.appendChild(accuracy);
+            sectionFull.appendChild(combo);
+            sectionFull.appendChild(label300);
+            sectionFull.appendChild(label100);
+            sectionFull.appendChild(label50);
+            sectionFull.appendChild(labelMiss);
+            sectionFull.appendChild(countOf300);
+            sectionFull.appendChild(countOf100);
+            sectionFull.appendChild(countOfMiss);
+            sectionFull.appendChild(countOf50);
+            sectionFull.appendChild(avatar);
+            setupModIconForAllScores(score.getModList(), doc, sectionFull);
+            sectionFull.setAttribute("transform", "translate(0," + 80 * listIndex + ")");
+            svgRoot.appendChild(sectionFull);
+            listIndex++;
+        }
+        return doc;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     private static Document setupModIconForScoreListDetailed(List<Mod> modList,Document doc,Element sectionFull)
     {
@@ -1623,6 +2047,38 @@ public class SvgUtil
             modSingle.appendChild(rectBG);
             modSingle.appendChild(modAcronym);
             modSingle.setAttribute("transform", "translate(" + -35*i  + " 0)");
+            sectionFull.appendChild(modSingleNode);
+        }
+        return doc;
+    }
+    private static Document setupModIconForAllScores(List<Mod> modList,Document doc,Element sectionFull)
+    {
+        if (modList.isEmpty()) return doc;
+        modList=modList.reversed();
+        for(int i=0;i<modList.size();i++)
+        {
+            Node modSingleNode = doc.createElementNS(namespaceSVG, "g");
+            Element modSingle = (Element) modSingleNode;
+            Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element rectBG = (Element) rectBGNode;
+            rectBG.setAttribute("rx", "5");
+            rectBG.setAttribute("x", "715");
+            rectBG.setAttribute("y", "408");
+            rectBG.setAttribute("width", "19");
+            rectBG.setAttribute("height", "10");
+            rectBG.setAttribute("fill", getBplistCardModColor(modList.get(i)));
+
+            Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
+            Element modAcronym = (Element) modAcronymNode;
+            modAcronym.setAttribute("class", "cls-4");
+            modAcronym.setAttribute("x", "719");
+            modAcronym.setAttribute("y", "416");
+            modAcronym.setAttribute("font-size", "8px");
+            modAcronym.setTextContent(modList.get(i).getAcronym());
+
+            modSingle.appendChild(rectBG);
+            modSingle.appendChild(modAcronym);
+            modSingle.setAttribute("transform", "translate(" + (22*i*-1)  + " 0)");
             sectionFull.appendChild(modSingleNode);
         }
         return doc;
@@ -2826,6 +3282,25 @@ public class SvgUtil
             logger.warn(elementId + ": 无法获取文本节点");
         }
     }
-
+    public static String accuracyColorMid(double accuracy) {
+        accuracy = Math.max(0.0, Math.min(1.0, accuracy));
+        int h, s = 96, l;
+        if (accuracy >= 1.0) {
+            h = 102;
+            l = 80;
+        } else if (accuracy >= 0.9) {
+            double t = (accuracy - 0.9) / 0.1;
+            h = (int) Math.round(70 + (102 - 70) * t);
+            l = (int) Math.round(75 + (80 - 75) * t);
+        } else if (accuracy >= 0.8) {
+            double t = (accuracy - 0.8) / 0.1;
+            h = (int) Math.round(23 + (70 - 23) * t);
+            l = (int) Math.round(70 + (75 - 70) * t);
+        } else {
+            h = 23;
+            l = 70;
+        }
+        return String.format("hsl(%d,%d%%,%d%%)", h, s, l);
+    }
 
 }

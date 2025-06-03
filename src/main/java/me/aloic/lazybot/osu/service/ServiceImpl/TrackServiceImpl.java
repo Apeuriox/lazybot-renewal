@@ -46,6 +46,7 @@ public class TrackServiceImpl implements TrackService
     private static final Map<String, Color> rankColorMap;
     private static final Map<String,Shape> rankShapeMap;
 
+
     static{
         rankColorMap = Map.of(
                 "A rank", new Color(149, 201, 134, 191),

@@ -170,6 +170,7 @@ public class ResourceMonitor
     public static void createOsuDirectories(Path workingDir) throws IOException {
         Path osuFilesDir = workingDir.resolve("osuFiles");
         Path playerAvatarDir = osuFilesDir.resolve("playerAvatar");
+        Path playerBannerDir = osuFilesDir.resolve("playerBanner");
         Path mapBGDir = osuFilesDir.resolve("mapBG");
         Path playerCustomizationDir = osuFilesDir.resolve("playerCustomization");
         Path profileDir = playerCustomizationDir.resolve("profile");
@@ -180,6 +181,7 @@ public class ResourceMonitor
 
         createDirectoryIfNotExists(osuFilesDir);
         createDirectoryIfNotExists(playerAvatarDir);
+        createDirectoryIfNotExists(playerBannerDir);
         createDirectoryIfNotExists(mapBGDir);
         createDirectoryIfNotExists(staticDir);
         createDirectoryIfNotExists(playerCustomizationDir);

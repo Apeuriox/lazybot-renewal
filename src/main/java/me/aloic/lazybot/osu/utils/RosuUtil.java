@@ -2,15 +2,14 @@ package me.aloic.lazybot.osu.utils;
 
 import cn.hutool.json.JSONUtil;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
+import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
 import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import org.spring.osu.OsuMode;
-import org.spring.osu.extended.rosu.JniBeatmap;
-import org.spring.osu.extended.rosu.JniPerformance;
-import org.spring.osu.extended.rosu.JniPerformanceAttributes;
-import org.spring.osu.extended.rosu.OsuPerformanceAttributes;
+import org.spring.osu.extended.rosu.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,6 +24,27 @@ public class RosuUtil
     }
     public static PerformanceVO getPPStats(Path pathToOsuFile, ScoreSequence scoreSequence) throws IOException {
         return getPPStats(pathToOsuFile, JSONUtil.toJsonStr(scoreSequence.getModList()) ,scoreSequence.getStatistics(), String.valueOf(scoreSequence.getRulesetId()),scoreSequence.getMaxCombo(),scoreSequence.getIsLazer());
+    }
+    public static double recalcPerformance(Path pathToOsuFile, MapScore score) throws IOException
+    {
+        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(pathToOsuFile));
+        JniPerformanceAttributes rosuResult=getPPStats(beatmap,JSONUtil.toJsonStr(score.getModJSON()),score.getStatistics(),"osu",score.getMaxCombo(),score.getIsLazer());
+        return rosuResult.getPP();
+    }
+
+    public static OsuDifficultyAttributes nomodMapStats(Path pathToOsuFile, BeatmapDTO beatmapDTO) throws IOException
+    {
+        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(pathToOsuFile));
+        JniPerformance performance=beatmap.createPerformance();
+        OsuMode osuMode=me.aloic.lazybot.osu.enums.OsuMode.convertMode(String.valueOf(beatmapDTO.getMode_int()));
+        performance.setMode(osuMode);
+        JniPerformanceAttributes rosuResult;
+        performance.setAcc(100.0);
+        performance.setLazer(true);
+        rosuResult=performance.calculate();
+        if(rosuResult instanceof OsuPerformanceAttributes osu)
+            return osu.getDifficulty();
+        return null;
     }
 
 

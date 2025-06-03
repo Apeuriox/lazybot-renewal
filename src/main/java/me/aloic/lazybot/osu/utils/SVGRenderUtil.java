@@ -65,10 +65,14 @@ public class SVGRenderUtil
     }
     public static byte[] renderSVGDocumentToByteArray(Document document)
     {
+       return renderSVGDocumentToByteArray(document, 1);
+    }
+    public static byte[] renderSVGDocumentToByteArray(Document document, Integer scale)
+    {
         long startingTime = System.currentTimeMillis();
         byte[] result;
         try{
-            result = renderer.RenderJpg(SvgUtil.documentToString(document));
+            result = renderer.RenderJpg(SvgUtil.documentToString(document),scale);
         }
         catch (Exception e){
             logger.error(e.getMessage());

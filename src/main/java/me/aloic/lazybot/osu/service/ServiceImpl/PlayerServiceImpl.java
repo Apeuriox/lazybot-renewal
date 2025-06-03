@@ -2,13 +2,11 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
+import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
-import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.theme.preset.ProfileLightTheme;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
@@ -24,6 +22,7 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -45,6 +44,39 @@ public class PlayerServiceImpl implements PlayerService
                     false);
             verifyBeatmapsCache(scoreVO);
             return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
+    }
+    @Override
+    public byte[] allScore(ScoreParameter params) throws Exception
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("目前处于测试阶段仅支持osu模式");
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
+        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+
+        List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractBeatmapUserScoreAll(params.getAccessToken(),
+                params.getBeatmapId(), playerInfoDTO.getId(), params.getMode());
+        if (scoreList.isEmpty()) throw new LazybotRuntimeException("没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
+        List<MapScore> mapScoreList=TransformerUtil.mapScoreTransform(scoreList);
+
+        OsuToolsUtil.setupPlayerStatics(mapScoreList,playerInfoDTO);
+        BeatmapDTO beatmapDTO = DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()),params.getMode());
+        BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
+        beatmapPerformance.setPerformanceAttributes(RosuUtil.nomodMapStats(AssertDownloadUtil.beatmapPath(beatmapDTO.getId(),false), beatmapDTO));
+        beatmapPerformance.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapPerformance.getSid()));
+        for (MapScore mapScore:mapScoreList) {
+            if (mapScore.getPp()==null)
+            {
+                try {
+                    mapScore.setPp(RosuUtil.recalcPerformance(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false), mapScore));
+                }
+                catch (Exception e) {
+                    throw new LazybotRuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
+                }
+            }
+        }
+        mapScoreList=mapScoreList.stream().sorted(Comparator.comparing(MapScore::getPp).reversed()).toList();
+        verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapDTO.getChecksum());
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createMapScoreList(mapScoreList,beatmapPerformance),2);
     }
 
     @Override
@@ -271,10 +303,13 @@ public class PlayerServiceImpl implements PlayerService
 
 
     private boolean verifyBeatmapsCache(ScoreVO scoreVO) {
-        String checksum=CommonTool.calculateMD5(new File(AssertDownloadUtil.beatmapPath(scoreVO,false).toUri()));
-        if (!checksum.equals(scoreVO.getBeatmap().getChecksum())) {
-            logger.warn("Checksum mismatch, downloading beatmap: {} != {}", scoreVO.getBeatmap().getChecksum(), checksum);
-            AssertDownloadUtil.beatmapPath(scoreVO, true);
+       return verifyBeatmapsCache(scoreVO.getBeatmap().getBid(),scoreVO.getBeatmap().getChecksum());
+    }
+    private boolean verifyBeatmapsCache(Integer bid, String checksum) {
+        String checksum2=CommonTool.calculateMD5(new File(AssertDownloadUtil.beatmapPath(bid,false).toUri()));
+        if (!checksum2.equals(checksum)) {
+            logger.warn("Checksum mismatch, downloading beatmap: {} != {}", checksum2, checksum);
+            AssertDownloadUtil.beatmapPath(bid, true);
             return false;
         }
         return true;

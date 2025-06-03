@@ -9,6 +9,8 @@ public interface PlayerService
 
     byte[] score(ScoreParameter params) throws Exception;
 
+    byte[] allScore(ScoreParameter params) throws Exception;
+
     byte[] recent(RecentParameter params, Integer type) throws IOException;
 
     byte[] bp(BpParameter params) throws Exception;
