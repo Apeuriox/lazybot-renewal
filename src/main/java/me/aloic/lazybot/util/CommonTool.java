@@ -425,19 +425,7 @@ public class CommonTool {
             return result.substring(0,2);
         }
     }
-    public static boolean saveOnlineResource(String link,String fileName) throws IOException
-    {
-        try (InputStream inputStream = new URL(link).openStream())
-        {
-            Files.copy(inputStream, Paths.get(fileName), StandardCopyOption.REPLACE_EXISTING);
-            return true;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return false;
-    }
+
 
     public static Double totalPpCalculator(List<ScoreVO> scoreList)
     {
