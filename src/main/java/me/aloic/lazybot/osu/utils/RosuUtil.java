@@ -31,6 +31,15 @@ public class RosuUtil
         JniPerformanceAttributes rosuResult=getPPStats(beatmap,JSONUtil.toJsonStr(score.getModJSON()),score.getStatistics(),"osu",score.getMaxCombo(),score.getIsLazer());
         return rosuResult.getPP();
     }
+    public static void setupMapScorePerformance(Path pathToOsuFile, MapScore score) throws IOException
+    {
+        JniBeatmap beatmap = new JniBeatmap(Files.readAllBytes(pathToOsuFile));
+        if (score.getPp()==null) {
+            JniPerformanceAttributes rosuResult = getPPStats(beatmap, JSONUtil.toJsonStr(score.getModJSON()), score.getStatistics(), "osu", score.getMaxCombo(), score.getIsLazer());
+            score.setPp(rosuResult.getPP());
+        }
+        score.setIffc(getIfFc(beatmap,JSONUtil.toJsonStr(score.getModJSON()),score.getStatistics(),"osu",score.getIsLazer()));
+    }
 
     public static OsuDifficultyAttributes nomodMapStats(Path pathToOsuFile, BeatmapDTO beatmapDTO) throws IOException
     {

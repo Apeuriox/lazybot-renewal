@@ -164,6 +164,7 @@ public class TransformerUtil
             temp.setRulesetId(scoreLazerDTOS.get(i).getRuleset_id());
             temp.setIsPerfectCombo(scoreLazerDTOS.get(i).getIs_perfect_combo());
             temp.setModJSON(scoreLazerDTOS.get(i).getMods());
+            temp.setScore(Long.valueOf(scoreLazerDTOS.get(i).getTotal_score()));
             if(scoreLazerDTOS.get(i).getPassed()) {
                 temp.setRank(scoreLazerDTOS.get(i).getRank());
             }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -63,16 +64,15 @@ public class PlayerServiceImpl implements PlayerService
         BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
         beatmapPerformance.setPerformanceAttributes(RosuUtil.nomodMapStats(AssertDownloadUtil.beatmapPath(beatmapDTO.getId(),false), beatmapDTO));
         beatmapPerformance.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapPerformance.getSid()));
+        Path beatmapPath = AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false);
         for (MapScore mapScore:mapScoreList) {
-            if (mapScore.getPp()==null)
-            {
                 try {
-                    mapScore.setPp(RosuUtil.recalcPerformance(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false), mapScore));
+                    RosuUtil.setupMapScorePerformance(beatmapPath, mapScore);
                 }
                 catch (Exception e) {
-                    throw new LazybotRuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
+                    logger.error(e.getMessage());
+                    throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
                 }
-            }
         }
         mapScoreList=mapScoreList.stream().sorted(Comparator.comparing(MapScore::getPp).reversed()).toList();
         verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapDTO.getChecksum());
@@ -306,12 +306,14 @@ public class PlayerServiceImpl implements PlayerService
        return verifyBeatmapsCache(scoreVO.getBeatmap().getBid(),scoreVO.getBeatmap().getChecksum());
     }
     private boolean verifyBeatmapsCache(Integer bid, String checksum) {
+        logger.info("正在校验.osu哈希值");
         String checksum2=CommonTool.calculateMD5(new File(AssertDownloadUtil.beatmapPath(bid,false).toUri()));
         if (!checksum2.equals(checksum)) {
             logger.warn("Checksum mismatch, downloading beatmap: {} != {}", checksum2, checksum);
             AssertDownloadUtil.beatmapPath(bid, true);
             return false;
         }
+        logger.info("匹配正常: {}}", checksum);
         return true;
     }
 

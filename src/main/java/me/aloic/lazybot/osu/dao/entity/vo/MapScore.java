@@ -19,4 +19,5 @@ public class MapScore extends ScoreSequence
     private String bannerUrl;
     private String avatarUrl;
     private List<Mod> modJSON;
+    private double iffc;
 }

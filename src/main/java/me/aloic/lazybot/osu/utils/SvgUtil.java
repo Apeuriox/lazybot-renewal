@@ -1410,7 +1410,7 @@ public class SvgUtil
             doc.getElementById("length").setTextContent(CommonTool.formatHitLength(beatmap.getHit_length()));
             doc.getElementById("bpm").setTextContent(String.valueOf(Math.round(beatmap.getBpm())));
             doc.getElementById("playcount").setTextContent(CommonTool.formatNumber(beatmap.getPlayCount()));
-            doc.getElementById("favourite").setTextContent(String.valueOf(beatmap.getFavouriteCount()));
+            doc.getElementById("favourite").setTextContent(CommonTool.formatNumber(beatmap.getFavouriteCount()));
 
             doc.getElementById("max-combo").setTextContent(beatmap.getMax_combo()+"x");
             doc.getElementById("circles").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNCircles()));
@@ -1429,7 +1429,7 @@ public class SvgUtil
 
             doc.getElementById("bid").setTextContent(String.valueOf(beatmap.getBid()));
             doc.getElementById("sid").setTextContent(String.valueOf(beatmap.getSid()));
-
+            doc.getElementById(beatmap.getStatus()).setAttribute("opacity", "1");
             doc.getElementById("star-all-num").setTextContent(CommonTool.toString(beatmap.getDifficult_rating()));
             doc.getElementById("star-aim-num").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getAim()));
             doc.getElementById("star-spd-num").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getSpeed()));
@@ -1440,9 +1440,13 @@ public class SvgUtil
                             )
                     )
             );
-            hue = hue>360?241:hue;
             HSL lighterStar=new HSL(hue,97,70);
             HSL darkerStar=new HSL(hue,42,17);
+            if (hue>360)
+            {
+                lighterStar=new HSL(hue,75,5);
+                darkerStar=new HSL(hue,20,75);
+            }
 
             doc.getElementById("star-all-num").setAttribute("fill", lighterStar.toString());
             doc.getElementById("star-aim-num").setAttribute("fill", lighterStar.toString());
@@ -1457,7 +1461,9 @@ public class SvgUtil
             doc.getElementById("star-aim-bg").setAttribute("fill", darkerStar.toString());
             doc.getElementById("star-spd-bg").setAttribute("fill", darkerStar.toString());
             doc.getElementById("allversion").setAttribute("fill", darkerStar.toString());
-
+            doc.getElementById("stats-mode").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("star-spd-label").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("star-aim-label").setAttribute("fill", darkerStar.toString());
 
 
             return setupAllScoreListElement(scorelist, doc, svgRoot);
@@ -1757,7 +1763,7 @@ public class SvgUtil
             rankText.setAttribute("font-weight", "700");
             rankText.setAttribute("font-size", "38px");
             rankText.setAttribute("fill", rankIconPeppyMap.get(score.getRank()));
-            rankText.setTextContent(score.getRank());
+            rankText.setTextContent(score.getRank().substring(0,1));
 
             rankGroup.appendChild(rankText);
 
@@ -1776,20 +1782,43 @@ public class SvgUtil
             Element pp = (Element) ppNode;
             pp.setAttribute("class", "cls-1");
             pp.setAttribute("x", "735");
-            pp.setAttribute("y", "440");
-            if (score.getModList().isEmpty())
-                pp.setAttribute("y", "436");
-            pp.setAttribute("font-size", "25px");
+            pp.setAttribute("y", "435");
+            pp.setAttribute("font-size", "20px");
             pp.setAttribute("text-anchor", "end");
+            pp.setAttribute("font-weight", "600");
             pp.setAttribute("fill",ppColor.toString());
-            pp.setTextContent(String.valueOf(Math.round(score.getPp())).concat("pp"));
+            pp.setTextContent(String.valueOf(Math.round(Optional.ofNullable(score.getPp()).orElse(0.0))).concat("pp"));
+
+            Node iffcNode = doc.createElementNS(namespaceSVG, "text");
+            Element iffc = (Element) iffcNode;
+            iffc.setAttribute("class", "cls-1");
+            iffc.setAttribute("x", "735");
+            iffc.setAttribute("y", "448");
+            iffc.setAttribute("font-size", "10px");
+            iffc.setAttribute("text-anchor", "end");
+            iffc.setAttribute("fill",ppColor.toString());
+            if (score.getIsPerfectCombo())
+                iffc.setAttribute("opacity", "0.6");
+
+            Node iffcLabelNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element iffcLabel = (Element) iffcLabelNode;
+            iffcLabel.setTextContent("if fc ");
+
+            Node iffcNumberNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element iffcNumber = (Element) iffcNumberNode;
+            iffcNumber.setAttribute("font-weight", "600");
+            iffcNumber.setTextContent(Math.round(Optional.ofNullable(score.getIffc()).orElse(0.0))+"pp");
+
+            iffc.appendChild(iffcLabel);
+            iffc.appendChild(iffcNumber);
+
 
             Node divisorNode = doc.createElementNS(namespaceSVG, "rect");
             Element divisor = (Element) divisorNode;
             divisor.setAttribute("rx", "10");
             divisor.setAttribute("x", "30");
             divisor.setAttribute("y", "398");
-            divisor.setAttribute("width", "604");
+            divisor.setAttribute("width", "617");
             divisor.setAttribute("height", "60");
             divisor.setAttribute("fill", "#262626");
 
@@ -1798,7 +1827,7 @@ public class SvgUtil
             playerBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBannerUrl());
             playerBGImage.setAttribute("x", "74");
             playerBGImage.setAttribute("y", "398");
-            playerBGImage.setAttribute("width", "557");
+            playerBGImage.setAttribute("width", "570");
             playerBGImage.setAttribute("height", "60");
             playerBGImage.setAttribute("opacity", "0.3");
             playerBGImage.setAttribute("clip-path", "url(#bannerClip)");
@@ -1809,7 +1838,7 @@ public class SvgUtil
             totalBGMask.setAttribute("rx", "10");
             totalBGMask.setAttribute("x", "74");
             totalBGMask.setAttribute("y", "398");
-            totalBGMask.setAttribute("width", "557");
+            totalBGMask.setAttribute("width", "570");
             totalBGMask.setAttribute("height", "60");
             totalBGMask.setAttribute("fill-opacity", "0.25");
 
@@ -1818,7 +1847,7 @@ public class SvgUtil
             gradGray.setAttribute("rx", "10");
             gradGray.setAttribute("x", "54");
             gradGray.setAttribute("y", "398");
-            gradGray.setAttribute("width", "577");
+            gradGray.setAttribute("width", "590");
             gradGray.setAttribute("height", "60");
             gradGray.setAttribute("fill", "url(#gray-1)");
 
@@ -1870,6 +1899,15 @@ public class SvgUtil
             ComboLabel.setAttribute("fill", "#B9C1C6");
             ComboLabel.setTextContent("Combo");
 
+            Node scoreLabelNode = doc.createElementNS(namespaceSVG, "text");
+            Element scoreLabel = (Element) scoreLabelNode;
+            scoreLabel.setAttribute("class", "cls-1");
+            scoreLabel.setAttribute("x", "425");
+            scoreLabel.setAttribute("y", "412");
+            scoreLabel.setAttribute("font-size", "6px");
+            scoreLabel.setAttribute("fill", "#B9C1C6");
+            scoreLabel.setTextContent("Score");
+
             Node accuracyNode = doc.createElementNS(namespaceSVG, "text");
             Element accuracy = (Element) accuracyNode;
             accuracy.setAttribute("class", "cls-1");
@@ -1890,6 +1928,17 @@ public class SvgUtil
                 combo.setAttribute("fill", "#B9FD9B");
             combo.setTextContent(score.getMaxCombo()+"x");
 
+            Node scoreNode = doc.createElementNS(namespaceSVG, "text");
+            Element totalScore = (Element) scoreNode;
+            totalScore.setAttribute("class", "cls-1");
+            totalScore.setAttribute("x", "425");
+            totalScore.setAttribute("y", "427");
+            totalScore.setAttribute("font-size", "15px");
+            totalScore.setAttribute("fill", "#ffffff");
+            if (score.getIsPerfectCombo())
+                totalScore.setAttribute("fill", "#B9FD9B");
+            totalScore.setTextContent(NumberFormat.getNumberInstance(Locale.US).format(score.getScore()));
+
             Node label300Node = doc.createElementNS(namespaceSVG, "text");
             Element label300 = (Element) label300Node;
             label300.setAttribute("class", "cls-1");
@@ -1907,6 +1956,7 @@ public class SvgUtil
             label100.setAttribute("font-size", "6px");
             label100.setAttribute("fill", "#B9C1C6");
             label100.setTextContent("100");
+
 
             Node label50Node = doc.createElementNS(namespaceSVG, "text");
             Element label50 = (Element) label50Node;
@@ -1942,7 +1992,7 @@ public class SvgUtil
             countOf100.setAttribute("y", "450");
             countOf100.setAttribute("font-size", "12px");
             countOf100.setAttribute("fill", "#ffffff");
-            countOf100.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGood()).orElse(0)));
+            countOf100.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getOk()).orElse(0)));
 
             Node countOf50Node = doc.createElementNS(namespaceSVG, "text");
             Element countOf50 = (Element) countOf50Node;
@@ -1962,6 +2012,7 @@ public class SvgUtil
             countOfMiss.setAttribute("fill", "#ffffff");
             countOfMiss.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMiss()).orElse(0)));
 
+
             Node avatarNode = doc.createElementNS(namespaceSVG, "image");
             Element avatar = (Element) avatarNode;
             avatar.setAttributeNS(xlinkns, "xlink:href", score.getAvatarUrl());
@@ -1971,7 +2022,6 @@ public class SvgUtil
             avatar.setAttribute("width", "60");
             avatar.setAttribute("height", "60");
             avatar.setAttribute("clip-path", "url(#avatarClip)");
-
 
             sectionFull.appendChild(totalBG);
             sectionFull.appendChild(leftBG);
@@ -1987,10 +2037,13 @@ public class SvgUtil
             sectionFull.appendChild(time);
             sectionFull.appendChild(index);
             sectionFull.appendChild(pp);
+            sectionFull.appendChild(iffc);
             sectionFull.appendChild(accuracyLabel);
             sectionFull.appendChild(ComboLabel);
+            sectionFull.appendChild(scoreLabel);
             sectionFull.appendChild(accuracy);
             sectionFull.appendChild(combo);
+            sectionFull.appendChild(totalScore);
             sectionFull.appendChild(label300);
             sectionFull.appendChild(label100);
             sectionFull.appendChild(label50);
@@ -2000,6 +2053,54 @@ public class SvgUtil
             sectionFull.appendChild(countOfMiss);
             sectionFull.appendChild(countOf50);
             sectionFull.appendChild(avatar);
+            if (score.getIsLazer())
+            {
+                Node labelTickNode = doc.createElementNS(namespaceSVG, "text");
+                Element labelTick = (Element) labelTickNode;
+                labelTick.setAttribute("class", "cls-1");
+                labelTick.setAttribute("x", "410");
+                labelTick.setAttribute("y", "437.8");
+                labelTick.setAttribute("font-size", "6px");
+                labelTick.setAttribute("fill", "#B9C1C6");
+                labelTick.setAttribute("opacity", "0.6");
+                labelTick.setTextContent("Tick");
+
+                Node labelEndNode = doc.createElementNS(namespaceSVG, "text");
+                Element labelEnd = (Element) labelEndNode;
+                labelEnd.setAttribute("class", "cls-1");
+                labelEnd.setAttribute("x", "446");
+                labelEnd.setAttribute("y", "437.8");
+                labelEnd.setAttribute("font-size", "6px");
+                labelEnd.setAttribute("fill", "#B9C1C6");
+                labelEnd.setAttribute("opacity", "0.6");
+                labelEnd.setTextContent("End");
+
+                Node countOfTickNode = doc.createElementNS(namespaceSVG, "text");
+                Element countOfTick = (Element) countOfTickNode;
+                countOfTick.setAttribute("class", "cls-1");
+                countOfTick.setAttribute("x", "410");
+                countOfTick.setAttribute("y", "450");
+                countOfTick.setAttribute("font-size", "12px");
+                countOfTick.setAttribute("fill", "#ffffff");
+                countOfTick.setAttribute("opacity", "0.6");
+                countOfTick.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getLarge_tick_hit()).orElse(0)));
+
+                Node countOfEndNode = doc.createElementNS(namespaceSVG, "text");
+                Element countOfEnd = (Element) countOfEndNode;
+                countOfEnd.setAttribute("class", "cls-1");
+                countOfEnd.setAttribute("x", "446");
+                countOfEnd.setAttribute("y", "450");
+                countOfEnd.setAttribute("font-size", "12px");
+                countOfEnd.setAttribute("fill", "#ffffff");
+                countOfEnd.setAttribute("opacity", "0.6");
+                countOfEnd.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getSlider_tail_hit()).orElse(0)));
+                sectionFull.appendChild(labelTick);
+                sectionFull.appendChild(labelEnd);
+                sectionFull.appendChild(countOfEnd);
+                sectionFull.appendChild(countOfTick);
+            }
+
+
             setupModIconForAllScores(score.getModList(), doc, sectionFull);
             sectionFull.setAttribute("transform", "translate(0," + 80 * listIndex + ")");
             svgRoot.appendChild(sectionFull);
@@ -2007,11 +2108,6 @@ public class SvgUtil
         }
         return doc;
     }
-
-
-
-
-
 
 
 
@@ -2054,7 +2150,7 @@ public class SvgUtil
     private static Document setupModIconForAllScores(List<Mod> modList,Document doc,Element sectionFull)
     {
         if (modList.isEmpty()) return doc;
-        modList=modList.reversed();
+        modList=modList.stream().filter(mod -> !mod.getAcronym().equals("CL")).toList().reversed();
         for(int i=0;i<modList.size();i++)
         {
             Node modSingleNode = doc.createElementNS(namespaceSVG, "g");
@@ -2062,7 +2158,7 @@ public class SvgUtil
             Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
             Element rectBG = (Element) rectBGNode;
             rectBG.setAttribute("rx", "5");
-            rectBG.setAttribute("x", "715");
+            rectBG.setAttribute("x", "717");
             rectBG.setAttribute("y", "408");
             rectBG.setAttribute("width", "19");
             rectBG.setAttribute("height", "10");
@@ -2071,15 +2167,27 @@ public class SvgUtil
             Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
             Element modAcronym = (Element) modAcronymNode;
             modAcronym.setAttribute("class", "cls-4");
-            modAcronym.setAttribute("x", "719");
+            modAcronym.setAttribute("x", "726.5");
             modAcronym.setAttribute("y", "416");
+            modAcronym.setAttribute("text-anchor", "middle");
             modAcronym.setAttribute("font-size", "8px");
             modAcronym.setTextContent(modList.get(i).getAcronym());
-
+            if(i>2)
+            {
+                rectBG.setAttribute("fill","#1f1e26");
+                modAcronym.setTextContent("...");
+                modAcronym.setAttribute("x", "722.8");
+                modAcronym.setAttribute("text-anchor", "start");
+                modAcronym.setAttribute("y", "413.5");
+                modAcronym.setAttribute("fill", "#ffffff");
+            }
             modSingle.appendChild(rectBG);
             modSingle.appendChild(modAcronym);
-            modSingle.setAttribute("transform", "translate(" + (22*i*-1)  + " 0)");
+            modSingle.setAttribute("transform", "translate(" + (-22*i)  + " 0)");
             sectionFull.appendChild(modSingleNode);
+            if (i>2) {
+                break;
+            }
         }
         return doc;
     }
