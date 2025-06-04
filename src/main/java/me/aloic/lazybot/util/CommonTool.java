@@ -631,6 +631,7 @@ public class CommonTool {
             return String.valueOf(number);
         }
     }
+
     public static int[] hexToRgb(String hex) {
         if (hex.length() != 6) {
             throw new IllegalArgumentException("HEX颜色必须是6位字符");

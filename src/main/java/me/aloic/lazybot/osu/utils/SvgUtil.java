@@ -5,7 +5,9 @@ import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
+import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.util.CommonTool;
@@ -21,7 +23,6 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spring.osu.extended.rosu.OsuDifficultyAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -67,8 +68,7 @@ public class SvgUtil
             3,4000,
             4, 5000,
             5,6000);
-    private static final Map<String, String> rankColorPeppyMap;
-    private static final Map<String, String> rankIconPeppyMap;
+
     static{
          transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_ALLOW_EXTERNAL_RESOURCES, Boolean.TRUE);
         try {
@@ -78,26 +78,6 @@ public class SvgUtil
             logger.error(e.getMessage());
             throw new LazybotRuntimeException("Batik转换器初始化失败");
         }
-        rankColorPeppyMap = Map.of(
-                "A", "#88DA20",
-                "B", "#e9b941",
-                "C", "#fa8a59",
-                "D", "#f55757",
-                "S", "#02b5c3",
-                "X", "#ce1c9d",
-                "SH", "#02b5c3",
-                "XH", "#ce1c9d"
-        );
-        rankIconPeppyMap = Map.of(
-                "A", "#36570d",
-                "B", "#553a2b",
-                "C", "#473625",
-                "D", "#512525",
-                "S", "#ffd362",
-                "X", "#ffd362",
-                "SH", "#ddf3f9",
-                "XH", "#ddf3f9"
-        );
     }
 
     public static OutputStream scoreToImageApache(ScoreVO targetScore) throws TranscoderException, IOException
@@ -308,7 +288,16 @@ public class SvgUtil
 
         if (scoreVO.getMods() != null)
         {
-            appendModIcon(document, scoreVO, sectionFull, 0);
+            scoreVO.setMods(Arrays.stream(scoreVO.getMods())
+                    .filter(score -> !score.equals("CL"))
+                    .toArray(String[]::new));
+            for(int i=0;i<scoreVO.getMods().length;i++) {
+                sectionFull.appendChild(wireModIconForList(document,
+                        i,
+                        scoreVO.getMods()[i],
+                        ModColor.fromString(scoreVO.getMods()[i]).getDetailedSideColor().toString(),
+                        0));
+            }
         }
         svgRoot.appendChild(sectionFull);
     }
@@ -432,12 +421,20 @@ public class SvgUtil
         sectionFull.appendChild(combo);
         sectionFull.appendChild(grade);
 
-        if (scoreVO.getMods() != null)
-        {
-            appendModIcon(document, scoreVO, sectionFull, 1);
+        if (scoreVO.getMods() != null) {
+            scoreVO.setMods(Arrays.stream(scoreVO.getMods())
+                .filter(score -> !score.equals("CL"))
+                .toArray(String[]::new));
+            for (int i = 0; i < scoreVO.getMods().length; i++) {
+                sectionFull.appendChild(
+                        wireModIconForList(document,
+                                i,
+                                scoreVO.getMods()[i],
+                                ModColor.fromString(scoreVO.getMods()[i]).getDetailedSideColor().toString(),
+                                1));
+            }
         }
-        if (type == 0)
-        {
+        if (type == 0) {
             sectionFull.setAttribute("transform", "translate(0 ".concat(String.valueOf(index * 85)).concat(")"));
         }
         else
@@ -445,86 +442,6 @@ public class SvgUtil
             sectionFull.setAttribute("transform", "translate(870 ".concat(String.valueOf(index * 85)).concat(")"));
         }
         svgRoot.appendChild(sectionFull);
-    }
-
-    private static void appendModIcon(Document document, ScoreVO scoreVO, Element sectionFull, int type)
-    {
-        for (int i = 0; i < scoreVO.getMods().length; i++)
-        {
-            switch (scoreVO.getMods()[i])
-            {
-                case "HR":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "HR", "#fb0038", type));
-                    break;
-                }
-                case "HD":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "HD", "#fff869", type));
-                    break;
-                }
-                case "DT":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "DT", "#7251f7", type));
-                    break;
-                }
-                case "NF":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "NF", "#33b5f1", type));
-                    break;
-                }
-                case "SO":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "SO", "#cd6cbf", type));
-                    break;
-                }
-                case "FL":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "FL", "303030", type));
-                    break;
-                }
-                case "SD":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "SD", "#926e4c", type));
-                    break;
-                }
-                case "EZ":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "EZ", "#38a772", type));
-                    break;
-                }
-                case "NC":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "NC", "#d625ff", type));
-                    break;
-                }
-                case "PF":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "PF", "#e5a565", type));
-                    break;
-                }
-                case "HT":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "HT", "#555a5d", type));
-                    break;
-                }
-                case "TD":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "TD", "#4dbcee", type));
-                    break;
-                }
-                case "RX":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "RX", "#4dbcee", type));
-                    break;
-                }
-                case "AP":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "AP", "#4dbcee", type));
-                    break;
-                }
-            }
-        }
     }
 
     public static Document getScorePanelWhiteModeDoc(ScoreVO targetScore)
@@ -653,7 +570,7 @@ public class SvgUtil
             Element grade = doc.getElementById("grade");
             doc.getElementById("gradeShadow").setTextContent(targetScore.getRank());
             grade.setTextContent(targetScore.getRank());
-            grade.setAttribute("fill", rankColorIndictor(targetScore.getRank()));
+            grade.setAttribute("fill", RankColor.fromString(targetScore.getRank()).getDarkRankColorHEX());
             logger.info("Batik Util Cost (white Mode):" + (System.currentTimeMillis() - startingTime) + "ms");
             return doc;
         } catch (Exception e)
@@ -746,8 +663,7 @@ public class SvgUtil
     {
         long startingTime = System.currentTimeMillis();
 
-        try
-        {
+        try {
             int hue=CommonTool.rgbToHue(primaryColor);
             Path filePath = ResourceMonitor.getResourcePath().resolve("static/scorePanelDarkmode_customize.svg");
             URI inputUri = filePath.toFile().toURI();
@@ -755,45 +671,17 @@ public class SvgUtil
             //此图片元素对应替换玩家的头像以及Beatmap的背景图
             NodeList imageElements = doc.getElementsByTagName("image");
 
-            for (int i = 0; i < imageElements.getLength(); i++)
-            {
+            for (int i = 0; i < imageElements.getLength(); i++) {
                 Element imageElement = (Element) imageElements.item(i);
                 String id = imageElement.getAttribute("id");
-                switch (id)
-                {
+                switch (id) {
                     case "avatar":
                         if (targetScore.getAvatarUrl() != null)
-                        {
-                            if (targetScore.getAvatarUrl().startsWith("http"))
-                            {
-                                logger.info("Using HTTP Asserts: Avatar Link");
-                                if (!CommonTool.isCorruptedLink(targetScore.getAvatarUrl()))
-                                {
-                                    imageElement.setAttributeNS(xlinkns, "xlink:href", targetScore.getAvatarUrl());
-                                }
-                            }
-                            else
-                            {
                                 imageElement.setAttributeNS(xlinkns, "xlink:href", targetScore.getAvatarUrl());
-                            }
-                        }
                         break;
                     case "mapBg-right":
                         if (targetScore.getBeatmap().getBgUrl() != null)
-                        {
-                            if (targetScore.getBeatmap().getBgUrl().startsWith("http"))
-                            {
-                                logger.info("Using HTTP Asserts: Beatmap background Link");
-                                if (!CommonTool.isCorruptedLink(targetScore.getBeatmap().getBgUrl()))
-                                {
-                                    imageElement.setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
-                                }
-                            }
-                            else
-                            {
                                 imageElement.setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
-                            }
-                        }
                         break;
                 }
             }
@@ -1066,13 +954,21 @@ public class SvgUtil
             Element grade = doc.getElementById("grade");
             doc.getElementById("grade-Shadow").setTextContent(targetScore.getRank());
             grade.setTextContent(targetScore.getRank());
-            grade.setAttribute("fill", rankColorIndictor(targetScore.getRank()));
+            grade.setAttribute("fill", RankColor.fromString(targetScore.getRank()).getDarkRankColorHEX());
 
             doc.getElementById("starRatingBG").setAttribute("fill", "#".concat(CommonTool.calcDiffColor(targetScore.getBeatmap().getDifficult_rating())));
 
-            if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0)
-            {
-                wireModIconForDarkScore(doc,targetScore);
+            if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0) {
+                for(int i=0;i<targetScore.getModJSON().size();i++) {
+                    ModColor color=ModColor.fromString(targetScore.getModJSON().get(i).getAcronym());
+                    wireModIconForDarkScore(doc,
+                            i,
+                            targetScore.getModJSON().get(i),
+                            color.getDetailedPrimaryColor().toString(),
+                            color.getDetailedSecondaryColor().toString(),
+                            color.getDetailedSideColor().toString()
+                    );
+                }
             }
             logger.info("Batik SVG util cost (dark mode): " + (System.currentTimeMillis() - startingTime) + "ms");
             return doc;
@@ -1097,100 +993,6 @@ public class SvgUtil
         doc.getElementById("label-header-bg").setAttribute("fill",CommonTool.hslFormat(hue,7,10));
     }
 
-
-    private static void wireModIconForDarkScore(Document doc, ScoreVO targetScore)
-    {
-        for (int i = 0; i < targetScore.getModJSON().size(); i++)
-        {
-            switch (targetScore.getModJSON().get(i).getAcronym().toString())
-            {
-                case "HR":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "89001f", "a32f4a", "911833");
-                    break;
-                }
-                case "HD":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "bda400", "d3bd58", "c8b02c");
-                    break;
-                }
-                case "DT":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "3a259c", "4f38ab", "45339c");
-                    break;
-                }
-                case "NF":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "0071a5", "237ca5", "157fac");
-                    break;
-                }
-                case "SO":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "3a022d", "5b3055", "511841");
-                    break;
-                }
-                case "FL":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "000100", "303030", "1a1819");
-                    break;
-                }
-                case "SD":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "744c28", "926e4c", "8a5a38");
-                    break;
-                }
-                case "EZ":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "088e47", "38a772", "1c9d58");
-                    break;
-                }
-                case "NC":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "9c22e9", "b925ff", "b520f0");
-                    break;
-                }
-                case "PF":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "e69a4e", "e5a565", "eda25e");
-                    break;
-                }
-                case "HT":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "32323c", "555a5d", "484848");
-                    break;
-                }
-                case "TD":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "27abe3", "4dbcee", "40b3e3");
-                    break;
-                }
-                case "RX":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "27abe3", "4dbcee", "40b3e3");
-                    break;
-                }
-                case "AP":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "27abe3", "4dbcee", "40b3e3");
-                    break;
-                }
-                case "CL":
-                {
-                    if(targetScore.getIsLazer())
-                    {
-                        wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "6b64ab", "766db1", "8077b6");
-                        break;
-                    }
-                    break;
-                }
-                default:
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "ea629f", "ec75aa", "ee86b4");
-                    break;
-                }
-            }
-        }
-    }
     private static void wireModIconForDarkScore(Document doc, int index, Mod mod, String color, String color2, String color3)
     {
         Element svgRoot = doc.getDocumentElement();
@@ -1206,7 +1008,7 @@ public class SvgUtil
         modBG.setAttribute("y", "530");
         modBG.setAttribute("width", "120");
         modBG.setAttribute("height", "70");
-        modBG.setAttribute("fill", "#".concat(color));
+        modBG.setAttribute("fill", color);
         modBG.setAttribute("transform", "skewX(-20)");
 
         Node modBGNode2 = doc.createElementNS(namespaceSVG, "rect");
@@ -1217,7 +1019,7 @@ public class SvgUtil
         modBG2.setAttribute("y", "550");
         modBG2.setAttribute("width", "70");
         modBG2.setAttribute("height", "50");
-        modBG2.setAttribute("fill", "#".concat(color2));
+        modBG2.setAttribute("fill", color2);
         modBG2.setAttribute("transform", "skewX(-20)");
 
         Node modBGNode3 = doc.createElementNS(namespaceSVG, "rect");
@@ -1228,7 +1030,7 @@ public class SvgUtil
         modBG3.setAttribute("y", "530");
         modBG3.setAttribute("width", "50");
         modBG3.setAttribute("height", "30");
-        modBG3.setAttribute("fill", "#".concat(color3));
+        modBG3.setAttribute("fill", color3);
         modBG3.setAttribute("transform", "skewX(-20)");
 
         Node modNameNode = doc.createElementNS(namespaceSVG, "text");
@@ -1396,7 +1198,7 @@ public class SvgUtil
             Path filePath = ResourceMonitor.getResourcePath().resolve("static/MapScoresPanel.svg");
             Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(filePath.toFile().toURI().toString());
             Element svgRoot = doc.getDocumentElement();
-            String totalHeight = String.valueOf(400 + 80 * scorelist.size());
+            String totalHeight = String.valueOf(400 + 75 * scorelist.size());
             svgRoot.setAttribute("height", totalHeight);
             doc.getElementById("map-bg").setAttributeNS(xlinkns, "xlink:href", beatmap.getBgUrl());
             doc.getElementById("container").setAttribute("height", totalHeight);
@@ -1612,7 +1414,7 @@ public class SvgUtil
             underlineOfRank.setAttribute("ry", "1.5");
             underlineOfRank.setAttribute("width", "30");
             underlineOfRank.setAttribute("height", "3");
-            underlineOfRank.setAttribute("fill", rankColorIndictor(score.getRank()));
+            underlineOfRank.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
             underlineOfRank.setAttribute("transform", "translate(60,80)");
 
             Node dateNode = doc.createElementNS(namespaceSVG, "text");
@@ -1718,7 +1520,7 @@ public class SvgUtil
             totalBG.setAttribute("y", "398");
             totalBG.setAttribute("width", "740");
             totalBG.setAttribute("height", "60");
-            totalBG.setAttribute("fill", rankColorPeppyMap.get(score.getRank()));
+            totalBG.setAttribute("fill", RankColor.fromString(score.getRank()).getBackgroundColorPeppyHEX());
 
             Node leftBGNode = doc.createElementNS(namespaceSVG, "rect");
             Element leftBG = (Element) leftBGNode;
@@ -1762,7 +1564,7 @@ public class SvgUtil
             rankText.setAttribute("y", "450");
             rankText.setAttribute("font-weight", "700");
             rankText.setAttribute("font-size", "38px");
-            rankText.setAttribute("fill", rankIconPeppyMap.get(score.getRank()));
+            rankText.setAttribute("fill", RankColor.fromString(score.getRank()).getIconColorPeppyHEX());
             rankText.setTextContent(score.getRank().substring(0,1));
 
             rankGroup.appendChild(rankText);
@@ -1777,7 +1579,9 @@ public class SvgUtil
             bgDim.setAttribute("fill-opacity", "0.3");
 
 
-            HSL ppColor=new HSL(CommonTool.rgbToHue(CommonTool.hexToRgb(rankColorPeppyMap.get(score.getRank()).substring(1))),41,80);
+            HSL ppColor=new HSL(CommonTool.rgbToHue(CommonTool.hexToRgb(
+                    RankColor.fromString(score.getRank()).getBackgroundColorPeppyHEX().substring(1))),
+                    41,80);
             Node ppNode = doc.createElementNS(namespaceSVG, "text");
             Element pp = (Element) ppNode;
             pp.setAttribute("class", "cls-1");
@@ -2102,7 +1906,7 @@ public class SvgUtil
 
 
             setupModIconForAllScores(score.getModList(), doc, sectionFull);
-            sectionFull.setAttribute("transform", "translate(0," + 80 * listIndex + ")");
+            sectionFull.setAttribute("transform", "translate(0," + 75 * listIndex + ")");
             svgRoot.appendChild(sectionFull);
             listIndex++;
         }
@@ -2131,7 +1935,7 @@ public class SvgUtil
             rectBG.setAttribute("ry", "7.5");
             rectBG.setAttribute("width", "30");
             rectBG.setAttribute("height", "15");
-            rectBG.setAttribute("fill", getBplistCardModColor(modList.get(i)));
+            rectBG.setAttribute("fill", ModColor.getModTypeColorHEX(modList.get(i)));
 
             Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
             Element modAcronym = (Element) modAcronymNode;
@@ -2162,7 +1966,7 @@ public class SvgUtil
             rectBG.setAttribute("y", "408");
             rectBG.setAttribute("width", "19");
             rectBG.setAttribute("height", "10");
-            rectBG.setAttribute("fill", getBplistCardModColor(modList.get(i)));
+            rectBG.setAttribute("fill", ModColor.fromString(modList.get(i).getAcronym()).getDetailedPrimaryColor().toString());
 
             Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
             Element modAcronym = (Element) modAcronymNode;
@@ -2171,23 +1975,26 @@ public class SvgUtil
             modAcronym.setAttribute("y", "416");
             modAcronym.setAttribute("text-anchor", "middle");
             modAcronym.setAttribute("font-size", "8px");
+            modAcronym.setAttribute("fill", "#ffffff");
+            modAcronym.setAttribute("font-weight", "600");
             modAcronym.setTextContent(modList.get(i).getAcronym());
-            if(i>2)
+            if(i>3)
             {
                 rectBG.setAttribute("fill","#1f1e26");
                 modAcronym.setTextContent("...");
                 modAcronym.setAttribute("x", "722.8");
                 modAcronym.setAttribute("text-anchor", "start");
                 modAcronym.setAttribute("y", "413.5");
-                modAcronym.setAttribute("fill", "#ffffff");
+                modSingle.appendChild(rectBG);
+                modSingle.appendChild(modAcronym);
+                modSingle.setAttribute("transform", "translate(-66 0)");
+                sectionFull.appendChild(modSingleNode);
+                break;
             }
             modSingle.appendChild(rectBG);
             modSingle.appendChild(modAcronym);
             modSingle.setAttribute("transform", "translate(" + (-22*i)  + " 0)");
             sectionFull.appendChild(modSingleNode);
-            if (i>2) {
-                break;
-            }
         }
         return doc;
     }
@@ -2524,7 +2331,7 @@ public class SvgUtil
         linearGradient.setAttributeNS(null, "gradientUnits", "userSpaceOnUse");
         Element stop1 = document.createElementNS(namespaceSVG, "stop");
         stop1.setAttributeNS(null, "offset", "0");
-        stop1.setAttributeNS(null, "stop-color", rankColorIndictor(scoreVO.getRank()));
+        stop1.setAttributeNS(null, "stop-color", RankColor.fromString(scoreVO.getRank()).getDarkRankColorHEX());
         linearGradient.appendChild(stop1);
         Element stop2 = document.createElementNS(namespaceSVG, "stop");
         if(type==0){
@@ -2533,7 +2340,7 @@ public class SvgUtil
         else {
             stop2.setAttributeNS(null, "offset", "0.77");
         }
-        stop2.setAttributeNS(null, "stop-color", rankColorIndictor(scoreVO.getRank()));
+        stop2.setAttributeNS(null, "stop-color", RankColor.fromString(scoreVO.getRank()).getDarkRankColorHEX());
         linearGradient.appendChild(stop2);
         Element stop3 = document.createElementNS(namespaceSVG, "stop");
         if(type==0){
@@ -2755,7 +2562,7 @@ public class SvgUtil
             rectBG.setAttribute("width", "22");
             rectBG.setAttribute("height", "11");
         }
-        rectBG .setAttribute("fill", getBplistCardModColor(mod));
+        rectBG .setAttribute("fill", ModColor.getModTypeColorHEX(mod));
 
         Node modAcronymNode = document.createElementNS(namespaceSVG, "text");
         Element modAcronym = (Element) modAcronymNode;
@@ -2780,41 +2587,6 @@ public class SvgUtil
 
 
 
-    private static String getBplistCardModColor(Mod mod) {
-        switch (mod.getAcronym().trim().toUpperCase()) {
-            case "HD":
-            case "HR":
-            case "FL":
-            case "NC":
-            case "DT":
-            case "SD":
-            case "PF":
-            case "BL":
-            case "ST":
-            case "AC":
-                return "#ffd810";
-            case "EZ":
-            case "NF":
-            case "HT":
-            case "DC":
-                return "#ddfbbc";
-            case "SO":
-            case "RX":
-            case "AP":
-            case "TD":
-                return "#64baff";
-            case "CL":
-            case "DA":
-            case "TP":
-            case "RD":
-            case "MR":
-            case "AL":
-            case "SG":
-                return "#a066ff";
-            default:
-                return "#ff8fb1";
-        }
-    }
 
 
 
@@ -2864,32 +2636,7 @@ public class SvgUtil
         }
     }
 
-    private static String rankColorIndictor(String rank)
-    {
-        switch (rank)
-        {
-            case "A":
-                return "#45e06d";
-            case "S":
-                return "#ffd25f";
-            case "SH":
-                return "#e1f4fa";
-            case "X":
-                return "#ffd464";
-            case "XH":
-                return "#c9eaf5";
-            case "B":
-                return "#3baedc";
-            case "C":
-                return "#9352d5";
-            case "D":
-                return "#e43350";
-            case "F":
-                return "#892f2a";
-            default:
-                return "#ffd25f";
-        }
-    }
+
     public static String convertDate(String inputDate) {
         LocalDateTime dateTime = LocalDateTime.parse(inputDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
@@ -2948,7 +2695,7 @@ public class SvgUtil
             rankHistory = playerInfo.getRankHistory().subList(size-8,size);
         }
         catch (Exception e) {
-            logger.info("Profile rank history invalid, use default rank history");
+            logger.info("Profile rank history invalid, using default rank history");
             rankHistory = List.of(0,0,0,0,0,0,0,0);
         }
         int[] data = rankHistory.stream().mapToInt(Integer::intValue).toArray();
@@ -3012,8 +2759,6 @@ public class SvgUtil
 
         return document;
     }
-
-
 
 
 
@@ -3236,7 +2981,7 @@ public class SvgUtil
                 Element rank = (Element) rankNode;
                 rank.setAttribute("class", "cls-130");
                 rank.setAttribute("font-size", "100px");
-                rank.setAttribute("fill", rankColorIndictor(score.getRank()));
+                rank.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
                 rank.setAttribute("clip-path", "url(#bpclip)");
                 rank.setAttribute("opacity", "0.5");
                 rank.setAttribute("font-weight", "600");
@@ -3250,7 +2995,7 @@ public class SvgUtil
                 Element rank = (Element) rankNode;
                 rank.setAttribute("width", "35");
                 rank.setAttribute("height", "3");
-                rank.setAttribute("fill", rankColorIndictor(score.getRank()));
+                rank.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
                 rank.setAttribute("transform", "translate(50,579.5)");
                 rank.setAttribute("rx", "1.5");
                 rank.setAttribute("ry", "1.5");
@@ -3285,7 +3030,7 @@ public class SvgUtil
             rectBG.setAttribute("ry", "6");
             rectBG.setAttribute("width", "22");
             rectBG.setAttribute("height", "12");
-            rectBG.setAttribute("fill", getBplistCardModColor(modList.get(i)));
+            rectBG.setAttribute("fill", ModColor.getModTypeColorHEX(modList.get(i)));
 
             Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
             Element modAcronym = (Element) modAcronymNode;

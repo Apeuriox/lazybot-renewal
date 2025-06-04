@@ -306,14 +306,13 @@ public class PlayerServiceImpl implements PlayerService
        return verifyBeatmapsCache(scoreVO.getBeatmap().getBid(),scoreVO.getBeatmap().getChecksum());
     }
     private boolean verifyBeatmapsCache(Integer bid, String checksum) {
-        logger.info("正在校验.osu哈希值");
         String checksum2=CommonTool.calculateMD5(new File(AssertDownloadUtil.beatmapPath(bid,false).toUri()));
         if (!checksum2.equals(checksum)) {
             logger.warn("Checksum mismatch, downloading beatmap: {} != {}", checksum2, checksum);
             AssertDownloadUtil.beatmapPath(bid, true);
             return false;
         }
-        logger.info("匹配正常: {}}", checksum);
+        logger.info("地图哈希值匹配正常: {}", checksum);
         return true;
     }
 

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@LazybotCommandMapping({"allscore","as"})
+@LazybotCommandMapping({"allscore","as","allscores","ass"})
 @Component
 public class AllScoreCommand implements LazybotSlashCommand
 {
@@ -37,7 +37,7 @@ public class AllScoreCommand implements LazybotSlashCommand
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
-
+        //not implemented yet
     }
 
     @Override
