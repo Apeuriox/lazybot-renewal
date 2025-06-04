@@ -425,19 +425,7 @@ public class CommonTool {
             return result.substring(0,2);
         }
     }
-    public static boolean saveOnlineResource(String link,String fileName) throws IOException
-    {
-        try (InputStream inputStream = new URL(link).openStream())
-        {
-            Files.copy(inputStream, Paths.get(fileName), StandardCopyOption.REPLACE_EXISTING);
-            return true;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return false;
-    }
+
 
     public static Double totalPpCalculator(List<ScoreVO> scoreList)
     {
@@ -619,6 +607,27 @@ public class CommonTool {
             h += 360;
         }
         return (int) h;
+    }
+    public static String formatNumber(int number) {
+        if (number >= 1_000_000_000) {
+            return String.format("%.1fB", number / 1_000_000_000.0);
+        } else if (number >= 1_000_000) {
+            return String.format("%.1fM", number / 1_000_000.0);
+        } else if (number >= 1_000) {
+            return String.format("%.1fk", number / 1_000.0);
+        } else {
+            return String.valueOf(number);
+        }
+    }
+
+    public static int[] hexToRgb(String hex) {
+        if (hex.length() != 6) {
+            throw new IllegalArgumentException("HEX颜色必须是6位字符");
+        }
+        int r = Integer.parseInt(hex.substring(0, 2), 16);
+        int g = Integer.parseInt(hex.substring(2, 4), 16);
+        int b = Integer.parseInt(hex.substring(4, 6), 16);
+        return new int[] { r, g, b };
     }
 
     public static Integer rgbToHue(int[] rgb) {

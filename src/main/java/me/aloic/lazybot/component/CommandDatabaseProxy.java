@@ -58,6 +58,7 @@ public class CommandDatabaseProxy
             throw new LazybotRuntimeException("数据库查询出错，详情请见log");
         }
         catch (Exception e) {
+            e.printStackTrace();
             logger.error("未知错误: {}", e.getMessage());
             throw new LazybotRuntimeException("出现未知错误 ，详情请见log");
         }

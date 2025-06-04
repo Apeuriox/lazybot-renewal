@@ -81,7 +81,7 @@ public class PpmapCommand implements LazybotSlashCommand
         GeneralParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
+        OsuToolsUtil.setUserStats(params.getPlayerName(),tokenPO, params);
         params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;

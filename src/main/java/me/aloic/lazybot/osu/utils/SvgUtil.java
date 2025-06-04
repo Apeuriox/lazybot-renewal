@@ -4,13 +4,17 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.*;
+import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.RankColor;
+import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.util.CommonTool;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
+import org.apache.batik.anim.dom.SVGDOMImplementation;
+import org.apache.batik.bridge.*;
+import org.apache.batik.gvt.GraphicsNode;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -28,6 +32,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
@@ -57,6 +62,13 @@ public class SvgUtil
     private static final Logger logger = LoggerFactory.getLogger(SvgUtil.class);
     private static final String namespaceSVG = "http://www.w3.org/2000/svg";
     private static final String xlinkns = "http://www.w3.org/1999/xlink";
+    private static final Map<Integer,Integer> ppplusRangeMap=Map.of(0,10000,
+            1,2000,
+            2,3000,
+            3,4000,
+            4, 5000,
+            5,6000);
+
     static{
          transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_ALLOW_EXTERNAL_RESOURCES, Boolean.TRUE);
         try {
@@ -276,7 +288,16 @@ public class SvgUtil
 
         if (scoreVO.getMods() != null)
         {
-            appendModIcon(document, scoreVO, sectionFull, 0);
+            scoreVO.setMods(Arrays.stream(scoreVO.getMods())
+                    .filter(score -> !score.equals("CL"))
+                    .toArray(String[]::new));
+            for(int i=0;i<scoreVO.getMods().length;i++) {
+                sectionFull.appendChild(wireModIconForList(document,
+                        i,
+                        scoreVO.getMods()[i],
+                        ModColor.fromString(scoreVO.getMods()[i]).getDetailedSideColor().toString(),
+                        0));
+            }
         }
         svgRoot.appendChild(sectionFull);
     }
@@ -400,12 +421,20 @@ public class SvgUtil
         sectionFull.appendChild(combo);
         sectionFull.appendChild(grade);
 
-        if (scoreVO.getMods() != null)
-        {
-            appendModIcon(document, scoreVO, sectionFull, 1);
+        if (scoreVO.getMods() != null) {
+            scoreVO.setMods(Arrays.stream(scoreVO.getMods())
+                .filter(score -> !score.equals("CL"))
+                .toArray(String[]::new));
+            for (int i = 0; i < scoreVO.getMods().length; i++) {
+                sectionFull.appendChild(
+                        wireModIconForList(document,
+                                i,
+                                scoreVO.getMods()[i],
+                                ModColor.fromString(scoreVO.getMods()[i]).getDetailedSideColor().toString(),
+                                1));
+            }
         }
-        if (type == 0)
-        {
+        if (type == 0) {
             sectionFull.setAttribute("transform", "translate(0 ".concat(String.valueOf(index * 85)).concat(")"));
         }
         else
@@ -413,86 +442,6 @@ public class SvgUtil
             sectionFull.setAttribute("transform", "translate(870 ".concat(String.valueOf(index * 85)).concat(")"));
         }
         svgRoot.appendChild(sectionFull);
-    }
-
-    private static void appendModIcon(Document document, ScoreVO scoreVO, Element sectionFull, int type)
-    {
-        for (int i = 0; i < scoreVO.getMods().length; i++)
-        {
-            switch (scoreVO.getMods()[i])
-            {
-                case "HR":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "HR", "#fb0038", type));
-                    break;
-                }
-                case "HD":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "HD", "#fff869", type));
-                    break;
-                }
-                case "DT":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "DT", "#7251f7", type));
-                    break;
-                }
-                case "NF":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "NF", "#33b5f1", type));
-                    break;
-                }
-                case "SO":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "SO", "#cd6cbf", type));
-                    break;
-                }
-                case "FL":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "FL", "303030", type));
-                    break;
-                }
-                case "SD":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "SD", "#926e4c", type));
-                    break;
-                }
-                case "EZ":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "EZ", "#38a772", type));
-                    break;
-                }
-                case "NC":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "NC", "#d625ff", type));
-                    break;
-                }
-                case "PF":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "PF", "#e5a565", type));
-                    break;
-                }
-                case "HT":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "HT", "#555a5d", type));
-                    break;
-                }
-                case "TD":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "TD", "#4dbcee", type));
-                    break;
-                }
-                case "RX":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "RX", "#4dbcee", type));
-                    break;
-                }
-                case "AP":
-                {
-                    sectionFull.appendChild(wireModIconForList(document, i, "AP", "#4dbcee", type));
-                    break;
-                }
-            }
-        }
     }
 
     public static Document getScorePanelWhiteModeDoc(ScoreVO targetScore)
@@ -610,12 +559,10 @@ public class SvgUtil
             doc.getElementById("HP").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getHp()));
             doc.getElementById("CS").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getCs()));
             doc.getElementById("mods").setTextContent(CommonTool.modArrayToString(targetScore.getMods()));
-            if (targetScore.getBeatmap().getTitle().length() < 24)
-            {
+            if (targetScore.getBeatmap().getTitle().length() < 24) {
                 doc.getElementById("songTitle1").setTextContent(targetScore.getBeatmap().getTitle());
             }
-            else
-            {
+            else {
                 doc.getElementById("songTitle1").setTextContent(targetScore.getBeatmap().getTitle().substring(0, 23).concat("..."));
             }
             doc.getElementById(targetScore.getBeatmap().getStatus() + "Status").setAttribute("opacity", "1");
@@ -623,7 +570,7 @@ public class SvgUtil
             Element grade = doc.getElementById("grade");
             doc.getElementById("gradeShadow").setTextContent(targetScore.getRank());
             grade.setTextContent(targetScore.getRank());
-            grade.setAttribute("fill", rankColorIndictor(targetScore.getRank()));
+            grade.setAttribute("fill", RankColor.fromString(targetScore.getRank()).getDarkRankColorHEX());
             logger.info("Batik Util Cost (white Mode):" + (System.currentTimeMillis() - startingTime) + "ms");
             return doc;
         } catch (Exception e)
@@ -716,8 +663,7 @@ public class SvgUtil
     {
         long startingTime = System.currentTimeMillis();
 
-        try
-        {
+        try {
             int hue=CommonTool.rgbToHue(primaryColor);
             Path filePath = ResourceMonitor.getResourcePath().resolve("static/scorePanelDarkmode_customize.svg");
             URI inputUri = filePath.toFile().toURI();
@@ -725,45 +671,17 @@ public class SvgUtil
             //此图片元素对应替换玩家的头像以及Beatmap的背景图
             NodeList imageElements = doc.getElementsByTagName("image");
 
-            for (int i = 0; i < imageElements.getLength(); i++)
-            {
+            for (int i = 0; i < imageElements.getLength(); i++) {
                 Element imageElement = (Element) imageElements.item(i);
                 String id = imageElement.getAttribute("id");
-                switch (id)
-                {
+                switch (id) {
                     case "avatar":
                         if (targetScore.getAvatarUrl() != null)
-                        {
-                            if (targetScore.getAvatarUrl().startsWith("http"))
-                            {
-                                logger.info("Using HTTP Asserts: Avatar Link");
-                                if (!CommonTool.isCorruptedLink(targetScore.getAvatarUrl()))
-                                {
-                                    imageElement.setAttributeNS(xlinkns, "xlink:href", targetScore.getAvatarUrl());
-                                }
-                            }
-                            else
-                            {
                                 imageElement.setAttributeNS(xlinkns, "xlink:href", targetScore.getAvatarUrl());
-                            }
-                        }
                         break;
                     case "mapBg-right":
                         if (targetScore.getBeatmap().getBgUrl() != null)
-                        {
-                            if (targetScore.getBeatmap().getBgUrl().startsWith("http"))
-                            {
-                                logger.info("Using HTTP Asserts: Beatmap background Link");
-                                if (!CommonTool.isCorruptedLink(targetScore.getBeatmap().getBgUrl()))
-                                {
-                                    imageElement.setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
-                                }
-                            }
-                            else
-                            {
                                 imageElement.setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
-                            }
-                        }
                         break;
                 }
             }
@@ -1036,13 +954,21 @@ public class SvgUtil
             Element grade = doc.getElementById("grade");
             doc.getElementById("grade-Shadow").setTextContent(targetScore.getRank());
             grade.setTextContent(targetScore.getRank());
-            grade.setAttribute("fill", rankColorIndictor(targetScore.getRank()));
+            grade.setAttribute("fill", RankColor.fromString(targetScore.getRank()).getDarkRankColorHEX());
 
             doc.getElementById("starRatingBG").setAttribute("fill", "#".concat(CommonTool.calcDiffColor(targetScore.getBeatmap().getDifficult_rating())));
 
-            if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0)
-            {
-                wireModIconForDarkScore(doc,targetScore);
+            if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0) {
+                for(int i=0;i<targetScore.getModJSON().size();i++) {
+                    ModColor color=ModColor.fromString(targetScore.getModJSON().get(i).getAcronym());
+                    wireModIconForDarkScore(doc,
+                            i,
+                            targetScore.getModJSON().get(i),
+                            color.getDetailedPrimaryColor().toString(),
+                            color.getDetailedSecondaryColor().toString(),
+                            color.getDetailedSideColor().toString()
+                    );
+                }
             }
             logger.info("Batik SVG util cost (dark mode): " + (System.currentTimeMillis() - startingTime) + "ms");
             return doc;
@@ -1067,100 +993,6 @@ public class SvgUtil
         doc.getElementById("label-header-bg").setAttribute("fill",CommonTool.hslFormat(hue,7,10));
     }
 
-
-    private static void wireModIconForDarkScore(Document doc, ScoreVO targetScore)
-    {
-        for (int i = 0; i < targetScore.getModJSON().size(); i++)
-        {
-            switch (targetScore.getModJSON().get(i).getAcronym().toString())
-            {
-                case "HR":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "89001f", "a32f4a", "911833");
-                    break;
-                }
-                case "HD":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "bda400", "d3bd58", "c8b02c");
-                    break;
-                }
-                case "DT":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "3a259c", "4f38ab", "45339c");
-                    break;
-                }
-                case "NF":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "0071a5", "237ca5", "157fac");
-                    break;
-                }
-                case "SO":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "3a022d", "5b3055", "511841");
-                    break;
-                }
-                case "FL":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "000100", "303030", "1a1819");
-                    break;
-                }
-                case "SD":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "744c28", "926e4c", "8a5a38");
-                    break;
-                }
-                case "EZ":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "088e47", "38a772", "1c9d58");
-                    break;
-                }
-                case "NC":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "9c22e9", "b925ff", "b520f0");
-                    break;
-                }
-                case "PF":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "e69a4e", "e5a565", "eda25e");
-                    break;
-                }
-                case "HT":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "32323c", "555a5d", "484848");
-                    break;
-                }
-                case "TD":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "27abe3", "4dbcee", "40b3e3");
-                    break;
-                }
-                case "RX":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "27abe3", "4dbcee", "40b3e3");
-                    break;
-                }
-                case "AP":
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "27abe3", "4dbcee", "40b3e3");
-                    break;
-                }
-                case "CL":
-                {
-                    if(targetScore.getIsLazer())
-                    {
-                        wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "6b64ab", "766db1", "8077b6");
-                        break;
-                    }
-                    break;
-                }
-                default:
-                {
-                    wireModIconForDarkScore(doc, i, targetScore.getModJSON().get(i), "ea629f", "ec75aa", "ee86b4");
-                    break;
-                }
-            }
-        }
-    }
     private static void wireModIconForDarkScore(Document doc, int index, Mod mod, String color, String color2, String color3)
     {
         Element svgRoot = doc.getDocumentElement();
@@ -1176,7 +1008,7 @@ public class SvgUtil
         modBG.setAttribute("y", "530");
         modBG.setAttribute("width", "120");
         modBG.setAttribute("height", "70");
-        modBG.setAttribute("fill", "#".concat(color));
+        modBG.setAttribute("fill", color);
         modBG.setAttribute("transform", "skewX(-20)");
 
         Node modBGNode2 = doc.createElementNS(namespaceSVG, "rect");
@@ -1187,7 +1019,7 @@ public class SvgUtil
         modBG2.setAttribute("y", "550");
         modBG2.setAttribute("width", "70");
         modBG2.setAttribute("height", "50");
-        modBG2.setAttribute("fill", "#".concat(color2));
+        modBG2.setAttribute("fill", color2);
         modBG2.setAttribute("transform", "skewX(-20)");
 
         Node modBGNode3 = doc.createElementNS(namespaceSVG, "rect");
@@ -1198,7 +1030,7 @@ public class SvgUtil
         modBG3.setAttribute("y", "530");
         modBG3.setAttribute("width", "50");
         modBG3.setAttribute("height", "30");
-        modBG3.setAttribute("fill", "#".concat(color3));
+        modBG3.setAttribute("fill", color3);
         modBG3.setAttribute("transform", "skewX(-20)");
 
         Node modNameNode = doc.createElementNS(namespaceSVG, "text");
@@ -1358,6 +1190,94 @@ public class SvgUtil
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
+
+    public static Document createMapScoreList(List<MapScore> scorelist, BeatmapPerformance beatmap) throws IOException
+    {
+        try
+        {
+            Path filePath = ResourceMonitor.getResourcePath().resolve("static/MapScoresPanel.svg");
+            Document doc = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(filePath.toFile().toURI().toString());
+            Element svgRoot = doc.getDocumentElement();
+            String totalHeight = String.valueOf(400 + 75 * scorelist.size());
+            svgRoot.setAttribute("height", totalHeight);
+            doc.getElementById("map-bg").setAttributeNS(xlinkns, "xlink:href", beatmap.getBgUrl());
+            doc.getElementById("container").setAttribute("height", totalHeight);
+
+            doc.getElementById("star-all-icon").setAttribute("fill","black");
+            doc.getElementById("version").setTextContent(beatmap.getVersion());
+            doc.getElementById("mapper").setTextContent(beatmap.getCreator());
+            doc.getElementById("title").setTextContent(beatmap.getTitle());
+            doc.getElementById("artist").setTextContent(beatmap.getArtist());
+
+            doc.getElementById("length").setTextContent(CommonTool.formatHitLength(beatmap.getHit_length()));
+            doc.getElementById("bpm").setTextContent(String.valueOf(Math.round(beatmap.getBpm())));
+            doc.getElementById("playcount").setTextContent(CommonTool.formatNumber(beatmap.getPlayCount()));
+            doc.getElementById("favourite").setTextContent(CommonTool.formatNumber(beatmap.getFavouriteCount()));
+
+            doc.getElementById("max-combo").setTextContent(beatmap.getMax_combo()+"x");
+            doc.getElementById("circles").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNCircles()));
+            doc.getElementById("sliders").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNSliders()));
+            doc.getElementById("spinners").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNSpinners()));
+
+            doc.getElementById("cs").setTextContent(CommonTool.toString(beatmap.getCs(),1));
+            doc.getElementById("ar").setTextContent(CommonTool.toString(beatmap.getAr(),1));
+            doc.getElementById("od").setTextContent(CommonTool.toString(beatmap.getAccuracy(),1));
+            doc.getElementById("hp").setTextContent(CommonTool.toString(beatmap.getDrain(),1));
+
+            doc.getElementById("aimstrain").setTextContent(String.valueOf(Math.round(beatmap.getPerformanceAttributes().getAimDifficultStrainCount())));
+            doc.getElementById("speedstrain").setTextContent(String.valueOf(Math.round(beatmap.getPerformanceAttributes().getSpeedDifficultStrainCount())));
+            doc.getElementById("sliderfactor").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getSliderFactor() * 100).concat("%"));
+            doc.getElementById("speednote").setTextContent(String.valueOf(Math.round(beatmap.getPerformanceAttributes().getSpeedNoteCount())));
+
+            doc.getElementById("bid").setTextContent(String.valueOf(beatmap.getBid()));
+            doc.getElementById("sid").setTextContent(String.valueOf(beatmap.getSid()));
+            doc.getElementById(beatmap.getStatus()).setAttribute("opacity", "1");
+            doc.getElementById("star-all-num").setTextContent(CommonTool.toString(beatmap.getDifficult_rating()));
+            doc.getElementById("star-aim-num").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getAim()));
+            doc.getElementById("star-spd-num").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getSpeed()));
+
+            int hue = CommonTool.rgbToHue(
+                    CommonTool.hexToRgb(
+                            CommonTool.calcDiffColor(beatmap.getDifficult_rating()
+                            )
+                    )
+            );
+            HSL lighterStar=new HSL(hue,97,70);
+            HSL darkerStar=new HSL(hue,42,17);
+            if (hue>360)
+            {
+                lighterStar=new HSL(hue,75,5);
+                darkerStar=new HSL(hue,20,75);
+            }
+
+            doc.getElementById("star-all-num").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-aim-num").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-spd-num").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-all-icon").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-aim-icon").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-spd-icon").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("star-left-bg").setAttribute("fill", lighterStar.toString());
+            doc.getElementById("map-stats-bg").setAttribute("fill", lighterStar.toString());
+
+            doc.getElementById("star-all-bg").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("star-aim-bg").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("star-spd-bg").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("allversion").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("stats-mode").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("star-spd-label").setAttribute("fill", darkerStar.toString());
+            doc.getElementById("star-aim-label").setAttribute("fill", darkerStar.toString());
+
+
+            return setupAllScoreListElement(scorelist, doc, svgRoot);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new LazybotRuntimeException("SVG 处理时出错");
+        }
+    }
+
+
     private static Document setupBpListDetailedSingle(List<ScoreSequence> scorelist, String primaryColor, Document doc, Element svgRoot, Integer offset)
     {
         int listIndex=0;
@@ -1494,7 +1414,7 @@ public class SvgUtil
             underlineOfRank.setAttribute("ry", "1.5");
             underlineOfRank.setAttribute("width", "30");
             underlineOfRank.setAttribute("height", "3");
-            underlineOfRank.setAttribute("fill", rankColorIndictor(score.getRank()));
+            underlineOfRank.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
             underlineOfRank.setAttribute("transform", "translate(60,80)");
 
             Node dateNode = doc.createElementNS(namespaceSVG, "text");
@@ -1585,6 +1505,420 @@ public class SvgUtil
         }
         return doc;
     }
+    private static Document setupAllScoreListElement(List<MapScore> scorelist, Document doc, Element svgRoot) throws Exception
+    {
+        int listIndex=0;
+        for (MapScore score : scorelist)
+        {
+            Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
+            Element sectionFull = (Element) sectionFullNode;
+
+            Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element totalBG = (Element) totalBGNode;
+            totalBG.setAttribute("rx", "10");
+            totalBG.setAttribute("x", "30");
+            totalBG.setAttribute("y", "398");
+            totalBG.setAttribute("width", "740");
+            totalBG.setAttribute("height", "60");
+            totalBG.setAttribute("fill", RankColor.fromString(score.getRank()).getBackgroundColorPeppyHEX());
+
+            Node leftBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element leftBG = (Element) leftBGNode;
+            leftBG.setAttribute("rx", "10");
+            leftBG.setAttribute("x", "30");
+            leftBG.setAttribute("y", "398");
+            leftBG.setAttribute("width", "717");
+            leftBG.setAttribute("height", "60");
+            leftBG.setAttribute("fill", "#414141");
+
+            Node borderNode = doc.createElementNS(namespaceSVG, "rect");
+            Element borderBG = (Element) borderNode;
+            borderBG.setAttribute("rx", "10");
+            borderBG.setAttribute("x", "32");
+            borderBG.setAttribute("y", "399");
+            borderBG.setAttribute("width", "715");
+            borderBG.setAttribute("height", "58");
+            borderBG.setAttribute("stroke", "url(#rank-border-"+score.getRank()+")");
+            borderBG.setAttribute("stroke-width", "2");
+            borderBG.setAttribute("fill", "none");
+
+            Node gradNode = doc.createElementNS(namespaceSVG, "rect");
+            Element gradBG = (Element) gradNode;
+            gradBG.setAttribute("rx", "10");
+            gradBG.setAttribute("x", "30");
+            gradBG.setAttribute("y", "398");
+            gradBG.setAttribute("width", "717");
+            gradBG.setAttribute("height", "60");
+            gradBG.setAttribute("fill", "url(#rank-filler-"+score.getRank()+")");
+            gradBG.setAttribute("fill-opacity", "0.5");
+
+            Node rankGroupNode = doc.createElementNS(namespaceSVG, "g");
+            Element rankGroup = (Element) rankGroupNode;
+            rankGroup.setAttribute("clip-path", "url(#rankClip)");
+
+            Node rankTextNode = doc.createElementNS(namespaceSVG, "text");
+            Element rankText = (Element) rankTextNode;
+            rankText.setAttribute("class", "cls-3");
+            rankText.setAttribute("transform", "rotate(-30,753,450)");
+            rankText.setAttribute("x", "753");
+            rankText.setAttribute("y", "450");
+            rankText.setAttribute("font-weight", "700");
+            rankText.setAttribute("font-size", "38px");
+            rankText.setAttribute("fill", RankColor.fromString(score.getRank()).getIconColorPeppyHEX());
+            rankText.setTextContent(score.getRank().substring(0,1));
+
+            rankGroup.appendChild(rankText);
+
+            Node bgDimNode = doc.createElementNS(namespaceSVG, "rect");
+            Element bgDim = (Element) bgDimNode;
+            bgDim.setAttribute("rx", "8");
+            bgDim.setAttribute("x", "54");
+            bgDim.setAttribute("y", "400");
+            bgDim.setAttribute("width", "691");
+            bgDim.setAttribute("height", "56");
+            bgDim.setAttribute("fill-opacity", "0.3");
+
+
+            HSL ppColor=new HSL(CommonTool.rgbToHue(CommonTool.hexToRgb(
+                    RankColor.fromString(score.getRank()).getBackgroundColorPeppyHEX().substring(1))),
+                    41,80);
+            Node ppNode = doc.createElementNS(namespaceSVG, "text");
+            Element pp = (Element) ppNode;
+            pp.setAttribute("class", "cls-1");
+            pp.setAttribute("x", "735");
+            pp.setAttribute("y", "435");
+            pp.setAttribute("font-size", "20px");
+            pp.setAttribute("text-anchor", "end");
+            pp.setAttribute("font-weight", "600");
+            pp.setAttribute("fill",ppColor.toString());
+            pp.setTextContent(String.valueOf(Math.round(Optional.ofNullable(score.getPp()).orElse(0.0))).concat("pp"));
+
+            Node iffcNode = doc.createElementNS(namespaceSVG, "text");
+            Element iffc = (Element) iffcNode;
+            iffc.setAttribute("class", "cls-1");
+            iffc.setAttribute("x", "735");
+            iffc.setAttribute("y", "448");
+            iffc.setAttribute("font-size", "10px");
+            iffc.setAttribute("text-anchor", "end");
+            iffc.setAttribute("fill",ppColor.toString());
+            if (score.getIsPerfectCombo())
+                iffc.setAttribute("opacity", "0.6");
+
+            Node iffcLabelNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element iffcLabel = (Element) iffcLabelNode;
+            iffcLabel.setTextContent("if fc ");
+
+            Node iffcNumberNode = doc.createElementNS(namespaceSVG, "tspan");
+            Element iffcNumber = (Element) iffcNumberNode;
+            iffcNumber.setAttribute("font-weight", "600");
+            iffcNumber.setTextContent(Math.round(Optional.ofNullable(score.getIffc()).orElse(0.0))+"pp");
+
+            iffc.appendChild(iffcLabel);
+            iffc.appendChild(iffcNumber);
+
+
+            Node divisorNode = doc.createElementNS(namespaceSVG, "rect");
+            Element divisor = (Element) divisorNode;
+            divisor.setAttribute("rx", "10");
+            divisor.setAttribute("x", "30");
+            divisor.setAttribute("y", "398");
+            divisor.setAttribute("width", "617");
+            divisor.setAttribute("height", "60");
+            divisor.setAttribute("fill", "#262626");
+
+            Node playerBGImageNode = doc.createElementNS(namespaceSVG, "image");
+            Element playerBGImage = (Element) playerBGImageNode;
+            playerBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBannerUrl());
+            playerBGImage.setAttribute("x", "74");
+            playerBGImage.setAttribute("y", "398");
+            playerBGImage.setAttribute("width", "570");
+            playerBGImage.setAttribute("height", "60");
+            playerBGImage.setAttribute("opacity", "0.3");
+            playerBGImage.setAttribute("clip-path", "url(#bannerClip)");
+            playerBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+
+            Node totalBGMaskNode = doc.createElementNS(namespaceSVG, "rect");
+            Element totalBGMask = (Element) totalBGMaskNode;
+            totalBGMask.setAttribute("rx", "10");
+            totalBGMask.setAttribute("x", "74");
+            totalBGMask.setAttribute("y", "398");
+            totalBGMask.setAttribute("width", "570");
+            totalBGMask.setAttribute("height", "60");
+            totalBGMask.setAttribute("fill-opacity", "0.25");
+
+            Node gradGrayNode = doc.createElementNS(namespaceSVG, "rect");
+            Element gradGray = (Element) gradGrayNode;
+            gradGray.setAttribute("rx", "10");
+            gradGray.setAttribute("x", "54");
+            gradGray.setAttribute("y", "398");
+            gradGray.setAttribute("width", "590");
+            gradGray.setAttribute("height", "60");
+            gradGray.setAttribute("fill", "url(#gray-1)");
+
+            Node playerNameNode = doc.createElementNS(namespaceSVG, "text");
+            Element playerName = (Element) playerNameNode;
+            playerName.setAttribute("class", "cls-1");
+            playerName.setAttribute("x", "104");
+            playerName.setAttribute("y", "423");
+            playerName.setAttribute("font-weight", "600");
+            playerName.setAttribute("font-size", "18px");
+            playerName.setAttribute("fill", "#ffffff");
+            playerName.setTextContent(score.getPlayerName());
+
+            Node timeNode = doc.createElementNS(namespaceSVG, "text");
+            Element time = (Element) timeNode;
+            time.setAttribute("class", "cls-1");
+            time.setAttribute("x", "104");
+            time.setAttribute("y", "435");
+            time.setAttribute("font-size", "8px");
+            time.setAttribute("fill", "#ffffff");
+            time.setTextContent(convertDate(score.getAchievedTime()));
+
+            Node indexNode = doc.createElementNS(namespaceSVG, "text");
+            Element index = (Element) indexNode;
+            index.setAttribute("class", "cls-1");
+            index.setAttribute("x", "104");
+            index.setAttribute("y", "450");
+            index.setAttribute("font-weight", "600");
+            index.setAttribute("font-size", "12px");
+            index.setAttribute("fill", "#F3F3F3");
+            index.setAttribute("opacity", "0.9");
+            index.setTextContent("#"+(listIndex+1));
+
+            Node accuracyLabelNode = doc.createElementNS(namespaceSVG, "text");
+            Element accuracyLabel = (Element) accuracyLabelNode;
+            accuracyLabel.setAttribute("class", "cls-1");
+            accuracyLabel.setAttribute("x", "505");
+            accuracyLabel.setAttribute("y", "412");
+            accuracyLabel.setAttribute("font-size", "6px");
+            accuracyLabel.setAttribute("fill", "#B9C1C6");
+            accuracyLabel.setTextContent("Accuracy");
+
+            Node ComboLabelNode = doc.createElementNS(namespaceSVG, "text");
+            Element ComboLabel = (Element) ComboLabelNode;
+            ComboLabel.setAttribute("class", "cls-1");
+            ComboLabel.setAttribute("x", "582");
+            ComboLabel.setAttribute("y", "412");
+            ComboLabel.setAttribute("font-size", "6px");
+            ComboLabel.setAttribute("fill", "#B9C1C6");
+            ComboLabel.setTextContent("Combo");
+
+            Node scoreLabelNode = doc.createElementNS(namespaceSVG, "text");
+            Element scoreLabel = (Element) scoreLabelNode;
+            scoreLabel.setAttribute("class", "cls-1");
+            scoreLabel.setAttribute("x", "425");
+            scoreLabel.setAttribute("y", "412");
+            scoreLabel.setAttribute("font-size", "6px");
+            scoreLabel.setAttribute("fill", "#B9C1C6");
+            scoreLabel.setTextContent("Score");
+
+            Node accuracyNode = doc.createElementNS(namespaceSVG, "text");
+            Element accuracy = (Element) accuracyNode;
+            accuracy.setAttribute("class", "cls-1");
+            accuracy.setAttribute("x", "505");
+            accuracy.setAttribute("y", "427");
+            accuracy.setAttribute("font-size", "15px");
+            accuracy.setAttribute("fill", accuracyColorMid(score.getAccuracy()));
+            accuracy.setTextContent(CommonTool.toString(score.getAccuracy() * 100).concat("%"));
+
+            Node comboNode = doc.createElementNS(namespaceSVG, "text");
+            Element combo = (Element) comboNode;
+            combo.setAttribute("class", "cls-1");
+            combo.setAttribute("x", "582");
+            combo.setAttribute("y", "427");
+            combo.setAttribute("font-size", "15px");
+            combo.setAttribute("fill", "#ffffff");
+            if (score.getIsPerfectCombo())
+                combo.setAttribute("fill", "#B9FD9B");
+            combo.setTextContent(score.getMaxCombo()+"x");
+
+            Node scoreNode = doc.createElementNS(namespaceSVG, "text");
+            Element totalScore = (Element) scoreNode;
+            totalScore.setAttribute("class", "cls-1");
+            totalScore.setAttribute("x", "425");
+            totalScore.setAttribute("y", "427");
+            totalScore.setAttribute("font-size", "15px");
+            totalScore.setAttribute("fill", "#ffffff");
+            if (score.getIsPerfectCombo())
+                totalScore.setAttribute("fill", "#B9FD9B");
+            totalScore.setTextContent(NumberFormat.getNumberInstance(Locale.US).format(score.getScore()));
+
+            Node label300Node = doc.createElementNS(namespaceSVG, "text");
+            Element label300 = (Element) label300Node;
+            label300.setAttribute("class", "cls-1");
+            label300.setAttribute("x", "485");
+            label300.setAttribute("y", "437.8");
+            label300.setAttribute("font-size", "6px");
+            label300.setAttribute("fill", "#B9C1C6");
+            label300.setTextContent("300");
+
+            Node label100Node = doc.createElementNS(namespaceSVG, "text");
+            Element label100 = (Element) label100Node;
+            label100.setAttribute("class", "cls-1");
+            label100.setAttribute("x", "521");
+            label100.setAttribute("y", "437.8");
+            label100.setAttribute("font-size", "6px");
+            label100.setAttribute("fill", "#B9C1C6");
+            label100.setTextContent("100");
+
+
+            Node label50Node = doc.createElementNS(namespaceSVG, "text");
+            Element label50 = (Element) label50Node;
+            label50.setAttribute("class", "cls-1");
+            label50.setAttribute("x", "551");
+            label50.setAttribute("y", "437.8");
+            label50.setAttribute("font-size", "6px");
+            label50.setAttribute("fill", "#B9C1C6");
+            label50.setTextContent("50");
+
+            Node labelMissNode = doc.createElementNS(namespaceSVG, "text");
+            Element labelMiss = (Element) labelMissNode;
+            labelMiss.setAttribute("class", "cls-1");
+            labelMiss.setAttribute("x", "579");
+            labelMiss.setAttribute("y", "437.8");
+            labelMiss.setAttribute("font-size", "6px");
+            labelMiss.setAttribute("fill", "#B9C1C6");
+            labelMiss.setTextContent("Miss");
+
+            Node countOf300Node = doc.createElementNS(namespaceSVG, "text");
+            Element countOf300 = (Element) countOf300Node;
+            countOf300.setAttribute("class", "cls-1");
+            countOf300.setAttribute("x", "485");
+            countOf300.setAttribute("y", "450");
+            countOf300.setAttribute("font-size", "12px");
+            countOf300.setAttribute("fill", "#ffffff");
+            countOf300.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGreat()).orElse(0)));
+
+            Node countOf100Node = doc.createElementNS(namespaceSVG, "text");
+            Element countOf100 = (Element) countOf100Node;
+            countOf100.setAttribute("class", "cls-1");
+            countOf100.setAttribute("x", "521");
+            countOf100.setAttribute("y", "450");
+            countOf100.setAttribute("font-size", "12px");
+            countOf100.setAttribute("fill", "#ffffff");
+            countOf100.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getOk()).orElse(0)));
+
+            Node countOf50Node = doc.createElementNS(namespaceSVG, "text");
+            Element countOf50 = (Element) countOf50Node;
+            countOf50.setAttribute("class", "cls-1");
+            countOf50.setAttribute("x", "551");
+            countOf50.setAttribute("y", "450");
+            countOf50.setAttribute("font-size", "12px");
+            countOf50.setAttribute("fill", "#ffffff");
+            countOf50.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMeh()).orElse(0)));
+
+            Node countOfMissNode = doc.createElementNS(namespaceSVG, "text");
+            Element countOfMiss = (Element) countOfMissNode;
+            countOfMiss.setAttribute("class", "cls-1");
+            countOfMiss.setAttribute("x", "579");
+            countOfMiss.setAttribute("y", "450");
+            countOfMiss.setAttribute("font-size", "12px");
+            countOfMiss.setAttribute("fill", "#ffffff");
+            countOfMiss.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMiss()).orElse(0)));
+
+
+            Node avatarNode = doc.createElementNS(namespaceSVG, "image");
+            Element avatar = (Element) avatarNode;
+            avatar.setAttributeNS(xlinkns, "xlink:href", score.getAvatarUrl());
+            avatar.setAttribute("preserveAspectRatio", "xMidYMid slice");
+            avatar.setAttribute("x", "30");
+            avatar.setAttribute("y", "398");
+            avatar.setAttribute("width", "60");
+            avatar.setAttribute("height", "60");
+            avatar.setAttribute("clip-path", "url(#avatarClip)");
+
+            sectionFull.appendChild(totalBG);
+            sectionFull.appendChild(leftBG);
+            sectionFull.appendChild(borderBG);
+            sectionFull.appendChild(gradBG);
+            sectionFull.appendChild(rankGroup);
+            sectionFull.appendChild(bgDim);
+            sectionFull.appendChild(divisor);
+            sectionFull.appendChild(playerBGImage);
+            sectionFull.appendChild(totalBGMask);
+            sectionFull.appendChild(gradGray);
+            sectionFull.appendChild(playerName);
+            sectionFull.appendChild(time);
+            sectionFull.appendChild(index);
+            sectionFull.appendChild(pp);
+            sectionFull.appendChild(iffc);
+            sectionFull.appendChild(accuracyLabel);
+            sectionFull.appendChild(ComboLabel);
+            sectionFull.appendChild(scoreLabel);
+            sectionFull.appendChild(accuracy);
+            sectionFull.appendChild(combo);
+            sectionFull.appendChild(totalScore);
+            sectionFull.appendChild(label300);
+            sectionFull.appendChild(label100);
+            sectionFull.appendChild(label50);
+            sectionFull.appendChild(labelMiss);
+            sectionFull.appendChild(countOf300);
+            sectionFull.appendChild(countOf100);
+            sectionFull.appendChild(countOfMiss);
+            sectionFull.appendChild(countOf50);
+            sectionFull.appendChild(avatar);
+            if (score.getIsLazer())
+            {
+                Node labelTickNode = doc.createElementNS(namespaceSVG, "text");
+                Element labelTick = (Element) labelTickNode;
+                labelTick.setAttribute("class", "cls-1");
+                labelTick.setAttribute("x", "410");
+                labelTick.setAttribute("y", "437.8");
+                labelTick.setAttribute("font-size", "6px");
+                labelTick.setAttribute("fill", "#B9C1C6");
+                labelTick.setAttribute("opacity", "0.6");
+                labelTick.setTextContent("Tick");
+
+                Node labelEndNode = doc.createElementNS(namespaceSVG, "text");
+                Element labelEnd = (Element) labelEndNode;
+                labelEnd.setAttribute("class", "cls-1");
+                labelEnd.setAttribute("x", "446");
+                labelEnd.setAttribute("y", "437.8");
+                labelEnd.setAttribute("font-size", "6px");
+                labelEnd.setAttribute("fill", "#B9C1C6");
+                labelEnd.setAttribute("opacity", "0.6");
+                labelEnd.setTextContent("End");
+
+                Node countOfTickNode = doc.createElementNS(namespaceSVG, "text");
+                Element countOfTick = (Element) countOfTickNode;
+                countOfTick.setAttribute("class", "cls-1");
+                countOfTick.setAttribute("x", "410");
+                countOfTick.setAttribute("y", "450");
+                countOfTick.setAttribute("font-size", "12px");
+                countOfTick.setAttribute("fill", "#ffffff");
+                countOfTick.setAttribute("opacity", "0.6");
+                countOfTick.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getLarge_tick_hit()).orElse(0)));
+
+                Node countOfEndNode = doc.createElementNS(namespaceSVG, "text");
+                Element countOfEnd = (Element) countOfEndNode;
+                countOfEnd.setAttribute("class", "cls-1");
+                countOfEnd.setAttribute("x", "446");
+                countOfEnd.setAttribute("y", "450");
+                countOfEnd.setAttribute("font-size", "12px");
+                countOfEnd.setAttribute("fill", "#ffffff");
+                countOfEnd.setAttribute("opacity", "0.6");
+                countOfEnd.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getSlider_tail_hit()).orElse(0)));
+                sectionFull.appendChild(labelTick);
+                sectionFull.appendChild(labelEnd);
+                sectionFull.appendChild(countOfEnd);
+                sectionFull.appendChild(countOfTick);
+            }
+
+
+            setupModIconForAllScores(score.getModList(), doc, sectionFull);
+            sectionFull.setAttribute("transform", "translate(0," + 75 * listIndex + ")");
+            svgRoot.appendChild(sectionFull);
+            listIndex++;
+        }
+        return doc;
+    }
+
+
+
+
+
+
+
 
     private static Document setupModIconForScoreListDetailed(List<Mod> modList,Document doc,Element sectionFull)
     {
@@ -1601,7 +1935,7 @@ public class SvgUtil
             rectBG.setAttribute("ry", "7.5");
             rectBG.setAttribute("width", "30");
             rectBG.setAttribute("height", "15");
-            rectBG.setAttribute("fill", getBplistCardModColor(modList.get(i)));
+            rectBG.setAttribute("fill", ModColor.getModTypeColorHEX(modList.get(i)));
 
             Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
             Element modAcronym = (Element) modAcronymNode;
@@ -1613,6 +1947,53 @@ public class SvgUtil
             modSingle.appendChild(rectBG);
             modSingle.appendChild(modAcronym);
             modSingle.setAttribute("transform", "translate(" + -35*i  + " 0)");
+            sectionFull.appendChild(modSingleNode);
+        }
+        return doc;
+    }
+    private static Document setupModIconForAllScores(List<Mod> modList,Document doc,Element sectionFull)
+    {
+        if (modList.isEmpty()) return doc;
+        modList=modList.stream().filter(mod -> !mod.getAcronym().equals("CL")).toList().reversed();
+        for(int i=0;i<modList.size();i++)
+        {
+            Node modSingleNode = doc.createElementNS(namespaceSVG, "g");
+            Element modSingle = (Element) modSingleNode;
+            Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element rectBG = (Element) rectBGNode;
+            rectBG.setAttribute("rx", "5");
+            rectBG.setAttribute("x", "717");
+            rectBG.setAttribute("y", "408");
+            rectBG.setAttribute("width", "19");
+            rectBG.setAttribute("height", "10");
+            rectBG.setAttribute("fill", ModColor.fromString(modList.get(i).getAcronym()).getDetailedPrimaryColor().toString());
+
+            Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
+            Element modAcronym = (Element) modAcronymNode;
+            modAcronym.setAttribute("class", "cls-4");
+            modAcronym.setAttribute("x", "726.5");
+            modAcronym.setAttribute("y", "416");
+            modAcronym.setAttribute("text-anchor", "middle");
+            modAcronym.setAttribute("font-size", "8px");
+            modAcronym.setAttribute("fill", "#ffffff");
+            modAcronym.setAttribute("font-weight", "600");
+            modAcronym.setTextContent(modList.get(i).getAcronym());
+            if(i>3)
+            {
+                rectBG.setAttribute("fill","#1f1e26");
+                modAcronym.setTextContent("...");
+                modAcronym.setAttribute("x", "722.8");
+                modAcronym.setAttribute("text-anchor", "start");
+                modAcronym.setAttribute("y", "413.5");
+                modSingle.appendChild(rectBG);
+                modSingle.appendChild(modAcronym);
+                modSingle.setAttribute("transform", "translate(-66 0)");
+                sectionFull.appendChild(modSingleNode);
+                break;
+            }
+            modSingle.appendChild(rectBG);
+            modSingle.appendChild(modAcronym);
+            modSingle.setAttribute("transform", "translate(" + (-22*i)  + " 0)");
             sectionFull.appendChild(modSingleNode);
         }
         return doc;
@@ -1950,7 +2331,7 @@ public class SvgUtil
         linearGradient.setAttributeNS(null, "gradientUnits", "userSpaceOnUse");
         Element stop1 = document.createElementNS(namespaceSVG, "stop");
         stop1.setAttributeNS(null, "offset", "0");
-        stop1.setAttributeNS(null, "stop-color", rankColorIndictor(scoreVO.getRank()));
+        stop1.setAttributeNS(null, "stop-color", RankColor.fromString(scoreVO.getRank()).getDarkRankColorHEX());
         linearGradient.appendChild(stop1);
         Element stop2 = document.createElementNS(namespaceSVG, "stop");
         if(type==0){
@@ -1959,7 +2340,7 @@ public class SvgUtil
         else {
             stop2.setAttributeNS(null, "offset", "0.77");
         }
-        stop2.setAttributeNS(null, "stop-color", rankColorIndictor(scoreVO.getRank()));
+        stop2.setAttributeNS(null, "stop-color", RankColor.fromString(scoreVO.getRank()).getDarkRankColorHEX());
         linearGradient.appendChild(stop2);
         Element stop3 = document.createElementNS(namespaceSVG, "stop");
         if(type==0){
@@ -2181,7 +2562,7 @@ public class SvgUtil
             rectBG.setAttribute("width", "22");
             rectBG.setAttribute("height", "11");
         }
-        rectBG .setAttribute("fill", getBplistCardModColor(mod));
+        rectBG .setAttribute("fill", ModColor.getModTypeColorHEX(mod));
 
         Node modAcronymNode = document.createElementNS(namespaceSVG, "text");
         Element modAcronym = (Element) modAcronymNode;
@@ -2206,41 +2587,6 @@ public class SvgUtil
 
 
 
-    private static String getBplistCardModColor(Mod mod) {
-        switch (mod.getAcronym().trim().toUpperCase()) {
-            case "HD":
-            case "HR":
-            case "FL":
-            case "NC":
-            case "DT":
-            case "SD":
-            case "PF":
-            case "BL":
-            case "ST":
-            case "AC":
-                return "#ffd810";
-            case "EZ":
-            case "NF":
-            case "HT":
-            case "DC":
-                return "#ddfbbc";
-            case "SO":
-            case "RX":
-            case "AP":
-            case "TD":
-                return "#64baff";
-            case "CL":
-            case "DA":
-            case "TP":
-            case "RD":
-            case "MR":
-            case "AL":
-            case "SG":
-                return "#a066ff";
-            default:
-                return "#ff8fb1";
-        }
-    }
 
 
 
@@ -2290,32 +2636,7 @@ public class SvgUtil
         }
     }
 
-    private static String rankColorIndictor(String rank)
-    {
-        switch (rank)
-        {
-            case "A":
-                return "#45e06d";
-            case "S":
-                return "#ffd25f";
-            case "SH":
-                return "#e1f4fa";
-            case "X":
-                return "#ffd464";
-            case "XH":
-                return "#c9eaf5";
-            case "B":
-                return "#3baedc";
-            case "C":
-                return "#9352d5";
-            case "D":
-                return "#e43350";
-            case "F":
-                return "#892f2a";
-            default:
-                return "#ffd25f";
-        }
-    }
+
     public static String convertDate(String inputDate) {
         LocalDateTime dateTime = LocalDateTime.parse(inputDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
@@ -2374,7 +2695,7 @@ public class SvgUtil
             rankHistory = playerInfo.getRankHistory().subList(size-8,size);
         }
         catch (Exception e) {
-            logger.info("Profile rank history invalid, use default rank history");
+            logger.info("Profile rank history invalid, using default rank history");
             rankHistory = List.of(0,0,0,0,0,0,0,0);
         }
         int[] data = rankHistory.stream().mapToInt(Integer::intValue).toArray();
@@ -2417,6 +2738,34 @@ public class SvgUtil
         document.getElementById("rankGraph-label-1").setTextContent(CommonTool.abbrNumber(dataMin));
         document.getElementById("rankGraph-label-2").setTextContent(CommonTool.abbrNumber(dataMax));
     }
+    public static Document createPPPlusPanel(PPPlusVO player, ProfileTheme theme) throws IOException
+    {
+        Path filePath = ResourceMonitor.getResourcePath().resolve("static/InfoV2-WhiteSpace.svg");
+        URI inputUri = filePath.toFile().toURI();
+        Document document = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
+        Element svgRoot = document.getDocumentElement();
+        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        HSL mainColor = new HSL(player.getPlayer().getPrimaryColor(), 100, 64);
+        HSL alternativeColor = new HSL(((player.getPlayer().getPrimaryColor() - 120) % 360 + 360) % 360, 86, 52);
+
+        document.getElementById("username").setTextContent(player.getPlayer().getPlayerName());
+        document.getElementById("global-label").setAttribute("fill",mainColor.toString());
+        document.getElementById("country-label").setAttribute("fill",mainColor.toString());
+        document.getElementById("background").setAttribute("fill",mainColor.toString());
+        document.getElementById("global").setTextContent(String.valueOf(player.getPlayer().getGlobalRank()));
+        document.getElementById("country").setTextContent(String.valueOf(player.getPlayer().getCountryRank()));
+        document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getPlayer().getAvatarUrl());
+
+
+        return document;
+    }
+
+
+
+
+
+
+
     private static void setupProfileBps(Document doc,PlayerInfoVO playerInfo,ProfileTheme theme)
     {
         int listIndex=0;
@@ -2479,7 +2828,12 @@ public class SvgUtil
 
             Node starNode = doc.createElementNS(namespaceSVG, "tspan");
             Element star = (Element) starNode;
-            star.setAttribute("fill", theme.getMainMiddleColor().toString());
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
+                star.setAttribute("fill", new HSL(theme.getHue(), 80, 85).toString());
+            }
+            else{
+                star.setAttribute("fill", theme.getMainMiddleColor().toString());
+            }
             star.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat("*"));
 
             Node divisorNode = doc.createElementNS(namespaceSVG, "tspan");
@@ -2488,7 +2842,9 @@ public class SvgUtil
 
             Node titleNode = doc.createElementNS(namespaceSVG, "tspan");
             Element title = (Element) titleNode;
-            title.setTextContent(score.getBeatmap().getTitle());
+            String titleStr=score.getBeatmap().getTitle();
+            if (titleStr.length() > 30) titleStr=titleStr.substring(0, 29).concat("...");
+            title.setTextContent(titleStr);
 
             starAndSongTitle.appendChild(star);
             starAndSongTitle.appendChild(divisor);
@@ -2513,7 +2869,7 @@ public class SvgUtil
 
             Node titleShadowNode = doc.createElementNS(namespaceSVG, "tspan");
             Element titleShadow = (Element) titleShadowNode;
-            titleShadow.setTextContent(score.getBeatmap().getTitle());
+            titleShadow.setTextContent(titleStr);
 
             starAndSongShadowTitle.appendChild(starShadow);
             starAndSongShadowTitle.appendChild(divisorShadow);
@@ -2530,7 +2886,12 @@ public class SvgUtil
 
             Node bpmNode = doc.createElementNS(namespaceSVG, "tspan");
             Element bpm = (Element) bpmNode;
-            bpm.setAttribute("fill", theme.getMainMiddleColor().toString());
+            if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
+                bpm.setAttribute("fill", new HSL(theme.getHue(), 80, 85).toString());
+            }
+            else {
+                bpm.setAttribute("fill", theme.getMainMiddleColor().toString());
+            }
             bpm.setTextContent(String.valueOf(Math.round(score.getBeatmap().getBpm())).concat(" BPM"));
 
             Node divisorNode2 = doc.createElementNS(namespaceSVG, "tspan");
@@ -2539,7 +2900,9 @@ public class SvgUtil
 
             Node mapperNode = doc.createElementNS(namespaceSVG, "tspan");
             Element mapper = (Element) mapperNode;
-            mapper.setTextContent(score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]"));
+            String mapperDiffStr=score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]");
+            if (mapperDiffStr.length() > 29) mapperDiffStr=mapperDiffStr.substring(0, 28).concat("...");
+            mapper.setTextContent(mapperDiffStr);
 
             bpmAndMapper.appendChild(bpm);
             bpmAndMapper.appendChild(divisor2);
@@ -2565,7 +2928,7 @@ public class SvgUtil
 
             Node mapperShadowNode = doc.createElementNS(namespaceSVG, "tspan");
             Element mapperShadow = (Element) mapperShadowNode;
-            mapperShadow.setTextContent(score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]"));
+            mapperShadow.setTextContent(mapperDiffStr);
 
             bpmAndMapperShadow.appendChild(bpmShadow);
             bpmAndMapperShadow.appendChild(divisor2Shadow);
@@ -2618,7 +2981,7 @@ public class SvgUtil
                 Element rank = (Element) rankNode;
                 rank.setAttribute("class", "cls-130");
                 rank.setAttribute("font-size", "100px");
-                rank.setAttribute("fill", rankColorIndictor(score.getRank()));
+                rank.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
                 rank.setAttribute("clip-path", "url(#bpclip)");
                 rank.setAttribute("opacity", "0.5");
                 rank.setAttribute("font-weight", "600");
@@ -2632,7 +2995,7 @@ public class SvgUtil
                 Element rank = (Element) rankNode;
                 rank.setAttribute("width", "35");
                 rank.setAttribute("height", "3");
-                rank.setAttribute("fill", rankColorIndictor(score.getRank()));
+                rank.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
                 rank.setAttribute("transform", "translate(50,579.5)");
                 rank.setAttribute("rx", "1.5");
                 rank.setAttribute("ry", "1.5");
@@ -2667,7 +3030,7 @@ public class SvgUtil
             rectBG.setAttribute("ry", "6");
             rectBG.setAttribute("width", "22");
             rectBG.setAttribute("height", "12");
-            rectBG.setAttribute("fill", getBplistCardModColor(modList.get(i)));
+            rectBG.setAttribute("fill", ModColor.getModTypeColorHEX(modList.get(i)));
 
             Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
             Element modAcronym = (Element) modAcronymNode;
@@ -2742,6 +3105,55 @@ public class SvgUtil
 
 
     }
+    private static void textElementBackgournd(Document doc, String elementId, int padding, int borderRadius, String color)
+    {
+        UserAgent userAgent = new UserAgentAdapter();
+        DocumentLoader loader = new DocumentLoader(userAgent);
+        BridgeContext ctx = new BridgeContext(userAgent, loader);
+        GVTBuilder builder = new GVTBuilder();
+        GraphicsNode rootNode = builder.build(ctx, doc);
 
+        Element textElement = doc.getElementById(elementId);
+        GraphicsNode textNode = ctx.getGraphicsNode(textElement);
+
+        if (textNode != null) {
+            Rectangle2D bounds = textNode.getBounds();
+            logger.trace("Text bounds: " + bounds);
+            Element rect = doc.createElementNS(SVGDOMImplementation.SVG_NAMESPACE_URI, "rect");
+            rect.setAttribute("x", String.valueOf(bounds.getX() - padding));
+            rect.setAttribute("y", String.valueOf(bounds.getY() - padding));
+            rect.setAttribute("width", String.valueOf(bounds.getWidth() + padding + padding));
+            rect.setAttribute("height", String.valueOf(bounds.getHeight() + padding + padding));
+            rect.setAttribute("fill", color);
+            rect.setAttribute("rx", String.valueOf(borderRadius));
+            rect.setAttribute("ry", String.valueOf(borderRadius));
+
+            Node parent = textElement.getParentNode();
+            parent.insertBefore(rect, textElement);
+
+        } else {
+            logger.warn(elementId + ": 无法获取文本节点");
+        }
+    }
+    public static String accuracyColorMid(double accuracy) {
+        accuracy = Math.max(0.0, Math.min(1.0, accuracy));
+        int h, s = 96, l;
+        if (accuracy >= 1.0) {
+            h = 102;
+            l = 80;
+        } else if (accuracy >= 0.9) {
+            double t = (accuracy - 0.9) / 0.1;
+            h = (int) Math.round(70 + (102 - 70) * t);
+            l = (int) Math.round(75 + (80 - 75) * t);
+        } else if (accuracy >= 0.8) {
+            double t = (accuracy - 0.8) / 0.1;
+            h = (int) Math.round(23 + (70 - 23) * t);
+            l = (int) Math.round(70 + (75 - 70) * t);
+        } else {
+            h = 23;
+            l = 70;
+        }
+        return String.format("hsl(%d,%d%%,%d%%)", h, s, l);
+    }
 
 }

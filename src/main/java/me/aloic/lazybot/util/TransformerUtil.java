@@ -1,4 +1,5 @@
 package me.aloic.lazybot.util;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapsetDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
@@ -7,6 +8,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.RosuUtil;
 import org.w3c.dom.Document;
 
 import javax.xml.transform.Transformer;
@@ -42,7 +44,6 @@ public class TransformerUtil
         catch (Exception e){
             playerInfoVO.setRankHistory(List.of(0,0,0,0,0,0,0,0));
         }
-
         playerInfoVO.setCountryRank(playerInfoDTO.getStatistics().getCountry_rank());
         playerInfoVO.setPlayCount(playerInfoDTO.getStatistics().getPlay_count());
         playerInfoVO.setGlobalRank(playerInfoDTO.getStatistics().getGlobal_rank());
@@ -137,7 +138,6 @@ public class TransformerUtil
             else {
                 temp.setRank("F");
             }
-            //do not download avatar here
             temp.setPlayerName(scoreLazerDTOS.get(i).getUser().getUsername());
             temp.setIsLazer(scoreLazerDTOS.get(i).getLegacy_total_score() == 0);
             temp.setStatistics(scoreLazerDTOS.get(i).getStatistics());
@@ -148,6 +148,32 @@ public class TransformerUtil
             scoreSequences.add(temp);
         }
         return scoreSequences;
+    }
+    public static List<MapScore> mapScoreTransform(List<ScoreLazerDTO> scoreLazerDTOS)
+    {
+        List<MapScore> mapScoreList=new ArrayList<>();
+        for (int i=0;i<scoreLazerDTOS.size();i++) {
+            MapScore temp = new MapScore();
+            temp.setAccuracy(scoreLazerDTOS.get(i).getAccuracy());
+            temp.setModList(scoreLazerDTOS.get(i).getMods());
+            temp.setAchievedTime(scoreLazerDTOS.get(i).getEnded_at());
+            temp.setMaxCombo(scoreLazerDTOS.get(i).getMax_combo());
+            temp.setPp(scoreLazerDTOS.get(i).getPp());
+            temp.setIsLazer(scoreLazerDTOS.get(i).getLegacy_total_score() == 0);
+            temp.setStatistics(scoreLazerDTOS.get(i).getStatistics());
+            temp.setRulesetId(scoreLazerDTOS.get(i).getRuleset_id());
+            temp.setIsPerfectCombo(scoreLazerDTOS.get(i).getIs_perfect_combo());
+            temp.setModJSON(scoreLazerDTOS.get(i).getMods());
+            temp.setScore(Long.valueOf(scoreLazerDTOS.get(i).getTotal_score()));
+            if(scoreLazerDTOS.get(i).getPassed()) {
+                temp.setRank(scoreLazerDTOS.get(i).getRank());
+            }
+            else {
+                temp.setRank("D");
+            }
+            mapScoreList.add(temp);
+        }
+        return mapScoreList;
     }
 
 
@@ -318,6 +344,34 @@ public class TransformerUtil
         score.setMode(String.valueOf(scoreLazer.getRuleset_id()));
         score.setIsPerfectCombo(scoreLazer.getIs_perfect_combo());
         return score;
+    }
+
+    public static BeatmapPerformance beatmapPerformanceTransform(BeatmapDTO beatmapDTO){
+        BeatmapPerformance beatmap=new BeatmapPerformance();
+        beatmap.setAccuracy(beatmapDTO.getAccuracy()); //od
+        beatmap.setAr(beatmapDTO.getAr()); //ar
+        beatmap.setCs(beatmapDTO.getCs());  //cs
+        beatmap.setDrain(beatmapDTO.getDrain()); //hp
+        beatmap.setDifficult_rating(beatmapDTO.getDifficulty_rating());  //star rating
+        beatmap.setBpm(beatmapDTO.getBpm());
+        beatmap.setHit_length(beatmapDTO.getHit_length());
+        beatmap.setTotal_length(beatmapDTO.getTotal_length());
+        beatmap.setVersion(beatmapDTO.getVersion()); //diff name
+        beatmap.setStatus(beatmapDTO.getStatus());  //ranked or loved something
+        beatmap.setArtist(beatmapDTO.getBeatmapset().getArtist());  //song creator
+        beatmap.setTitle(beatmapDTO.getBeatmapset().getTitle());   //song title
+        beatmap.setCreator(beatmapDTO.getBeatmapset().getCreator());  //map creator
+        beatmap.setMax_combo(beatmapDTO.getMax_combo());
+        beatmap.setCoverUrl(beatmapDTO.getBeatmapset().getCovers().getCover2x());
+        beatmap.setSid(beatmapDTO.getBeatmapset_id());
+        beatmap.setBid(beatmapDTO.getId());
+        beatmap.setMode_int(beatmapDTO.getMode_int());
+        beatmap.setChecksum(beatmapDTO.getChecksum());
+        beatmap.setGenre(beatmapDTO.getBeatmapset().getGenre());
+        beatmap.setLanguage(beatmapDTO.getBeatmapset().getLanguage());
+        beatmap.setPlayCount(beatmapDTO.getBeatmapset().getPlay_count());
+        beatmap.setFavouriteCount(beatmapDTO.getBeatmapset().getFavourite_count());
+        return beatmap;
     }
 
 }

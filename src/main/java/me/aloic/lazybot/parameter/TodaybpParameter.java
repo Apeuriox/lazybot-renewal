@@ -83,7 +83,7 @@ public class TodaybpParameter extends LazybotCommandParameter
     public static void setupDefaultValue(TodaybpParameter parameter, AccessTokenPO accessTokenPO)
     {
         if (parameter.getPlayerName() == null)
-            parameter.setPlayerName(accessTokenPO.getPlayer_name());
+            parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
         if (parameter.getMaxDays() == null)

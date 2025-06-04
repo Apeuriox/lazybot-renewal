@@ -56,7 +56,7 @@ public class BplistParameter extends LazybotCommandParameter
 
     public static void setupDefaultValue(BplistParameter parameter, AccessTokenPO accessTokenPO)
     {
-        if (parameter.getPlayerName() == null) parameter.setPlayerName(accessTokenPO.getPlayer_name());
+        if (parameter.getPlayerName() == null) parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null) parameter.setMode(accessTokenPO.getDefault_mode());
     }
     private static void setupParameterIndexes(BplistParameter parameter,String params)

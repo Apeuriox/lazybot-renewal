@@ -79,7 +79,10 @@ public class BpIfCommand implements LazybotSlashCommand
         BpifParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(params.getPlayerName(),tokenPO));
+        if (params.getPlayerName()!=null)
+            params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(params.getPlayerName(),tokenPO.getAccess_token(),params.getMode()));
+        else
+            params.setInfoDTO(OsuToolsUtil.getUserInfoByUserId(params.getPlayerId(),tokenPO,params.getMode()));
         params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;

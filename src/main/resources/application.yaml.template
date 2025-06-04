@@ -65,7 +65,7 @@ lazybot:
     identity: 1524185356
     enabled: false
   command:
-    whatif_calc_max_count: 200;
+    whatif_calc_max_count: 200
 
 async:
   executor:

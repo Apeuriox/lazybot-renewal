@@ -124,10 +124,18 @@ public class AssertDownloadUtil
 
     public static Path avatarDownload(String url,int playerId, boolean override)
     {
-        String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + playerId +".jpg";
+        return assertDownload(url,"playerAvatar", String.valueOf(playerId),"jpg",override);
+    }
+    public static Path bannerDownload(String url,int playerId, boolean override)
+    {
+        return assertDownload(url,"playerBanner", String.valueOf(playerId),"jpg",override);
+    }
+    public static Path assertDownload(String url,String subPath,String fileName,String fileExtension, boolean override)
+    {
+        String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/"+ subPath + "/" + fileName + "." + fileExtension;
         File saveFilePath = new File(desiredLocalPath);
         if (saveFilePath.exists()&&!override) {
-            logger.info("玩家头像文件已存在: {}", saveFilePath.getAbsolutePath());
+            logger.info("该文件已存在: {}", saveFilePath.getAbsolutePath());
             return Paths.get(desiredLocalPath);
         }
         try{
@@ -135,7 +143,7 @@ public class AssertDownloadUtil
         }
         catch (Exception e)
         {
-            logger.error("头像下载失败: {}", e.getMessage());
+            logger.error("下载失败: {}", e.getMessage());
             throw new LazybotRuntimeException("下载线程出错: "+ e.getMessage());
         }
         return Paths.get(desiredLocalPath);
@@ -166,6 +174,12 @@ public class AssertDownloadUtil
     {
         avatarDownload(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId(),override);
         return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + playerInfoDTO.getId() +".jpg";
+    }
+
+    public static String bannerAbsolutePath(PlayerInfoDTO playerInfoDTO, boolean override)
+    {
+        bannerDownload(playerInfoDTO.getCover_url(), playerInfoDTO.getId(),override);
+        return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerBanner/" + playerInfoDTO.getId() +".jpg";
     }
     private static void resourceDownload(String targetUrl,String desiredLocalPath)
     {

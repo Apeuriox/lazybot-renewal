@@ -64,6 +64,7 @@ public class ResourceMonitor
             logger.info("正在从 JAR 文件中提取资源");
             try (JarFile jar = new JarFile(source)) {
                 Enumeration<JarEntry> entries = jar.entries();
+                resourceDir = "BOOT-INF/classes/" + resourceDir;
                 while (entries.hasMoreElements()) {
                     JarEntry entry = entries.nextElement();
                     if (entry.getName().startsWith(resourceDir + "/")) {
@@ -74,8 +75,12 @@ public class ResourceMonitor
                                 throw new IOException("无法创建目录：" + targetFile.getAbsolutePath());
                             }
                         } else {
+                            logger.info("正在提取资源：{}", targetFile.getAbsolutePath());
                             copyResourceFromJar(jar, entry, targetFile);
                         }
+                    }
+                    else {
+                        logger.trace("跳过资源：{}", entry.getName());
                     }
                 }
             }
@@ -165,6 +170,7 @@ public class ResourceMonitor
     public static void createOsuDirectories(Path workingDir) throws IOException {
         Path osuFilesDir = workingDir.resolve("osuFiles");
         Path playerAvatarDir = osuFilesDir.resolve("playerAvatar");
+        Path playerBannerDir = osuFilesDir.resolve("playerBanner");
         Path mapBGDir = osuFilesDir.resolve("mapBG");
         Path playerCustomizationDir = osuFilesDir.resolve("playerCustomization");
         Path profileDir = playerCustomizationDir.resolve("profile");
@@ -175,6 +181,7 @@ public class ResourceMonitor
 
         createDirectoryIfNotExists(osuFilesDir);
         createDirectoryIfNotExists(playerAvatarDir);
+        createDirectoryIfNotExists(playerBannerDir);
         createDirectoryIfNotExists(mapBGDir);
         createDirectoryIfNotExists(staticDir);
         createDirectoryIfNotExists(playerCustomizationDir);

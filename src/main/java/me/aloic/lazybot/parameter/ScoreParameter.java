@@ -100,8 +100,11 @@ public class ScoreParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(ScoreParameter scoreParameter, AccessTokenPO accessTokenPO)
     {
-        if (scoreParameter.getPlayerName() == null)
+        if (scoreParameter.getPlayerName() == null) {
             scoreParameter.setPlayerName(accessTokenPO.getPlayer_name());
+            scoreParameter.setPlayerId(accessTokenPO.getPlayer_id());
+        }
+
         if (scoreParameter.getMode() == null)
             scoreParameter.setMode(accessTokenPO.getDefault_mode());
         if (scoreParameter.getVersion() == null)
