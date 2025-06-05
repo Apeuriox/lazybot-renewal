@@ -67,7 +67,7 @@ public class SVGRenderUtil
     {
        return renderSVGDocumentToByteArray(document, 1);
     }
-    public static byte[] renderSVGDocumentToByteArray(Document document, Integer scale)
+    public static byte[] renderSVGDocumentToByteArray(Document document, float scale)
     {
         long startingTime = System.currentTimeMillis();
         byte[] result;

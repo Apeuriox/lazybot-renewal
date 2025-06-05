@@ -15,10 +15,12 @@ import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spring.osu.extended.rosu.JniBeatmap;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -49,25 +51,26 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] allScore(ScoreParameter params) throws Exception
     {
-        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("目前处于测试阶段仅支持osu模式");
         PlayerInfoDTO playerInfoDTO;
         if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
         else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
 
         List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractBeatmapUserScoreAll(params.getAccessToken(),
                 params.getBeatmapId(), playerInfoDTO.getId(), params.getMode());
-        if (scoreList.isEmpty()) throw new LazybotRuntimeException("没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
+        if (scoreList==null || scoreList.isEmpty()) throw new LazybotRuntimeException("没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
         List<MapScore> mapScoreList=TransformerUtil.mapScoreTransform(scoreList);
 
         OsuToolsUtil.setupPlayerStatics(mapScoreList,playerInfoDTO);
         BeatmapDTO beatmapDTO = DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()),params.getMode());
         BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
-        beatmapPerformance.setPerformanceAttributes(RosuUtil.nomodMapStats(AssertDownloadUtil.beatmapPath(beatmapDTO.getId(),false), beatmapDTO));
+       JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
+        beatmapPerformance.setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, beatmapPerformance.getMode().getDescribe()));
         beatmapPerformance.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapPerformance.getSid()));
-        Path beatmapPath = AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false);
+        beatmapPerformance.setLengthBonus(CommonTool.lengthBonusCalc(beatmapPerformance.getCountCircles()+beatmapPerformance.getCountSliders()+beatmapPerformance.getCountSpinners()));
         for (MapScore mapScore:mapScoreList) {
                 try {
-                    RosuUtil.setupMapScorePerformance(beatmapPath, mapScore);
+                    RosuUtil.setupMapScorePerformance(beatmap, mapScore);
+                    mapScore.setupBpm(mapScore,beatmapPerformance);
                 }
                 catch (Exception e) {
                     logger.error(e.getMessage());
@@ -76,7 +79,7 @@ public class PlayerServiceImpl implements PlayerService
         }
         mapScoreList=mapScoreList.stream().sorted(Comparator.comparing(MapScore::getPp).reversed()).toList();
         verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapDTO.getChecksum());
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createMapScoreList(mapScoreList,beatmapPerformance),2);
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createMapScoreList(mapScoreList,beatmapPerformance),2f);
     }
 
     @Override

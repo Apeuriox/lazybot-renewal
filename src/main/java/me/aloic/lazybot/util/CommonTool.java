@@ -751,4 +751,9 @@ public class CommonTool {
         }
     }
 
+    public static double lengthBonusCalc(Integer count)
+    {
+        return 0.95 + 0.4 * Math.min(1.0, count / 2000.0) + (count > 2000 ? Math.log10(count / 2000.0) * 0.5 : 0.0);
+    }
+
 }

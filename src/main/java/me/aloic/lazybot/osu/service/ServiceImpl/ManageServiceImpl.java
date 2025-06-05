@@ -39,9 +39,12 @@ public class ManageServiceImpl implements ManageService
     private static final Map<Long,Boolean> adminMap;  //Long ass numbers are discord ids
     static{
         updateMap = Map.of("avatar",ManageServiceImpl::updateAvatar,
-                "track",ManageServiceImpl::updateOsuTrack);
+                "track",ManageServiceImpl::updateOsuTrack,
+                "banner",ManageServiceImpl::updateBanner);
+
         adminMap = Map.of( 1524185356L,true,
-                412246007024451585L,true);
+                412246007024451585L,true,
+                1204694006L,true);
     }
 
     @Resource
@@ -54,7 +57,7 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String update(UpdateParameter params)
     {
-        if(params==null || params.getType()==null || !updateMap.containsKey(params.getType())) return "Update avatar {user_name} or Update track {user_name}";
+        if(params==null || params.getType()==null || !updateMap.containsKey(params.getType())) return "输入Update avatar 用户名 以更新头像\n输入 Update track 用户名  以更新ppmap数据\n输入Update banner 用户名 以更新用户横幅";
         return updateMap.get(params.getType()).apply(params);
     }
 
@@ -66,6 +69,15 @@ public class ManageServiceImpl implements ManageService
 
         playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true)));
         return "已更新用户"+playerInfoDTO.getUsername()+"的头像缓存";
+    }
+    private static String updateBanner(UpdateParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
+        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+
+        playerInfoDTO.setCover_url((AssertDownloadUtil.bannerAbsolutePath(playerInfoDTO,true)));
+        return "已更新用户"+playerInfoDTO.getUsername()+"的横幅缓存";
     }
     private static String updateOsuTrack(UpdateParameter params)
     {

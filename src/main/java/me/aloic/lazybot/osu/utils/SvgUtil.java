@@ -23,6 +23,7 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spring.osu.extended.rosu.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -1215,26 +1216,10 @@ public class SvgUtil
             doc.getElementById("favourite").setTextContent(CommonTool.formatNumber(beatmap.getFavouriteCount()));
 
             doc.getElementById("max-combo").setTextContent(beatmap.getMax_combo()+"x");
-            doc.getElementById("circles").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNCircles()));
-            doc.getElementById("sliders").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNSliders()));
-            doc.getElementById("spinners").setTextContent(String.valueOf(beatmap.getPerformanceAttributes().getNSpinners()));
+            doc.getElementById("circles").setTextContent(String.valueOf(Optional.ofNullable(beatmap.getCountCircles()).orElse(0)));
+            doc.getElementById("sliders").setTextContent(String.valueOf(Optional.ofNullable(beatmap.getCountSliders()).orElse(0)));
+            doc.getElementById("spinners").setTextContent(String.valueOf(Optional.ofNullable(beatmap.getCountSpinners()).orElse(0)));
 
-            doc.getElementById("cs").setTextContent(CommonTool.toString(beatmap.getCs(),1));
-            doc.getElementById("ar").setTextContent(CommonTool.toString(beatmap.getAr(),1));
-            doc.getElementById("od").setTextContent(CommonTool.toString(beatmap.getAccuracy(),1));
-            doc.getElementById("hp").setTextContent(CommonTool.toString(beatmap.getDrain(),1));
-
-            doc.getElementById("aimstrain").setTextContent(String.valueOf(Math.round(beatmap.getPerformanceAttributes().getAimDifficultStrainCount())));
-            doc.getElementById("speedstrain").setTextContent(String.valueOf(Math.round(beatmap.getPerformanceAttributes().getSpeedDifficultStrainCount())));
-            doc.getElementById("sliderfactor").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getSliderFactor() * 100).concat("%"));
-            doc.getElementById("speednote").setTextContent(String.valueOf(Math.round(beatmap.getPerformanceAttributes().getSpeedNoteCount())));
-
-            doc.getElementById("bid").setTextContent(String.valueOf(beatmap.getBid()));
-            doc.getElementById("sid").setTextContent(String.valueOf(beatmap.getSid()));
-            doc.getElementById(beatmap.getStatus()).setAttribute("opacity", "1");
-            doc.getElementById("star-all-num").setTextContent(CommonTool.toString(beatmap.getDifficult_rating()));
-            doc.getElementById("star-aim-num").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getAim()));
-            doc.getElementById("star-spd-num").setTextContent(CommonTool.toString(beatmap.getPerformanceAttributes().getSpeed()));
 
             int hue = CommonTool.rgbToHue(
                     CommonTool.hexToRgb(
@@ -1242,6 +1227,7 @@ public class SvgUtil
                             )
                     )
             );
+
             HSL lighterStar=new HSL(hue,97,70);
             HSL darkerStar=new HSL(hue,42,17);
             if (hue>360)
@@ -1249,6 +1235,75 @@ public class SvgUtil
                 lighterStar=new HSL(hue,75,5);
                 darkerStar=new HSL(hue,20,75);
             }
+            switch (beatmap.getDifficultyAttributes()) {
+                case OsuDifficultyAttributes osu -> {
+                    doc.getElementById("mode-osu").setAttribute("opacity", "1");
+                    doc.getElementById("mode-osu").setAttribute("fill", darkerStar.toString());
+                    doc.getElementById("osu-stats-2").setAttribute("opacity", "1");
+                    doc.getElementById("osu-stats-3").setAttribute("opacity", "1");
+                    doc.getElementById("star-aim").setAttribute("opacity", "1");
+                    doc.getElementById("star-spd").setAttribute("opacity", "1");
+                    doc.getElementById("cs-osu").setTextContent(CommonTool.toString(beatmap.getCs(), 1));
+                    doc.getElementById("ar-osu").setTextContent(CommonTool.toString(beatmap.getAr(), 1));
+                    doc.getElementById("od-osu").setTextContent(CommonTool.toString(beatmap.getAccuracy(), 1));
+                    doc.getElementById("hp-osu").setTextContent(CommonTool.toString(beatmap.getDrain(), 1));
+                    doc.getElementById("star-aim-num").setTextContent(CommonTool.toString(osu.getAim()));
+                    doc.getElementById("star-spd-num").setTextContent(CommonTool.toString(osu.getSpeed()));
+
+                    doc.getElementById("aimstrain").setTextContent(String.valueOf(Math.round(osu.getAimDifficultStrainCount())));
+                    doc.getElementById("speedstrain").setTextContent(String.valueOf(Math.round(osu.getSpeedDifficultStrainCount())));
+                    doc.getElementById("sliderfactor").setTextContent(CommonTool.toString(osu.getSliderFactor() * 100).concat("%"));
+                    doc.getElementById("lengthbonus").setTextContent(CommonTool.toString(beatmap.getLengthBonus(),3));
+                }
+                case TaikoDifficultyAttributes taiko -> {
+                    doc.getElementById("mode-taiko").setAttribute("opacity", "1");
+                    doc.getElementById("mode-taiko").setAttribute("fill", darkerStar.toString());
+                    doc.getElementById("taiko-stats-2").setAttribute("opacity", "1");
+                    doc.getElementById("taiko-stats-3").setAttribute("opacity", "1");
+                    doc.getElementById("od-taiko").setTextContent(CommonTool.toString(beatmap.getAccuracy(), 1));
+                    doc.getElementById("hp-taiko").setTextContent(CommonTool.toString(beatmap.getDrain(), 1));
+
+                    doc.getElementById("stamina").setTextContent(CommonTool.toString(taiko.getStamina()));
+                    doc.getElementById("rhythm").setTextContent(CommonTool.toString(taiko.getRhythm()));
+                    doc.getElementById("color").setTextContent(CommonTool.toString(taiko.getColor()));
+                    doc.getElementById("peak").setTextContent(CommonTool.toString(taiko.getPeak()*1000000).concat("^-6"));
+                }
+                case CatchDifficultyAttributes fruits -> {
+                    doc.getElementById("mode-ctb").setAttribute("opacity", "1");
+                    doc.getElementById("mode-ctb").setAttribute("fill", darkerStar.toString());
+                    doc.getElementById("fruits-stats-2").setAttribute("opacity", "1");
+                    doc.getElementById("fruits-stats-3").setAttribute("opacity", "1");
+                    doc.getElementById("cs-fruits").setTextContent(CommonTool.toString(beatmap.getCs(), 1));
+                    doc.getElementById("ar-fruits").setTextContent(CommonTool.toString(beatmap.getAr(), 1));
+                    doc.getElementById("od-fruits").setTextContent(CommonTool.toString(beatmap.getAccuracy(), 1));
+                    doc.getElementById("hp-fruits").setTextContent(CommonTool.toString(beatmap.getDrain(), 1));
+
+                    doc.getElementById("fruits").setTextContent(String.valueOf(fruits.getNFruits()));
+                    doc.getElementById("droplets").setTextContent(String.valueOf(fruits.getNDroplets()));
+                    doc.getElementById("tinydroplets").setTextContent(String.valueOf(fruits.getNTinyDroplets()));
+                    doc.getElementById("convert1").setTextContent(String.valueOf(beatmap.getConvert()));
+                }
+                case ManiaDifficultyAttributes mania -> {
+                    doc.getElementById("mode-taiko").setAttribute("opacity", "1");
+                    doc.getElementById("mode-taiko").setAttribute("fill", darkerStar.toString());
+                    doc.getElementById("mania-stats-2").setAttribute("opacity", "1");
+                    doc.getElementById("mania-stats-3").setAttribute("opacity", "1");
+                    doc.getElementById("key-mania").setTextContent(CommonTool.toString(beatmap.getCs(), 1));
+                    doc.getElementById("od-mania").setTextContent(CommonTool.toString(beatmap.getAccuracy(), 1));
+                    doc.getElementById("hp-mania").setTextContent(CommonTool.toString(beatmap.getDrain(), 1));
+
+                    doc.getElementById("objects").setTextContent(String.valueOf(mania.getNObjects()));
+                    doc.getElementById("holdnotes").setTextContent(String.valueOf(mania.getNHoldNotes()));
+                    doc.getElementById("convert2").setTextContent(String.valueOf(beatmap.getConvert()));
+                }
+            }
+
+            doc.getElementById("bid").setTextContent(String.valueOf(beatmap.getBid()));
+            doc.getElementById("sid").setTextContent(String.valueOf(beatmap.getSid()));
+            doc.getElementById(beatmap.getStatus()).setAttribute("opacity", "1");
+            doc.getElementById("star-all-num").setTextContent(CommonTool.toString(beatmap.getDifficult_rating()));
+
+
 
             doc.getElementById("star-all-num").setAttribute("fill", lighterStar.toString());
             doc.getElementById("star-aim-num").setAttribute("fill", lighterStar.toString());
@@ -1263,12 +1318,11 @@ public class SvgUtil
             doc.getElementById("star-aim-bg").setAttribute("fill", darkerStar.toString());
             doc.getElementById("star-spd-bg").setAttribute("fill", darkerStar.toString());
             doc.getElementById("allversion").setAttribute("fill", darkerStar.toString());
-            doc.getElementById("stats-mode").setAttribute("fill", darkerStar.toString());
             doc.getElementById("star-spd-label").setAttribute("fill", darkerStar.toString());
             doc.getElementById("star-aim-label").setAttribute("fill", darkerStar.toString());
 
 
-            return setupAllScoreListElement(scorelist, doc, svgRoot);
+            return setupAllScoreListElement(scorelist, doc, svgRoot, beatmap.getMode());
         }
         catch (Exception e)
         {
@@ -1505,11 +1559,10 @@ public class SvgUtil
         }
         return doc;
     }
-    private static Document setupAllScoreListElement(List<MapScore> scorelist, Document doc, Element svgRoot) throws Exception
+    private static Document setupAllScoreListElement(List<MapScore> scorelist, Document doc, Element svgRoot, OsuMode mode) throws Exception
     {
         int listIndex=0;
-        for (MapScore score : scorelist)
-        {
+        for (MapScore score : scorelist) {
             Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
             Element sectionFull = (Element) sectionFullNode;
 
@@ -1600,9 +1653,10 @@ public class SvgUtil
             iffc.setAttribute("y", "448");
             iffc.setAttribute("font-size", "10px");
             iffc.setAttribute("text-anchor", "end");
+            iffc.setAttribute("opacity", "0.9");
             iffc.setAttribute("fill",ppColor.toString());
             if (score.getIsPerfectCombo())
-                iffc.setAttribute("opacity", "0.6");
+                iffc.setAttribute("opacity", "0.5");
 
             Node iffcLabelNode = doc.createElementNS(namespaceSVG, "tspan");
             Element iffcLabel = (Element) iffcLabelNode;
@@ -1678,12 +1732,12 @@ public class SvgUtil
             Element index = (Element) indexNode;
             index.setAttribute("class", "cls-1");
             index.setAttribute("x", "104");
-            index.setAttribute("y", "450");
+            index.setAttribute("y", "448");
             index.setAttribute("font-weight", "600");
-            index.setAttribute("font-size", "12px");
+            index.setAttribute("font-size", "9px");
             index.setAttribute("fill", "#F3F3F3");
-            index.setAttribute("opacity", "0.9");
-            index.setTextContent("#"+(listIndex+1));
+            index.setAttribute("opacity", "1");
+            index.setTextContent(CommonTool.toString(score.getStarRating())+"* | " + Math.round(score.getBpm()) + " bpm | " + "#" + (listIndex+1));
 
             Node accuracyLabelNode = doc.createElementNS(namespaceSVG, "text");
             Element accuracyLabel = (Element) accuracyLabelNode;
@@ -1743,80 +1797,6 @@ public class SvgUtil
                 totalScore.setAttribute("fill", "#B9FD9B");
             totalScore.setTextContent(NumberFormat.getNumberInstance(Locale.US).format(score.getScore()));
 
-            Node label300Node = doc.createElementNS(namespaceSVG, "text");
-            Element label300 = (Element) label300Node;
-            label300.setAttribute("class", "cls-1");
-            label300.setAttribute("x", "485");
-            label300.setAttribute("y", "437.8");
-            label300.setAttribute("font-size", "6px");
-            label300.setAttribute("fill", "#B9C1C6");
-            label300.setTextContent("300");
-
-            Node label100Node = doc.createElementNS(namespaceSVG, "text");
-            Element label100 = (Element) label100Node;
-            label100.setAttribute("class", "cls-1");
-            label100.setAttribute("x", "521");
-            label100.setAttribute("y", "437.8");
-            label100.setAttribute("font-size", "6px");
-            label100.setAttribute("fill", "#B9C1C6");
-            label100.setTextContent("100");
-
-
-            Node label50Node = doc.createElementNS(namespaceSVG, "text");
-            Element label50 = (Element) label50Node;
-            label50.setAttribute("class", "cls-1");
-            label50.setAttribute("x", "551");
-            label50.setAttribute("y", "437.8");
-            label50.setAttribute("font-size", "6px");
-            label50.setAttribute("fill", "#B9C1C6");
-            label50.setTextContent("50");
-
-            Node labelMissNode = doc.createElementNS(namespaceSVG, "text");
-            Element labelMiss = (Element) labelMissNode;
-            labelMiss.setAttribute("class", "cls-1");
-            labelMiss.setAttribute("x", "579");
-            labelMiss.setAttribute("y", "437.8");
-            labelMiss.setAttribute("font-size", "6px");
-            labelMiss.setAttribute("fill", "#B9C1C6");
-            labelMiss.setTextContent("Miss");
-
-            Node countOf300Node = doc.createElementNS(namespaceSVG, "text");
-            Element countOf300 = (Element) countOf300Node;
-            countOf300.setAttribute("class", "cls-1");
-            countOf300.setAttribute("x", "485");
-            countOf300.setAttribute("y", "450");
-            countOf300.setAttribute("font-size", "12px");
-            countOf300.setAttribute("fill", "#ffffff");
-            countOf300.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGreat()).orElse(0)));
-
-            Node countOf100Node = doc.createElementNS(namespaceSVG, "text");
-            Element countOf100 = (Element) countOf100Node;
-            countOf100.setAttribute("class", "cls-1");
-            countOf100.setAttribute("x", "521");
-            countOf100.setAttribute("y", "450");
-            countOf100.setAttribute("font-size", "12px");
-            countOf100.setAttribute("fill", "#ffffff");
-            countOf100.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getOk()).orElse(0)));
-
-            Node countOf50Node = doc.createElementNS(namespaceSVG, "text");
-            Element countOf50 = (Element) countOf50Node;
-            countOf50.setAttribute("class", "cls-1");
-            countOf50.setAttribute("x", "551");
-            countOf50.setAttribute("y", "450");
-            countOf50.setAttribute("font-size", "12px");
-            countOf50.setAttribute("fill", "#ffffff");
-            countOf50.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMeh()).orElse(0)));
-
-            Node countOfMissNode = doc.createElementNS(namespaceSVG, "text");
-            Element countOfMiss = (Element) countOfMissNode;
-            countOfMiss.setAttribute("class", "cls-1");
-            countOfMiss.setAttribute("x", "579");
-            countOfMiss.setAttribute("y", "450");
-            countOfMiss.setAttribute("font-size", "12px");
-            countOfMiss.setAttribute("fill", "#ffffff");
-            countOfMiss.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMiss()).orElse(0)));
-
-
             Node avatarNode = doc.createElementNS(namespaceSVG, "image");
             Element avatar = (Element) avatarNode;
             avatar.setAttributeNS(xlinkns, "xlink:href", score.getAvatarUrl());
@@ -1826,6 +1806,7 @@ public class SvgUtil
             avatar.setAttribute("width", "60");
             avatar.setAttribute("height", "60");
             avatar.setAttribute("clip-path", "url(#avatarClip)");
+
 
             sectionFull.appendChild(totalBG);
             sectionFull.appendChild(leftBG);
@@ -1842,21 +1823,99 @@ public class SvgUtil
             sectionFull.appendChild(index);
             sectionFull.appendChild(pp);
             sectionFull.appendChild(iffc);
+            sectionFull.appendChild(avatar);
             sectionFull.appendChild(accuracyLabel);
             sectionFull.appendChild(ComboLabel);
             sectionFull.appendChild(scoreLabel);
             sectionFull.appendChild(accuracy);
             sectionFull.appendChild(combo);
             sectionFull.appendChild(totalScore);
-            sectionFull.appendChild(label300);
-            sectionFull.appendChild(label100);
-            sectionFull.appendChild(label50);
-            sectionFull.appendChild(labelMiss);
-            sectionFull.appendChild(countOf300);
-            sectionFull.appendChild(countOf100);
-            sectionFull.appendChild(countOfMiss);
-            sectionFull.appendChild(countOf50);
-            sectionFull.appendChild(avatar);
+
+
+            setupAllScoreLabelsMode(doc, score, sectionFull, mode);
+            setupModIconForAllScores(score.getModList(), doc, sectionFull);
+            sectionFull.setAttribute("transform", "translate(0," + 75 * listIndex + ")");
+            svgRoot.appendChild(sectionFull);
+            listIndex++;
+        }
+        return doc;
+    }
+
+    private static void setupAllScoreLabelsMode(Document doc, MapScore score, Element sectionFull, OsuMode mode)
+    {
+        Node label300Node = doc.createElementNS(namespaceSVG, "text");
+        Element label300 = (Element) label300Node;
+        label300.setAttribute("class", "cls-1");
+        label300.setAttribute("x", "485");
+        label300.setAttribute("y", "437.8");
+        label300.setAttribute("font-size", "6px");
+        label300.setAttribute("fill", "#B9C1C6");
+
+        Node label100Node = doc.createElementNS(namespaceSVG, "text");
+        Element label100 = (Element) label100Node;
+        label100.setAttribute("class", "cls-1");
+        label100.setAttribute("x", "521");
+        label100.setAttribute("y", "437.8");
+        label100.setAttribute("font-size", "6px");
+        label100.setAttribute("fill", "#B9C1C6");
+
+        Node label50Node = doc.createElementNS(namespaceSVG, "text");
+        Element label50 = (Element) label50Node;
+        label50.setAttribute("class", "cls-1");
+        label50.setAttribute("x", "551");
+        label50.setAttribute("y", "437.8");
+        label50.setAttribute("font-size", "6px");
+        label50.setAttribute("fill", "#B9C1C6");
+
+        Node labelMissNode = doc.createElementNS(namespaceSVG, "text");
+        Element labelMiss = (Element) labelMissNode;
+        labelMiss.setAttribute("class", "cls-1");
+        labelMiss.setAttribute("x", "579");
+        labelMiss.setAttribute("y", "437.8");
+        labelMiss.setAttribute("font-size", "6px");
+        labelMiss.setAttribute("fill", "#B9C1C6");
+
+        Node countOf300Node = doc.createElementNS(namespaceSVG, "text");
+        Element countOf300 = (Element) countOf300Node;
+        countOf300.setAttribute("class", "cls-1");
+        countOf300.setAttribute("x", "485");
+        countOf300.setAttribute("y", "450");
+        countOf300.setAttribute("font-size", "12px");
+        countOf300.setAttribute("fill", "#ffffff");
+
+        Node countOf100Node = doc.createElementNS(namespaceSVG, "text");
+        Element countOf100 = (Element) countOf100Node;
+        countOf100.setAttribute("class", "cls-1");
+        countOf100.setAttribute("x", "521");
+        countOf100.setAttribute("y", "450");
+        countOf100.setAttribute("font-size", "12px");
+        countOf100.setAttribute("fill", "#ffffff");
+
+        Node countOf50Node = doc.createElementNS(namespaceSVG, "text");
+        Element countOf50 = (Element) countOf50Node;
+        countOf50.setAttribute("class", "cls-1");
+        countOf50.setAttribute("x", "551");
+        countOf50.setAttribute("y", "450");
+        countOf50.setAttribute("font-size", "12px");
+        countOf50.setAttribute("fill", "#ffffff");
+
+        Node countOfMissNode = doc.createElementNS(namespaceSVG, "text");
+        Element countOfMiss = (Element) countOfMissNode;
+        countOfMiss.setAttribute("class", "cls-1");
+        countOfMiss.setAttribute("x", "579");
+        countOfMiss.setAttribute("y", "450");
+        countOfMiss.setAttribute("font-size", "12px");
+        countOfMiss.setAttribute("fill", "#ffffff");
+
+        if (mode == OsuMode.Osu) {
+            countOfMiss.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMiss()).orElse(0)));
+            countOf50.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMeh()).orElse(0)));
+            countOf100.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getOk()).orElse(0)));
+            countOf300.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGreat()).orElse(0)));
+            labelMiss.setTextContent("Miss");
+            label50.setTextContent("50");
+            label100.setTextContent("100");
+            label300.setTextContent("300");
             if (score.getIsLazer())
             {
                 Node labelTickNode = doc.createElementNS(namespaceSVG, "text");
@@ -1903,16 +1962,99 @@ public class SvgUtil
                 sectionFull.appendChild(countOfEnd);
                 sectionFull.appendChild(countOfTick);
             }
-
-
-            setupModIconForAllScores(score.getModList(), doc, sectionFull);
-            sectionFull.setAttribute("transform", "translate(0," + 75 * listIndex + ")");
-            svgRoot.appendChild(sectionFull);
-            listIndex++;
         }
-        return doc;
-    }
+        else if (mode == OsuMode.Taiko) {
+            countOfMiss.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getLarge_bonus()).orElse(0)));
+            countOf50.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMiss()).orElse(0)));
+            countOf100.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getOk()).orElse(0)));
+            countOf300.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGreat()).orElse(0)));
+            labelMiss.setTextContent("Bonus");
+            label50.setTextContent("Miss");
+            label100.setTextContent("OK");
+            label300.setTextContent("Great");
+        }
+        else if (mode == OsuMode.Catch) {
+            label300.setAttribute("x", "475");
+            label100.setAttribute("x", "511");
+            label50.setAttribute("x", "541");
+            countOf300.setAttribute("x", "475");
+            countOf100.setAttribute("x", "511");
+            countOf50.setAttribute("x", "541");
+            countOfMiss.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMiss()).orElse(0)));
+            countOf50.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getSmall_tick_miss()).orElse(0)));
+            countOf100.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getLarge_tick_hit()).orElse(0)));
+            countOf300.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGreat()).orElse(0)));
+            labelMiss.setTextContent("Miss");
+            label50.setTextContent("Drop Miss");
+            label100.setTextContent("Ticks");
+            label300.setTextContent("Fruits");
+        }
+        else {
+            Node labelGreatNode = doc.createElementNS(namespaceSVG, "text");
+            Element labelGreat = (Element) labelGreatNode;
+            labelGreat.setAttribute("class", "cls-1");
+            labelGreat.setAttribute("x", "400");
+            labelGreat.setAttribute("y", "437.8");
+            labelGreat.setAttribute("font-size", "6px");
+            labelGreat.setAttribute("fill", "#B9C1C6");
 
+            Node labelPerfectNode = doc.createElementNS(namespaceSVG, "text");
+            Element labelPerfect = (Element) labelPerfectNode;
+            labelPerfect.setAttribute("class", "cls-1");
+            labelPerfect.setAttribute("x", "440");
+            labelPerfect.setAttribute("y", "437.8");
+            labelPerfect.setAttribute("font-size", "6px");
+            labelPerfect.setAttribute("fill", "#B9C1C6");
+
+            Node countOfPerfectNode = doc.createElementNS(namespaceSVG, "text");
+            Element countOfPerfect = (Element) countOfPerfectNode;
+            countOfPerfect.setAttribute("class", "cls-1");
+            countOfPerfect.setAttribute("x", "400");
+            countOfPerfect.setAttribute("y", "450");
+            countOfPerfect.setAttribute("font-size", "12px");
+            countOfPerfect.setAttribute("fill", "#ffffff");
+
+            Node countOfGreatNode = doc.createElementNS(namespaceSVG, "text");
+            Element countOfGreat = (Element) countOfGreatNode;
+            countOfGreat.setAttribute("class", "cls-1");
+            countOfGreat.setAttribute("x", "440");
+            countOfGreat.setAttribute("y", "450");
+            countOfGreat.setAttribute("font-size", "12px");
+            countOfGreat.setAttribute("fill", "#ffffff");
+
+            label300.setAttribute("x", "475");
+            label100.setAttribute("x", "515");
+            label50.setAttribute("x", "548");
+            countOf300.setAttribute("x", "475");
+            countOf100.setAttribute("x", "515");
+            countOf50.setAttribute("x", "548");
+            countOfMiss.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMiss()).orElse(0)));
+            countOf50.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getMeh()).orElse(0)));
+            countOf100.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getOk()).orElse(0)));
+            countOf300.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGood()).orElse(0)));
+            countOfGreat.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getGreat()).orElse(0)));
+            countOfPerfect.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getPerfect()).orElse(0)));
+            labelMiss.setTextContent("Miss");
+            label50.setTextContent("Meh");
+            label100.setTextContent("OK");
+            label300.setTextContent("Good");
+            labelGreat.setTextContent("Great");
+            labelPerfect.setTextContent("Perfect");
+            sectionFull.appendChild(labelPerfect);
+            sectionFull.appendChild(labelGreat);
+            sectionFull.appendChild(countOfGreat);
+            sectionFull.appendChild(countOfPerfect);
+        }
+        sectionFull.appendChild(label300);
+        sectionFull.appendChild(label100);
+        sectionFull.appendChild(label50);
+        sectionFull.appendChild(labelMiss);
+        sectionFull.appendChild(countOf300);
+        sectionFull.appendChild(countOf100);
+        sectionFull.appendChild(countOfMiss);
+        sectionFull.appendChild(countOf50);
+
+    }
 
 
 

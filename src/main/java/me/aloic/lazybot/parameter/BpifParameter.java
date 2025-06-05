@@ -10,8 +10,6 @@ import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
