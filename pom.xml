@@ -108,6 +108,11 @@
             <version>0.1.4</version>
         </dependency>
         <dependency>
+            <groupId>me.zhjk</groupId>
+            <artifactId>rosu-ppplus</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.sterl.svg2png</groupId>
             <artifactId>svg2png</artifactId>
             <version>1.2.1</version>

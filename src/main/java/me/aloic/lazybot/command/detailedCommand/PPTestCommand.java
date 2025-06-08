@@ -27,6 +27,8 @@ public class PPTestCommand implements LazybotSlashCommand
     private TestOutputTool testOutputTool;
     @Resource
     private CommandDatabaseProxy proxy;
+    @Value("${lazybot.test.identity}")
+    private Long identity;
 
 
     @Override
@@ -44,7 +46,7 @@ public class PPTestCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.writeStringToFile(event.toString() + manageService.ppTest(ScoreCommand.setupParameter(event,proxy.getAccessToken(event))));
+        testOutputTool.writeStringToFile(manageService.ppTest(ScoreCommand.setupParameter(event,proxy.getAccessToken(event)),identity));
     }
 
 }

@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -63,7 +62,7 @@ public class PlayerServiceImpl implements PlayerService
         OsuToolsUtil.setupPlayerStatics(mapScoreList,playerInfoDTO);
         BeatmapDTO beatmapDTO = DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()),params.getMode());
         BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
-       JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
+        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
         beatmapPerformance.setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, beatmapPerformance.getMode().getDescribe()));
         beatmapPerformance.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapPerformance.getSid()));
         beatmapPerformance.setLengthBonus(CommonTool.lengthBonusCalc(beatmapPerformance.getCountCircles()+beatmapPerformance.getCountSliders()+beatmapPerformance.getCountSpinners()));

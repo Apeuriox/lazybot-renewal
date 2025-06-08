@@ -8,6 +8,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.po.TipsPO;
+import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
@@ -15,6 +16,7 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
+import me.aloic.lazybot.osu.utils.PlusPPUtil;
 import me.aloic.lazybot.osu.utils.SvgUtil;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
@@ -156,15 +158,23 @@ public class ManageServiceImpl implements ManageService
     }
 
     @Override
-    public String ppTest(ScoreParameter params)
+    public String ppTest(ScoreParameter params, Long userIdentity)
     {
+        if(!adminMap.containsKey(userIdentity)) throw new LazybotRuntimeException("你没有权限");
         BeatmapUserScoreLazer beatmapUserScoreLazer = DataObjectExtractor.extractBeatmapUserScore(params.getAccessToken(),
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
                 DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()), params.getMode()),
                 beatmapUserScoreLazer.getScore(),
                 false);
-        return scoreVO.getPpDetailsLocal().getOriginal().toString();
+        try{
+            PPPlusPerformance ppPlusPerformance = PlusPPUtil.calcPPPlusStats(AssertDownloadUtil.beatmapPath(scoreVO,false).toString(),scoreVO);
+            return scoreVO.getPpDetailsLocal().getOriginal().toString() +"\n"+ ppPlusPerformance.toString();
+        }
+        catch (Exception e) {
+            logger.error("计算pp时失败",e);
+            return "计算pp+时失败，详情请见log";
+        }
     }
 
     private String verifyProfileCustomization(VerifyParameter params)

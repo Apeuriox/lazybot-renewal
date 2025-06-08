@@ -63,12 +63,13 @@ public class SvgUtil
     private static final Logger logger = LoggerFactory.getLogger(SvgUtil.class);
     private static final String namespaceSVG = "http://www.w3.org/2000/svg";
     private static final String xlinkns = "http://www.w3.org/1999/xlink";
-    private static final Map<Integer,Integer> ppplusRangeMap=Map.of(0,10000,
-            1,2000,
+    private static final Map<Integer,Integer> ppplusRangeMap=
+            Map.of(0,12000,
+            1,8000,
             2,3000,
-            3,4000,
-            4, 5000,
-            5,6000);
+            3,10000,
+            4, 8000,
+            5,5500);
 
     static{
          transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_ALLOW_EXTERNAL_RESOURCES, Boolean.TRUE);
@@ -960,6 +961,7 @@ public class SvgUtil
             doc.getElementById("starRatingBG").setAttribute("fill", "#".concat(CommonTool.calcDiffColor(targetScore.getBeatmap().getDifficult_rating())));
 
             if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0) {
+                targetScore.setModJSON(targetScore.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
                 for(int i=0;i<targetScore.getModJSON().size();i++) {
                     ModColor color=ModColor.fromString(targetScore.getModJSON().get(i).getAcronym());
                     wireModIconForDarkScore(doc,
@@ -2880,23 +2882,33 @@ public class SvgUtil
         document.getElementById("rankGraph-label-1").setTextContent(CommonTool.abbrNumber(dataMin));
         document.getElementById("rankGraph-label-2").setTextContent(CommonTool.abbrNumber(dataMax));
     }
-    public static Document createPPPlusPanel(PPPlusVO player, ProfileTheme theme) throws IOException
+    public static Document createPPPlusPanel(PPPlusPerformance performance, PlayerInfoVO player) throws IOException
     {
         Path filePath = ResourceMonitor.getResourcePath().resolve("static/InfoV2-WhiteSpace.svg");
         URI inputUri = filePath.toFile().toURI();
         Document document = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
         Element svgRoot = document.getDocumentElement();
         NumberFormat formatter = NumberFormat.getInstance(Locale.US);
-        HSL mainColor = new HSL(player.getPlayer().getPrimaryColor(), 100, 64);
-        HSL alternativeColor = new HSL(((player.getPlayer().getPrimaryColor() - 120) % 360 + 360) % 360, 86, 52);
+        HSL mainColor = new HSL(player.getPrimaryColor(), 100, 64);
+        HSL alternativeColor = new HSL(((player.getPrimaryColor() - 120) % 360 + 360) % 360, 86, 52);
 
-        document.getElementById("username").setTextContent(player.getPlayer().getPlayerName());
+        document.getElementById("playername").setTextContent(player.getPlayerName());
         document.getElementById("global-label").setAttribute("fill",mainColor.toString());
         document.getElementById("country-label").setAttribute("fill",mainColor.toString());
         document.getElementById("background").setAttribute("fill",mainColor.toString());
-        document.getElementById("global").setTextContent(String.valueOf(player.getPlayer().getGlobalRank()));
-        document.getElementById("country").setTextContent(String.valueOf(player.getPlayer().getCountryRank()));
-        document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getPlayer().getAvatarUrl());
+        document.getElementById("global-rank").setTextContent(String.valueOf(player.getGlobalRank()));
+        document.getElementById("country-rank").setTextContent(String.valueOf(player.getCountryRank()));
+        document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getAvatarUrl());
+
+        document.getElementById("jump").setTextContent(String.valueOf(Math.round(performance.getPpJumpAim())));
+        document.getElementById("flow").setTextContent(String.valueOf(Math.round(performance.getPpFlowAim())));
+        document.getElementById("speed").setTextContent(String.valueOf(Math.round(performance.getPpSpeed())));
+        document.getElementById("stamina").setTextContent(String.valueOf(Math.round(performance.getPpStamina())));
+        document.getElementById("precision").setTextContent(String.valueOf(Math.round(performance.getPpPrecision())));
+        document.getElementById("accuracy").setTextContent(String.valueOf(Math.round(performance.getPpAcc())));
+        //need calc
+        document.getElementById("average").setTextContent(String.valueOf(Math.round(performance.getPpJumpAim())));
+
 
 
         return document;
@@ -3187,6 +3199,7 @@ public class SvgUtil
             sectionFull.appendChild(modSingleNode);
         }
     }
+
 
     private static void setupProfileBackground(Document doc,String filename,Boolean enableGlassEffect)
     {
