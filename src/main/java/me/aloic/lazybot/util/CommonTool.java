@@ -773,7 +773,7 @@ public class CommonTool {
         return (hue-subtract+360)%360;
     }
     public static boolean isWarmColor(int hue) {
-        return ((hue >= 270 && hue < 360) || (hue >= 0 && hue <= 60));
+        return ((hue >= 270 && hue <= 360) || (hue >= 0 && hue <= 60));
     }
 
 }

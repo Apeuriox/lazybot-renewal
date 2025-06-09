@@ -2883,12 +2883,11 @@ public class SvgUtil
         NumberFormat formatter = NumberFormat.getInstance(Locale.US);
         boolean isWarmColor = CommonTool.isWarmColor(player.getPrimaryColor());
         HSL mainColor = new HSL(player.getPrimaryColor(), 100, 64);
+        if (player.getPrimaryColor()>=172 && player.getPrimaryColor()<=195) mainColor= new HSL(player.getPrimaryColor(), 72, 50);
         HSL alternativeColor;
-        if(isWarmColor) alternativeColor = new HSL((CommonTool.circularHueSubtract(player.getPrimaryColor(), 120)), 70, 35);
-
 
         document.getElementById("playername").setTextContent(player.getPlayerName());
-        if(player.getPrimaryColor()>=240 && player.getPrimaryColor()<=290) {
+        if(player.getPrimaryColor()>=234 && player.getPrimaryColor()<=292) {
             document.getElementById("playername").setAttribute("fill", "#e3e3e3");
         }
         document.getElementById("global-label").setAttribute("fill",mainColor.toString());
@@ -3001,7 +3000,7 @@ public class SvgUtil
         for(PerformancePlusTag tag:tags)
         {
             HSL textColor=new HSL(startHue,100,7);
-            if(startHue>=240 && startHue<=290) {
+            if(startHue>=233 && startHue<=292) {
                 textColor=new HSL(startHue,0,90);
             }
             Node tagSingleNode = doc.createElementNS(namespaceSVG, "g");
@@ -3046,10 +3045,12 @@ public class SvgUtil
                 PerformanceDimensionLimit.ACCURACY, performance.getPpAcc()
         );
 
+
         PerformanceDimensionLimit avgLimit = PerformanceDimensionLimit.AVERAGE;
         double avgScaled = CommonTool.getScaledRatio(averagePp, avgLimit.getLimitExpertPlus(), avgLimit.getScaleFactor());
 
         List<PerformancePlusTag> tags = new ArrayList<>();
+        List<PerformancePlusTag> scaledMainTags = new ArrayList<>();
         long strongCount = 0;
         for (Map.Entry<PerformanceDimensionLimit, Double> entry : ppMap.entrySet()) {
             PerformanceDimensionLimit dim = entry.getKey();
@@ -3060,13 +3061,15 @@ public class SvgUtil
                 PerformancePlusTag tag = mapToTag(dim);
                 if (tag != null) tags.add(tag);
             }
+            if (scaled> (avgScaled-0.08)) scaledMainTags.add(mapToTag(dim));
+
         }
         if (strongCount>=4) {
             return List.of(PerformancePlusTag.OMNIPOTENT);
         }
 
 
-        Set<PerformancePlusTag> tagSet = new HashSet<>(tags);
+        Set<PerformancePlusTag> tagSet = new HashSet<>(scaledMainTags);
         boolean hasAccuracy = tagSet.contains(PerformancePlusTag.ACCURATE);
         boolean hasAim = tagSet.contains(PerformancePlusTag.AIM);
         boolean hasFlow = tagSet.contains(PerformancePlusTag.FLOW);
