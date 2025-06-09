@@ -756,4 +756,24 @@ public class CommonTool {
         return 0.95 + 0.4 * Math.min(1.0, count / 2000.0) + (count > 2000 ? Math.log10(count / 2000.0) * 0.5 : 0.0);
     }
 
+    public static double getScaledRatio(double value, double maxValue, double alpha) {
+        if (maxValue <= 0 || alpha <= 0) {
+            throw new IllegalArgumentException("maxValue must be > 0, and alpha must be > 0.");
+        }
+        if (value < 0) value = 0;
+        if (value > maxValue) value = maxValue;
+
+        double scaledValue = Math.pow(value, alpha);
+        double scaledMax = Math.pow(maxValue, alpha);
+
+        return scaledValue / scaledMax;
+    }
+    public static Integer circularHueSubtract(Integer hue, Integer subtract)
+    {
+        return (hue-subtract+360)%360;
+    }
+    public static boolean isWarmColor(int hue) {
+        return ((hue >= 270 && hue < 360) || (hue >= 0 && hue <= 60));
+    }
+
 }

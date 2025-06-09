@@ -234,6 +234,15 @@ public class PlayerServiceImpl implements PlayerService
         playerInfoVO.setMode(params.getMode());
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoCard(playerInfoVO));
     }
+    @Override
+    public byte[] performancePlus(GeneralParameter params) throws IOException
+    {
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
+        playerInfoVO.setMode(params.getMode());
+        if (playerInfoVO.getPrimaryColor()==333) playerInfoVO.setPrimaryColor(208);
+        PPPlusPerformance performance=DataObjectExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
+        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanel(performance,playerInfoVO),2);
+    }
 
     @Override
     public byte[] profile(ProfileParameter params) throws Exception {

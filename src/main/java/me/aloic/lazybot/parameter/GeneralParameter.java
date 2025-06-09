@@ -50,7 +50,7 @@ public class GeneralParameter extends LazybotCommandParameter
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.setAccessToken(tokenPO.getAccess_token());
-        if (params.getPlayerName()==null) params.setInfoDTO(DataObjectExtractor.extractPlayerInfo(tokenPO.getAccess_token(),params.getPlayerId(),params.getMode()));
+        if (params.getPlayerId()!=null) params.setInfoDTO(DataObjectExtractor.extractPlayerInfo(tokenPO.getAccess_token(),params.getPlayerId(),params.getMode()));
         else params.setInfoDTO(DataObjectExtractor.extractPlayerInfo(tokenPO.getAccess_token(),params.getPlayerName(),params.getMode()));
         return params;
     }

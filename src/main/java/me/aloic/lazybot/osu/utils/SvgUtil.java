@@ -5,9 +5,7 @@ import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
-import me.aloic.lazybot.osu.enums.ModColor;
-import me.aloic.lazybot.osu.enums.OsuMode;
-import me.aloic.lazybot.osu.enums.RankColor;
+import me.aloic.lazybot.osu.enums.*;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.util.CommonTool;
@@ -35,6 +33,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -63,13 +62,6 @@ public class SvgUtil
     private static final Logger logger = LoggerFactory.getLogger(SvgUtil.class);
     private static final String namespaceSVG = "http://www.w3.org/2000/svg";
     private static final String xlinkns = "http://www.w3.org/1999/xlink";
-    private static final Map<Integer,Integer> ppplusRangeMap=
-            Map.of(0,12000,
-            1,8000,
-            2,3000,
-            3,10000,
-            4, 8000,
-            5,5500);
 
     static{
          transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_ALLOW_EXTERNAL_RESOURCES, Boolean.TRUE);
@@ -961,7 +953,7 @@ public class SvgUtil
             doc.getElementById("starRatingBG").setAttribute("fill", "#".concat(CommonTool.calcDiffColor(targetScore.getBeatmap().getDifficult_rating())));
 
             if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0) {
-                targetScore.setModJSON(targetScore.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
+                if (!targetScore.getIsLazer()) targetScore.setModJSON(targetScore.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
                 for(int i=0;i<targetScore.getModJSON().size();i++) {
                     ModColor color=ModColor.fromString(targetScore.getModJSON().get(i).getAcronym());
                     wireModIconForDarkScore(doc,
@@ -2884,36 +2876,220 @@ public class SvgUtil
     }
     public static Document createPPPlusPanel(PPPlusPerformance performance, PlayerInfoVO player) throws IOException
     {
-        Path filePath = ResourceMonitor.getResourcePath().resolve("static/InfoV2-WhiteSpace.svg");
+        Path filePath = ResourceMonitor.getResourcePath().resolve("static/PPplusCard.svg");
         URI inputUri = filePath.toFile().toURI();
         Document document = new SAXSVGDocumentFactory(XMLResourceDescriptor.getXMLParserClassName()).createDocument(inputUri.toString());
         Element svgRoot = document.getDocumentElement();
         NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        boolean isWarmColor = CommonTool.isWarmColor(player.getPrimaryColor());
         HSL mainColor = new HSL(player.getPrimaryColor(), 100, 64);
-        HSL alternativeColor = new HSL(((player.getPrimaryColor() - 120) % 360 + 360) % 360, 86, 52);
+        HSL alternativeColor;
+        if(isWarmColor) alternativeColor = new HSL((CommonTool.circularHueSubtract(player.getPrimaryColor(), 120)), 70, 35);
+
 
         document.getElementById("playername").setTextContent(player.getPlayerName());
+        if(player.getPrimaryColor()>=240 && player.getPrimaryColor()<=290) {
+            document.getElementById("playername").setAttribute("fill", "#e3e3e3");
+        }
         document.getElementById("global-label").setAttribute("fill",mainColor.toString());
         document.getElementById("country-label").setAttribute("fill",mainColor.toString());
         document.getElementById("background").setAttribute("fill",mainColor.toString());
-        document.getElementById("global-rank").setTextContent(String.valueOf(player.getGlobalRank()));
-        document.getElementById("country-rank").setTextContent(String.valueOf(player.getCountryRank()));
+        document.getElementById("global-rank").setTextContent("#" + formatter.format(player.getGlobalRank()));
+        document.getElementById("country-rank").setTextContent("#" + formatter.format(player.getCountryRank()));
         document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getAvatarUrl());
 
-        document.getElementById("jump").setTextContent(String.valueOf(Math.round(performance.getPpJumpAim())));
-        document.getElementById("flow").setTextContent(String.valueOf(Math.round(performance.getPpFlowAim())));
-        document.getElementById("speed").setTextContent(String.valueOf(Math.round(performance.getPpSpeed())));
-        document.getElementById("stamina").setTextContent(String.valueOf(Math.round(performance.getPpStamina())));
-        document.getElementById("precision").setTextContent(String.valueOf(Math.round(performance.getPpPrecision())));
-        document.getElementById("accuracy").setTextContent(String.valueOf(Math.round(performance.getPpAcc())));
-        //need calc
-        document.getElementById("average").setTextContent(String.valueOf(Math.round(performance.getPpJumpAim())));
+        int jumpAim= (int) Math.round(performance.getPpJumpAim());
+        int flowAim= (int) Math.round(performance.getPpFlowAim());
+        int speed= (int) Math.round(performance.getPpSpeed());
+        int stamina= (int) Math.round(performance.getPpStamina());
+        int precision= (int) Math.round(performance.getPpPrecision());
+        int accuracy= (int) Math.round(performance.getPpAcc());
+        int average= (int) Math.round((jumpAim+flowAim+speed+stamina+precision+accuracy)/6);
+
+        document.getElementById("jump").setTextContent(String.valueOf(jumpAim));
+        document.getElementById("flow").setTextContent(String.valueOf(flowAim));
+        document.getElementById("speed").setTextContent(String.valueOf(speed));
+        document.getElementById("stamina").setTextContent(String.valueOf(stamina));
+        document.getElementById("precision").setTextContent(String.valueOf(precision));
+        document.getElementById("accuracy").setTextContent(String.valueOf(accuracy));
+        document.getElementById("average").setTextContent(String.valueOf(average));
+        document.getElementById("total").setTextContent(String.valueOf(Math.round(performance.getPp())));
 
 
+        if (isWarmColor) alternativeColor=new HSL(0, 0, 90);
+        else alternativeColor = new HSL((CommonTool.circularHueSubtract(player.getPrimaryColor(),120)), 86, 52);
+        document.getElementById("jump").setAttribute("fill", alternativeColor.toString());
+        document.getElementById("flow").setAttribute("fill", alternativeColor.toString());
+        document.getElementById("speed").setAttribute("fill", alternativeColor.toString());
+        document.getElementById("stamina").setAttribute("fill", alternativeColor.toString());
+        document.getElementById("precision").setAttribute("fill", alternativeColor.toString());
+        document.getElementById("accuracy").setAttribute("fill", alternativeColor.toString());
+        document.getElementById("average").setAttribute("fill", alternativeColor.toString());
+        document.getElementById("total").setAttribute("fill", alternativeColor.toString());
+        if (isWarmColor) alternativeColor=new HSL((CommonTool.circularHueSubtract(player.getPrimaryColor(),120)), 69, 35);
 
+        document.getElementById("jump-bar").setAttribute("width", CommonTool.toString(530*
+                CommonTool.getScaledRatio(jumpAim,
+                        PerformanceDimensionLimit.JUMP.getLimitExpertPlus(),
+                        PerformanceDimensionLimit.JUMP.getScaleFactor())));
+        document.getElementById("jump-bar").setAttribute("fill", alternativeColor.toString());
+
+        document.getElementById("flow-bar").setAttribute("width", CommonTool.toString(530*
+                CommonTool.getScaledRatio(flowAim,
+                        PerformanceDimensionLimit.FLOW.getLimitExpertPlus(),
+                        PerformanceDimensionLimit.FLOW.getScaleFactor())));
+        document.getElementById("flow-bar").setAttribute("fill", alternativeColor.toString());
+
+        document.getElementById("speed-bar").setAttribute("width", CommonTool.toString(530*
+                CommonTool.getScaledRatio(speed,
+                        PerformanceDimensionLimit.SPEED.getLimitExpertPlus(),
+                        PerformanceDimensionLimit.SPEED.getScaleFactor())));
+        document.getElementById("speed-bar").setAttribute("fill", alternativeColor.toString());
+
+        document.getElementById("stamina-bar").setAttribute("width", CommonTool.toString(530*
+                CommonTool.getScaledRatio(stamina,
+                        PerformanceDimensionLimit.STAMINA.getLimitExpertPlus(),
+                        PerformanceDimensionLimit.STAMINA.getScaleFactor())));
+        document.getElementById("stamina-bar").setAttribute("fill", alternativeColor.toString());
+
+        document.getElementById("precision-bar").setAttribute("width", CommonTool.toString(530*
+                CommonTool.getScaledRatio(precision,
+                        PerformanceDimensionLimit.PRECISION.getLimitExpertPlus(),
+                        PerformanceDimensionLimit.PRECISION.getScaleFactor())));
+        document.getElementById("precision-bar").setAttribute("fill", alternativeColor.toString());
+
+        document.getElementById("accuracy-bar").setAttribute("width", CommonTool.toString(530*
+                CommonTool.getScaledRatio(accuracy,
+                        PerformanceDimensionLimit.ACCURACY.getLimitExpertPlus(),
+                        PerformanceDimensionLimit.ACCURACY.getScaleFactor())));
+        document.getElementById("accuracy-bar").setAttribute("fill", alternativeColor.toString());
+
+        document.getElementById("average-bar").setAttribute("width", CommonTool.toString(530*
+                CommonTool.getScaledRatio(average,
+                        PerformanceDimensionLimit.AVERAGE.getLimitExpertPlus(),
+                        PerformanceDimensionLimit.AVERAGE.getScaleFactor())));
+        document.getElementById("average-bar").setAttribute("fill", alternativeColor.toString());
+
+        List<String> playStyleElements =Arrays.asList(
+                "input-muse", "input-keyboard", "aim-tablet", "aim-mouse", "aim-touch"
+        );
+        if (player.getPlayStyles()!=null && !player.getPlayStyles().isEmpty())
+        {
+            for (String type : player.getPlayStyles()) {
+                for (String element : playStyleElements) {
+                    if (element.contains(type.toLowerCase().trim())) {
+                        document.getElementById(element).setAttribute("fill", mainColor.toString());
+                    }
+                }
+            }
+            if (player.getPlayStyles().size()==1 && player.getPlayStyles().get(0).equalsIgnoreCase("mouse"))
+            {
+                document.getElementById("input-muse").setAttribute("fill", mainColor.toString());
+            }
+
+        }
+
+        setupPPPlusTags(blessPlayerWithTags(performance,average),document,svgRoot,player.getPrimaryColor()-133);
         return document;
     }
+    private static void setupPPPlusTags(List<PerformancePlusTag> tags, Document doc, Element sectionFull, Integer startHue) {
+        if (tags.isEmpty()) return;
+        int offset=0;
+        int lastElementSize=0;
+        startHue= (startHue+360) % 360;
 
+        for(PerformancePlusTag tag:tags)
+        {
+            HSL textColor=new HSL(startHue,100,7);
+            if(startHue>=240 && startHue<=290) {
+                textColor=new HSL(startHue,0,90);
+            }
+            Node tagSingleNode = doc.createElementNS(namespaceSVG, "g");
+            Element tagSingle = (Element) tagSingleNode;
+
+            Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
+            Element rectBG = (Element) rectBGNode;
+            rectBG.setAttribute("x", "15");
+            rectBG.setAttribute("y", "70");
+            rectBG.setAttribute("width", String.valueOf(tag.getElementSize()));
+            rectBG.setAttribute("height", "20");
+            rectBG.setAttribute("fill", new HSL(startHue, 87, 53).toString());
+
+            Node tagNamemNode = doc.createElementNS(namespaceSVG, "text");
+            Element tagName = (Element) tagNamemNode;
+            tagName.setAttribute("class", "cls-2");
+            tagName.setAttribute("x", String.valueOf(tag.getAnchor()));
+            tagName.setAttribute("y", "100");
+            tagName.setAttribute("font-size", "15px");
+            tagName.setAttribute("transform", "scale(1 0.85)");
+            tagName.setAttribute("font-weight", "700");
+            tagName.setAttribute("text-anchor", "middle");
+            tagName.setAttribute("fill", textColor.toString());
+            tagName.setTextContent(tag.getName());
+
+            tagSingle.appendChild(rectBG);
+            tagSingle.appendChild(tagName);
+            tagSingle.setAttribute("transform", "translate(" + offset+lastElementSize  + " 0)");
+            sectionFull.appendChild(tagSingleNode);
+            startHue+=35;
+            lastElementSize+=tag.getElementSize()+10;
+        }
+    }
+    private static List<PerformancePlusTag> blessPlayerWithTags(PPPlusPerformance performance, double averagePp)
+    {
+        Map<PerformanceDimensionLimit, Double> ppMap = Map.of(
+                PerformanceDimensionLimit.JUMP, performance.getPpJumpAim(),
+                PerformanceDimensionLimit.FLOW, performance.getPpFlowAim(),
+                PerformanceDimensionLimit.SPEED, performance.getPpSpeed(),
+                PerformanceDimensionLimit.STAMINA, performance.getPpStamina(),
+                PerformanceDimensionLimit.PRECISION, performance.getPpPrecision(),
+                PerformanceDimensionLimit.ACCURACY, performance.getPpAcc()
+        );
+
+        PerformanceDimensionLimit avgLimit = PerformanceDimensionLimit.AVERAGE;
+        double avgScaled = CommonTool.getScaledRatio(averagePp, avgLimit.getLimitExpertPlus(), avgLimit.getScaleFactor());
+
+        List<PerformancePlusTag> tags = new ArrayList<>();
+        long strongCount = 0;
+        for (Map.Entry<PerformanceDimensionLimit, Double> entry : ppMap.entrySet()) {
+            PerformanceDimensionLimit dim = entry.getKey();
+            double value = entry.getValue();
+            double scaled = CommonTool.getScaledRatio(value, dim.getLimitExpertPlus(), dim.getScaleFactor());
+            if(scaled>=0.98) strongCount++;
+            if (scaled >= avgScaled) {
+                PerformancePlusTag tag = mapToTag(dim);
+                if (tag != null) tags.add(tag);
+            }
+        }
+        if (strongCount>=4) {
+            return List.of(PerformancePlusTag.OMNIPOTENT);
+        }
+
+
+        Set<PerformancePlusTag> tagSet = new HashSet<>(tags);
+        boolean hasAccuracy = tagSet.contains(PerformancePlusTag.ACCURATE);
+        boolean hasAim = tagSet.contains(PerformancePlusTag.AIM);
+        boolean hasFlow = tagSet.contains(PerformancePlusTag.FLOW);
+        boolean hasSpeedyOrEnduring = tagSet.contains(PerformancePlusTag.SPEEDY) || tagSet.contains(PerformancePlusTag.ENDURING);
+
+        if (hasAccuracy && hasAim && hasFlow && hasSpeedyOrEnduring) {
+            return List.of(PerformancePlusTag.COMPREHENSIVE);
+        }
+
+        return tags.stream().limit(4).sorted().toList();
+    }
+    private static PerformancePlusTag mapToTag(PerformanceDimensionLimit dim)
+    {
+        return switch (dim) {
+            case JUMP -> PerformancePlusTag.AIM;
+            case FLOW -> PerformancePlusTag.FLOW;
+            case SPEED -> PerformancePlusTag.SPEEDY;
+            case STAMINA -> PerformancePlusTag.ENDURING;
+            case PRECISION -> PerformancePlusTag.PRECISE;
+            case ACCURACY -> PerformancePlusTag.ACCURATE;
+            default -> null;
+        };
+    }
 
 
 

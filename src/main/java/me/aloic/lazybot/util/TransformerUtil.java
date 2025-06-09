@@ -56,6 +56,7 @@ public class TransformerUtil
         playerInfoVO.setAvatarUrl(playerInfoDTO.getAvatar_url());
         playerInfoVO.setId(playerInfoDTO.getId());
         playerInfoVO.setPrimaryColor(Optional.ofNullable(playerInfoDTO.getProfile_hue()).orElse(333));
+        playerInfoVO.setPlayStyles(playerInfoDTO.getPlaystyle());
         return playerInfoVO;
 
     }

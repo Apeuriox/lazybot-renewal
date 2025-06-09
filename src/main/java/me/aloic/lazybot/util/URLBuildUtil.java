@@ -212,5 +212,14 @@ public class URLBuildUtil
                 .addQuery("v", pp);
         return builder.build();
     }
+    public static String buildURLOfPlayerPerformancePlus(Integer id)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp("https://114.242.29.30:41000", CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("player")
+                .addPath("info")
+                .addQuery("id", id);
+        return builder.build();
+    }
 
 }

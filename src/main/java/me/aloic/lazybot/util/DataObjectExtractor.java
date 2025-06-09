@@ -3,6 +3,8 @@ package me.aloic.lazybot.util;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotResultPlayerPerformance;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebPlayerPerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
@@ -10,6 +12,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
 
@@ -34,6 +37,15 @@ public class DataObjectExtractor
             throw new LazybotRuntimeException("没这B人: " + playerId);
         }
         return playerInfoDTO;
+    }
+    public static PPPlusPerformance extractPerformancePlusPlayerTotal(Integer playerId)
+    {
+        ApiRequestStarter requestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerPerformancePlus(playerId));
+        LazybotWebPlayerPerformance performance = requestStarter.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, LazybotWebPlayerPerformance.class);
+        if(performance.getData()==null) {
+            throw new LazybotRuntimeException("获取" + playerId + "用户pp+失败");
+        }
+        return performance.getData().getPerformances();
     }
 
 

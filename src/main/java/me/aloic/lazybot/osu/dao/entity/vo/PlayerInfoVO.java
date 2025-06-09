@@ -35,6 +35,7 @@ public class PlayerInfoVO
     private List<Integer> rankHistory;
     private List<ScoreVO> bps;
     private Integer id;
+    private List<String> playStyles;
 
 
 }
