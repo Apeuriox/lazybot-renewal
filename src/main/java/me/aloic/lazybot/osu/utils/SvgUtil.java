@@ -2893,8 +2893,18 @@ public class SvgUtil
         document.getElementById("global-label").setAttribute("fill",mainColor.toString());
         document.getElementById("country-label").setAttribute("fill",mainColor.toString());
         document.getElementById("background").setAttribute("fill",mainColor.toString());
-        document.getElementById("global-rank").setTextContent("#" + formatter.format(player.getGlobalRank()));
-        document.getElementById("country-rank").setTextContent("#" + formatter.format(player.getCountryRank()));
+        if (player.getGlobalRank()!=null && player.getCountryRank()!=null)
+        {
+            document.getElementById("global-rank").setTextContent("#" + formatter.format(player.getGlobalRank()));
+            document.getElementById("country-rank").setTextContent("#" + formatter.format(player.getCountryRank()));
+        }
+        else{
+            document.getElementById("global-rank").setTextContent("#0");
+            document.getElementById("country-rank").setTextContent("#0");
+            document.getElementById("global-rank").setAttribute("opacity","0.7");
+            document.getElementById("country-rank").setAttribute("opacity","0.7");
+        }
+
         document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getAvatarUrl());
 
         int jumpAim= (int) Math.round(performance.getPpJumpAim());
@@ -3056,12 +3066,12 @@ public class SvgUtil
             PerformanceDimensionLimit dim = entry.getKey();
             double value = entry.getValue();
             double scaled = CommonTool.getScaledRatio(value, dim.getLimitExpertPlus(), dim.getScaleFactor());
-            if(scaled>=0.98) strongCount++;
+            if(scaled>=0.95) strongCount++;
             if (scaled >= avgScaled) {
                 PerformancePlusTag tag = mapToTag(dim);
                 if (tag != null) tags.add(tag);
             }
-            if (scaled> (avgScaled-0.08)) scaledMainTags.add(mapToTag(dim));
+            if (scaled> (avgScaled*0.87)) scaledMainTags.add(mapToTag(dim));
 
         }
         if (strongCount>=4) {

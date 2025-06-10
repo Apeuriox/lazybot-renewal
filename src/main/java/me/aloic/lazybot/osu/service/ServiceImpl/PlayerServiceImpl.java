@@ -237,11 +237,17 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] performancePlus(GeneralParameter params) throws IOException
     {
-        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
-        playerInfoVO.setMode(params.getMode());
-        if (playerInfoVO.getPrimaryColor()==333) playerInfoVO.setPrimaryColor(208);
-        PPPlusPerformance performance=DataObjectExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanel(performance,playerInfoVO),2);
+        try{
+            PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
+            playerInfoVO.setMode(params.getMode());
+            if (playerInfoVO.getPrimaryColor()==333) playerInfoVO.setPrimaryColor(208);
+            PPPlusPerformance performance=DataObjectExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
+            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanel(performance,playerInfoVO),2);
+        }
+        catch (Exception e){
+            throw new LazybotRuntimeException("生成pp+图形失败: "+e.getMessage());
+        }
+
     }
 
     @Override
