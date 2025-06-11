@@ -15,6 +15,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.monitor.TokenMonitor;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class DataObjectExtractor
     }
     public static PPPlusPerformance extractPerformancePlusPlayerTotal(Integer playerId)
     {
-        ApiRequestStarter requestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerPerformancePlus(playerId));
+        ApiRequestStarter requestStarter = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerPerformancePlus(playerId), TokenMonitor.getLazybotToken());
         LazybotWebPlayerPerformance performance = requestStarter.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, LazybotWebPlayerPerformance.class);
         if(performance.getData()==null) {
             throw new LazybotRuntimeException("获取" + playerId + "用户pp+失败");

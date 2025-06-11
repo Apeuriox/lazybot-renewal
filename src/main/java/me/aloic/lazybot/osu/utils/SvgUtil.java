@@ -3067,11 +3067,11 @@ public class SvgUtil
             double value = entry.getValue();
             double scaled = CommonTool.getScaledRatio(value, dim.getLimitExpertPlus(), dim.getScaleFactor());
             if(scaled>=0.95) strongCount++;
-            if (scaled >= avgScaled) {
+            if (scaled >= (avgScaled * dim.getTagFactor())) {
                 PerformancePlusTag tag = mapToTag(dim);
                 if (tag != null) tags.add(tag);
             }
-            if (scaled> (avgScaled*0.87)) scaledMainTags.add(mapToTag(dim));
+            if (scaled> (avgScaled * dim.getTagFactor() *0.88)) scaledMainTags.add(mapToTag(dim));
 
         }
         if (strongCount>=4) {
@@ -3088,8 +3088,10 @@ public class SvgUtil
         if (hasAccuracy && hasAim && hasFlow && hasSpeedyOrEnduring) {
             return List.of(PerformancePlusTag.COMPREHENSIVE);
         }
+        if (tags.isEmpty())
+            return List.of(PerformancePlusTag.POTENTIAL);
 
-        return tags.stream().limit(4).sorted().toList();
+        return tags.stream().limit(5).sorted().toList();
     }
     private static PerformancePlusTag mapToTag(PerformanceDimensionLimit dim)
     {

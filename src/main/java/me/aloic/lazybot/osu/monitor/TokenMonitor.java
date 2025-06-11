@@ -3,14 +3,16 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import com.alibaba.fastjson.TypeReference;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebResult;
 import me.aloic.lazybot.osu.dao.entity.dto.oauth.AccessTokenDTO;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
-import me.aloic.lazybot.util.BeanCopierUtil;
+import me.aloic.lazybot.util.URLBuildUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,10 +33,19 @@ public class TokenMonitor
     private Integer clientId;
     @Value("${lazybot.client_secret}")
     private String clientSecret;
+
+    @Value("${lazybot.plus.client_id}")
+    private Integer lazybotClientId;
+    @Value("${lazybot.plus.client_secret}")
+    private String lazybotClientSecret;
     @Resource
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private TokenMapper tokenMapper;
+
+
+
+    private static String lazybotToken;
 
     private static final Logger logger = LoggerFactory.getLogger(TokenMonitor.class);
 
@@ -77,7 +88,29 @@ public class TokenMonitor
             throw new LazybotRuntimeException("数据库操作失败，请检查数据库服务是否正常");
         }
     }
-
+    @Scheduled(cron = "0 0 0/12 * * ? ")
+    public void refreshPPPlusClientToken()
+    {
+        String url =  URLBuildUtil.buildURLOfLazybotToken(lazybotClientId,lazybotClientSecret);
+        try {
+            LazybotWebResult<String> lazybotTokenJSON = JSON.parseObject(
+                    HttpUtil.createPost(url).execute().body(),
+                    new TypeReference<LazybotWebResult<String>>() {}
+            );
+            lazybotToken= lazybotTokenJSON.getData();
+            logger.info("Lazybot token created: {}",lazybotTokenJSON.getData());
+        }
+        catch (Exception e) {
+            logger.error("{} : {}", e.getClass(), e.getMessage());
+            throw new LazybotRuntimeException("更新PP+验证失败，请检查服务器");
+        }
+    }
+    public static String getLazybotToken() {
+        if (lazybotToken == null) {
+            throw new IllegalStateException("PP+获取Token未初始化！");
+        }
+        return lazybotToken;
+    }
 
 
 }

@@ -14,7 +14,8 @@ public enum PerformancePlusTag
     SPEEDY("Speed Dog", "ppSpeed", 90, 60),
     ENDURING("Enduring", "ppStamina", 75, 53),
     OMNIPOTENT("Omnipotent", null, 95, 63),
-    COMPREHENSIVE("Comprehensive", null, 120, 75);
+    COMPREHENSIVE("Comprehensive", null, 120, 75),
+    POTENTIAL("Potential", null, 76, 53);
 
 
     private final String name;
