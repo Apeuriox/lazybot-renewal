@@ -214,7 +214,7 @@ public class URLBuildUtil
     }
     public static String buildURLOfPlayerPerformancePlus(Integer id)
     {
-        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000/", CharsetUtil.CHARSET_UTF_8)
+        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000", CharsetUtil.CHARSET_UTF_8)
                 .addPath("lazybot")
                 .addPath("player")
                 .addPath("info")
@@ -223,7 +223,7 @@ public class URLBuildUtil
     }
     public static String buildURLOfLazybotToken(Integer clientId, String clientSecret)
     {
-        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000/", CharsetUtil.CHARSET_UTF_8)
+        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000", CharsetUtil.CHARSET_UTF_8)
                 .addPath("lazybot")
                 .addPath("auth")
                 .addPath("token")

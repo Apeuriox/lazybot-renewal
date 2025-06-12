@@ -50,8 +50,6 @@ public class ScoreCommand implements LazybotSlashCommand
                 Optional.ofNullable(event.getOption("bid")).orElseThrow(() -> new RuntimeException("bid为必选参数")).getAsInt(),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event, playerService.score(params));
     }
@@ -83,8 +81,6 @@ public class ScoreCommand implements LazybotSlashCommand
         params.setVersion(event.getScorePanelVersion());
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

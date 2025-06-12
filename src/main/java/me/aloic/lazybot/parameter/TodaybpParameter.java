@@ -31,11 +31,11 @@ public class TodaybpParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if(maxDays<=0) {
-            throw new IllegalArgumentException("Days must be greater than 0");
+            throw new IllegalArgumentException("[Lazybot] 查询的天数需要为正整数");
         }
         if(maxDays>=10000)
         {
-            throw new IllegalArgumentException("Days is longer than total osu game lifespan");
+            throw new IllegalArgumentException("[Lazybot] 查询的天数不能大于Osu的整个生命周期");
         }
     }
     public static TodaybpParameter analyzeParameter(List<String> params)
@@ -48,7 +48,7 @@ public class TodaybpParameter extends LazybotCommandParameter
                     if (CommonTool.isPositiveInteger(paras[1]))
                         parameter.setMaxDays(Integer.parseInt(paras[1]));
                     else
-                        throw new LazybotRuntimeException("参数解析错误, index不为正整数，length=1");
+                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误, index不为正整数，length=1");
                 }
                 else if(CommonTool.isPositiveInteger(params.getFirst()))
                     parameter.setMaxDays(Integer.parseInt(params.getFirst()));
@@ -64,7 +64,7 @@ public class TodaybpParameter extends LazybotCommandParameter
                     if (CommonTool.isPositiveInteger(paras[1]))
                         parameter.setMaxDays(Integer.parseInt(paras[1]));
                     else
-                        throw new LazybotRuntimeException("参数解析错误, index不为正整数,length=2");
+                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误, index不为正整数,length=2");
                 }
                 else if(CommonTool.isPositiveInteger(params.get(1))) {
                     parameter.setPlayerName(params.getFirst());
@@ -72,7 +72,7 @@ public class TodaybpParameter extends LazybotCommandParameter
                 }
             }
             else {
-                throw new LazybotRuntimeException("Incorrect parameters: " + params);
+                throw new LazybotRuntimeException("[Lazybot] Incorrect parameters: " + params);
             }
         }
         else {
@@ -82,8 +82,7 @@ public class TodaybpParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(TodaybpParameter parameter, AccessTokenPO accessTokenPO)
     {
-        if (parameter.getPlayerName() == null)
-            parameter.setPlayerId(accessTokenPO.getPlayer_id());
+        parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
         if (parameter.getMaxDays() == null)

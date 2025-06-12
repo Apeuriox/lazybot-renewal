@@ -48,7 +48,6 @@ public class BpCardCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("from"), 0),
                 OptionMappingTool.getOptionOrDefault(event.getOption("to"), 1));
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.bplistCardView(params));
     }
@@ -73,7 +72,6 @@ public class BpCardCommand implements LazybotSlashCommand
         BplistParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

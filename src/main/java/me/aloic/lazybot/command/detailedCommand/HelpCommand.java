@@ -38,7 +38,7 @@ public class HelpCommand implements LazybotSlashCommand
             ImageUploadUtil.uploadImageToOnebot(bot,event,Files.readAllBytes(Paths.get(filePath.toUri())));
         }
         catch (Exception e) {
-            throw new LazybotRuntimeException("读取Help页面失败");
+            throw new LazybotRuntimeException("[Lazybot] 读取Help页面失败");
         }
 
     }

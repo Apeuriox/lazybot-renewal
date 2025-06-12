@@ -37,7 +37,6 @@ public class WhatIfParameter extends LazybotCommandParameter
         parameter.setPlayerName(accessTokenPO.getPlayer_name());
         parameter.setMode(accessTokenPO.getDefault_mode());
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
-        parameter.setAccessToken(accessTokenPO.getAccess_token());
     }
     public static Map<Double, Integer> parseToMap(String input) {
         Map<Double, Integer> result = new HashMap<>();

@@ -1,5 +1,7 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
+import com.alibaba.fastjson2.TypeReference;
+import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
@@ -34,14 +36,22 @@ import java.util.stream.Collectors;
 public class PlayerServiceImpl implements PlayerService
 {
     private static final Logger logger = LoggerFactory.getLogger(PlayerServiceImpl.class);
+    @Resource
+    private DataExtractor dataExtractor;
+
+
     @Override
     public byte[] score(ScoreParameter params) throws Exception
     {
-        BeatmapUserScoreLazer beatmapUserScoreLazer = DataObjectExtractor.extractBeatmapUserScore(params.getAccessToken(),
-                String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
-
-            ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
-                    DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()), params.getMode()),
+        if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
+        BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
+                String.valueOf(params.getBeatmapId()),
+                params.getPlayerId(),
+                params.getMode(),
+                params.getModCombination()
+        );
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                    dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
                     beatmapUserScoreLazer.getScore(),
                     false);
             verifyBeatmapsCache(scoreVO);
@@ -50,17 +60,14 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] allScore(ScoreParameter params) throws Exception
     {
-        PlayerInfoDTO playerInfoDTO;
-        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
-        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
 
-        List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractBeatmapUserScoreAll(params.getAccessToken(),
-                params.getBeatmapId(), playerInfoDTO.getId(), params.getMode());
-        if (scoreList==null || scoreList.isEmpty()) throw new LazybotRuntimeException("没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
+        List<ScoreLazerDTO> scoreList = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), playerInfoDTO.getId(), params.getMode());
+        if (scoreList==null || scoreList.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
         List<MapScore> mapScoreList=TransformerUtil.mapScoreTransform(scoreList);
 
         OsuToolsUtil.setupPlayerStatics(mapScoreList,playerInfoDTO);
-        BeatmapDTO beatmapDTO = DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()),params.getMode());
+        BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()),params.getMode());
         BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
         JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
         beatmapPerformance.setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, beatmapPerformance.getMode().getDescribe()));
@@ -73,7 +80,7 @@ public class PlayerServiceImpl implements PlayerService
                 }
                 catch (Exception e) {
                     logger.error(e.getMessage());
-                    throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
+                    throw new LazybotRuntimeException("[Lazybot] Error during recalculations/重算成绩时出错: " + e.getMessage());
                 }
         }
         mapScoreList=mapScoreList.stream().sorted(Comparator.comparing(MapScore::getPp).reversed()).toList();
@@ -84,12 +91,13 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] recent(RecentParameter params, Integer type) throws IOException
     {
-        List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractRecentScoreList(params.getAccessToken(), params.getPlayerId(), type, params.getIndex(), params.getMode());
+        if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
+        List<ScoreLazerDTO> scoreList = dataExtractor.extractRecentScoreList(params.getPlayerId(), type, params.getIndex(), params.getMode());
         if(params.getIndex()>scoreList.size()) {
-            throw new LazybotRuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " + scoreList.size());
+            throw new LazybotRuntimeException("[Lazybot] 超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " + scoreList.size());
         }
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
-                DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
+                dataExtractor.extractBeatmap(String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
                 scoreList.get(params.getIndex() - 1),
                 false);
         verifyBeatmapsCache(scoreVO);
@@ -99,14 +107,14 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] bp(BpParameter params) throws IOException
     {
-        List<ScoreLazerDTO> scoreDTO = DataObjectExtractor.extractUserBestScoreList(
-                params.getAccessToken(),
+        if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
+        List<ScoreLazerDTO> scoreDTO = dataExtractor.extractUserBestScoreList(
                 String.valueOf(params.getPlayerId()),
                 params.getIndex()-1,
                 params.getMode());
 
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
-                DataObjectExtractor.extractBeatmap(params.getAccessToken(),String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
+                dataExtractor.extractBeatmap(String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
                 scoreDTO.getFirst(),
                 false);
         verifyBeatmapsCache(scoreVO);
@@ -115,13 +123,9 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] bplistCardView(BplistParameter params) throws Exception
     {
-        PlayerInfoDTO playerInfoDTO;
-        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
-        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
-
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
-        List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(
-                params.getAccessToken(),
+        List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(
                 String.valueOf(playerInfoDTO.getId()),
                 params.getTo()-params.getFrom()+1,
                 params.getFrom()-1,
@@ -132,11 +136,17 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] todayBp(TodaybpParameter params) throws Exception
     {
-        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
-        List<ScoreLazerDTO> scoreDTOList=DataObjectExtractor.extractUserBestScoreList(
-                params.getAccessToken(),
-                String.valueOf(params.getInfoDTO().getId()),
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestScoreList(
+                String.valueOf(info.getId()),
                 100,0,params.getMode());
+        if (scoreDTOList.size() < 110) {
+            scoreDTOList.addAll(dataExtractor.extractUserBestScoreList(
+                    String.valueOf(info.getId()),
+                    100,101,params.getMode()));
+        }
         //Why not directly filter scoreDTOs? cuz we need this procedure to set up Indexes
         List<ScoreVO> scoreVOList=TransformerUtil.scoreTransformForList(scoreDTOList);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC+0"));
@@ -145,7 +155,7 @@ public class PlayerServiceImpl implements PlayerService
                     ZonedDateTime scoreTime = ZonedDateTime.parse(score.getCreate_at(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
                     return scoreTime.isAfter(now.minusDays(params.getMaxDays()));
                 }).collect(Collectors.toList());
-        if(scoreVOList.isEmpty()) throw new LazybotRuntimeException("没有找到符合条件的bp");
+        if(scoreVOList.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 没有找到符合条件的bp");
 
         OsuToolsUtil.setUpImageStatic(scoreVOList);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOList,0,4,
@@ -156,32 +166,34 @@ public class PlayerServiceImpl implements PlayerService
     {
         CompletableFuture<PlayerInfoDTO> playerInfoFuture = CompletableFuture.supplyAsync(() -> {
             try {
-                PlayerInfoDTO dto = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(), params.getPlayerName(), params.getMode());
+                PlayerInfoDTO dto;
+                if (params.getPlayerName()!=null) dto= dataExtractor.extractPlayerInfoDTO(params.getPlayerName(), params.getMode());
+                else dto= dataExtractor.extractPlayerInfoDTO(params.getPlayerId(), params.getMode());
                 dto.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(dto, false));
                 return dto;
             } catch (Exception e) {
-                throw new LazybotRuntimeException("[bpvs指令] 异步获取玩家" + params.getPlayerName() + "数据失败"+ e.getMessage());
+                throw new LazybotRuntimeException("[Lazybot] 异步获取玩家" + params.getPlayerName() + "数据失败"+ e.getMessage());
             }
         });
 
         CompletableFuture<PlayerInfoDTO> comparePlayerInfoFuture = CompletableFuture.supplyAsync(() -> {
             try {
-                PlayerInfoDTO dto = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(), params.getComparePlayerName(), params.getMode());
+                PlayerInfoDTO dto = dataExtractor.extractPlayerInfoDTO(params.getComparePlayerName(), params.getMode());
                 dto.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(dto, false));
                 return dto;
             } catch (Exception e) {
-                throw new LazybotRuntimeException("[bpvs指令] 异步获取玩家" + params.getComparePlayerName() + "数据失败"+ e.getMessage());
+                throw new LazybotRuntimeException("[Lazybot] 异步获取玩家" + params.getComparePlayerName() + "数据失败"+ e.getMessage());
             }
         });
 
         CompletableFuture<byte[]> resultFuture = playerInfoFuture.thenCombineAsync(comparePlayerInfoFuture, (playerInfoDTO, comparePlayerInfoDTO) -> {
             try {
-                if (Objects.equals(playerInfoDTO.getId(), comparePlayerInfoDTO.getId())) throw new LazybotRuntimeException("你不能和自己对比");
+                if (Objects.equals(playerInfoDTO.getId(), comparePlayerInfoDTO.getId())) throw new LazybotRuntimeException("[Lazybot] 你不能和自己对比");
                 CompletableFuture<List<ScoreLazerDTO>> scoreFuture = CompletableFuture.supplyAsync(() ->
-                        DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoDTO.getId()), 100, 0, params.getMode()));
+                        dataExtractor.extractUserBestScoreList(String.valueOf(playerInfoDTO.getId()), 100, 0, params.getMode()));
 
                 CompletableFuture<List<ScoreLazerDTO>> compareScoreFuture = CompletableFuture.supplyAsync(() ->
-                        DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(comparePlayerInfoDTO.getId()), 100, 0, params.getMode()));
+                        dataExtractor.extractUserBestScoreList(String.valueOf(comparePlayerInfoDTO.getId()), 100, 0, params.getMode()));
 
                 List<ScoreLazerDTO> scoreDTOS = scoreFuture.get();
                 List<ScoreLazerDTO> compareScoreDTOS = compareScoreFuture.get();
@@ -207,13 +219,14 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] noChoke(GeneralParameter params, int type) throws Exception
     {
-        List<ScoreLazerDTO> originalScoreArray=DataObjectExtractor.extractUserBestScoreList(
-                params.getAccessToken(),
-                String.valueOf(params.getInfoDTO().getId()),
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+
+        List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestScoreList(
+                String.valueOf(playerInfoDTO.getId()),
                 100,0,params.getMode());
 
         NoChokeListVO noChokeListVO=OsuToolsUtil.setupNoChokeList(
-                OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO()),
+                OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO),
                 TransformerUtil.scoreTransformForList(originalScoreArray),
                 type);
 
@@ -227,10 +240,7 @@ public class PlayerServiceImpl implements PlayerService
     }
     @Override
     public byte[] card(GeneralParameter params) throws Exception {
-        PlayerInfoDTO playerInfoDTO;
-        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
-        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
-        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
         playerInfoVO.setMode(params.getMode());
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoCard(playerInfoVO));
     }
@@ -238,23 +248,24 @@ public class PlayerServiceImpl implements PlayerService
     public byte[] performancePlus(GeneralParameter params) throws IOException
     {
         try{
-            PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
+            PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
             playerInfoVO.setMode(params.getMode());
             if (playerInfoVO.getPrimaryColor()==333) playerInfoVO.setPrimaryColor(208);
-            PPPlusPerformance performance=DataObjectExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
+            PPPlusPerformance performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
             return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanel(performance,playerInfoVO),2);
         }
         catch (Exception e){
-            throw new LazybotRuntimeException("生成pp+图形失败: "+e.getMessage());
+            throw new LazybotRuntimeException("[Lazybot] Pp+服务正在维护或生成失败，请稍后再试");
         }
 
     }
 
     @Override
     public byte[] profile(ProfileParameter params) throws Exception {
-        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(params.getInfoDTO());
+
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
         playerInfoVO.setMode(params.getMode());
-        List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(params.getAccessToken(), String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());
+        List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         playerInfoVO.setBps(scoreVOArray);
         ProfileTheme theme;
@@ -286,8 +297,7 @@ public class PlayerServiceImpl implements PlayerService
         StringBuilder builder = new StringBuilder();
         for(String name:params.getTargets()){
             name=name.trim();
-            ApiRequestStarter playerRequest = new ApiRequestStarter(URLBuildUtil.buildURLOfPlayerInfo(name),params.getAccessToken());
-            PlayerInfoDTO playerInfoDTO = playerRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_GET, PlayerInfoDTO.class);
+            PlayerInfoDTO playerInfoDTO = dataExtractor.extractPlayerInfoDTO(name,params.getMode());
             if(playerInfoDTO.getId()==null){
                 builder.append(name).append(" --> ")
                         .append("没这B人\n");
@@ -297,18 +307,14 @@ public class PlayerServiceImpl implements PlayerService
             }
         }
 
-        return builder.toString();
+        return "[Lazybot] " + builder.toString();
     }
     @Override
     public byte[] bplistListView(BplistParameter params) throws Exception
     {
-        PlayerInfoDTO playerInfoDTO;
-        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
-        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
-        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
-        List<ScoreLazerDTO> scoreDTOS=DataObjectExtractor.extractUserBestScoreList(
-                params.getAccessToken(),
-                String.valueOf(playerInfoDTO.getId()),
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
+        List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(
+                String.valueOf(info.getId()),
                 params.getTo()-params.getFrom()+1,
                 params.getFrom()-1,
                 params.getMode());
@@ -335,6 +341,13 @@ public class PlayerServiceImpl implements PlayerService
 
     private int[] getDominantColorArray(ScoreVO scoreVO) throws IOException {
         return CommonTool.getDominantColorColorThief(new File(scoreVO.getBeatmap().getBgUrl()));
+    }
+    private PlayerInfoDTO getTargetPlayerInfoDTO(LazybotCommandParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerName()==null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+        else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+        return playerInfoDTO;
     }
 
 

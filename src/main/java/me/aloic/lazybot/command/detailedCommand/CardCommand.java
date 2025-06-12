@@ -50,7 +50,6 @@ public class CardCommand implements LazybotSlashCommand
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.card(params));
     }
@@ -80,7 +79,6 @@ public class CardCommand implements LazybotSlashCommand
         GeneralParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

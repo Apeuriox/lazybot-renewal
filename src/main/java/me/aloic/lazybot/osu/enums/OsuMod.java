@@ -329,7 +329,7 @@ public enum OsuMod
     public static List<String> getAllModAcronym(String acronyms) {
         if (acronyms.trim().isEmpty()) return Collections.emptyList();
         String modsStr = acronyms.toUpperCase(Locale.getDefault()).replaceAll("\\s+", "");
-        if (modsStr.length() % 2 != 0) throw new LazybotRuntimeException("无效mod组合: " + acronyms);
+        if (modsStr.length() % 2 != 0) throw new LazybotRuntimeException("[Lazybot] 无效mod组合: " + acronyms);
         List<String> modStrList = Arrays.stream(modsStr.split("(?<=\\G.{2})"))
                 .collect(Collectors.toList());
         return modStrList;

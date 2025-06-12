@@ -28,7 +28,7 @@ public class RecentParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if (index<=0||index>100) {
-            throw new IllegalArgumentException("index must be between 1 and 100");
+            throw new IllegalArgumentException("[Lazybot] 索引必须介于 1 和 100 之间");
         }
         if(version==null) {
             version=0;
@@ -40,7 +40,7 @@ public class RecentParameter extends LazybotCommandParameter
         RecentParameter recentParameter=new RecentParameter();
         if (params != null && !params.isEmpty()) {
             if (params.size() > 2)
-                throw new LazybotRuntimeException("最高参数长度为2（如果你名字有空格请把空格换成下划线），使用例：/pr userName #1");
+                throw new LazybotRuntimeException("[Lazybot] 允许参数长度最大为2（如果你名字有空格请把空格换成下划线），使用例：/pr userName #1");
             else if (params.size() == 1) {
                 if (params.getFirst().contains("#") && CommonTool.isPositiveInteger(params.getFirst().substring(1))) {
                     int targetIndex = Integer.parseInt(params.getFirst().substring(1));
@@ -52,7 +52,7 @@ public class RecentParameter extends LazybotCommandParameter
                     recentParameter.setIndex(1);
                 }
                 else
-                    throw new LazybotRuntimeException("参数错误，含有非数字，使用例：/pr userName #10");
+                    throw new LazybotRuntimeException("[Lazybot] 参数错误，含有非数字，使用例：/pr userName #10");
             }
             else if (params.size() == 2) {
                 if(params.get(1).contains("#")) {
@@ -65,7 +65,7 @@ public class RecentParameter extends LazybotCommandParameter
                     }
                     else
                     {
-                        throw new LazybotRuntimeException("参数解析错误，使用例：/pr userName #10");
+                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误，使用例：/pr userName #10");
                     }
                 }
                 else {
@@ -76,7 +76,7 @@ public class RecentParameter extends LazybotCommandParameter
                         recentParameter.setIndex(targetIndex);
                     }
                     else {
-                        throw new LazybotRuntimeException("参数解析错误，使用例：/pr userName #10");
+                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误，使用例：/pr userName #10");
                     }
                 }
             }
@@ -86,8 +86,7 @@ public class RecentParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(RecentParameter recentParameter, AccessTokenPO accessTokenPO)
     {
-        if (recentParameter.getPlayerName() == null)
-            recentParameter.setPlayerName(accessTokenPO.getPlayer_name());
+        recentParameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (recentParameter.getMode() == null)
             recentParameter.setMode(accessTokenPO.getDefault_mode());
         if (recentParameter.getVersion() == null)

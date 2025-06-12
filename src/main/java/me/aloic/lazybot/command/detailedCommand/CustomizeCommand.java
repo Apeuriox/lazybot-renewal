@@ -49,7 +49,6 @@ public class CustomizeCommand implements LazybotSlashCommand
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         CustomizationParameter params=new CustomizationParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("type"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         event.getHook().sendMessage(customizeService.customize(params)).queue();
     }
@@ -80,7 +79,6 @@ public class CustomizeCommand implements LazybotSlashCommand
     {
         CustomizationParameter params=CustomizationParameter.analyzeParameter(event.getCommandParameters());
         CustomizationParameter.setupDefaultValue(params,tokenPO);
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

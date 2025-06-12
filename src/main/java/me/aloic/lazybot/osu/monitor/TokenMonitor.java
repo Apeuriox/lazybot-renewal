@@ -38,14 +38,10 @@ public class TokenMonitor
     private Integer lazybotClientId;
     @Value("${lazybot.plus.client_secret}")
     private String lazybotClientSecret;
-    @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
-    private TokenMapper tokenMapper;
 
-
-
+    private static final String TOKEN_URL = "https://osu.ppy.sh/oauth/token";
     private static String lazybotToken;
+    private static String token;
 
     private static final Logger logger = LoggerFactory.getLogger(TokenMonitor.class);
 
@@ -54,7 +50,6 @@ public class TokenMonitor
     {
         try {
             logger.info("Getting Token for client");
-            String url = "https://osu.ppy.sh/oauth/token";
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("client_id", clientId);
             jsonObject.put("client_secret", clientSecret);
@@ -63,40 +58,27 @@ public class TokenMonitor
             Map<String, String > heads = new HashMap<>();
             heads.put("Accept", "application/json");
             heads.put("Content-Type", "application/json;charset=UTF-8");
-            AccessTokenDTO tokenDTO = JSON.parseObject(HttpUtil.createPost(url).addHeaders(heads).body(jsonObject.toString()).execute().body(),
+            AccessTokenDTO tokenDTO = JSON.parseObject(HttpUtil.createPost(TOKEN_URL).addHeaders(heads).body(jsonObject.toString()).execute().body(),
                     AccessTokenDTO.class);
-            UserTokenPO tokenPO = new UserTokenPO(tokenDTO.getRefresh_token(), tokenDTO.getAccess_token());
-            tokenPO.setPlayer_name("CLIENT");
-            tokenPO.setPlayer_id(0);
-            tokenPO.setDiscord_code(0L);
-            Optional.ofNullable(discordTokenMapper.selectByDiscord(0L)).ifPresentOrElse(
-                    token -> discordTokenMapper.updateByToken(tokenPO),
-                    () -> discordTokenMapper.insert(tokenPO)
-            );
-            AccessTokenPO accessTokenPO = new AccessTokenPO(tokenDTO.getRefresh_token(), tokenDTO.getAccess_token());
-            accessTokenPO.setPlayer_name("CLIENT");
-            accessTokenPO.setPlayer_id(0);
-            accessTokenPO.setQq_code(0L);
-            Optional.ofNullable(tokenMapper.selectByQq_code(0L)).ifPresentOrElse(
-                    token -> tokenMapper.updateByToken(accessTokenPO),
-                    () -> tokenMapper.insert(accessTokenPO)
-            );
-            logger.info("successfully created client token: {}", tokenPO.getAccess_token());
+            logger.info("successfully created client token: {}", tokenDTO.getAccess_token());
+            token= tokenDTO.getAccess_token();
         }
         catch (Exception e) {
             logger.error("{} : {}", e.getClass(), e.getMessage());
-            throw new LazybotRuntimeException("数据库操作失败，请检查数据库服务是否正常");
+            throw new LazybotRuntimeException("刷新osu客户端Token失败");
         }
     }
     @Scheduled(cron = "0 0 0/12 * * ? ")
     public void refreshPPPlusClientToken()
     {
         String url =  URLBuildUtil.buildURLOfLazybotToken(lazybotClientId,lazybotClientSecret);
+        System.out.println(url);
         try {
             LazybotWebResult<String> lazybotTokenJSON = JSON.parseObject(
                     HttpUtil.createPost(url).execute().body(),
                     new TypeReference<LazybotWebResult<String>>() {}
             );
+            System.out.println(lazybotTokenJSON);
             lazybotToken= lazybotTokenJSON.getData();
             logger.info("Lazybot token created: {}",lazybotTokenJSON.getData());
         }
@@ -110,6 +92,12 @@ public class TokenMonitor
             throw new IllegalStateException("PP+获取Token未初始化！");
         }
         return lazybotToken;
+    }
+    public static String getToken() {
+        if (token == null) {
+            throw new IllegalStateException("令牌尚未获取！");
+        }
+        return token;
     }
 
 

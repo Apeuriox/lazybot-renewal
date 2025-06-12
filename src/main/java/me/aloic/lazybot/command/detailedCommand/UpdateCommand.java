@@ -49,7 +49,6 @@ public class UpdateCommand implements LazybotSlashCommand
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         UpdateParameter params=new UpdateParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("type"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         event.getHook().sendMessage(manageService.update(params)).queue();
     }
@@ -80,7 +79,6 @@ public class UpdateCommand implements LazybotSlashCommand
         UpdateParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

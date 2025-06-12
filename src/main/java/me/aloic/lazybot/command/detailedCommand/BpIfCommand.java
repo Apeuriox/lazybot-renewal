@@ -53,8 +53,6 @@ public class BpIfCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("operator"), "+"),
                 OptionMappingTool.getOptionOrDefault(event.getOption("mods"), ""),
                 OptionMappingTool.getOptionOrDefault(event.getOption("rendersize"), 30));
-        params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,analysisService.bpIf(params));
     }
@@ -79,11 +77,7 @@ public class BpIfCommand implements LazybotSlashCommand
         BpifParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        if (params.getPlayerName()!=null)
-            params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(params.getPlayerName(),tokenPO.getAccess_token(),params.getMode()));
-        else
-            params.setInfoDTO(OsuToolsUtil.getUserInfoByUserId(params.getPlayerId(),tokenPO,params.getMode()));
-        params.setAccessToken(tokenPO.getAccess_token());
+        params.setPlayerId(tokenPO.getPlayer_id());
         params.validateParams();
         return params;
     }

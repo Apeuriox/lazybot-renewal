@@ -42,7 +42,6 @@ public class TopScoresCommand implements LazybotSlashCommand
         UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
         TopScoresParameter params=new TopScoresParameter(OptionMappingTool.getOptionOrDefault(event.getOption("mode"),"osu"),
                 OptionMappingTool.getOptionOrDefault(event.getOption("limit"), 10));
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,trackService.bestPlaysInGamemode(params));
     }
@@ -73,7 +72,6 @@ public class TopScoresCommand implements LazybotSlashCommand
         TopScoresParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

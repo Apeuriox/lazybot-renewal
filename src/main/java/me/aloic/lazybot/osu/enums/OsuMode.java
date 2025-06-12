@@ -39,7 +39,7 @@ public enum OsuMode
     }
 
     public static OsuMode getMode(String name) {
-        if (name == null) throw new LazybotRuntimeException("Null mode provided");
+        if (name == null) throw new LazybotRuntimeException("[Lazybot] Null mode provided");
         return switch (name.toLowerCase().trim())
         {
             case "osu", "o", "0", "std", "standard" -> Osu;

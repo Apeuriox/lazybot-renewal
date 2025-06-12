@@ -35,31 +35,32 @@ public class CustomizeServiceImpl implements CustomizeService
     @Override
     public String customize(CustomizationParameter params)
     {
+
         if(params.getType().toLowerCase().trim().equals("profilebg")) {
             try {
                 logger.info("开始处理Profile BG更改请求: {}", params);
                 if(!(params.getTargetUrl().startsWith("http://") || params.getTargetUrl().startsWith("https://")))
-                    throw new LazybotRuntimeException("超链接协议无效");
+                    throw new LazybotRuntimeException("[Lazybot] 超链接协议无效");
                 profileBackgroundCustomize(params);
                 insertProfileCustomizeToTable(params);
-                return "已提交对"+params.getPlayerId()+"的背景图片修改请求，请等待验证";
+                return "[Lazybot] 已提交对"+params.getPlayerId()+"的背景图片修改请求，请等待验证";
             }
             catch (Exception e) {
-                throw new LazybotRuntimeException("创建Profile客制化请求失败: " + e.getMessage());
+                throw new LazybotRuntimeException("[Lazybot] 创建Profile客制化请求失败: " + e.getMessage());
             }
         }
         else if(params.getType().toLowerCase().trim().equals("profiletheme")) {
             try {
                 logger.info("开始处理Profile Theme更改请求: {}", params);
                 profileThemeUpdate(params);
-                return "成功修改";
+                return "[Lazybot] 成功修改";
             }
             catch (Exception e) {
-                throw new LazybotRuntimeException("处理Profile Theme更改请求失败: " + e.getMessage());
+                throw new LazybotRuntimeException("[Lazybot] 处理Profile Theme更改请求失败: " + e.getMessage());
             }
         }
         else {
-            throw new LazybotRuntimeException("未知的客制化类型: " + params.getType());
+            throw new LazybotRuntimeException("[Lazybot] 未知的客制化类型: " + params.getType());
         }
     }
     private static void profileBackgroundCustomize(CustomizationParameter params)
@@ -71,7 +72,7 @@ public class CustomizeServiceImpl implements CustomizeService
         }
         catch (Exception e) {
             logger.error(e.getMessage());
-            throw new LazybotRuntimeException("指定图片链接无法下载");
+            throw new LazybotRuntimeException("[Lazybot] 指定图片链接无法下载");
         }
     }
     public static void validateProfileCustomizationCache(ProfileCustomizationPO custom)
@@ -87,7 +88,7 @@ public class CustomizeServiceImpl implements CustomizeService
             CommonTool.cropAndResize(desiredSavePath,1900,1000);
         }
         catch (Exception e) {
-            throw new LazybotRuntimeException("尝试重新获取图片缓存失败: " + e.getMessage());
+            throw new LazybotRuntimeException("[Lazybot] 尝试重新获取图片缓存失败: " + e.getMessage());
         }
     }
     private void insertProfileCustomizeToTable(CustomizationParameter params) throws IOException
@@ -121,6 +122,6 @@ public class CustomizeServiceImpl implements CustomizeService
                 );
     }
     private void throwIfNoCustomizationFound() {
-        throw new LazybotRuntimeException("未找到该用户的客制化请求，由于默认背景的关系，需要用户首先提交背景修改申请后再更改默认版本，可以单独做但是我现在懒了，不留点坑以后写什么呢");
+        throw new LazybotRuntimeException("[Lazybot] 未找到该用户的客制化请求，由于默认背景的关系，需要用户首先提交背景修改申请后再更改默认版本，可以单独做但是我现在懒了，不留点坑以后写什么呢");
     }
 }

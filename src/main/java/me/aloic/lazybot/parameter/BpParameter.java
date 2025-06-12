@@ -82,8 +82,6 @@ public class BpParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(BpParameter bpParameter, AccessTokenPO accessTokenPO)
     {
-        if (bpParameter.getPlayerName() == null)
-            bpParameter.setPlayerName(accessTokenPO.getPlayer_name());
         if (bpParameter.getMode() == null)
             bpParameter.setMode(accessTokenPO.getDefault_mode());
         if (bpParameter.getVersion() == null)
