@@ -72,13 +72,11 @@ public class TokenMonitor
     public void refreshPPPlusClientToken()
     {
         String url =  URLBuildUtil.buildURLOfLazybotToken(lazybotClientId,lazybotClientSecret);
-        System.out.println(url);
         try {
             LazybotWebResult<String> lazybotTokenJSON = JSON.parseObject(
                     HttpUtil.createPost(url).execute().body(),
                     new TypeReference<LazybotWebResult<String>>() {}
             );
-            System.out.println(lazybotTokenJSON);
             lazybotToken= lazybotTokenJSON.getData();
             logger.info("Lazybot token created: {}",lazybotTokenJSON.getData());
         }

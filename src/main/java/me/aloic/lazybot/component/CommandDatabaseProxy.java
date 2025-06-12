@@ -19,11 +19,7 @@ import java.util.List;
 public class CommandDatabaseProxy
 {
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private TokenMapper tokenMapper;
-    @Resource
-    private TokenMonitor tokenMonitor;
 
     @Value("${lazybot.test.identity}")
     private Long testIdentity;

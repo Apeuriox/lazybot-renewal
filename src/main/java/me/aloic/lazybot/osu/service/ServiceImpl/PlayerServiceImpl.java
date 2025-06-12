@@ -245,7 +245,7 @@ public class PlayerServiceImpl implements PlayerService
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoCard(playerInfoVO));
     }
     @Override
-    public byte[] performancePlus(GeneralParameter params) throws IOException
+    public byte[] performancePlus(GeneralParameter params)
     {
         try{
             PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
