@@ -8,7 +8,9 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
+import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.theme.preset.ProfileLightTheme;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
@@ -38,6 +40,8 @@ public class PlayerServiceImpl implements PlayerService
     private static final Logger logger = LoggerFactory.getLogger(PlayerServiceImpl.class);
     @Resource
     private DataExtractor dataExtractor;
+    @Resource
+    private CustomizationMapper customizationMapper;
 
 
     @Override
@@ -264,20 +268,21 @@ public class PlayerServiceImpl implements PlayerService
     public byte[] profile(ProfileParameter params) throws Exception {
 
         PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
+        ProfileCustomizationPO customizationPO=customizationMapper.selectById(playerInfoVO.getId());
         playerInfoVO.setMode(params.getMode());
         List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         playerInfoVO.setBps(scoreVOArray);
         ProfileTheme theme;
         String defaultBackground=ResourceMonitor.getResourcePath().toAbsolutePath()+ "/static/assets/whitespace_" +CommonTool.randomNumberGenerator(3) +".png";
-        if (params.getProfileCustomizationPO()!=null) {
-            CustomizeServiceImpl.validateProfileCustomizationCache(params.getProfileCustomizationPO());
-            if(params.getProfileCustomizationPO().getVerified()>0){
+        if (customizationPO!=null) {
+            CustomizeServiceImpl.validateProfileCustomizationCache(customizationPO);
+            if(customizationPO.getVerified()>0){
                 playerInfoVO.setProfileBackgroundUrl(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerCustomization/profile/" + playerInfoVO.getId() +".jpg");
-                if(params.getProfileCustomizationPO().getHue()!=null)
-                    theme=ProfileTheme.getInstance(params.getProfileCustomizationPO().getPreferred_type(),params.getProfileCustomizationPO().getHue());
+                if(customizationPO.getHue()!=null)
+                    theme=ProfileTheme.getInstance(customizationPO.getPreferred_type(),customizationPO.getHue());
                 else
-                    theme=ProfileTheme.getInstance(params.getProfileCustomizationPO().getPreferred_type(),CommonTool.getDominantHueColorThief(new File(playerInfoVO.getProfileBackgroundUrl())));
+                    theme=ProfileTheme.getInstance(customizationPO.getPreferred_type(),CommonTool.getDominantHueColorThief(new File(playerInfoVO.getProfileBackgroundUrl())));
             }
             else {
                 playerInfoVO.setProfileBackgroundUrl(defaultBackground);

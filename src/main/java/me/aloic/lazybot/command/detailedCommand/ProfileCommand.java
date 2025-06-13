@@ -81,8 +81,6 @@ public class ProfileCommand implements LazybotSlashCommand
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.validateParams();
-        ProfileCustomizationPO customization=customizationMapper.selectById(params.getPlayerId());
-        params.setProfileCustomizationPO(customization);
         return params;
     }
 

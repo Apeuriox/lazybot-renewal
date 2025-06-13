@@ -46,8 +46,8 @@ public class MessageEventFactory
             return slashCommandEvent;
         }
         catch (Exception e){
-            logger.error("解析参数时出错",e);
-            throw new LazybotRuntimeException("解析参数时出错");
+            logger.error("[Lazybot] 解析参数时出错",e);
+            throw new LazybotRuntimeException("[Lazybot] 解析参数时出错");
         }
     }
     public LazybotSlashCommandEvent setupSlashCommandEvent(String command) {
