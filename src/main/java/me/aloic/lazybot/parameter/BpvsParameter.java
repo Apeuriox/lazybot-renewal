@@ -27,7 +27,7 @@ public class BpvsParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if(comparePlayerName.equals(this.getPlayerName())) {
-            throw new IllegalArgumentException("你不能和你自己比");
+            throw new IllegalArgumentException("[Lazybot] 你不能和你自己比");
         }
     }
     public static BpvsParameter analyzeParameter(List<String> params)
@@ -41,7 +41,7 @@ public class BpvsParameter extends LazybotCommandParameter
                    parameter.setPlayerName(names[0].trim());
                    parameter.setComparePlayerName(names[1].trim());
                 }
-                else throw new LazybotRuntimeException("参数处理错误: " + Arrays.toString(names));
+                else throw new LazybotRuntimeException("[Lazybot] 参数处理错误，请检测输入: " + Arrays.toString(names));
             }
             else parameter.setComparePlayerName(String.join(" ", params));
         }
@@ -49,8 +49,8 @@ public class BpvsParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(BpvsParameter parameter, AccessTokenPO accessTokenPO)
     {
-        if (parameter.getPlayerName() == null)
-            parameter.setPlayerName(accessTokenPO.getPlayer_name());
+        parameter.setPlayerName(accessTokenPO.getPlayer_name());
+        parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
     }

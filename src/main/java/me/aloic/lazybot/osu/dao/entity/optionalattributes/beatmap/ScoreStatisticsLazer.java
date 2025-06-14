@@ -49,7 +49,7 @@ public class ScoreStatisticsLazer implements Serializable
             }
             catch (IllegalAccessException e)
             {
-                throw new LazybotRuntimeException("reInitialize failed in ScoreStatisticsLazer");
+                throw new LazybotRuntimeException("[Lazybot] reInitialize failed in ScoreStatisticsLazer");
             }
         }
     }

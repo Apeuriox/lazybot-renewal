@@ -7,7 +7,6 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.TipsPO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreIf;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
@@ -17,22 +16,18 @@ import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.parameter.WhatIfParameter;
 import me.aloic.lazybot.util.ApiRequestStarter;
-import me.aloic.lazybot.util.DataObjectExtractor;
+import me.aloic.lazybot.util.DataExtractor;
 import me.aloic.lazybot.util.URLBuildUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -45,6 +40,8 @@ public class FunServiceImpl implements FunService
     private static final Logger logger = LoggerFactory.getLogger(FunServiceImpl.class);
     @Value("${lazybot.command.whatif_calc_max_count}")
     private Integer MAX_CALC;
+    @Resource
+    private DataExtractor dataExtractor;
 
 
 
@@ -54,25 +51,25 @@ public class FunServiceImpl implements FunService
         if (parameter.getId() == null || parameter.getId() == 0) {
             return Optional.ofNullable(tipsMapper.selectRandom())
                     .map(TipsPO::builderContent)
-                    .orElseThrow(() -> new LazybotRuntimeException("数据库查询出错"));
+                    .orElseThrow(() -> new LazybotRuntimeException("[Lazybot] 数据库查询出错"));
         }
         else {
           return Optional.ofNullable(tipsMapper.selectById(parameter.getId()))
                   .map(TipsPO::builderContent)
-                  .orElseThrow(() -> new LazybotRuntimeException("要么你参数输入错误，要么这个ID对应的tip不存在"));
+                  .orElseThrow(() -> new LazybotRuntimeException("[Lazybot] 要么你参数输入错误，要么这个ID对应的tip不存在"));
         }
     }
     @Override
     public Path modInfo(GeneralParameter parameter)
     {
-        if (parameter.getPlayerName() == null || parameter.getPlayerName().length() < 2) throw new LazybotRuntimeException("参数输入错误或为空");
+        if (parameter.getPlayerName() == null || parameter.getPlayerName().length() < 2) throw new LazybotRuntimeException("[Lazybot] 参数输入错误或为空");
         else {
             try{
                 return ResourceMonitor.getResourcePath().resolve("static/modifier/"+ OsuMod.findAcronym(parameter.getPlayerName()) +".png");
             }
             catch (Exception e){
                 logger.warn(e.getMessage());
-                throw new LazybotRuntimeException("[mod] 路径处理时出错");
+                throw new LazybotRuntimeException("[Lazybot] 路径处理时出错");
             }
         }
     }
@@ -80,20 +77,25 @@ public class FunServiceImpl implements FunService
     public String whatIfIGotSomePP(WhatIfParameter params)
     {
         DecimalFormat df = new DecimalFormat("#.00");
-        List<ScoreIf> existingScores = DataObjectExtractor.extractUserBestScoreList(
-                params.getAccessToken(),
+        List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestScoreList(
                 String.valueOf(params.getPlayerId()),
-                200,0,
-                params.getMode()).stream()
+                100,0,params.getMode());
+        if (scoreDTOList.size() < 110) {
+            scoreDTOList.addAll(dataExtractor.extractUserBestScoreList(
+                    String.valueOf(params.getPlayerId()),
+                    100,101,params.getMode()));
+        }
+        List<ScoreIf> existingScores = scoreDTOList.stream()
                 .map(score -> new ScoreIf(score.getPp()))
                 .toList();
+
         Double originalTotalPp = totalPpCalc(existingScores);
-        PlayerInfoDTO playerInfo = OsuToolsUtil.getUserInfoByUsername(params.getPlayerName(), params.getAccessToken(), params.getMode());
+        PlayerInfoDTO playerInfo = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(), params.getMode());
         Double bonusPp;
         try{
             bonusPp=playerInfo.getStatistics().getPp()-originalTotalPp;
         } catch (Exception e){
-            throw new LazybotRuntimeException("获取用户pp错误");
+            throw new LazybotRuntimeException("[Lazybot] 获取用户pp错误");
         }
         Integer originalRank = Optional.ofNullable(playerInfo.getRank_history().getData()[playerInfo.getRank_history().getData().length-1]).orElse(-1);
 
@@ -106,7 +108,15 @@ public class FunServiceImpl implements FunService
                 .limit(MAX_CALC)
                 .toList();
         Double totalPp = totalPpCalc(finalScores);
-        Integer rankFictional =ApiRequestStarter.excuteInteger(URLBuildUtil.buildURLOfPpRank(OsuMode.getMode(params.getMode()).getValue(), (int) Math.round(totalPp+bonusPp)));
+        Integer rankFictional;
+        try{
+            rankFictional = dataExtractor.extractRankByPP(params.getMode(),totalPp + bonusPp);
+        }
+        catch (Exception e)
+        {
+            logger.error("获取whatIf 新pp rank时出错:{}", e.getMessage());
+            throw new LazybotRuntimeException("[Lazybot] 获取whatIf 新pp rank时出错");
+        }
         String rankDifference = originalRank-rankFictional>0?"+"+(originalRank-rankFictional):" - ";
         StringBuilder result= new StringBuilder(playerInfo.getUsername() + "的pp变化情况：\n")
                 .append("原pp: ").append(df.format(originalTotalPp+bonusPp)).append("\n")

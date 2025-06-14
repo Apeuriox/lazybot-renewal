@@ -22,7 +22,7 @@ public class TipsParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if (id==null) id=0;
-        if (id<0) throw new LazybotRuntimeException("{id} 必须大于 0");
+        if (id<0) throw new LazybotRuntimeException("[Lazybot] {id} 必须大于 0");
     }
     public TipsParameter(Integer id) {
         this.id=id;

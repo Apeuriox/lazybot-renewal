@@ -144,7 +144,7 @@ public class AssertDownloadUtil
         catch (Exception e)
         {
             logger.error("下载失败: {}", e.getMessage());
-            throw new LazybotRuntimeException("下载线程出错: "+ e.getMessage());
+            throw new LazybotRuntimeException("[Lazybot] 下载线程出错: "+ e.getMessage());
         }
         return Paths.get(desiredLocalPath);
     }
@@ -180,76 +180,6 @@ public class AssertDownloadUtil
     {
         bannerDownload(playerInfoDTO.getCover_url(), playerInfoDTO.getId(),override);
         return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerBanner/" + playerInfoDTO.getId() +".jpg";
-    }
-    private static void resourceDownload(String targetUrl,String desiredLocalPath)
-    {
-        ReadableByteChannel rbc = null;
-        FileOutputStream fos = null;
-        try {
-            logger.info("请求文件不存在，正在下载（小型文件）");
-            URL ppySource = new URL(targetUrl);
-            rbc = Channels.newChannel(ppySource.openStream());
-            fos = new FileOutputStream(desiredLocalPath);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-        } catch (Exception e)
-        {
-            logger.error("下载小型文件时出错:{}", e.getMessage());
-            throw new LazybotRuntimeException("下载时出错: " +e.getMessage() +" 如果出现此消息请重试 ");
-        }
-        finally{
-            logger.info("下载完成（小型文件）: {}", desiredLocalPath);
-            if(fos!=null){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(rbc!=null){
-                try {
-                    rbc.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-    }
-    private static void largeResourceDownload(String targetUrl,String desiredLocalPath)
-    {
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-        try {
-            logger.info("请求文件不存在，正在下载");
-            URL url = new URL(targetUrl);
-            //这里没有使用 封装后的ResponseEntity 就是也是因为这里不适合一次性的拿到结果，放不下content,会造成内存溢出
-            HttpURLConnection connection =(HttpURLConnection) url.openConnection();
-
-            inputStream = new BufferedInputStream(connection.getInputStream());
-            File file = new File(desiredLocalPath);
-            if (file.exists()) {
-                file.delete();
-            }
-            outputStream = Files.newOutputStream(file.toPath());
-            byte[] buffer = new byte[1024 * 1024 * 3];// 2MB
-            int len = 0;
-            while ((len = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, len);
-            }
-            connection.disconnect();
-        }catch (Exception e){
-            logger.error("下载时出错:{}", e.getMessage());
-            throw new LazybotRuntimeException("下载时出错:" +e.getMessage() +" 如果出现此消息请重试 ");
-
-        }finally {
-            logger.info("下载完成: {}", desiredLocalPath);
-            IOUtils.closeQuietly(outputStream);
-            IOUtils.closeQuietly(inputStream);
-        }
-    }
-    private static long largeResourceDownloadHutools(String targetUrl,String desiredLocalPath)
-    {
-       return HttpUtil.downloadFile(targetUrl, FileUtil.file(desiredLocalPath));
     }
     private static void fileDownloadJavaHttpClient(String targetUrl, String desiredLocalPath) throws Exception {
         int attempt = 0;

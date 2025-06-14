@@ -9,8 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>me.aloic</groupId>
-    <artifactId>lazybot-jda</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>lazybot</artifactId>
+    <version>1.1.29</version>
     <name>lazybot-jda</name>
     <description>lazybot-jda</description>
     <url/>

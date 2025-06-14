@@ -57,7 +57,7 @@ public class ModCalculatorUtil
         for(Mod mod: mods) {
             if (mod.getAcronym().equals("DA") && mod.getSettings()!=null) {
                 Optional.ofNullable(mod.getSettings().getApproach_rate()).ifPresent(attributes::setAr);
-                Optional.ofNullable(mod.getSettings().getOverall_Difficulty()).ifPresent(attributes::setOd);
+                Optional.ofNullable(mod.getSettings().getOverall_difficulty()).ifPresent(attributes::setOd);
                 Optional.ofNullable(mod.getSettings().getCircle_size()).ifPresent(attributes::setCs);
                 Optional.ofNullable(mod.getSettings().getDrain_rate()).ifPresent(attributes::setHp);
             }

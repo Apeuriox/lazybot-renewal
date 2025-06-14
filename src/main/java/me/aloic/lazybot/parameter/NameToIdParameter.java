@@ -27,14 +27,13 @@ public class NameToIdParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (targets == null)
-            return;
+        if (targets == null) return;
        targets = targets.stream().distinct().limit(10).toList();
     }
     public static NameToIdParameter analyzeParameter(List<String> params)
     {
         NameToIdParameter parameter=new NameToIdParameter();
-        if(params == null || params.isEmpty()) throw new LazybotRuntimeException("此方法必须有参数");
+        if(params == null || params.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 此方法必须有参数");
         parameter.setTargets(List.of(String.join(" ", params).split(",")));
         return parameter;
     }

@@ -19,5 +19,6 @@ public class InitializeConfig  implements ApplicationRunner
     {
         ResourceMonitor.initResources();
         tokenMonitor.refreshClientToken();
+        tokenMonitor.refreshPPPlusClientToken();
     }
 }

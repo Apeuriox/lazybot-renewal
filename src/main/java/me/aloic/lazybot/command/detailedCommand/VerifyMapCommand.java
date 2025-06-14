@@ -43,7 +43,6 @@ public class VerifyMapCommand implements LazybotSlashCommand
         UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
         BeatmapParameter params=new BeatmapParameter(Integer.parseInt(OptionMappingTool.getOptionOrDefault(event.getOption("bid"),"" )));
         params.setUserIdentity(event.getUser().getIdLong());
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         event.getHook().sendMessage(manageService.verifyBeatmap(params)).queue();
     }
@@ -75,7 +74,6 @@ public class VerifyMapCommand implements LazybotSlashCommand
             params.setMode(event.getOsuMode().getDescribe());
         if (!testEnabled) params.setUserIdentity(event.getMessageEvent().getSender().getUserId());
         else params.setUserIdentity(identity);
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

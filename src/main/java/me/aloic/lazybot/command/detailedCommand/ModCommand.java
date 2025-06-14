@@ -44,7 +44,7 @@ public class ModCommand implements LazybotSlashCommand
             ImageUploadUtil.uploadImageToOnebot(bot,event, Files.readAllBytes(Paths.get(funService.modInfo(params).toUri())));
         }
         catch (Exception e){
-            throw new LazybotRuntimeException("要么你输入的Mod名有问题，要么此Mod的页面还未创建");
+            throw new LazybotRuntimeException("[Lazybot] 要么你输入的Mod名有问题，要么此Mod的页面还未创建");
         }
 
     }
@@ -58,7 +58,7 @@ public class ModCommand implements LazybotSlashCommand
             testOutputTool.saveImageToLocal(Files.readAllBytes(Paths.get(funService.modInfo(params).toUri())));
         }
         catch (Exception e){
-            throw new LazybotRuntimeException("要么你输入的Mod名有问题，要么此Mod的页面还未创建");
+            throw new LazybotRuntimeException("[Lazybot] 要么你输入的Mod名有问题，要么此Mod的页面还未创建");
         }
 
     }

@@ -8,6 +8,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.po.TipsPO;
+import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
@@ -15,7 +16,6 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
-import me.aloic.lazybot.osu.utils.SvgUtil;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
 import org.slf4j.Logger;
@@ -35,66 +35,86 @@ import java.util.function.Function;
 @Service
 public class ManageServiceImpl implements ManageService
 {
-    private static final Map<String, Function<UpdateParameter,String>> updateMap;
+//    private static final Map<String, Function<UpdateParameter,String>> updateMap;
     private static final Map<Long,Boolean> adminMap;  //Long ass numbers are discord ids
     static{
-        updateMap = Map.of("avatar",ManageServiceImpl::updateAvatar,
-                "track",ManageServiceImpl::updateOsuTrack);
+//        updateMap = Map.of("avatar",ManageServiceImpl::updateAvatar,
+//                "track",ManageServiceImpl::updateOsuTrack,
+//                "banner",ManageServiceImpl::updateBanner);
+
         adminMap = Map.of( 1524185356L,true,
-                412246007024451585L,true);
+                412246007024451585L,true,
+                1204694006L,true);
     }
 
     @Resource
     private CustomizationMapper customizationMapper;
     @Resource
-    private TokenMapper tokenMapper;
-    @Resource
     private TipsMapper tipsMapper;
     private static final Logger logger = LoggerFactory.getLogger(ManageServiceImpl.class);
+
+    @Resource
+    private DataExtractor dataExtractor;
+
     @Override
     public String update(UpdateParameter params)
     {
-        if(params==null || params.getType()==null || !updateMap.containsKey(params.getType())) return "Update avatar {user_name} or Update track {user_name}";
-        return updateMap.get(params.getType()).apply(params);
+        if(params==null || params.getType()==null)
+            return "[Lazybot] 输入Update avatar 用户名 以更新头像\n输入 Update track 用户名  以更新ppmap数据\n输入Update banner 用户名 以更新用户横幅";
+        else if(params.getType().equals("avatar"))
+            return updateAvatar(params);
+        else if(params.getType().equals("track"))
+            return updateOsuTrack(params);
+        else if(params.getType().equals("banner"))
+            return updateBanner(params);
+        return "[Lazybot] 输入Update avatar 用户名 以更新头像\n输入 Update track 用户名  以更新ppmap数据\n输入Update banner 用户名 以更新用户横幅";
     }
-
-    private static String updateAvatar(UpdateParameter params)
+    private String updateAvatar(UpdateParameter params)
     {
         PlayerInfoDTO playerInfoDTO;
-        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
-        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+        if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+        else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
 
         playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true)));
-        return "已更新用户"+playerInfoDTO.getUsername()+"的头像缓存";
+        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的头像缓存";
     }
-    private static String updateOsuTrack(UpdateParameter params)
+    private String updateBanner(UpdateParameter params)
     {
         PlayerInfoDTO playerInfoDTO;
-        if (params.getPlayerId()!=null) playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode());
-        else playerInfoDTO = DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode());
+        if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+        else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+
+        playerInfoDTO.setCover_url((AssertDownloadUtil.bannerAbsolutePath(playerInfoDTO,true)));
+        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的横幅缓存";
+    }
+    private String updateOsuTrack(UpdateParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+        else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
         ApiRequestStarter trackApiRequest = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackUpdate(playerInfoDTO.getId(),params.getMode()));
         UserDifference userDifference = trackApiRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_POST, UserDifference.class);
-        return "已更新用户"+playerInfoDTO.getUsername()+"的Osu Track数据";
+        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的Osu Track数据";
     }
 
     @Override
     public String verifyBeatmap(BeatmapParameter params)
     {
-        if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("你没有权限");
+        if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("[Lazybot] 你没有权限");
         File beatmapFile;
         try{
             beatmapFile = new File(AssertDownloadUtil.beatmapPath(params.getBid(),false).toUri());
         }
         catch (Exception e) {
-            return "未检索到本地缓存";
+            return "[Lazybot] 未检索到本地缓存";
         }
         String checksum= CommonTool.calculateMD5(beatmapFile);
-        BeatmapDTO beatmapDTO = DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBid()),params.getMode());
+        BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBid()),params.getMode());
         if (!checksum.equals(beatmapDTO.getChecksum())) {
             AssertDownloadUtil.beatmapPath(params.getBid(), true);
-            return "校验和不匹配: " + beatmapDTO.getChecksum() + " != " + checksum;
+            return "[Lazybot] 校验和不匹配: " + beatmapDTO.getChecksum() + " != " + checksum;
         }
-        return "校验和正常: "+checksum;
+        return "[Lazybot] 校验和正常: "+checksum;
     }
 
     @Override
@@ -144,12 +164,13 @@ public class ManageServiceImpl implements ManageService
     }
 
     @Override
-    public String ppTest(ScoreParameter params)
+    public String ppTest(ScoreParameter params, Long userIdentity)
     {
-        BeatmapUserScoreLazer beatmapUserScoreLazer = DataObjectExtractor.extractBeatmapUserScore(params.getAccessToken(),
+        if(!adminMap.containsKey(userIdentity)) throw new LazybotRuntimeException("你没有权限");
+        BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
-                DataObjectExtractor.extractBeatmap(params.getAccessToken(), String.valueOf(params.getBeatmapId()), params.getMode()),
+                dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
                 beatmapUserScoreLazer.getScore(),
                 false);
         return scoreVO.getPpDetailsLocal().getOriginal().toString();

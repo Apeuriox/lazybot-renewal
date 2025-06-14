@@ -9,8 +9,6 @@ import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.CommonTool;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -33,10 +31,10 @@ public class ScoreParameter extends LazybotCommandParameter
     @Override
     public void validateParams() {
         if(beatmapId<=0) {
-            throw new IllegalArgumentException("illegal bid: " + beatmapId);
+            throw new IllegalArgumentException("[Lazybot] bid输入值不合法: " + beatmapId);
         }
         if(modCombination!=null && modCombination.length()%2!=0) {
-            throw new IllegalArgumentException("invalid mod: " + modCombination);
+            throw new IllegalArgumentException("[Lazybot] mod输入值不合法: " + modCombination);
         }
         if(version==null) {
             version=0;
@@ -46,7 +44,7 @@ public class ScoreParameter extends LazybotCommandParameter
     {
         ScoreParameter scoreParameter=new ScoreParameter();
         if (params == null || params.size() > 2)
-            throw new LazybotRuntimeException("参数输入错误");
+            throw new LazybotRuntimeException("[Lazybot] 参数输入错误，bid和mod间请不要使用空格");
         //如果参数只有一个，并且包含+，说明是mod+bid的形式
         else if (params.size() == 1) {
             if(params.getFirst().contains("+")) {
@@ -57,13 +55,13 @@ public class ScoreParameter extends LazybotCommandParameter
                    scoreParameter.setModCombination(paras[1]);
                 }
                 else
-                    throw new LazybotRuntimeException("参数解析错误,para=1, mod=true");
+                    throw new LazybotRuntimeException("参数解析错误, Modded: true, Player: self");
             }
             else {
                 if(CommonTool.isPositiveInteger(params.getFirst()))
                     scoreParameter.setBeatmapId(Integer.valueOf(params.getFirst()));
                 else
-                    throw new LazybotRuntimeException("参数解析错误, para=1, mod=false");
+                    throw new LazybotRuntimeException("参数解析错误, Modded: false, Player: self");
             }
         }
         //两个参数，有+代表有mod
@@ -78,7 +76,7 @@ public class ScoreParameter extends LazybotCommandParameter
                     scoreParameter.setModCombination(paras[1]);
                 }
                 else {
-                    throw new LazybotRuntimeException("参数解析错误, para=2,mod=true");
+                    throw new LazybotRuntimeException("参数解析错误, Modded: false, Player: others");
                 }
             }
             else {
@@ -87,24 +85,20 @@ public class ScoreParameter extends LazybotCommandParameter
                     scoreParameter.setBeatmapId(Integer.valueOf(params.get(1)));
                 }
                 else {
-                    throw new LazybotRuntimeException("参数解析错误, para=2, mods=false");
+                    throw new LazybotRuntimeException("[Lazybot] 参数解析错误, Modded: false, Player: Others");
                 }
             }
         }
         //只有一个参数，且没有指定mod，那就看参数是不是正整数，不是就滚犊子
         else
         {
-            throw new LazybotRuntimeException("未知错误, 可能为para>=3");
+            throw new LazybotRuntimeException("[Lazybot] 未知错误, 可能为参数长度>=3");
         }
         return scoreParameter;
     }
     public static void setupDefaultValue(ScoreParameter scoreParameter, AccessTokenPO accessTokenPO)
     {
-        if (scoreParameter.getPlayerName() == null) {
-            scoreParameter.setPlayerName(accessTokenPO.getPlayer_name());
-            scoreParameter.setPlayerId(accessTokenPO.getPlayer_id());
-        }
-
+        scoreParameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (scoreParameter.getMode() == null)
             scoreParameter.setMode(accessTokenPO.getDefault_mode());
         if (scoreParameter.getVersion() == null)

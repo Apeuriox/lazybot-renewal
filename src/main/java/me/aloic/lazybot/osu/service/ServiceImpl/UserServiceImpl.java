@@ -14,7 +14,7 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.DataObjectExtractor;
+import me.aloic.lazybot.util.DataExtractor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +30,18 @@ public class UserServiceImpl implements UserService
     @Resource
     private TokenMapper tokenMapper;
 
+    @Resource
+    private DataExtractor dataExtractor;
+
 
 
     @Override
     public void updateDefaultMode(SlashCommandInteractionEvent event)
     {
         event.deferReply().queue();
-        if(event.getOption("mode")==null) throw new LazybotRuntimeException("请输入模式");
+        if(event.getOption("mode")==null) throw new LazybotRuntimeException("[Lazybot] 请输入模式");
         OsuMode mode = OsuMode.getMode(event.getOption("mode").getAsString());
-        if (mode == OsuMode.Default) throw new LazybotRuntimeException("未知的模式: " + event.getOption("mode").getAsString());
+        if (mode == OsuMode.Default) throw new LazybotRuntimeException("[Lazybot] 未知的模式: " + event.getOption("mode").getAsString());
         BiConsumer<SlashCommandInteractionEvent, UserTokenPO> createBindError =  ErrorResultHandler::createBindError;
         if(event.getOption("username")==null)
             ErrorResultHandler.createParameterError(event);
@@ -46,19 +49,19 @@ public class UserServiceImpl implements UserService
                 .ifPresentOrElse(
                         token -> discordTokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getUser().getIdLong()),
                         this::createNotBindError);
-        event.getHook().sendMessage("已成功更改模式为: " +mode.getDescribe()).queue();
+        event.getHook().sendMessage("[Lazybot] 已成功更改模式为: " +mode.getDescribe()).queue();
     }
     @Override
     public void updateDefaultMode(Bot bot, LazybotSlashCommandEvent event)
     {
-        if (event.getCommandParameters()==null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("请输入模式");
+        if (event.getCommandParameters()==null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 请输入模式");
         OsuMode mode = OsuMode.getMode(event.getCommandParameters().getFirst());
-        if (mode == OsuMode.Default) throw new LazybotRuntimeException("未知的模式: " + event.getCommandParameters().getFirst());
+        if (mode == OsuMode.Default) throw new LazybotRuntimeException("[Lazybot] 未知的模式: " + event.getCommandParameters().getFirst());
         Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
                 .ifPresentOrElse(
                         token -> tokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getMessageEvent().getSender().getUserId()),
                         this::createNotBindError);
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("已成功更改模式为: " +mode.getDescribe()).build(),false);
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 已成功更改模式为: " +mode.getDescribe()).build(),false);
     }
 
 
@@ -98,7 +101,7 @@ public class UserServiceImpl implements UserService
         Optional.ofNullable(discordTokenMapper.selectByDiscord(event.getUser().getIdLong()))
                 .ifPresentOrElse(token -> discordTokenMapper.deleteByDiscord(event.getUser().getIdLong()),
                         this::createNotBindError);
-        event.getHook().sendMessage("已解除绑定: " +event.getOption("username").getAsString()).queue();
+        event.getHook().sendMessage("[Lazybot] 已解除绑定: " +event.getOption("username").getAsString()).queue();
     }
     @Override
     public void unlinkUser(Bot bot, LazybotSlashCommandEvent event)
@@ -107,22 +110,20 @@ public class UserServiceImpl implements UserService
                 .ifPresentOrElse(
                         token -> tokenMapper.deleteByQQ(event.getMessageEvent().getSender().getUserId()),
                         this::createNotBindError);
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("成功解除绑定").build(),false);
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功解除绑定").build(),false);
     }
     private void insertUserToTable(SlashCommandInteractionEvent event, @Nonnull String username){
-        UserTokenPO client = discordTokenMapper.selectByDiscord(0L);
-        PlayerInfoDTO player = DataObjectExtractor.extractPlayerInfo(client.getAccess_token(),username, "osu");
+        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
         UserTokenPO user = new UserTokenPO(event.getUser().getIdLong(), player.getId(), player.getUsername());
         Optional.ofNullable(discordTokenMapper.selectByPlayername(player.getUsername()))
                 .ifPresentOrElse(
                         userToken -> discordTokenMapper.updateByToken(user),
                         () -> discordTokenMapper.insert(user)
                 );
-        event.getHook().sendMessage("成功绑定用户: " +username).queue();
+        event.getHook().sendMessage("[Lazybot] 成功绑定用户: " +username).queue();
     }
     private void insertUserToTable(LazybotSlashCommandEvent event, @Nonnull String username,Bot bot){
-        AccessTokenPO client = tokenMapper.selectByQq_code(0L);
-        PlayerInfoDTO player = DataObjectExtractor.extractPlayerInfo(client.getAccess_token(),username, "osu");
+        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
         AccessTokenPO user = new AccessTokenPO();
         user.setPlayer_id(player.getId());
         user.setPlayer_name(player.getUsername());
@@ -134,7 +135,7 @@ public class UserServiceImpl implements UserService
                         userToken -> tokenMapper.updateByToken(user),
                         () -> tokenMapper.insert(user)
                 );
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("成功绑定用户: " +username).build(),false);
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功绑定用户: " +username).build(),false);
     }
 
 
@@ -142,20 +143,20 @@ public class UserServiceImpl implements UserService
 
 
     private void createBindError(AccessTokenPO token){
-        throw new LazybotRuntimeException("您已绑定用户: " +token.getPlayer_name());
+        throw new LazybotRuntimeException("[Lazybot] 您已绑定用户: " +token.getPlayer_name());
     }
     private void createAlreadyBindError(AccessTokenPO token){
-        throw new LazybotRuntimeException("该用户已绑定账户: " +token.getQq_code());
+        throw new LazybotRuntimeException("[Lazybot] 该用户已绑定账户: " +token.getQq_code());
     }
     private void createNotBindError(){
         {
-            throw new LazybotRuntimeException("您并未绑定");
+            throw new LazybotRuntimeException("[Lazybot] 您并未绑定");
         }
     }
     public static boolean isValidUsername(String input) {
-        if (input==null||input.trim().isEmpty()) throw new LazybotRuntimeException("输入用户名为空");
-        if(input.trim().length()>15) throw new LazybotRuntimeException("输入用户名过长");
-        if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) throw new LazybotRuntimeException("已输入的用户名含有非法字符");
+        if (input==null||input.trim().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 输入用户名为空");
+        if(input.trim().length()>15) throw new LazybotRuntimeException("[Lazybot] 输入用户名过长");
+        if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) throw new LazybotRuntimeException("[Lazybot] 已输入的用户名含有非法字符");
         return true;
     }
 }

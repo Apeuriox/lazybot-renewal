@@ -17,7 +17,7 @@ public class ContentParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (content==null|| content.trim().isEmpty()) throw new LazybotRuntimeException("参数为必选项");
+        if (content==null|| content.trim().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 参数为必选项");
     }
     public ContentParameter(String content) {
         this.content=content;

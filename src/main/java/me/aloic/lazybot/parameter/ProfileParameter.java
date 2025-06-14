@@ -35,8 +35,7 @@ public class ProfileParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(ProfileParameter parameter, AccessTokenPO accessTokenPO)
     {
-        if (parameter.getPlayerName() == null)
-            parameter.setPlayerId(accessTokenPO.getPlayer_id());
+        parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
     }

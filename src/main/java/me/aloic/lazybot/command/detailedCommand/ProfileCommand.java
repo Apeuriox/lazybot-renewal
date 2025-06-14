@@ -17,7 +17,6 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ProfileParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -51,7 +50,6 @@ public class ProfileCommand implements LazybotSlashCommand
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         ProfileParameter params=new ProfileParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.profile(params));
     }
@@ -82,16 +80,7 @@ public class ProfileCommand implements LazybotSlashCommand
         ProfileParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
-        if (params.getPlayerName()==null)
-        {
-            params.setInfoDTO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(), params.getPlayerId(), params.getMode()));
-            //TODO:I NEED A WAY TO RENEW PLAYER CACHE SINCE THEY CAN REVERT THEIR NAME
-        }
-        else params.setInfoDTO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode()));
-        ProfileCustomizationPO customization=customizationMapper.selectById(params.getInfoDTO().getId());
-        params.setProfileCustomizationPO(customization);
         return params;
     }
 

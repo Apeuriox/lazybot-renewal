@@ -11,13 +11,10 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
-import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.TodaybpParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.DataObjectExtractor;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -50,8 +47,6 @@ public class TodaybpCommand implements LazybotSlashCommand
         TodaybpParameter params=new TodaybpParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("days"), 1));
-        params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.todayBp(params));
     }
@@ -82,10 +77,6 @@ public class TodaybpCommand implements LazybotSlashCommand
         TodaybpParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setAccessToken(tokenPO.getAccess_token());
-        if (params.getPlayerName()==null) params.setInfoDTO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerId(),params.getMode()));
-        else params.setInfoDTO(DataObjectExtractor.extractPlayerInfo(params.getAccessToken(),params.getPlayerName(),params.getMode()));
-
         params.validateParams();
         return params;
     }

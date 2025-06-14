@@ -10,8 +10,6 @@ import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
@@ -39,13 +37,13 @@ public class BpifParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (this.getModList()==null || this.getModList().isEmpty()) throw new LazybotRuntimeException("Mod在哪? 现阶段不支持多步操作，比如+HD -HR");
+        if (this.getModList()==null || this.getModList().isEmpty()) throw new LazybotRuntimeException("[Lazybot] Mod在哪? 现阶段不支持多步操作，比如+HD -HR");
     }
     public static BpifParameter analyzeParameter(List<String> params)
     {
         BpifParameter parameter=new BpifParameter();
         String modStr;
-        if (params == null||params.isEmpty()) throw new LazybotRuntimeException("参数呢?");
+        if (params == null||params.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 参数呢?");
         else {
             if (params.size() == 1) {
                 modStr=params.getFirst();
@@ -66,7 +64,7 @@ public class BpifParameter extends LazybotCommandParameter
         String operator=modStr.substring(0,1);
         if ( modStr.endsWith("!")) operator="!";
         if(!operator.equals("+") && !operator.equals("-") && !operator.equals("!")) {
-            throw new LazybotRuntimeException("不支持的运算符: " + operator);
+            throw new LazybotRuntimeException("[Lazybot] 不支持的运算符: " + operator);
         }
         else {
             parameter.setOperator(operator);
@@ -79,8 +77,6 @@ public class BpifParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(BpifParameter parameter, AccessTokenPO accessTokenPO)
     {
-        if (parameter.getPlayerName() == null)
-            parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
         if (parameter.getRenderSize() == null)

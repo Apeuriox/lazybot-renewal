@@ -15,6 +15,6 @@ public class ModSetting implements Serializable
     private Double circle_size;
     private Double approach_rate;
     private Boolean extended_limits;
-    private Double overall_Difficulty;
+    private Double overall_difficulty;
     private Long seed;
 }

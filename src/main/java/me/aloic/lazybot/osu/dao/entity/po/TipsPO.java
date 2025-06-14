@@ -23,6 +23,6 @@ public class TipsPO implements Serializable {
     private String updated_by;
 
     public String builderContent(){
-        return "No."+id+": "+content;
+        return "[Lazybot] No."+id+": "+content;
     }
 }

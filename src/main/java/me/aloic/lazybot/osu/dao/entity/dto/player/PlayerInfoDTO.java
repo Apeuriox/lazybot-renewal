@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.player.Kudosu;
 
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
@@ -21,9 +23,9 @@ public class PlayerInfoDTO extends UserCompactDTO
     private Integer max_friends;
     private String occupation;
     private String playmode;
-    private String[] playstyle;
+    private List<String> playstyle;
     private Integer post_count;
-    private String[] profile_order;
+    private List<String> profile_order;
     private String title;
     private String title_url;
     private String twitter;

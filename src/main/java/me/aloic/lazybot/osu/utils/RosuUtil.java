@@ -31,29 +31,45 @@ public class RosuUtil
         JniPerformanceAttributes rosuResult=getPPStats(beatmap,JSONUtil.toJsonStr(score.getModJSON()),score.getStatistics(),"osu",score.getMaxCombo(),score.getIsLazer());
         return rosuResult.getPP();
     }
-    public static void setupMapScorePerformance(Path pathToOsuFile, MapScore score) throws IOException
+    public static void setupMapScorePerformance(JniBeatmap beatmap, MapScore score)
     {
-        JniBeatmap beatmap = new JniBeatmap(Files.readAllBytes(pathToOsuFile));
+        JniPerformanceAttributes rosuResult = getPPStats(beatmap, JSONUtil.toJsonStr(score.getModJSON()), score.getStatistics(), "osu", score.getMaxCombo(), score.getIsLazer());
         if (score.getPp()==null) {
-            JniPerformanceAttributes rosuResult = getPPStats(beatmap, JSONUtil.toJsonStr(score.getModJSON()), score.getStatistics(), "osu", score.getMaxCombo(), score.getIsLazer());
             score.setPp(rosuResult.getPP());
         }
+        score.setStarRating(rosuResult.getStarRating());
         score.setIffc(getIfFc(beatmap,JSONUtil.toJsonStr(score.getModJSON()),score.getStatistics(),"osu",score.getIsLazer()));
     }
 
-    public static OsuDifficultyAttributes nomodMapStats(Path pathToOsuFile, BeatmapDTO beatmapDTO) throws IOException
+    public static void setupMapScorePerformance(Path pathToOsuFile, MapScore score) throws IOException
     {
-        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(pathToOsuFile));
+        setupMapScorePerformance(new JniBeatmap(Files.readAllBytes(pathToOsuFile)),score);
+    }
+
+    public static JniDifficultyAttributes nomodMapStats(Path pathToOsuFile, BeatmapDTO beatmapDTO) throws IOException
+    {
+        return nomodMapStats(new JniBeatmap(Files.readAllBytes(pathToOsuFile)), String.valueOf(beatmapDTO.getMode_int()));
+    }
+    public static JniDifficultyAttributes nomodMapStats(Path pathToOsuFile, String mode) throws IOException
+    {
+        return nomodMapStats(new JniBeatmap(Files.readAllBytes(pathToOsuFile)), mode);
+    }
+    public static JniDifficultyAttributes nomodMapStats(JniBeatmap beatmap, String mode)
+    {
         JniPerformance performance=beatmap.createPerformance();
-        OsuMode osuMode=me.aloic.lazybot.osu.enums.OsuMode.convertMode(String.valueOf(beatmapDTO.getMode_int()));
+        OsuMode osuMode=me.aloic.lazybot.osu.enums.OsuMode.convertMode(String.valueOf(mode));
         performance.setMode(osuMode);
         JniPerformanceAttributes rosuResult;
         performance.setAcc(100.0);
         performance.setLazer(true);
         rosuResult=performance.calculate();
-        if(rosuResult instanceof OsuPerformanceAttributes osu)
-            return osu.getDifficulty();
-        return null;
+        return switch (rosuResult) {
+            case OsuPerformanceAttributes osu -> osu.getDifficulty();
+            case TaikoPerformanceAttributes taiko -> taiko.getDifficulty();
+            case ManiaPerformanceAttributes mania -> mania.getDifficulty();
+            case CatchPerformanceAttributes catchPerformance -> catchPerformance.getDifficulty();
+            default -> null;
+        };
     }
 
 
@@ -138,10 +154,11 @@ public class RosuUtil
                 break;
             case Catch:
                 performance.setN300(Optional.ofNullable(statistics.getGreat()).orElse(0));
-                performance.setLargeTick(Optional.ofNullable(statistics.getLarge_tick_hit()).orElse(0));
-                performance.setSmallTick(Optional.ofNullable(statistics.getSmall_tick_hit()).orElse(0));
+                performance.setN100(Optional.ofNullable(statistics.getLarge_tick_hit()).orElse(0));
+                performance.setN50(Optional.ofNullable(statistics.getSmall_tick_hit()).orElse(0));
+                performance.setKatu(Optional.ofNullable(statistics.getSmall_tick_miss()).orElse(0));
                 if(maxCombo!=0)
-                    performance.setMisses(Optional.ofNullable(statistics.getSmall_bonus()).orElse(0));
+                    performance.setMisses(Optional.ofNullable(statistics.getMiss()).orElse(0));
                 rosuResult= performance.calculate();
                 break;
             default:

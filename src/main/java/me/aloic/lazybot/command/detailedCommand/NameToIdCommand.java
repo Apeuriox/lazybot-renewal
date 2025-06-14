@@ -53,7 +53,6 @@ public class NameToIdCommand implements LazybotSlashCommand
                 .limit(10)
                 .collect(Collectors.toList());
         NameToIdParameter params=new NameToIdParameter(playerNames,"osu");
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         event.getHook().sendMessage(playerService.nameToId(params)).queue();
     }
@@ -82,7 +81,6 @@ public class NameToIdCommand implements LazybotSlashCommand
     {
         NameToIdParameter params=NameToIdParameter.analyzeParameter(event.getCommandParameters());
         NameToIdParameter.setupDefaultValue(params,tokenPO);
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

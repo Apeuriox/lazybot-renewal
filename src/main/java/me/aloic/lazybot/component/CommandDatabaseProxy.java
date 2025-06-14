@@ -19,11 +19,7 @@ import java.util.List;
 public class CommandDatabaseProxy
 {
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private TokenMapper tokenMapper;
-    @Resource
-    private TokenMonitor tokenMonitor;
 
     @Value("${lazybot.test.identity}")
     private Long testIdentity;
@@ -36,18 +32,11 @@ public class CommandDatabaseProxy
 
     public AccessTokenPO getAccessToken(LazybotSlashCommandEvent event)
     {
-        AccessTokenPO accessToken, tokenPO;
+        AccessTokenPO tokenPO;
         try {
             if (testEnabled) tokenPO = tokenMapper.selectByQq_code(testIdentity);
             else tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-
-            if (tokenPO == null) throw new LazybotRuntimeException("请先使用/link 你的osu用户名 绑定osu账号");
-            accessToken= tokenMapper.selectByQq_code(0L);
-            if(accessToken == null) {
-                tokenMonitor.refreshClientToken();
-                throw new LazybotRuntimeException("Osu api token失效，正在重获取");
-            }
-            tokenPO.setAccess_token(accessToken.getAccess_token());
+            if (tokenPO == null) throw new LazybotRuntimeException("[Lazybot] 请先使用/link 你的osu用户名 绑定osu账号");
             return tokenPO;
         }
         catch (LazybotRuntimeException e) {
@@ -58,7 +47,6 @@ public class CommandDatabaseProxy
             throw new LazybotRuntimeException("数据库查询出错，详情请见log");
         }
         catch (Exception e) {
-            e.printStackTrace();
             logger.error("未知错误: {}", e.getMessage());
             throw new LazybotRuntimeException("出现未知错误 ，详情请见log");
         }

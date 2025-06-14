@@ -49,9 +49,8 @@ public class BpCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1));
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
+        params.setPlayerId(tokenPO.getPlayer_id());
         ImageUploadUtil.uploadImageToDiscord(event,playerService.bp(params));
     }
 
@@ -76,8 +75,7 @@ public class BpCommand implements LazybotSlashCommand
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.setVersion(event.getScorePanelVersion());
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
-        params.setAccessToken(tokenPO.getAccess_token());
+        params.setPlayerId(tokenPO.getPlayer_id());
         params.validateParams();
         return params;
     }

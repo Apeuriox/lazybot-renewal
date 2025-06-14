@@ -7,10 +7,12 @@ import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
+import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.osu.utils.RosuUtil;
 import org.w3c.dom.Document;
 
+import javax.swing.text.html.Option;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -54,6 +56,7 @@ public class TransformerUtil
         playerInfoVO.setAvatarUrl(playerInfoDTO.getAvatar_url());
         playerInfoVO.setId(playerInfoDTO.getId());
         playerInfoVO.setPrimaryColor(Optional.ofNullable(playerInfoDTO.getProfile_hue()).orElse(333));
+        playerInfoVO.setPlayStyles(playerInfoDTO.getPlaystyle());
         return playerInfoVO;
 
     }
@@ -348,10 +351,10 @@ public class TransformerUtil
 
     public static BeatmapPerformance beatmapPerformanceTransform(BeatmapDTO beatmapDTO){
         BeatmapPerformance beatmap=new BeatmapPerformance();
-        beatmap.setAccuracy(beatmapDTO.getAccuracy()); //od
-        beatmap.setAr(beatmapDTO.getAr()); //ar
-        beatmap.setCs(beatmapDTO.getCs());  //cs
-        beatmap.setDrain(beatmapDTO.getDrain()); //hp
+        beatmap.setAccuracy(Optional.ofNullable(beatmapDTO.getAccuracy()).orElse(0.0)); //od
+        beatmap.setAr(Optional.ofNullable(beatmapDTO.getAr()).orElse(0.0)); //ar
+        beatmap.setCs(Optional.ofNullable(beatmapDTO.getCs()).orElse(0.0));  //cs
+        beatmap.setDrain(Optional.ofNullable(beatmapDTO.getDrain()).orElse(0.0)); //hp
         beatmap.setDifficult_rating(beatmapDTO.getDifficulty_rating());  //star rating
         beatmap.setBpm(beatmapDTO.getBpm());
         beatmap.setHit_length(beatmapDTO.getHit_length());
@@ -371,6 +374,11 @@ public class TransformerUtil
         beatmap.setLanguage(beatmapDTO.getBeatmapset().getLanguage());
         beatmap.setPlayCount(beatmapDTO.getBeatmapset().getPlay_count());
         beatmap.setFavouriteCount(beatmapDTO.getBeatmapset().getFavourite_count());
+        beatmap.setCountCircles(Optional.ofNullable(beatmapDTO.getCount_circles()).orElse(0));
+        beatmap.setCountSliders(Optional.ofNullable(beatmapDTO.getCount_sliders()).orElse(0));
+        beatmap.setCountSpinners(Optional.ofNullable(beatmapDTO.getCount_spinners()).orElse(0));
+        beatmap.setConvert(beatmapDTO.getConvert());
+        beatmap.setMode(OsuMode.getMode(beatmapDTO.getMode_int()));
         return beatmap;
     }
 

@@ -48,8 +48,6 @@ public class NoChokeCommand implements LazybotSlashCommand
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
-        params.setInfoDTO(OsuToolsUtil.getUserInfoByUsername(playerName,tokenPO));
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         if (event.getFullCommandName().equalsIgnoreCase("no1miss"))
             ImageUploadUtil.uploadImageToDiscord(event,playerService.noChoke(params,1));

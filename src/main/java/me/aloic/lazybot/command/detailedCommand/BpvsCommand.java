@@ -48,7 +48,6 @@ public class BpvsCommand implements LazybotSlashCommand
         BpvsParameter params=new BpvsParameter(OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name()),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrException(event.getOption("target"), "请输入对比对象"));
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         ImageUploadUtil.uploadImageToDiscord(event,playerService.bpvs(params));
     }
@@ -75,7 +74,6 @@ public class BpvsCommand implements LazybotSlashCommand
         BpvsParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

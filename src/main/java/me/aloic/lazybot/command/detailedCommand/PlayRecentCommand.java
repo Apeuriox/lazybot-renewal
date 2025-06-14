@@ -52,8 +52,6 @@ public class PlayRecentCommand implements LazybotSlashCommand
         RecentParameter params=new RecentParameter(OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(playerName,tokenPO));
-        params.setAccessToken(accessToken.getAccess_token());
         params.validateParams();
         if (event.getFullCommandName().equals("rp")||event.getFullCommandName().equals("pr")||event.getFullCommandName().equals("playrecent"))
             ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,1));
@@ -103,8 +101,6 @@ public class PlayRecentCommand implements LazybotSlashCommand
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.setVersion(event.getScorePanelVersion());
-        params.setPlayerId(OsuToolsUtil.getUserIdByUsername(params.getPlayerName(),tokenPO));
-        params.setAccessToken(tokenPO.getAccess_token());
         params.validateParams();
         return params;
     }

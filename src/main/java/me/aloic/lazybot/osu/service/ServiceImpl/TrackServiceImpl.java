@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
+import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.DiamondShape;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapsetDTO;
@@ -11,7 +12,8 @@ import me.aloic.lazybot.osu.service.TrackService;
 import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TopScoresParameter;
-import me.aloic.lazybot.util.DataObjectExtractor;
+import me.aloic.lazybot.util.ApiRequestExecutor;
+import me.aloic.lazybot.util.DataExtractor;
 import me.aloic.lazybot.util.TransformerUtil;
 import me.aloic.lazybot.util.VirtualThreadExecutorHolder;
 import org.jfree.chart.ChartFactory;
@@ -45,6 +47,8 @@ public class TrackServiceImpl implements TrackService
     private static final Logger logger = LoggerFactory.getLogger(TrackServiceImpl.class);
     private static final Map<String, Color> rankColorMap;
     private static final Map<String,Shape> rankShapeMap;
+    @Resource
+    private DataExtractor dataExtractor;
 
 
     static{
@@ -76,7 +80,7 @@ public class TrackServiceImpl implements TrackService
     @Override
     public byte[] ppTimeMap(GeneralParameter params) throws Exception
     {
-        java.util.List<HitScoreVO> hitScoreVOs= DataObjectExtractor.extractOsuTrackHitScoreList(params.getPlayerId(), params.getMode());
+        java.util.List<HitScoreVO> hitScoreVOs= dataExtractor.extractOsuTrackHitScoreList(params.getPlayerId(), params.getMode());
         logger.info("ppMap转换后对象数量：{}", hitScoreVOs.size());
 
         ZonedDateTime dateTime1 = ZonedDateTime.parse(hitScoreVOs.getFirst().getScoreTimeJSON());
@@ -181,7 +185,7 @@ public class TrackServiceImpl implements TrackService
     public byte[] bestPlaysInGamemode(TopScoresParameter params) throws IOException
     {
         List<BestPlay> bestPlayListDistinct = new ArrayList<>(
-                DataObjectExtractor.extractOsuTrackBestPlay(params.getLimit(),params.getRuleset().getValue()).stream()
+                dataExtractor.extractOsuTrackBestPlay(params.getLimit(),params.getRuleset().getValue()).stream()
                         .collect(Collectors.toMap(
                                 BestPlay::getScoreKey,
                                 singlePlay -> singlePlay,
@@ -192,8 +196,7 @@ public class TrackServiceImpl implements TrackService
         List<CompletableFuture<ScoreLazerDTO>> futures = bestPlayListDistinct.stream()
                 .map(bestPlay -> CompletableFuture.supplyAsync(() -> {
                     try {
-                        List<ScoreLazerDTO> scoreList = DataObjectExtractor.extractBeatmapUserScoreAll(
-                                params.getAccessToken(),
+                        List<ScoreLazerDTO> scoreList = dataExtractor.extractBeatmapUserScoreAll(
                                 bestPlay.getBeatmap_id(),
                                 bestPlay.getUser(),
                                 params.getRuleset().getDescribe());
@@ -201,8 +204,7 @@ public class TrackServiceImpl implements TrackService
                         if (scoreList != null && !scoreList.isEmpty()) {
                             scoreList.sort(Comparator.comparing(ScoreLazerDTO::getPp).reversed());
 
-                            BeatmapDTO beatmapDTO = DataObjectExtractor.extractBeatmap(
-                                    params.getAccessToken(),
+                            BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(
                                     String.valueOf(bestPlay.getBeatmap_id()),
                                     params.getRuleset().getDescribe());
 
@@ -210,8 +212,7 @@ public class TrackServiceImpl implements TrackService
                             topScore.setBeatmap(beatmapDTO);
                             topScore.setBeatmapset(beatmapDTO.getBeatmapset());
 
-                            topScore.setUser(DataObjectExtractor.extractPlayerInfo(
-                                    params.getAccessToken(),
+                            topScore.setUser(dataExtractor.extractPlayerInfoDTO(
                                     bestPlay.getUser(),
                                     params.getRuleset().getDescribe()));
                             return topScore;
