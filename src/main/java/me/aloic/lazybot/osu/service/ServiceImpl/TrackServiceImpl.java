@@ -6,11 +6,13 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapsetDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
+import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.service.TrackService;
 import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.GeneralParameter;
+import me.aloic.lazybot.parameter.LazybotCommandParameter;
 import me.aloic.lazybot.parameter.TopScoresParameter;
 import me.aloic.lazybot.util.ApiRequestExecutor;
 import me.aloic.lazybot.util.DataExtractor;
@@ -80,7 +82,8 @@ public class TrackServiceImpl implements TrackService
     @Override
     public byte[] ppTimeMap(GeneralParameter params) throws Exception
     {
-        java.util.List<HitScoreVO> hitScoreVOs= dataExtractor.extractOsuTrackHitScoreList(params.getPlayerId(), params.getMode());
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+        java.util.List<HitScoreVO> hitScoreVOs= dataExtractor.extractOsuTrackHitScoreList(playerInfoDTO.getId(), params.getMode());
         logger.info("ppMap转换后对象数量：{}", hitScoreVOs.size());
 
         ZonedDateTime dateTime1 = ZonedDateTime.parse(hitScoreVOs.getFirst().getScoreTimeJSON());
@@ -102,7 +105,7 @@ public class TrackServiceImpl implements TrackService
         }
         logger.info("Dataset type count：{}", seriesList.size());
         JFreeChart chart = ChartFactory.createScatterPlot(
-                "Best Performance Time-pp Scatter Chart of "+params.getPlayerName() +" , Mode: " + params.getMode(),    // 图表标题
+                "Best Performance Time-pp Scatter Chart of "+playerInfoDTO.getUsername() +" , Mode: " + params.getMode(),    // 图表标题
                 "Achieved Time",                 // X轴标签
                 "PP Values",         // Y轴标签
                 dataset,                // 数据集
@@ -237,6 +240,13 @@ public class TrackServiceImpl implements TrackService
         logger.info("最终过滤长度为: {}",scoreSequences.size());
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
         return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned",1));
+    }
+    private PlayerInfoDTO getTargetPlayerInfoDTO(LazybotCommandParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerName()==null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+        else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+        return playerInfoDTO;
     }
 
 }

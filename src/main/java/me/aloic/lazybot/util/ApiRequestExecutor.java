@@ -8,6 +8,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.enums.HTTPTypeEnum;
+import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
 
@@ -72,6 +73,9 @@ public class ApiRequestExecutor
                     TimeUnit.SECONDS.sleep(10);
                     continue;
                 }
+                if (status == 404) {
+                    throw new LazybotNotFoundException("请求对象不存在");
+                }
                 if (status >= 200 && status < 300) {
                     response.close();
                     logger.info("HTTP request successful: {}", url);
@@ -83,7 +87,11 @@ public class ApiRequestExecutor
                     logger.warn("HTTP 请求失败: {}, 状态码: {}, 内容: {}", url, status, respBody);
                     throw new LazybotRuntimeException("HTTP 请求失败, 状态码: " + status);
                 }
-            } catch (Exception e) {
+            }
+            catch (LazybotNotFoundException e) {
+                throw e;
+            }
+            catch (Exception e) {
                 logger.error("请求在尝试 {} 次后失败: {}", attempt, e.getMessage());
                 if (attempt == MAX_RETRIES) {
                     throw new LazybotRuntimeException("请求在尝试 " + MAX_RETRIES + " 次后失败: " + e.getMessage(), e);
