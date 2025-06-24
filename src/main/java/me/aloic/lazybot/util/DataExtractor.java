@@ -137,12 +137,19 @@ public class DataExtractor
 
     public List<ScoreLazerDTO> extractBeatmapUserScoreAll(Integer beatmapId, Integer playerId, String mode)
     {
-        return apiRequestExecutor.execute(
-                URLBuildUtil.buildURLOfBeatmapScoreAll(String.valueOf(beatmapId), String.valueOf(playerId),mode),
-                HTTPTypeEnum.GET,
-                TokenMonitor.getToken(),
-                null,
-                BeatmapUserScores.class).getScores();
+        try{
+            List<ScoreLazerDTO> scoreAll = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfBeatmapScoreAll(String.valueOf(beatmapId), String.valueOf(playerId),mode),
+                    HTTPTypeEnum.GET,
+                    TokenMonitor.getToken(),
+                    null,
+                    BeatmapUserScores.class).getScores();
+            return scoreAll;
+        }
+        catch (LazybotNotFoundException e) {
+            throw new LazybotRuntimeException("[Lazybot] 没有找到" + playerId +"在" + beatmapId+ "上的成绩");
+        }
+
     }
 
     public BeatmapDTO extractBeatmap(String beatmapId, String mode)

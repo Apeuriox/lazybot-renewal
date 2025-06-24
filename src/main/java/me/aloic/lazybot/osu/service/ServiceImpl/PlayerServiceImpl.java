@@ -251,6 +251,7 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] performancePlus(GeneralParameter params)
     {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] Pp+目前仅支持osu模式");
         try{
             PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
             playerInfoVO.setMode(params.getMode());
