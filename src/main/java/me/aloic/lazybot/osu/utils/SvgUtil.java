@@ -2789,6 +2789,7 @@ public class SvgUtil
         document.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         document.getElementById("countryAbbrv").setTextContent(playerInfo.getCountryCode());
         document.getElementById("countryRank").setTextContent(String.valueOf(playerInfo.getCountryRank()));
+        if (playerInfo.getGlobalRank()==null) playerInfo.setGlobalRank(0);
         document.getElementById("globalRank").setTextContent("#".concat(String.valueOf(playerInfo.getGlobalRank())));
         document.getElementById("ppValue").setTextContent(String.valueOf(Math.round(playerInfo.getPerformancePoint())));
         document.getElementById("rankedScore").setTextContent(formatter.format(playerInfo.getRankTotalScore()));
@@ -3066,15 +3067,19 @@ public class SvgUtil
             PerformanceDimensionLimit dim = entry.getKey();
             double value = entry.getValue();
             double scaled = CommonTool.getScaledRatio(value, dim.getLimitExpertPlus(), dim.getScaleFactor());
-            if(scaled>=0.95) strongCount++;
-            if (scaled >= (avgScaled * dim.getTagFactor())) {
+            if (scaled>=0.92) {
+                strongCount++;
+                PerformancePlusTag tag = mapToMaxTag(dim);
+                if (tag != null) tags.add(tag);
+            }
+            else if (scaled >= (avgScaled * dim.getTagFactor())) {
                 PerformancePlusTag tag = mapToTag(dim);
                 if (tag != null) tags.add(tag);
             }
-            if (scaled> (avgScaled * dim.getTagFactor() *0.88)) scaledMainTags.add(mapToTag(dim));
+            if (scaled> (avgScaled * dim.getTagFactor() * 0.88)) scaledMainTags.add(mapToTag(dim));
 
         }
-        if (strongCount>=4) {
+        if (strongCount>=5) {
             return List.of(PerformancePlusTag.OMNIPOTENT);
         }
 
@@ -3102,6 +3107,18 @@ public class SvgUtil
             case STAMINA -> PerformancePlusTag.ENDURING;
             case PRECISION -> PerformancePlusTag.PRECISE;
             case ACCURACY -> PerformancePlusTag.ACCURATE;
+            default -> null;
+        };
+    }
+    private static PerformancePlusTag mapToMaxTag(PerformanceDimensionLimit dim)
+    {
+        return switch (dim) {
+            case JUMP -> PerformancePlusTag.SURGICAL;
+            case FLOW -> PerformancePlusTag.WORMMASTER;
+            case SPEED -> PerformancePlusTag.BLISTERING;
+            case STAMINA -> PerformancePlusTag.NUCLEARPOWERED;
+            case PRECISION -> PerformancePlusTag.EXQUISITE;
+            case ACCURACY -> PerformancePlusTag.VERACIOUS;
             default -> null;
         };
     }
