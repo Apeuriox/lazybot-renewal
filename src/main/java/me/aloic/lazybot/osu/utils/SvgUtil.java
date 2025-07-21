@@ -3013,7 +3013,10 @@ public class SvgUtil
         Element defs = document.createElementNS(namespaceSVG, "defs");
         HSL mainColor = new HSL(player.getPrimaryColor(), 80, 35);
 
-        document.getElementById("name").setTextContent(player.getPlayerName());
+        String name=player.getPlayerName();
+        if (name.length()>15)
+            name=name.substring(0,12).concat("...");
+        document.getElementById("name").setTextContent(name);
         if (player.getGlobalRank()!=null)
             document.getElementById("rank").setTextContent("#" + CommonTool.formatNumber(player.getGlobalRank()));
         else{
@@ -3037,7 +3040,7 @@ public class SvgUtil
         double staminaScaled= CommonTool.getScaledRatio(stamina, PerformanceDimensionLimit.STAMINA.getLimitExpertPlus(), PerformanceDimensionLimit.STAMINA.getScaleFactor());
         double precisionScaled= CommonTool.getScaledRatio(precision, PerformanceDimensionLimit.PRECISION.getLimitExpertPlus(), PerformanceDimensionLimit.PRECISION.getScaleFactor());
         double accuracyScaled= CommonTool.getScaledRatio(accuracy, PerformanceDimensionLimit.ACCURACY.getLimitExpertPlus(), PerformanceDimensionLimit.ACCURACY.getScaleFactor());
-        double averageScaled= CommonTool.getScaledRatio(average, PerformanceDimensionLimit.AVERAGE.getLimitExpertPlus(), PerformanceDimensionLimit.AVERAGE.getScaleFactor());
+        double averageScaled= (jumpScaled+flowScaled+speedScaled+staminaScaled+precisionScaled+accuracyScaled)/6.0;
 
 
 
@@ -3079,7 +3082,7 @@ public class SvgUtil
         linearGradient.setAttributeNS(null, "y2", "1272");
         linearGradient.setAttributeNS(null, "gradientUnits", "userSpaceOnUse");
 
-        String stopColor= new HSL(primaryColor,100,60).toString();
+        String stopColor= new HSL(primaryColor,100,65).toString();
         Element stop1 = doc.createElementNS(namespaceSVG, "stop");
         stop1.setAttributeNS(null, "offset", "0");
         stop1.setAttributeNS(null, "stop-opacity", "1");
