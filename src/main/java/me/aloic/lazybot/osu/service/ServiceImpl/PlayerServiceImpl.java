@@ -122,7 +122,7 @@ public class PlayerServiceImpl implements PlayerService
                 scoreDTO.getFirst(),
                 false);
         verifyBeatmapsCache(scoreVO);
-        return SVGRenderUtil.renderScoreToByteArray(scoreVO,params.getVersion(), getDominantColorArray(scoreVO));
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
     }
     @Override
     public byte[] bplistCardView(BplistParameter params) throws Exception
@@ -257,6 +257,7 @@ public class PlayerServiceImpl implements PlayerService
             playerInfoVO.setMode(params.getMode());
             if (playerInfoVO.getPrimaryColor()==333) playerInfoVO.setPrimaryColor(208);
             PPPlusPerformance performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
+            if (params.getVersion()==1) return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanelCC2024(performance,playerInfoVO),1);
             return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanel(performance,playerInfoVO),2);
         }
         catch (Exception e){

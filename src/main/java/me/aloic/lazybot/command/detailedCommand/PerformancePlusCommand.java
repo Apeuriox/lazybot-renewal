@@ -27,7 +27,7 @@ public class PerformancePlusCommand implements LazybotSlashCommand
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
-
+        //not implemented
     }
 
     @Override
