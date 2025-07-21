@@ -3056,7 +3056,7 @@ public class SvgUtil
         document.getElementById("bar-lower").setAttribute("fill", mainColor.toString());
         document.getElementById("stats-bg").setAttribute("fill", mainColor.toString());
 
-        document.getElementById("skill-level").setTextContent(String.valueOf(Math.round(averageScaled*9)));
+        document.getElementById("skill-level").setTextContent(String.valueOf(calculateLevel(jumpScaled,flowScaled,speedScaled,staminaScaled,precisionScaled,accuracyScaled)));
 
         setLinearGradientForCC2024(document,"jump-bar",jumpAim, jumpScaled,  getPrimaryHueForCC2024(jumpScaled,averageScaled,PerformanceDimensionLimit.JUMP,player.getPrimaryColor()));
         setLinearGradientForCC2024(document,"flow-bar",flowAim, flowScaled,  getPrimaryHueForCC2024(flowScaled,averageScaled,PerformanceDimensionLimit.FLOW,player.getPrimaryColor()));
@@ -3633,4 +3633,34 @@ public class SvgUtil
         return String.format("hsl(%d,%d%%,%d%%)", h, s, l);
     }
 
+    private static int calculateLevel(double jump, double flow, double speed, double stamina, double precision, double accuracy)
+    {
+        double[] abilities = {jump, flow, speed, stamina, precision};
+        Double[] sorted = Arrays.stream(abilities)
+                .boxed()
+                .toArray(Double[]::new);
+        Arrays.sort(sorted, Collections.reverseOrder());
+
+        double[] weights = {0.35, 0.3, 0.15, 0.12, 0.08};
+
+        double score = 0;
+        for (int i = 0; i < 5; i++) {
+            score += sorted[i] * weights[i];
+        }
+        double epsilon = 0.01;
+        double lambda = 1.05;
+
+        double penaltyFactor;
+        if (accuracy >= score || accuracy>=0.95) {
+            penaltyFactor = 1.0;
+        } else {
+            double delta = score - accuracy;
+            penaltyFactor = 1.0 / (1.0 + lambda * (delta / (score + epsilon)));
+        }
+        double gamma = 0.8;
+        double boosted = Math.pow(score, gamma);
+        double finalScore = boosted * penaltyFactor;
+        int level = (int) Math.round(finalScore * 15);
+        return Math.max(1, Math.min(15, level));
+    }
 }
