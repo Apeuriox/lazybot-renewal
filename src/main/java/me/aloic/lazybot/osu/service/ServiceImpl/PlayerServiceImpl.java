@@ -1,11 +1,12 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import com.alibaba.fastjson2.TypeReference;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScore;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
@@ -58,8 +59,8 @@ public class PlayerServiceImpl implements PlayerService
                     dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
                     beatmapUserScoreLazer.getScore(),
                     false);
-            verifyBeatmapsCache(scoreVO);
-            return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
+        verifyBeatmapsCache(scoreVO);
+        return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
     }
     @Override
     public byte[] allScore(ScoreParameter params) throws Exception
@@ -260,8 +261,42 @@ public class PlayerServiceImpl implements PlayerService
             if (params.getVersion()==1) return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanelCC2024(performance,playerInfoVO),1);
             return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanel(performance,playerInfoVO),2);
         }
+        catch (LazybotRuntimeException e) {
+            throw e;
+        }
         catch (Exception e){
             throw new LazybotRuntimeException("[Lazybot] Pp+服务正在维护或生成失败，请稍后再试");
+        }
+
+    }
+
+
+    @Override
+    public byte[] addScoreForPerformancePlus(ScoreParameter params)
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] Pp+相关操作目前仅支持osu模式");
+        try{
+            if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
+            BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
+                    String.valueOf(params.getBeatmapId()),
+                    params.getPlayerId(),
+                    params.getMode(),
+                    params.getModCombination()
+            );
+            ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                    dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
+                    beatmapUserScoreLazer.getScore(),
+                    false);
+            LazybotScorePerformance score=dataExtractor.extractPerformancePlusAddScore(params.getPlayerId(),params.getBeatmapId());
+
+            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusScorePanelCrimson(score, scoreVO, CommonTool.rgbToHue(getDominantColorArray(scoreVO))));
+        }
+        catch (LazybotRuntimeException e) {
+            throw e;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            throw new LazybotRuntimeException("[Lazybot] 添加失败");
         }
 
     }

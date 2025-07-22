@@ -8,7 +8,10 @@ import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScore;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebPlayerPerformance;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebResult;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
@@ -83,6 +86,24 @@ public class DataExtractor
         }
         catch (LazybotNotFoundException e) {
             throw new LazybotRuntimeException("[Lazybot] 获取" + playerId + "用户pp+失败");
+        }
+    }
+    public LazybotScorePerformance extractPerformancePlusAddScore(Integer playerId, Integer beatmapId)
+    {
+        try{
+            LazybotWebResult<LazybotScorePerformance> result = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfAddScorePerformancePlus(playerId,beatmapId),
+                    HTTPTypeEnum.POST,
+                    TokenMonitor.getLazybotToken(),
+                    null,
+                    new TypeReference<LazybotWebResult<LazybotScorePerformance>>() {});
+            if(result.getData()==null) {
+                throw new LazybotRuntimeException("[Lazybot] 添加用户" + playerId + "在" +beatmapId +"上的成绩失败");
+            }
+            return result.getData();
+        }
+        catch (LazybotNotFoundException e) {
+            throw new LazybotRuntimeException("[Lazybot] 添加用户" + playerId + "在" +beatmapId +"上的成绩失败");
         }
     }
 
