@@ -13,6 +13,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
+
+
 @LazybotCommandMapping({"addtips"})
 @Component
 public class AddTipsCommand implements LazybotSlashCommand

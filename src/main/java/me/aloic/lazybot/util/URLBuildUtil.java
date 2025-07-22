@@ -231,5 +231,15 @@ public class URLBuildUtil
                 .addQuery("clientSecret", clientSecret);
         return builder.build();
     }
+    public static String buildURLOfAddScorePerformancePlus(Integer id,Integer beatmapId)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000", CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("player")
+                .addPath("add")
+                .addQuery("id", id)
+                .addQuery("beatmapId",beatmapId);
+        return builder.build();
+    }
 
 }

@@ -47,7 +47,7 @@ public class BpCommand implements LazybotSlashCommand
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         BpParameter params=new BpParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
-                OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),
+                OptionMappingTool.getOptionOrDefault(event.getOption("version"), 0),
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1));
         params.validateParams();
         params.setPlayerId(tokenPO.getPlayer_id());

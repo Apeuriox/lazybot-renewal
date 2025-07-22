@@ -15,11 +15,18 @@ public enum PerformancePlusTag
     ENDURING("Enduring", "ppStamina", 75, 53),
     OMNIPOTENT("Omnipotent", null, 95, 63),
     COMPREHENSIVE("Comprehensive", null, 120, 75),
-    POTENTIAL("Potential", null, 76, 53);
+    POTENTIAL("Potential", null, 76, 53),
+
+    SURGICAL("Surgical", null, 68, 49),
+    VERACIOUS("Veracious", null, 79, 55),
+    WORMMASTER("Worm Master", null, 100, 65),
+    EXQUISITE("Exquisite", null, 74, 52),
+    BLISTERING("Blistering", null, 74, 52),
+    NUCLEARPOWERED("Nuclear Powered", null, 125, 78);
 
 
     private final String name;
     private final String dimensionField; // 对应 Performance 对象的字段名
     private final Integer elementSize;
     private final Integer anchor;
-}
+    }

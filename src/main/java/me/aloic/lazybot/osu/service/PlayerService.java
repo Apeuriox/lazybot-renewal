@@ -29,6 +29,8 @@ public interface PlayerService
 
     byte[] performancePlus(GeneralParameter params) throws Exception;
 
+    byte[] addScoreForPerformancePlus(ScoreParameter params);
+
     byte[] profile(ProfileParameter params) throws Exception;
 
     String nameToId(NameToIdParameter params) throws Exception;

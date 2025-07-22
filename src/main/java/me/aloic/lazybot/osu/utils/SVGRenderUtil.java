@@ -79,6 +79,14 @@ public class SVGRenderUtil
             throw new LazybotRuntimeException("[Lazybot] 渲染成绩图时出错");
         }
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
+//        try{
+//            System.out.println(SvgUtil.documentToString(document));
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+
         return result;
     }
     private static OutputStream convertByteArrayToOutputStream(byte[] byteArray) {
