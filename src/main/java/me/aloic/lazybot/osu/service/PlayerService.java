@@ -11,13 +11,15 @@ public interface PlayerService
 
     byte[] allScore(ScoreParameter params) throws Exception;
 
-    byte[] recent(RecentParameter params, Integer type) throws IOException;
+    byte[] recent(RecentParameter params, int type) throws IOException;
 
     byte[] bp(BpParameter params) throws Exception;
 
     byte[] bplistCardView(BplistParameter params) throws Exception;
 
     byte[] bplistListView(BplistParameter params) throws Exception;
+
+    byte[] playRecentSeries(GeneralParameter params, int type, int style) throws Exception;
 
     byte[] todayBp(TodaybpParameter params) throws Exception;
 

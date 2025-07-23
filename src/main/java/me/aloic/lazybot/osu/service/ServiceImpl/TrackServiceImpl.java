@@ -233,7 +233,7 @@ public class TrackServiceImpl implements TrackService
                 .collect(Collectors.toList());
 
         logger.info("存在成绩长度为: {}",listOfScores.size());
-        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores);
+        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores,false);
 //                listOfScores).stream().
 //                filter(scoreSequence -> scoreSequence.getDifferenceBetweenNextScore()>=0)
 //                .toList();

@@ -28,6 +28,13 @@ public class BplistParameter extends LazybotCommandParameter
         this.from = from;
         this.to = to;
     }
+    public BplistParameter(Integer playerId, String mode, Integer from, Integer to)
+    {
+        this.setPlayerId(playerId);
+        this.setMode(mode);
+        this.from = from;
+        this.to = to;
+    }
 
     @Override
     public void validateParams()

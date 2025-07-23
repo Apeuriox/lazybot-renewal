@@ -1387,6 +1387,8 @@ public class SvgUtil
 
             Node titleNode = doc.createElementNS(namespaceSVG, "tspan");
             Element title = (Element) titleNode;
+            if (score.getBeatmap().getArtist().length()+score.getBeatmap().getTitle().length()>60)
+                score.getBeatmap().setTitle(score.getBeatmap().getTitle().substring(0,60-score.getBeatmap().getArtist().length()-2).concat("..."));
             title.setTextContent(score.getBeatmap().getArtist().concat(" - ").concat(score.getBeatmap().getTitle()));
 
 
@@ -1508,6 +1510,7 @@ public class SvgUtil
             pp.setAttribute("class", "cls-114");
             pp.setAttribute("text-anchor", "end");
             pp.setAttribute("transform", "translate(960 142)");
+            if (score.getPp()==null) score.setPp(score.getPpDetails().getCurrentPP());
             pp.setTextContent(String.valueOf(Math.round(score.getPp())).concat("pp"));
 
             Node differenceNode = doc.createElementNS(namespaceSVG, "text");
@@ -1515,20 +1518,20 @@ public class SvgUtil
 
             difference.setAttribute("transform", "translate(910 162)");
             difference.setAttribute("text-anchor", "middle");
-            if(score.getDifferenceBetweenNextScore()>0)
+            if (score.getDifferenceBetweenNextScore() == null || score.getDifferenceBetweenNextScore() == 0)
+            {
+                difference.setAttribute("class", "cls-117");
+                difference.setTextContent("- pp");
+            }
+            else if(score.getDifferenceBetweenNextScore()>0)
             {
                 difference.setAttribute("class", "cls-115");
                 difference.setTextContent("+".concat(String.valueOf(score.getDifferenceBetweenNextScore())).concat("pp"));
             }
-            else if(score.getDifferenceBetweenNextScore()<0)
+            else
             {
                 difference.setAttribute("class", "cls-116");
                 difference.setTextContent(String.valueOf(score.getDifferenceBetweenNextScore()).concat("pp"));
-            }
-            else
-            {
-                difference.setAttribute("class", "cls-117");
-                difference.setTextContent("- pp");
             }
 
             sectionFull.appendChild(totalBG);
@@ -2359,6 +2362,7 @@ public class SvgUtil
         else {
             ppValue.setAttribute("transform", "translate(57 155)");
             ppValue.setAttribute("class", "cls-6");
+            if (scoreVO.getPp()==null) scoreVO.setPp(scoreVO.getPpDetailsLocal().getCurrentPP());
             ppValue.setTextContent(String.valueOf(Math.round(scoreVO.getPp())).concat("pp"));
         }
 
@@ -2537,7 +2541,7 @@ public class SvgUtil
                 sectionFull.setAttribute("transform", "translate(270,0)");
             }
             else if (total == 2) {
-                sectionFull.setAttribute("transform", "translate(" + 135 + index * 270 + " 0)");
+                sectionFull.setAttribute("transform", "translate(" + (135 + index * 270) + " 0)");
             }
             else {
                 sectionFull.setAttribute("transform",

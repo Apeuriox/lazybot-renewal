@@ -164,7 +164,7 @@ public class OsuToolsUtil
         return TransformerUtil.userTransform(playerInfoDTO);
     }
 
-    public static NoChokeListVO setupNoChokeList(PlayerInfoVO info, List<ScoreVO> scoreList,int type)
+    public static NoChokeListVO setupNoChokeList(PlayerInfoVO info, List<ScoreVO> scoreList, int type)
     {
         NoChokeListVO noChokeListVO=new NoChokeListVO();
         double originalRawPp= CommonTool.totalPpCalculator(scoreList);

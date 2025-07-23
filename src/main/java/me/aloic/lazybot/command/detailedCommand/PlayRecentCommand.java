@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@LazybotCommandMapping({"pr","rp","playrecent","rs","re","recent"})
+@LazybotCommandMapping({"pr","rp","playrecent","re","recent"})
 @Component
 public class PlayRecentCommand implements LazybotSlashCommand
 {
