@@ -1,9 +1,9 @@
-package me.aloic.lazybot.osu.utils;
+package me.aloic.lazybot.graphics.render;
 
 import me.aloic.ResvgJNI;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.utils.SvgUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -11,11 +11,11 @@ import org.w3c.dom.Document;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-public class SVGRenderUtil
+public class SVGRenderer
 {
     private static final ResvgJNI.RenderOptions options;
     private static final ResvgJNI.Renderer renderer;
-    private static final Logger logger = LoggerFactory.getLogger(SVGRenderUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(SVGRenderer.class);
 
     static{
         options = new ResvgJNI.RenderOptions(ResourceMonitor.getResourcePath().toAbsolutePath()+"/static");
@@ -24,31 +24,6 @@ public class SVGRenderUtil
     }
 
 
-    public static OutputStream renderScoreToImage(ScoreVO targetScore, int version, int[] primaryColor)
-    {
-
-        Document doc;
-        if (version==0)
-            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore,primaryColor);
-        else if (version==1)
-            doc = SvgUtil.getScorePanelWhiteModeDoc(targetScore);
-        else if (version==2)
-            doc = SvgUtil.getScorePanelMaterialDesign(targetScore,primaryColor);
-        else throw new LazybotRuntimeException("[Lazybot] 不支持的面板版本: " + version);
-        return renderSVGToOutputstream(doc);
-    }
-    public static byte[] renderScoreToByteArray(ScoreVO targetScore, int version,int[] primaryColor)
-    {
-        Document doc;
-        if (version==0)
-            doc = SvgUtil.getScorePanelDarkModeDoc(targetScore,primaryColor);
-        else if (version==1)
-            doc = SvgUtil.getScorePanelWhiteModeDoc(targetScore);
-        else if (version==2)
-            doc = SvgUtil.getScorePanelMaterialDesign(targetScore,primaryColor);
-        else throw new LazybotRuntimeException("[Lazybot] 不支持的面板版本: " + version);
-        return renderSVGDocumentToByteArray(doc);
-    }
     public static OutputStream renderSVGToOutputstream(Document document)
     {
         long startingTime = System.currentTimeMillis();
