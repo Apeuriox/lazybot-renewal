@@ -227,6 +227,37 @@ public class DataExtractor
            throw new LazybotRuntimeException("[Lazybot] 没这成绩: " +"index=" + (offset+1) + " player=" + playerId + " mode=" +mode);
        }
     }
+    public List<ScoreLazerDTO> extractUserBestAll(String playerId, String mode)
+    {
+        try{
+            List<ScoreLazerDTO> scoreLazerDTOS = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfUserBest(String.valueOf(playerId), 100, 0, mode),
+                    HTTPTypeEnum.GET,
+                    TokenMonitor.getToken(),
+                    null,
+                    new TypeReference<List<ScoreLazerDTO>>() {}
+            );
+            if (scoreLazerDTOS == null || scoreLazerDTOS.isEmpty()) {
+                throw new LazybotNotFoundException("[Lazybot] 找不到"+playerId+"的成绩");
+            }
+            if (scoreLazerDTOS.size() < 110) {
+                scoreLazerDTOS.addAll(apiRequestExecutor.execute(
+                        URLBuildUtil.buildURLOfUserBest(String.valueOf(playerId), 200-scoreLazerDTOS.size(), scoreLazerDTOS.size(), mode),
+                        HTTPTypeEnum.GET,
+                        TokenMonitor.getToken(),
+                        null,
+                        new TypeReference<List<ScoreLazerDTO>>() {}));
+            }
+            return scoreLazerDTOS;
+        }
+        catch (LazybotNotFoundException e) {
+            throw new LazybotRuntimeException("[Lazybot] 找不到"+playerId+"的成绩");
+        }
+    }
+
+
+
+
     public List<HitScoreVO> extractOsuTrackHitScoreList(Integer playerId, String mode)
     {
         try{

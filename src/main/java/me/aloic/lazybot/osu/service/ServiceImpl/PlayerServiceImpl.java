@@ -266,15 +266,14 @@ public class PlayerServiceImpl implements PlayerService
     {
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
 
-        List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestScoreList(
-                String.valueOf(playerInfoDTO.getId()),
-                100,0,params.getMode());
+        List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestAll(
+                String.valueOf(playerInfoDTO.getId()), params.getMode());
 
         NoChokeListVO noChokeListVO=OsuToolsUtil.setupNoChokeList(
                 OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO),
                 TransformerUtil.scoreTransformForList(originalScoreArray),
                 type);
-
+        noChokeListVO.setScoreList(noChokeListVO.getScoreList().stream().limit(51).collect(Collectors.toList()));
         if(type==1) {
             return SVGRenderer.renderSVGDocumentToByteArray(
                     ScoreListSVGMapper.mapScoreListToBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,2)
