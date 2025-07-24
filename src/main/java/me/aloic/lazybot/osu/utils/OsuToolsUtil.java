@@ -184,14 +184,15 @@ public class OsuToolsUtil
 
         scoreList = futureList.stream()
                 .map(CompletableFuture::join)
-                .sorted(Comparator.comparing(ScoreVO::getPp).reversed()).collect(Collectors.toList());
+                .sorted(Comparator.comparing(ScoreVO::getPp).reversed()).toList();
 
         double fixedRawPp=CommonTool.totalPpCalculator(scoreList);
-        fixedRawPp+=Math.abs(info.getPerformancePoint()-originalRawPp);
+        double bonusPp=Math.abs(info.getPerformancePoint()-originalRawPp);
+        fixedRawPp+=bonusPp;
         StringBuilder sb=new StringBuilder(String.valueOf(Math.round(info.getPerformancePoint())));
         sb.append(" -> ").append(Math.round(fixedRawPp))
                 .append(" (+")
-                .append(Math.round(Math.abs(originalRawPp-fixedRawPp)))
+                .append(Math.round(Math.abs(originalRawPp-fixedRawPp+bonusPp)))
                 .append(")");
         info.setFixedPPString(sb.toString());
         List<ScoreVO> scoreListNeedsFix;

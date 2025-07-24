@@ -89,7 +89,7 @@ public class AssertDownloadUtil
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/" + bid +".osu";
         File saveFilePath = new File(desiredLocalPath);
         if (saveFilePath.exists() && !override) {
-            logger.info("地图.osu文件已存在: {}", saveFilePath.getAbsolutePath());
+            logger.trace("地图.osu文件已存在: {}", saveFilePath.getAbsolutePath());
             return false;
         }
         String targetUrl= ContentUtil.BEATMAP_DOWNLOAD_URL+ "/" +bid;
@@ -108,7 +108,7 @@ public class AssertDownloadUtil
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/mapBG/" + sid +".jpg";
         File saveFilePath = new File(desiredLocalPath);
         if (saveFilePath.exists()) {
-            logger.info("地图背景文件已存在: {}", saveFilePath.getAbsolutePath());
+            logger.trace("地图背景文件已存在: {}", saveFilePath.getAbsolutePath());
             return Paths.get(desiredLocalPath);
         }
         String targetUrl = ContentUtil.BEATMAP_BG_BASE_URL+sid+"/covers/raw.jpg";
@@ -135,7 +135,7 @@ public class AssertDownloadUtil
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/"+ subPath + "/" + fileName + "." + fileExtension;
         File saveFilePath = new File(desiredLocalPath);
         if (saveFilePath.exists()&&!override) {
-            logger.info("该文件已存在: {}", saveFilePath.getAbsolutePath());
+            logger.trace("该文件已存在: {}", saveFilePath.getAbsolutePath());
             return Paths.get(desiredLocalPath);
         }
         try{
