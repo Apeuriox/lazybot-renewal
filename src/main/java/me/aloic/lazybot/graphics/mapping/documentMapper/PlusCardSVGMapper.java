@@ -133,7 +133,7 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
                     }
                 }
             }
-            if (player.getPlayStyles().size()==1 && player.getPlayStyles().get(0).equalsIgnoreCase("mouse"))
+            if (player.getPlayStyles().size()==1 && player.getPlayStyles().getFirst().equalsIgnoreCase("mouse"))
             {
                 document.getElementById("input-muse").setAttribute("fill", mainColor.toString());
             }

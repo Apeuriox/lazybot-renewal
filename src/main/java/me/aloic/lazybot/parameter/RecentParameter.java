@@ -8,6 +8,8 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.CommonTool;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -38,50 +40,25 @@ public class RecentParameter extends LazybotCommandParameter
     public static RecentParameter analyzeParameter(List<String> params)
     {
         RecentParameter recentParameter=new RecentParameter();
-        if (params != null && !params.isEmpty()) {
-            if (params.size() > 2)
-                throw new LazybotRuntimeException("[Lazybot] 允许参数长度最大为2（如果你名字有空格请把空格换成下划线），使用例：/pr userName #1");
-            else if (params.size() == 1) {
-                if (params.getFirst().contains("#") && CommonTool.isPositiveInteger(params.getFirst().substring(1))) {
-                    int targetIndex = Integer.parseInt(params.getFirst().substring(1));
-                    targetIndex = Math.min(targetIndex, 50);
-                    recentParameter.setIndex(targetIndex);
-                }
-                else if(!params.getFirst().contains("#")) {
-                    recentParameter.setPlayerName(params.getFirst());
-                    recentParameter.setIndex(1);
-                }
-                else
-                    throw new LazybotRuntimeException("[Lazybot] 参数错误，含有非数字，使用例：/pr userName #10");
+        if (params == null || params.isEmpty())
+            return new RecentParameter(null,1,0,null);
+
+        String text = String.join(" ", params).trim();
+        if (text.matches("\\d+")) {
+            int indexVal = Integer.parseInt(text);
+            if (indexVal >= 1 && indexVal <= 200)
+                recentParameter.index = indexVal;
+            else
+                recentParameter.setPlayerName(text);
+        }
+        else {
+            Matcher indexMatcher = Pattern.compile("#(\\d+)").matcher(text);
+            if (indexMatcher.find()) {
+                recentParameter.index = Integer.parseInt(indexMatcher.group(1));
+                text = text.replace(indexMatcher.group(), "").trim();
             }
-            else if (params.size() == 2) {
-                if(params.get(1).contains("#")) {
-                    String[] paras = params.get(1).split("#");
-                    recentParameter.setPlayerName(params.get(0));
-                    if (CommonTool.isPositiveInteger(paras[1])) {
-                        int targetIndex = Integer.parseInt(paras[1]);
-                        targetIndex = Math.min(targetIndex, 50);
-                        recentParameter.setIndex(targetIndex);
-                    }
-                    else
-                    {
-                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误，使用例：/pr userName #10");
-                    }
-                }
-                else {
-                    recentParameter.setPlayerName(params.get(0));
-                    if (CommonTool.isPositiveInteger(params.get(1))) {
-                        int targetIndex = Integer.parseInt(params.get(1));
-                        targetIndex = Math.min(targetIndex, 50);
-                        recentParameter.setIndex(targetIndex);
-                    }
-                    else {
-                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误，使用例：/pr userName #10");
-                    }
-                }
-            }
-            else recentParameter.setIndex(1);
-        }else recentParameter.setIndex(1);
+            if (!text.isEmpty()) recentParameter.setPlayerName(text);
+        }
         return recentParameter;
     }
     public static void setupDefaultValue(RecentParameter recentParameter, AccessTokenPO accessTokenPO)

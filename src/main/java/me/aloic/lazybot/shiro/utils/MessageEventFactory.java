@@ -111,6 +111,7 @@ public class MessageEventFactory
         if (input == null || input.isEmpty()) {
             return input;
         }
+        input = input.replaceAll("[\u200B\u200C\u200D\uFEFF]", "");
         return input
                 .replace("&#91;", "[")
                 .replace("&#93;", "]")
