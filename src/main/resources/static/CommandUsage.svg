@@ -396,7 +396,7 @@
         <rect id="bar-2" width="0" height="30" x="540" y="280" rx="14.5" fill="rgb(123,157,130)" />
         <text id="count-per-2" class="cls-1" x="1066" y="263" font-size="40" font-weight="600" fill="#8C9485">0%</text>
     </g>
-    <g id="bar-3" transform="translate(0,345)">
+    <g transform="translate(0,345)">
         <text id="commandName-3" class="cls-1" x="541" y="254" font-size="45" font-weight="600" fill="#697566">N/A</text>
         <text id="count-3" class="cls-1" x="1066" y="313" font-size="48" font-weight="600" fill="#697566">0</text>
         <rect id="bar-bg-3" width="500" height="30" x="541" y="280" rx="14.5" fill="rgb(66,87,71)" fill-opacity="0.25" />
