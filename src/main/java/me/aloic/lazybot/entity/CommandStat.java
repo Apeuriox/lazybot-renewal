@@ -1,6 +1,6 @@
 package me.aloic.lazybot.entity;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +18,7 @@ public class CommandStat {
 
     public void recordCall(String user, String channel) {
         callCount.incrementAndGet();
-        callRecords.add(new CommandCallRecord(user, channel, Instant.now()));
+        callRecords.add(new CommandCallRecord(user, channel, LocalDateTime.now()));
     }
 
     public int getCallCount() {

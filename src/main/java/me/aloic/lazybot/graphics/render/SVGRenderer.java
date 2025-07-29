@@ -8,8 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class SVGRenderer
 {
@@ -54,11 +56,11 @@ public class SVGRenderer
             throw new LazybotRuntimeException("[Lazybot] 渲染成绩图时出错");
         }
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
-//        try{
-//            System.out.println(SvgUtil.documentToString(document));
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter("X:\\lazybot-output\\test.svg"))) {
+//            writer.write(SvgUtil.documentToString(document));
+//            logger.info("成功写入字符串到{}.", "X:\\lazybot-output\\test.svg");
 //        }
-//        catch (Exception e)
-//        {
+//        catch (Exception e) {
 //            e.printStackTrace();
 //        }
 

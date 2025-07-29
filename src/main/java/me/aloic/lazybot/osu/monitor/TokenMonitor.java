@@ -75,8 +75,8 @@ public class TokenMonitor
             logger.info("Lazybot token created: {}",lazybotTokenJSON.getData());
         }
         catch (Exception e) {
-            logger.error("{} : {}", e.getClass(), e.getMessage());
-            throw new LazybotRuntimeException("更新PP+验证失败，请检查服务器");
+            logger.error("更新PP+验证失败，请检查服务器: {} : {}", e.getClass(), e.getMessage());
+//            throw new LazybotRuntimeException("更新PP+验证失败，请检查服务器");
         }
     }
     public static String getLazybotToken() {

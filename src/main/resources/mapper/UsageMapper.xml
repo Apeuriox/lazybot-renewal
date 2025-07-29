@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.UsageMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.osu.dao.entity.po.CommandUsage">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="total" jdbcType="INTEGER" property="total"/>
+        <result column="source" property="source" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="distribution" property="distribution" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="command" property="command" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="is_complete" jdbcType="INTEGER" property="is_complete"/>
+        <result column="created_at" jdbcType="DATE" property="created_at"/>
+
+    </resultMap>
+    <sql id = "Base_Column_List">
+        id, total, source, distribution, command, is_complete, hue, created_at
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from command_usage
+        where id =#{id}
+    </select>
+
+    <select id="selectByDate" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM command_usage
+        WHERE created_at BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM command_usage WHERE id =#{id}
+    </delete>
+
+
+</mapper>

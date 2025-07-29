@@ -16,4 +16,6 @@ public interface ManageService
     String addTips(ContentParameter params);
 
     String ppTest(ScoreParameter params, Long userIdentity);
+
+    byte[] commandUsage();
 }
