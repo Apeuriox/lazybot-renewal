@@ -144,17 +144,20 @@ public class FunServiceImpl implements FunService
                 index,
                 params.getMode());
         if (scoreDTO==null || scoreDTO.isEmpty()) {
-            throw new LazybotRuntimeException("[Lazybot] 小孩子bp没打满200个不准玩");
+            throw new LazybotRuntimeException("[Lazybot] 请重试，查询的用户bp未满200");
         }
         ScoreLazerDTO score = scoreDTO.getFirst();
         result.setMeta(new SongGuessWithTime(
                 score.getBeatmapset().getTitle(),
                 score.getBeatmapset().getCreator(),
                 score.getBeatmapset().getArtist(),
-                score.getBeatmap_id()));
+                score.getBeatmap_id(),
+                score.getBeatmap().getBeatmapset_id()));
         try{
             String urlOfBG =  AssertDownloadUtil.svgAbsolutePath(score.getBeatmap().getBeatmapset_id());
-            BufferedImage original = cropImage(ImageIO.read(new File(urlOfBG)),5);
+            int resize = new Random().nextInt(5) + 1;
+            BufferedImage original = cropImage(ImageIO.read(new File(urlOfBG)),resize);
+            result.setResizeLevel(resize);
             result.setImg(toByteArray(original,"jpg"));
             return result;
         }

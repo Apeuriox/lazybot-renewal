@@ -8,4 +8,5 @@ public class LazybotSongGuessData
 {
     private SongGuessWithTime meta;
     private byte[] img;
+    private int resizeLevel;
 }

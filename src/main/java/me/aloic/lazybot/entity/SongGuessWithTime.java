@@ -14,16 +14,18 @@ public class SongGuessWithTime
     private final String mapper;
     private final String artist;
     private final Integer bid;
+    private final Integer sid;
 
 
     private final LocalDateTime startTime;
 
-    public SongGuessWithTime(String title, String mapper, String artist, Integer bid) {
+    public SongGuessWithTime(String title, String mapper, String artist, Integer bid, Integer sid) {
         this.title = title;
         this.mapper = mapper;
         this.artist = artist;
         this.startTime = LocalDateTime.now();
         this.bid = bid;
+        this.sid = sid;
     }
 
 }
