@@ -60,7 +60,7 @@ public class SongGuessCommand implements LazybotSlashCommand
             existingGameMap.put(identity, songGuessData.getMeta());
             ImageUploadUtil.uploadImageToOnebotWithText(bot,event,
                     songGuessData.getImg(),
-                    "[Lazybot] 取自"+tokenPO.getPlayer_name()+"的bp200\n缩放等级:" + songGuessData.getResizeLevel());
+                    "[Lazybot] 取自"+tokenPO.getPlayer_name()+"的BP前200\n缩放等级: " + songGuessData.getResizeLevel());
         }
         else
         {
@@ -75,7 +75,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                         "取自"+tokenPO.getPlayer_name()+"的bp200");
             }
             else if (event.getScorePanelVersion()==0) {
-                if (event.getCommandParameters() == null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 请输入文本");
+                if (event.getCommandParameters() == null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 点击输入文本");
                 String guessed = String.join(" ", event.getCommandParameters());
                 if (isFuzzyMatch(original.getTitle(), guessed,0.3)) {
                     existingGameMap.remove(identity);
@@ -102,7 +102,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                 try{
                     BufferedImage fullsize = ImageIO.read(new File(AssertDownloadUtil.svgAbsolutePath(original.getSid())));
                     ImageUploadUtil.uploadImageToOnebotWithText(bot,event,toByteArray(fullsize,"jpg"),
-                            "[Lazybot] 回答正确，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
+                            "[Lazybot] 已提前结束，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
                 }
                 catch (Exception e){
                     throw new LazybotRuntimeException("[Lazybot] 加载歌曲图片时出错");
@@ -162,7 +162,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                 try{
                     BufferedImage fullsize = ImageIO.read(new File(AssertDownloadUtil.svgAbsolutePath(original.getSid())));
                     testOutputTool.saveImageAndTextToLocal(toByteArray(fullsize,"jpg"),
-                            "[Lazybot] 回答正确，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
+                            "[Lazybot] 已提前结束，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
                 }
                 catch (Exception e){
                     throw new LazybotRuntimeException("[Lazybot] 加载歌曲图片时出错");
