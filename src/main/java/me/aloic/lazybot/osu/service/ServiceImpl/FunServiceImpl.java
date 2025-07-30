@@ -1,33 +1,38 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.entity.SongGuessWithTime;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotSongGuessData;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.TipsPO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreIf;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
-import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.FunService;
-import me.aloic.lazybot.osu.utils.OsuToolsUtil;
+import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.parameter.WhatIfParameter;
-import me.aloic.lazybot.util.ApiRequestStarter;
 import me.aloic.lazybot.util.DataExtractor;
-import me.aloic.lazybot.util.URLBuildUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -127,6 +132,67 @@ public class FunServiceImpl implements FunService
                 .append(" (").append(rankDifference).append(") ");
         return result.toString();
     }
+
+
+    @Override
+    public LazybotSongGuessData songGuessImage(GeneralParameter params)
+    {
+        LazybotSongGuessData result = new LazybotSongGuessData();
+        int index = new Random().nextInt(200);
+        List<ScoreLazerDTO> scoreDTO = dataExtractor.extractUserBestScoreList(
+                String.valueOf(params.getPlayerId()),
+                index,
+                params.getMode());
+        if (scoreDTO==null || scoreDTO.isEmpty()) {
+            throw new LazybotRuntimeException("[Lazybot] 小孩子bp没打满200个不准玩");
+        }
+        ScoreLazerDTO score = scoreDTO.getFirst();
+        result.setMeta(new SongGuessWithTime(
+                score.getBeatmapset().getTitle(),
+                score.getBeatmapset().getCreator(),
+                score.getBeatmapset().getArtist(),
+                score.getBeatmap_id()));
+        try{
+            String urlOfBG =  AssertDownloadUtil.svgAbsolutePath(score.getBeatmap().getBeatmapset_id());
+            BufferedImage original = cropImage(ImageIO.read(new File(urlOfBG)),5);
+            result.setImg(toByteArray(original,"jpg"));
+            return result;
+        }
+        catch (Exception e){
+            logger.error("获取歌曲图片时出错:{}", e.getMessage());
+            throw new LazybotRuntimeException("[Lazybot] 获取歌曲图片时出错");
+        }
+    }
+
+
+    private static BufferedImage cropImage(BufferedImage src, int resize) {
+        int originalWidth = src.getWidth();
+        int originalHeight = src.getHeight();
+
+        int cropWidth = originalWidth / resize;
+        int cropHeight = originalHeight / resize;
+
+        Random rand = new Random();
+
+        int maxX = originalWidth - cropWidth;
+        int maxY = originalHeight - cropHeight;
+        int x = rand.nextInt(maxX + 1);
+        int y = rand.nextInt(maxY + 1);
+
+        return src.getSubimage(x, y, cropWidth, cropHeight);
+    }
+
+    private static byte[] toByteArray(BufferedImage image, String format) throws IOException
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, format, baos);
+        return baos.toByteArray();
+    }
+
+
+
+
+
     private Double totalPpCalc(List<ScoreIf> scoreList)
     {
         return IntStream.range(0, scoreList.size())

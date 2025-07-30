@@ -47,6 +47,15 @@ public class ImageUploadUtil
                 logger.error(e.getMessage());
         }
     }
+    public static void uploadImageToOnebotWithText(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray, String text) {
+        try  {
+            String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(text).img("base64://"+base64Image).build(), false);
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
 
 //    public static File saveBytesToFile(byte[] imageBytes, String fileName) throws IOException {
 //        long startTime = System.currentTimeMillis();

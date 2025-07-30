@@ -33,7 +33,8 @@ public class UsageSVGMapper extends LazybotSVGMapper
                     document.getElementById("count-" + i).setTextContent(CommonTool.formatNumber(commandUsage.getCommand().get(i).getCount()));
                     document.getElementById("count-per-" + i).setTextContent((commandUsage.getCommand().get(i).getCount() / commandUsage.getTotal() * 100) + "%");
                     document.getElementById("count-per-" + i).setTextContent(Math.round(percentage * 100) + "%");
-                    document.getElementById("bar-" + i).setAttribute("width", String.valueOf(Math.round(percentage * 500)));
+                    int size = (int) Math.max(30,Math.round(percentage * 500));
+                    document.getElementById("bar-" + i).setAttribute("width", String.valueOf(size));
                 }
             }
         }

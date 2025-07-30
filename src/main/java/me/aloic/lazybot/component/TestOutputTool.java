@@ -39,6 +39,11 @@ public class TestOutputTool
         writeStringToFile(content, testPath, "lazybot-test-text.txt");
     }
 
+    public void saveImageAndTextToLocal(byte[] imageByteArray, String content) {
+        saveImageToLocal(imageByteArray, testPath, "lazybot-test-image.png");
+        writeStringToFile(content, testPath, "lazybot-test-text.txt");
+    }
+
     public void writeStringToFile(String content, String filePath, String fileName) {
         if (!testEnabled) return;
         try {
