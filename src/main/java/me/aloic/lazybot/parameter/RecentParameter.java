@@ -69,6 +69,6 @@ public class RecentParameter extends LazybotCommandParameter
         if (recentParameter.getVersion() == null)
             recentParameter.setVersion(0);
         if (recentParameter.getIndex()==null)
-            recentParameter.setIndex(0);
+            recentParameter.setIndex(1);
     }
 }

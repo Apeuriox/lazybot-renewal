@@ -13,13 +13,11 @@ import me.aloic.lazybot.osu.dao.mapper.UsageMapper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -58,9 +56,9 @@ public class CommandMonitor {
         commandStats.clear();
     }
 
-    @Scheduled(cron = "0 0 3 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void clearOldStats() {
-        log.info("正在保存清楚旧数据...");
+        log.info("正在保存旧数据...");
         usageMapper.insert(setupCommandUsage(commandStats, startTime));
         clear();
         this.startTime = LocalDateTime.now();
@@ -103,16 +101,18 @@ public class CommandMonitor {
                 .mapToInt(stat -> stat.getCallRecords().size())
                 .sum();
 
-        int isComplete = startTime.getHour() == 3 ? 1 : 0;
+        int isComplete = startTime.getHour() == 0 ? 1 : 0;
 
         return new CommandUsage(totalCount, timeDistList, sourceList, commandList, isComplete, startTime);
     }
+
+    //fill empty data with 0
     private static List<LazybotUsageTimeDistribution> setupTimeDistribution(Map<String, CommandStat> commandStatMap)
     {
         int[] hourCount = new int[24];
         commandStatMap.values().forEach(stat ->
                 stat.getCallRecords().forEach(record -> {
-                    int hour = record.timestamp().getHour();
+                    int hour = (record.timestamp().getHour() - 1 + 24 ) % 24;
                     hourCount[hour]++;
                 })
         );

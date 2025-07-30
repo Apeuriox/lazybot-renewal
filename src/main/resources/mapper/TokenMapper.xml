@@ -28,6 +28,13 @@
         where player_name =#{player_name}
     </select>
 
+    <select id="selectRandom" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from token
+        ORDER BY RAND()
+        LIMIT 1;
+    </select>
+
     <select id="selectDefaultModeByQq_code" parameterType="java.lang.Long" resultType="String">
         select default_mode
         from token

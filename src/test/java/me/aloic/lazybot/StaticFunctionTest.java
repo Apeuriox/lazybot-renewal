@@ -1,8 +1,16 @@
 //package me.aloic.lazybot;
 //
+//import me.aloic.lazybot.osu.utils.SvgUtil;
 //import me.aloic.lazybot.shiro.utils.MessageEventFactory;
 //import me.aloic.lazybot.util.CommonTool;
 //import org.junit.jupiter.api.Test;
+//
+//import java.io.BufferedWriter;
+//import java.io.FileWriter;
+//import java.io.IOException;
+//import java.nio.file.Files;
+//import java.nio.file.Path;
+//import java.nio.file.Paths;
 //
 //public class StaticFunctionTest
 //{
@@ -29,4 +37,5 @@
 //        }
 //        return sb.toString().trim().toLowerCase();
 //    }
+//
 //}
