@@ -171,12 +171,10 @@ public class FunServiceImpl implements FunService
     private static BufferedImage cropImage(BufferedImage src, int resize) {
         int originalWidth = src.getWidth();
         int originalHeight = src.getHeight();
-
         int cropWidth = originalWidth / resize;
         int cropHeight = originalHeight / resize;
 
         Random rand = new Random();
-
         int maxX = originalWidth - cropWidth;
         int maxY = originalHeight - cropHeight;
         int x = rand.nextInt(maxX + 1);

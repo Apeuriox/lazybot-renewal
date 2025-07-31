@@ -134,7 +134,11 @@
             <artifactId>shiro</artifactId>
             <version>2.3.3</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
+        </dependency>
     </dependencies>
 
     <build>

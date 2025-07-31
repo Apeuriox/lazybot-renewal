@@ -16,6 +16,7 @@ import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -72,12 +73,17 @@ public class SongGuessCommand implements LazybotSlashCommand
                 existingGameMap.put(identity, songGuessData.getMeta());
                 ImageUploadUtil.uploadImageToOnebotWithText(bot,event,
                         songGuessData.getImg(),
-                        "取自"+tokenPO.getPlayer_name()+"的bp200");
+                        "[Lazybot] 取自"+tokenPO.getPlayer_name()+"的BP前200\n缩放等级: " + songGuessData.getResizeLevel());
             }
             else if (event.getScorePanelVersion()==0) {
                 if (event.getCommandParameters() == null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 点击输入文本");
-                String guessed = String.join(" ", event.getCommandParameters());
-                if (isFuzzyMatch(original.getTitle(), guessed,0.3)) {
+                String guessed = String.join(" ", event.getCommandParameters()).toLowerCase();
+                JaroWinklerSimilarity jws = new JaroWinklerSimilarity();
+                if (guessed.length()>original.getTitle().length()*1.5) {
+                    throw new LazybotRuntimeException("[Lazybot] 我觉得你在瞎写");
+                }
+                double score = jws.apply(original.getTitle().toLowerCase(), guessed);
+                if (score>0.7) {
                     existingGameMap.remove(identity);
                    try{
                        BufferedImage fullsize = ImageIO.read(new File(AssertDownloadUtil.svgAbsolutePath(original.getSid())));

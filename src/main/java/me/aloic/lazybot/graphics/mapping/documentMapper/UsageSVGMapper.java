@@ -51,7 +51,7 @@ public class UsageSVGMapper extends LazybotSVGMapper
 
 
             for (int i = 0; i < 23; i++) {
-                double percentage = (double) commandUsage.getDistribution().get(i).getCount() /  (double) commandUsage.getTotal();
+                double percentage = (double) commandUsage.getDistribution().get(i).getCount() /  (double) maxForDistribution;
                 document.getElementById("chart-" + i).setAttribute("height", String.valueOf(Math.round(percentage * 280)));
                 document.getElementById("chart-" + i).setAttribute("y", String.valueOf(920 - Math.round(percentage * 280)));
             }
