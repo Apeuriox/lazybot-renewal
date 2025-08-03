@@ -1,5 +1,17 @@
 # 更新日志
 
+## Lazybot V1.1.43/20250803
+
+- 新增`/Song`娱乐功能，随机挑选玩家BP进行裁剪以让玩家识别，即猜歌功能。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/Name`娱乐功能，随机挑选玩家的缓存名混淆后供玩家猜测，即猜名字功能。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/bs`、`/ps`、`/rs`功能，即以列表形式默认返回索引1到21的数据。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/monitor`功能，用于监控bot的指令使用情况，采用全新设计。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 重构了`/bp`/`/score`、和`/todaybp`的参数解析逻辑，以支持带空格的用户名。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 将绘图模块拆解到对应的**SVGMappe**类中。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 将`/nochoke`以及`/no1miss`的计算上限提升到bp 200。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了将`/nochoke`和`/no1miss`中错误的pp变化值。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 细分了所有命令至不同的包中。作者: [Aloic](https://osu.ppy.sh/users/11232623)
+
 ## Lazybot V1.1.35/20250722
 
 - 新增`/AddScore`功能，用于以Bid申请添加计算pp+数据。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
