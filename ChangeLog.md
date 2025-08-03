@@ -1,5 +1,44 @@
 # 更新日志
 
+## Lazybot V1.1.43/20250803
+
+- 新增`/Song`娱乐功能，随机挑选玩家BP进行裁剪以让玩家识别，即猜歌功能。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/Name`娱乐功能，随机挑选玩家的缓存名混淆后供玩家猜测，即猜名字功能。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/bs`、`/ps`、`/rs`功能，即以列表形式默认返回索引1到21的数据。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/monitor`功能，用于监控bot的指令使用情况，采用全新设计。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 重构了`/bp`/`/score`、和`/todaybp`的参数解析逻辑，以支持带空格的用户名。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 将绘图模块拆解到对应的**SVGMappe**类中。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 将`/nochoke`以及`/no1miss`的计算上限提升到bp 200。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了将`/nochoke`和`/no1miss`中错误的pp变化值。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 细分了所有命令至不同的包中。作者: [Aloic](https://osu.ppy.sh/users/11232623)
+
+## Lazybot V1.1.35/20250722
+
+- 新增`/AddScore`功能，用于以Bid申请添加计算pp+数据。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为`/plus`功能新增了一套新的面板设计，原型来自Corsace Open 2024，输入`/plus &`即可使用。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为`/plus`添加了模式限制。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为`/plus`新增了一套标签以用于描述顶尖玩家。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了在`/ppmap`中直接指定用户名的输入被错误忽略的问题。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了`/plus`中错误捕获异常导致的输出结果错误。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了`/info`命令中不活跃玩家的Rank被错误的显示为null的问题。作者: [Aloic](https://osu.ppy.sh/users/11232623)
+
+## Lazybot V1.1.28/20250613
+- 新增`/plus`功能，用于查询用户的pp+数据。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 重构了**ApiRequestStarter**和**DataObjectExtractor**，现在使用依赖注入归为Spring管理，以添加token失效重试机制。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为`/AllScores`添加了四模式支持，同时将Std中的SpeedNote改为LengthBonus。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了成绩面板中意外出现CL mod的问题。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+
+## Lazybot V1.1.21/20250605
+- 新增`/AllScores`功能，用于查询用户在指定地图下的全部成绩，采用全新的面板设计。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 重构所有Mod以及Rank的颜色到新的枚举中。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了使用`/profile`命令时，Bp中过长的标题溢出指定元素的问题。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了ResourceMonitor与Jar包中提取静态文件时跳过执行的问题。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了玩家在回退用户名后无法使用部分指令的问题。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+
+## Lazybot V1.1.8/20250511
+- 新增`/mod`功能，用于查询osu游戏mod的详细解释。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 将所有Lazer Mod添加到OsuMod.java，并为其添加别名属性。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+
 ## Lazybot V1.1.6/20250502
 - 现已将`/bplist`和`/bpcard`的索引上限增加至200，同时添加了同时最大渲染数量为100。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
 - 将`/bpvs`指令中**CompletableFuture**执行中抛出的**ExecutionException**异常处理移动到**SlashCommandProcessor**中，并添加包名分割。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>

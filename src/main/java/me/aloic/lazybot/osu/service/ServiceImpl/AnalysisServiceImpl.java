@@ -1,13 +1,14 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
-import me.aloic.lazybot.osu.utils.SVGRenderUtil;
+import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.osu.utils.SvgUtil;
 import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
@@ -33,7 +34,13 @@ public class AnalysisServiceImpl implements AnalysisService
         PlayerInfoVO info= OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
         List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestScoreList(String.valueOf(info.getId()),100,0,params.getMode());
         List<ScoreVO> scoreList=OsuToolsUtil.setupBpifScoreList(params,originalScoreArray,info);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreList.stream().limit(30).collect(Collectors.toList()),0,3,"/BpIf: Recalculate your Bps with desired mods. +mod to insert, -mod to remove, +mod! to replace."));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreListSVGMapper.mapScoreListToBpCard(info,
+                        scoreList.stream().limit(30).collect(Collectors.toList()),
+                        0,
+                        3,
+                        "/BpIf: Recalculate your Bps with desired mods. +mod to insert, -mod to remove, +mod! to replace.")
+        );
     }
     @Override
     public String recommendedDifficulty(GeneralParameter params)

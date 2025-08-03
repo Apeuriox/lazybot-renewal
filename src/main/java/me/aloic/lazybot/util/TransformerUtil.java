@@ -123,7 +123,7 @@ public class TransformerUtil
         }
         return scoreVO;
     }
-    public static List<ScoreSequence> scoreSequenceListTransform(List<ScoreLazerDTO> scoreLazerDTOS)
+    public static List<ScoreSequence> scoreSequenceListTransform(List<ScoreLazerDTO> scoreLazerDTOS, boolean disableDifference)
     {
         List<ScoreSequence> scoreSequences=new ArrayList<>();
         for (int i=0;i<scoreLazerDTOS.size();i++) {
@@ -147,7 +147,8 @@ public class TransformerUtil
             temp.setBeatmap(TransformerUtil.beatmapTransform(scoreLazerDTOS.get(i).getBeatmap(), scoreLazerDTOS.get(i).getBeatmapset()));
             temp.setRulesetId(scoreLazerDTOS.get(i).getRuleset_id());
             temp.setIsPerfectCombo(scoreLazerDTOS.get(i).getIs_perfect_combo());
-            temp.setDifferenceBetweenNextScore((int) Math.round(scoreLazerDTOS.size()>i+1?(scoreLazerDTOS.get(i).getPp()-scoreLazerDTOS.get(i+1).getPp()):0));
+            if (!disableDifference)
+                temp.setDifferenceBetweenNextScore((int) Math.round(scoreLazerDTOS.size()>i+1?(scoreLazerDTOS.get(i).getPp()-scoreLazerDTOS.get(i+1).getPp()):0));
             scoreSequences.add(temp);
         }
         return scoreSequences;

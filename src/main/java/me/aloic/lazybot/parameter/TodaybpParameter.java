@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -41,42 +43,24 @@ public class TodaybpParameter extends LazybotCommandParameter
     public static TodaybpParameter analyzeParameter(List<String> params)
     {
         TodaybpParameter parameter=new TodaybpParameter();
-        if (params != null && !params.isEmpty()) {
-            if (params.size() == 1) {
-                if(params.getFirst().contains("#")) {
-                    String[] paras = params.getFirst().split("#");
-                    if (CommonTool.isPositiveInteger(paras[1]))
-                        parameter.setMaxDays(Integer.parseInt(paras[1]));
-                    else
-                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误, index不为正整数，length=1");
-                }
-                else if(CommonTool.isPositiveInteger(params.getFirst()))
-                    parameter.setMaxDays(Integer.parseInt(params.getFirst()));
-                else {
-                    parameter.setPlayerName(params.getFirst());
-                    parameter.setMaxDays(1);
-                }
-            }
-            else if (params.size() == 2) {
-                if(params.get(1).contains("#")) {
-                    String[] paras = params.get(1).split("#");
-                    parameter.setPlayerName(params.getFirst());
-                    if (CommonTool.isPositiveInteger(paras[1]))
-                        parameter.setMaxDays(Integer.parseInt(paras[1]));
-                    else
-                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误, index不为正整数,length=2");
-                }
-                else if(CommonTool.isPositiveInteger(params.get(1))) {
-                    parameter.setPlayerName(params.getFirst());
-                    parameter.setMaxDays(Integer.parseInt(params.get(1)));
-                }
-            }
-            else {
-                throw new LazybotRuntimeException("[Lazybot] Incorrect parameters: " + params);
+        String text = String.join(" ", params).trim();
+        if (text.matches("\\d+")) {
+            int indexVal = Integer.parseInt(text);
+            if (indexVal >= 1)
+                parameter.maxDays = indexVal;
+            else
+            {
+                parameter.setPlayerName(text);
+                parameter.maxDays = 1;
             }
         }
         else {
-            parameter.setMaxDays(1);
+            Matcher indexMatcher = Pattern.compile("#(\\d+)").matcher(text);
+            if (indexMatcher.find()) {
+                parameter.maxDays = Integer.parseInt(indexMatcher.group(1));
+                text = text.replace(indexMatcher.group(), "").trim();
+            }
+            if (!text.isEmpty()) parameter.setPlayerName(text);
         }
         return parameter;
     }

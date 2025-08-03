@@ -11,6 +11,8 @@ import me.aloic.lazybot.util.CommonTool;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -33,8 +35,8 @@ public class BpParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (index<=0||index>MAX_INDEXED) {
-            throw new LazybotRuntimeException("Bp查询区间为 1 到 " + MAX_INDEXED);
+        if (index<=0||index > MAX_INDEXED) {
+            throw new LazybotRuntimeException("[Lazybot] Bp查询区间为 1 到 " + MAX_INDEXED);
         }
         if(version==null) {
             version=0;
@@ -43,41 +45,25 @@ public class BpParameter extends LazybotCommandParameter
     public static BpParameter analyzeParameter(List<String> params)
     {
         BpParameter bpParameter=new BpParameter();
-        if (params != null && !params.isEmpty()) {
-            if (params.size() == 1) {
-                if(params.getFirst().contains("#")) {
-                    String[] paras = params.getFirst().split("#");
-                    if (CommonTool.isPositiveInteger(paras[1]) && Integer.parseInt(paras[1]) <= MAX_INDEXED)
-                        bpParameter.setIndex(Integer.parseInt(paras[1]));
-                    else
-                        throw new LazybotRuntimeException("输入参数不为正整数: " + paras[1]);
-                }
-                else if(CommonTool.isPositiveInteger(params.getFirst()) && Integer.parseInt(params.getFirst())<=MAX_INDEXED)
-                    bpParameter.setIndex(Integer.parseInt(params.getFirst()));
-                else {
-                    bpParameter.setPlayerName(params.getFirst());
-                    bpParameter.setIndex(1);
-                }
-            }
-            else if (params.size() == 2) {
-                if(params.get(1).contains("#")) {
-                    String[] paras =params.get(1).split("#");
-                    bpParameter.setPlayerName(params.getFirst());
-                    if (CommonTool.isPositiveInteger(paras[1]) && Integer.parseInt(paras[1]) <= MAX_INDEXED)
-                        bpParameter.setIndex(Integer.parseInt(paras[1]));
-                    else
-                        throw new LazybotRuntimeException("输入参数不为正整数: " + paras[1]);
-                }
-                else if(CommonTool.isPositiveInteger(params.get(1)) && Integer.parseInt(params.get(1))<=MAX_INDEXED) {
-                    bpParameter.setPlayerName(params.getFirst());
-                    bpParameter.setIndex(Integer.parseInt(params.get(1)));
-                }
-            }
-            else {
-                bpParameter.setPlayerName(String.join(" ", params));
-            }
+        if (params == null || params.isEmpty())
+            return new BpParameter(null,null,0,1);
+
+        String text = String.join(" ", params).trim();
+        if (text.matches("\\d+")) {
+            int indexVal = Integer.parseInt(text);
+            if (indexVal >= 1 && indexVal <= 200)
+                bpParameter.index = indexVal;
+            else
+                bpParameter.setPlayerName(text);
         }
-        else bpParameter.setIndex(1);
+        else {
+            Matcher indexMatcher = Pattern.compile("#(\\d+)").matcher(text);
+            if (indexMatcher.find()) {
+                bpParameter.index = Integer.parseInt(indexMatcher.group(1));
+                text = text.replace(indexMatcher.group(), "").trim();
+            }
+            if (!text.isEmpty()) bpParameter.setPlayerName(text);
+        }
         return bpParameter;
     }
     public static void setupDefaultValue(BpParameter bpParameter, AccessTokenPO accessTokenPO)
@@ -87,7 +73,7 @@ public class BpParameter extends LazybotCommandParameter
         if (bpParameter.getVersion() == null)
             bpParameter.setVersion(0);
         if (bpParameter.getIndex()==null)
-            bpParameter.setIndex(0);
+            bpParameter.setIndex(1);
 
     }
 }

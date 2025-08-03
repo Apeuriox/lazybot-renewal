@@ -1,18 +1,19 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.entity.CommandStat;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.graphics.mapping.documentMapper.UsageSVGMapper;
+import me.aloic.lazybot.graphics.render.SVGRenderer;
+import me.aloic.lazybot.monitor.CommandMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
-import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
-import me.aloic.lazybot.osu.dao.entity.po.TipsPO;
-import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
+import me.aloic.lazybot.osu.dao.entity.po.*;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
@@ -24,11 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.*;
 
 
 // onebot protocol can be forged so no sensitive functions here
@@ -37,6 +34,9 @@ public class ManageServiceImpl implements ManageService
 {
 //    private static final Map<String, Function<UpdateParameter,String>> updateMap;
     private static final Map<Long,Boolean> adminMap;  //Long ass numbers are discord ids
+    @Resource
+    private CommandMonitor commandMonitor;
+
     static{
 //        updateMap = Map.of("avatar",ManageServiceImpl::updateAvatar,
 //                "track",ManageServiceImpl::updateOsuTrack,
@@ -196,6 +196,14 @@ public class ManageServiceImpl implements ManageService
             sb.deleteCharAt(sb.length()-1);
         }
         return sb.toString();
+    }
+    @Override
+    public byte[] commandUsage()
+    {
+        Map<String, CommandStat> commandStatMap = commandMonitor.getAllStats();
+        LocalDateTime startTime = commandMonitor.getStartTime();
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                UsageSVGMapper.mapCommandUsageToPanel(CommandMonitor.setupCommandUsage(commandStatMap,startTime)));
     }
 
 }

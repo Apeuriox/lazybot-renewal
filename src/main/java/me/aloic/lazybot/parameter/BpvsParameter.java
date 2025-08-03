@@ -49,7 +49,6 @@ public class BpvsParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(BpvsParameter parameter, AccessTokenPO accessTokenPO)
     {
-        parameter.setPlayerName(accessTokenPO.getPlayer_name());
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());

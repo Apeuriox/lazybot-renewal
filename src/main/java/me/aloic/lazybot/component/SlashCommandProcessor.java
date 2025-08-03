@@ -7,6 +7,7 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.command.registry.LazybotSlashCommandRegistry;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.monitor.CommandMonitor;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.slf4j.Logger;
@@ -22,6 +23,8 @@ public class SlashCommandProcessor
 {
     @Resource
     private LazybotSlashCommandRegistry registry;
+    @Resource
+    private CommandMonitor commandMonitor;
 
 
     private static final Logger logger = LoggerFactory.getLogger(SlashCommandProcessor.class);
@@ -33,6 +36,9 @@ public class SlashCommandProcessor
             LazybotSlashCommand command = registry.getCommand(event.getName());
             if (command != null) {
                 logger.info("正在处理 {} 命令",event.getName());
+                commandMonitor.record(event.getName(),
+                        event.getUser().getId(),
+                        event.getChannel().getId());
                 command.execute(event);
             } else {
                 event.reply("找不到对应指令").setEphemeral(true).queue();
@@ -51,6 +57,9 @@ public class SlashCommandProcessor
             LazybotSlashCommand command = registry.getCommand(event.getCommandType());
             if (command != null) {
                 logger.info("正在处理 {} 命令(Onebot)", event.getCommandType());
+                commandMonitor.record(event.getCommandType(),
+                        String.valueOf(event.getMessageEvent().getSender().getUserId()),
+                        String.valueOf(event.getMessageEvent().getGroupId()));
                 command.execute(bot, event);
             }
         } catch (LazybotRuntimeException | IllegalArgumentException e) {
@@ -78,7 +87,10 @@ public class SlashCommandProcessor
             try {
                 LazybotSlashCommand command = registry.getCommand(event.getCommandType());
                 if (command != null) {
-                    logger.info("正在处理 {} 命令(TEST CASE)", event.getCommandString());
+                    logger.info("正在处理 {} 命令(TEST CASE)", event.getCommandType());
+                    commandMonitor.record(event.getCommandType(),
+                            "TEST",
+                            "TEST");
                     command.execute(event);
                 }
             } catch (LazybotRuntimeException | IllegalArgumentException e)  {

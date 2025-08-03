@@ -2,8 +2,9 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.DiamondShape;
+import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
+import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
-import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapsetDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -14,7 +15,6 @@ import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.LazybotCommandParameter;
 import me.aloic.lazybot.parameter.TopScoresParameter;
-import me.aloic.lazybot.util.ApiRequestExecutor;
 import me.aloic.lazybot.util.DataExtractor;
 import me.aloic.lazybot.util.TransformerUtil;
 import me.aloic.lazybot.util.VirtualThreadExecutorHolder;
@@ -233,13 +233,14 @@ public class TrackServiceImpl implements TrackService
                 .collect(Collectors.toList());
 
         logger.info("存在成绩长度为: {}",listOfScores.size());
-        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores);
+        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(listOfScores,false);
 //                listOfScores).stream().
 //                filter(scoreSequence -> scoreSequence.getDifferenceBetweenNextScore()>=0)
 //                .toList();
         logger.info("最终过滤长度为: {}",scoreSequences.size());
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned",1));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreListSVGMapper.mapScoreListToBpList(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned",1));
     }
     private PlayerInfoDTO getTargetPlayerInfoDTO(LazybotCommandParameter params)
     {

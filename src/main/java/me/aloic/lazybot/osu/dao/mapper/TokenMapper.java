@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface TokenMapper extends BaseMapper<AccessTokenPO> {
     AccessTokenPO selectByQq_code(@Param("qq_code")Long qq_code);
+    AccessTokenPO selectRandom();
     String selectDefaultModeByQq_code(@Param("qq_code")Long qq_code);
     void updateByToken(AccessTokenPO accessTokenPO);
     AccessTokenPO selectByPlayername(String player_name);

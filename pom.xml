@@ -10,7 +10,7 @@
     </parent>
     <groupId>me.aloic</groupId>
     <artifactId>lazybot</artifactId>
-    <version>1.1.35</version>
+    <version>1.1.42</version>
     <name>lazybot-jda</name>
     <description>lazybot-jda</description>
     <url/>
@@ -134,7 +134,11 @@
             <artifactId>shiro</artifactId>
             <version>2.3.3</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -2,10 +2,11 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.graphics.mapping.documentMapper.*;
+import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
-import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScore;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -60,7 +61,9 @@ public class PlayerServiceImpl implements PlayerService
                     beatmapUserScoreLazer.getScore(),
                     false);
         verifyBeatmapsCache(scoreVO);
-        return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+        );
     }
     @Override
     public byte[] allScore(ScoreParameter params) throws Exception
@@ -90,11 +93,13 @@ public class PlayerServiceImpl implements PlayerService
         }
         mapScoreList=mapScoreList.stream().sorted(Comparator.comparing(MapScore::getPp).reversed()).toList();
         verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapDTO.getChecksum());
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createMapScoreList(mapScoreList,beatmapPerformance),2f);
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScoreList,beatmapPerformance),
+                2f);
     }
 
     @Override
-    public byte[] recent(RecentParameter params, Integer type) throws IOException
+    public byte[] recent(RecentParameter params, int type) throws IOException
     {
         if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
         List<ScoreLazerDTO> scoreList = dataExtractor.extractRecentScoreList(params.getPlayerId(), type, params.getIndex(), params.getMode());
@@ -106,7 +111,9 @@ public class PlayerServiceImpl implements PlayerService
                 scoreList.get(params.getIndex() - 1),
                 false);
         verifyBeatmapsCache(scoreVO);
-        return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+        );
 
     }
     @Override
@@ -123,7 +130,9 @@ public class PlayerServiceImpl implements PlayerService
                 scoreDTO.getFirst(),
                 false);
         verifyBeatmapsCache(scoreVO);
-        return SVGRenderUtil.renderScoreToByteArray(scoreVO, params.getVersion(), getDominantColorArray(scoreVO));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+        );
     }
     @Override
     public byte[] bplistCardView(BplistParameter params) throws Exception
@@ -136,8 +145,37 @@ public class PlayerServiceImpl implements PlayerService
                 params.getFrom()-1,
                 params.getMode());
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOArray,params.getFrom(),1));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreListSVGMapper.mapScoreListToBpCard(info,scoreVOArray,params.getFrom(),1)
+        );
     }
+
+    @Override
+    public byte[] playRecentSeries(GeneralParameter params, int type, int style) throws IOException
+    {
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        List<ScoreLazerDTO> scoreDTOS= dataExtractor.extractRecentScoreList(
+                info.getId(),
+                type,
+                21,
+                params.getMode());
+        if (style==0)
+        {
+            List<ScoreVO> scoreVOArray = OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    ScoreListSVGMapper.mapScoreListToBpCard(info, scoreVOArray, 1, 1)
+            );
+        }
+        else {
+            List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS,true);
+            OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    ScoreListSVGMapper.mapScoreListToBpList(scoreSequences,info,1)
+            );
+        }
+    }
+
     @Override
     public byte[] todayBp(TodaybpParameter params) throws Exception
     {
@@ -163,8 +201,10 @@ public class PlayerServiceImpl implements PlayerService
         if(scoreVOList.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 没有找到符合条件的bp");
 
         OsuToolsUtil.setUpImageStatic(scoreVOList);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(info,scoreVOList,0,4,
-                "Current command: /todayBp. Showing new Bps within " + params.getMaxDays() +" day(s)"));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreListSVGMapper.mapScoreListToBpCard(info,scoreVOList,0,4,
+                "Current command: /todayBp. Showing new Bps within " + params.getMaxDays() +" day(s)")
+        );
     }
     @Override
     public byte[] bpvs(BpvsParameter params)throws Exception
@@ -203,8 +243,8 @@ public class PlayerServiceImpl implements PlayerService
                 List<ScoreLazerDTO> scoreDTOS = scoreFuture.get();
                 List<ScoreLazerDTO> compareScoreDTOS = compareScoreFuture.get();
 
-                return SVGRenderUtil.renderSVGDocumentToByteArray(
-                        SvgUtil.createCompareBpList(
+                return SVGRenderer.renderSVGDocumentToByteArray(
+                        CompareScoreListSVGMapper.mapScoresToCompareScoreList(
                                 playerInfoDTO,
                                 comparePlayerInfoDTO,
                                 TransformerUtil.scoreTransformForArray(scoreDTOS),
@@ -226,28 +266,33 @@ public class PlayerServiceImpl implements PlayerService
     {
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
 
-        List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestScoreList(
-                String.valueOf(playerInfoDTO.getId()),
-                100,0,params.getMode());
+        List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestAll(
+                String.valueOf(playerInfoDTO.getId()), params.getMode());
 
         NoChokeListVO noChokeListVO=OsuToolsUtil.setupNoChokeList(
                 OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO),
                 TransformerUtil.scoreTransformForList(originalScoreArray),
                 type);
-
+        noChokeListVO.setScoreList(noChokeListVO.getScoreList().stream().limit(51).collect(Collectors.toList()));
         if(type==1) {
-            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,2));
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    ScoreListSVGMapper.mapScoreListToBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,2)
+            );
         }
         else {
-            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,3,
-                    "All scores are recalculated with FC. Plz keep in mind that this may not reflect your skill correctly."));
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    ScoreListSVGMapper.mapScoreListToBpCard(noChokeListVO.getInfo(),noChokeListVO.getScoreList(),0,3,
+                    "All scores are recalculated with FC. Plz keep in mind that this may not reflect your skill correctly.")
+            );
         }
     }
     @Override
     public byte[] card(GeneralParameter params) throws Exception {
         PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
         playerInfoVO.setMode(params.getMode());
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoCard(playerInfoVO));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                PlayerInfoSVGMapper.mapPlayerInfoToCard(playerInfoVO)
+        );
     }
     @Override
     public byte[] performancePlus(GeneralParameter params)
@@ -258,8 +303,13 @@ public class PlayerServiceImpl implements PlayerService
             playerInfoVO.setMode(params.getMode());
             if (playerInfoVO.getPrimaryColor()==333) playerInfoVO.setPrimaryColor(208);
             PPPlusPerformance performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
-            if (params.getVersion()==1) return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanelCC2024(performance,playerInfoVO),1);
-            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusPanel(performance,playerInfoVO),2);
+
+            if (params.getVersion()==1) return SVGRenderer.renderSVGDocumentToByteArray(
+                    PlusCardSVGMapper.mapPlusInfoToCardCC2024(performance,playerInfoVO),
+                    1);
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    PlusCardSVGMapper.mapPlusInfoToCard(performance,playerInfoVO),
+                    2);
         }
         catch (LazybotRuntimeException e) {
             throw e;
@@ -289,7 +339,9 @@ public class PlayerServiceImpl implements PlayerService
                     false);
             LazybotScorePerformance score=dataExtractor.extractPerformancePlusAddScore(params.getPlayerId(),params.getBeatmapId());
 
-            return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createPPPlusScorePanelCrimson(score, scoreVO, CommonTool.rgbToHue(getDominantColorArray(scoreVO))));
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    PlusScoreSVGMapper.mapPlusScoreToCard(score, scoreVO, CommonTool.rgbToHue(getDominantColorArray(scoreVO))
+                    ));
         }
         catch (LazybotRuntimeException e) {
             throw e;
@@ -331,7 +383,9 @@ public class PlayerServiceImpl implements PlayerService
             theme=ProfileLightTheme.createInstance(192);
         }
 
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createInfoPanel(playerInfoVO, theme));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                PlayerInfoSVGMapper.mapPlayerInfoToProfilePanel(playerInfoVO, theme)
+        );
     }
 
     @Override
@@ -360,9 +414,11 @@ public class PlayerServiceImpl implements PlayerService
                 params.getTo()-params.getFrom()+1,
                 params.getFrom()-1,
                 params.getMode());
-        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS);
+        List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS,false);
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
-        return SVGRenderUtil.renderSVGDocumentToByteArray(SvgUtil.createScoreListDetailed(scoreSequences,info,params.getFrom()));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreListSVGMapper.mapScoreListToBpList(scoreSequences,info,params.getFrom())
+        );
     }
 
 

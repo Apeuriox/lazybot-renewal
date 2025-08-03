@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.service;
 
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotSongGuessData;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.parameter.WhatIfParameter;
@@ -13,4 +14,6 @@ public interface FunService
     Path modInfo(GeneralParameter parameter);
 
     String whatIfIGotSomePP(WhatIfParameter whatIfParameter);
+
+    LazybotSongGuessData songGuessImage(GeneralParameter params);
 }
