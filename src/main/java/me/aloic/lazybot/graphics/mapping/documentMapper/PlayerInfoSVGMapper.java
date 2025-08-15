@@ -140,7 +140,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("Moelleux").setAttribute("fill", new HSL(primaryHue, 75*saturationFactor, 95).toString());
         doc.getElementById("footer-bg").setAttribute("fill", mainBorderColor.toString());
 
-        doc.getElementById("name-1").setTextContent(player.getInfo().getPlayerName().replace("-", ""));
+        doc.getElementById("name-1").setTextContent(player.getInfo().getPlayerName().replace("-", "").replaceAll("\\d", ""));
         doc.getElementById("name-1").setAttribute("fill", new HSL(primaryHue, 9*saturationFactor, 75).toString());
         doc.getElementById("name-2").setTextContent(player.getInfo().getPlayerName().toUpperCase());
 
@@ -216,7 +216,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("bp-4").setAttributeNS(xlinkns, "xlink:href", player.getBps().get(3).getBeatmap().getBgUrl());
         doc.getElementById("bp-bid-4").setTextContent(String.valueOf(player.getBps().get(3).getBeatmap().getBid()));
         String artistForBp4=player.getBps().get(3).getBeatmap().getArtist();
-        if (artistForBp4.length()>7) artistForBp4=artistForBp3.substring(0,5).concat("...");
+        if (artistForBp4.length()>7) artistForBp4=artistForBp4.substring(0,5).concat("...");
         doc.getElementById("bp-artist-4").setTextContent(artistForBp4);
 
 
