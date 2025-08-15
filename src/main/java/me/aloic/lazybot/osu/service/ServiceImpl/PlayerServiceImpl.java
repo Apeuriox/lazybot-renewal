@@ -295,6 +295,33 @@ public class PlayerServiceImpl implements PlayerService
         );
     }
     @Override
+    public byte[] cardMoelleux(GeneralParameter params) throws Exception {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] 测试期间仅支持osu模式");
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
+        playerInfoVO.setMode(params.getMode());
+        PPPlusPerformance performance;
+        try{
+            performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
+        }
+        catch (LazybotRuntimeException e) {
+            throw new LazybotRuntimeException("[Lazybot] Pp+数据获取失败，请稍后再试");
+        }
+        List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(
+                String.valueOf(playerInfoVO.getId()),
+                4,
+                0,
+                params.getMode());
+        List<ScoreVO> scoreVOArray = OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+        PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
+                scoreVOArray,
+                performance);
+
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCard(playerInfoMoelleux,CommonTool.getDominantHueColorThief(new File(playerInfoVO.getAvatarUrl())))
+                ,2
+        );
+    }
+    @Override
     public byte[] performancePlus(GeneralParameter params)
     {
         if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] Pp+目前仅支持osu模式");
@@ -444,7 +471,7 @@ public class PlayerServiceImpl implements PlayerService
     {
         PlayerInfoDTO playerInfoDTO;
         if (params.getPlayerName()==null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
-        else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+        else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName().trim(),params.getMode());
         return playerInfoDTO;
     }
 

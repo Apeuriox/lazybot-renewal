@@ -29,6 +29,8 @@ public interface PlayerService
 
     byte[] card(GeneralParameter params) throws Exception;
 
+    byte[] cardMoelleux(GeneralParameter params) throws Exception;
+
     byte[] performancePlus(GeneralParameter params) throws Exception;
 
     byte[] addScoreForPerformancePlus(ScoreParameter params);

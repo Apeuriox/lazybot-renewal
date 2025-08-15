@@ -85,7 +85,10 @@ public class CommonTool {
         return obj.toString();
 
     }
-
+    public static String transformNumber(int number)
+    {
+        return transformNumber(String.valueOf(number));
+    }
     public static String transformNumber(String number){
         int length = number.length();
         int offset = length%3;

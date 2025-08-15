@@ -54,21 +54,36 @@ public class CardCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        ImageUploadUtil.uploadImageToOnebot(bot,event,
-                playerService.card(
-                        setupParameter(event, proxy.getAccessToken(event))
-                )
-        );
+        if (event.getScorePanelVersion()==0)
+            ImageUploadUtil.uploadImageToOnebot(bot,event,
+                    playerService.card(
+                            setupParameter(event, proxy.getAccessToken(event))
+                    )
+            );
+        else
+        {
+            ImageUploadUtil.uploadImageToOnebotWithText(bot,event,playerService.cardMoelleux(
+                            setupParameter(event, proxy.getAccessToken(event))
+                    ),
+                    "[Lazybot] 开发中预览，不代表最终品质");
+        }
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(
-                playerService.card(
-                        setupParameter(event, proxy.getAccessToken(event))
-                )
-        );
+        if (event.getScorePanelVersion()==0)
+            testOutputTool.saveImageToLocal(
+                    playerService.card(
+                            setupParameter(event, proxy.getAccessToken(event))
+                    )
+            );
+        else
+            testOutputTool.saveImageToLocal(
+                    playerService.cardMoelleux(
+                            setupParameter(event, proxy.getAccessToken(event))
+                    )
+            );
     }
     private GeneralParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {
