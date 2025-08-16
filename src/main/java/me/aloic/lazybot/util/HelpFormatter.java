@@ -7,7 +7,7 @@ public class HelpFormatter {
     public static String format(CommandHelp help) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("命令: ").append(help.getCommand()).append("\n");
+        sb.append("[Lazybot] 命令: ").append(help.getCommand()).append("\n");
         sb.append("调用名: ").append(help.getAlias()).append("\n");
         sb.append("描述: ").append(help.getDescription()).append("\n\n");
 
