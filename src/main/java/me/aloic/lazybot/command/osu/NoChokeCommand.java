@@ -8,12 +8,15 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -77,5 +80,17 @@ public class NoChokeCommand implements LazybotSlashCommand
                 playerService.noChoke(
                         GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 0)
         );
+    }
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("No Choke","NoChoke, nc, no1miss",
+                        "以FC计算用户的全部Bp，使用no1miss仅计算<=1miss的成绩",
+                        "Aloic", "Aloic", "2024-05-20")
+                        .addExample("/NoChoke")
+                        .addExample("/NoChoke Aloic")
+                        .addExample("/No1Miss Aloic")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

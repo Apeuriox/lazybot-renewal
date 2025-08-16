@@ -4,8 +4,11 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -31,5 +34,15 @@ public class LinkCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         //do not implement
+    }
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Link","Link",
+                        "用户绑定",
+                        "Aloic", null, "2023-04-04")
+                        .addExample("/Link Aloic")
+                        .addOption(new CommandParameter("PlayerName","指定的用户名称", CommandParameter.ParameterType.MUST)));
     }
 }

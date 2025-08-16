@@ -6,9 +6,12 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -50,6 +53,18 @@ public class PerformancePlusCommand implements LazybotSlashCommand
                 )
         );
     }
-
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Performance Plus Card","Ppp, Plus",
+                        "查询对应玩家的重算版pp+，输入&以Corsace样式输出结果，主色调跟随玩家主页",
+                        "Aloic", "Aloic", "2024-06-09")
+                        .addExample("/Plus")
+                        .addExample("/Plus Aloic &")
+                        .addExample("/Ppp &")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Version","存在&则以Corsace形式输出", CommandParameter.ParameterType.OPTIONAL)));
+    }
 
 }

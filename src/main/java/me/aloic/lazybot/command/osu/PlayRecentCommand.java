@@ -8,6 +8,8 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -15,6 +17,7 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.RecentParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -102,6 +105,19 @@ public class PlayRecentCommand implements LazybotSlashCommand
         params.validateParams();
         return params;
     }
-
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Play Recently","Pr, Rp, Playrecent, Re, Recent",
+                        "查询指定用户的最近游玩成绩中的指定的第几个",
+                        "Aloic", "Slayemus, Aloic", "2024-04-06")
+                        .addExample("/Pr #1")
+                        .addExample("/Re Aloic #10")
+                        .addExample("/Pr Aloic #10 &")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Index","指定查询的索引，范围 1-50，默认为1", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Version","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
+    }
 
 }

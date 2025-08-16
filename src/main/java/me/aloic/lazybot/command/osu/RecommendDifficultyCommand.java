@@ -9,12 +9,15 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -68,5 +71,16 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
                 GeneralParameter.setupParameter(event, proxy.getAccessToken(event))
                 )
         );
+    }
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Recommend Difficulty","rd, recommenddifficulty",
+                        "查询指定用户的推荐星级，上为ppy算法，下为改进版",
+                        "Aloic", null, "2025-01-07")
+                        .addExample("/Rd")
+                        .addExample("/Rd Aloic")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

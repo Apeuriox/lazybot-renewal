@@ -7,9 +7,12 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.parameter.WhatIfParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -49,5 +52,15 @@ public class WhatIfCommand implements LazybotSlashCommand
         params.validateParams();
         WhatIfParameter.setupDefaultValue(params,proxy.getAccessToken(event));
         testOutputTool.writeStringToFile(funService.whatIfIGotSomePP(params));
+    }
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("What if I got some pp","Whatif",
+                        "假设你多刷了这么多pp后的总pp变化",
+                        "Aloic", null, "2025-05-17")
+                        .addExample("/Whatif 300*10 400*5")
+                        .addOption(new CommandParameter("PP Series","给定的pp列表", CommandParameter.ParameterType.MUST)));
     }
 }

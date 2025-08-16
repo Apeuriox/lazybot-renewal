@@ -9,6 +9,8 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -16,6 +18,7 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.parameter.UpdateParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -79,5 +82,18 @@ public class UpdateCommand implements LazybotSlashCommand
             params.setMode(event.getOsuMode().getDescribe());
         params.validateParams();
         return params;
+    }
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Update Cache","Update",
+                        "更新用户缓存",
+                        "Aloic", null, "2025-01-20")
+                        .addExample("/Update Track Aloic")
+                        .addExample("/Update Avatar Aloic")
+                        .addExample("/Update Banner")
+                        .addOption(new CommandParameter("Type","更新的类型", CommandParameter.ParameterType.MUST))
+                        .addOption(new CommandParameter("PlayerName","指定的用户名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

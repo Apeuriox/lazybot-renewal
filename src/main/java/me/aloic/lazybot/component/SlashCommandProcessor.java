@@ -3,6 +3,7 @@ package me.aloic.lazybot.component;
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.chain.CommandChainProcessor;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.command.registry.LazybotSlashCommandRegistry;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
@@ -25,7 +26,8 @@ public class SlashCommandProcessor
     private LazybotSlashCommandRegistry registry;
     @Resource
     private CommandMonitor commandMonitor;
-
+    @Resource
+    private CommandChainProcessor commandChainProcessor;
 
     private static final Logger logger = LoggerFactory.getLogger(SlashCommandProcessor.class);
 
@@ -60,7 +62,7 @@ public class SlashCommandProcessor
                 commandMonitor.record(event.getCommandType(),
                         String.valueOf(event.getMessageEvent().getSender().getUserId()),
                         String.valueOf(event.getMessageEvent().getGroupId()));
-                command.execute(bot, event);
+                commandChainProcessor.process(bot, event, command);
             }
         } catch (LazybotRuntimeException | IllegalArgumentException e) {
             logger.error(e.getMessage());
@@ -91,7 +93,7 @@ public class SlashCommandProcessor
                     commandMonitor.record(event.getCommandType(),
                             "TEST",
                             "TEST");
-                    command.execute(event);
+                    commandChainProcessor.process(event, command);
                 }
             } catch (LazybotRuntimeException | IllegalArgumentException e)  {
                 logger.error("捕获到预期内exception: {}", e.getMessage());

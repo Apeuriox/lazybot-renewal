@@ -8,6 +8,8 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -15,6 +17,7 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.NameToIdParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -82,5 +85,15 @@ public class NameToIdCommand implements LazybotSlashCommand
         NameToIdParameter.setupDefaultValue(params,tokenPO);
         params.validateParams();
         return params;
+    }
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Name to ID","n2d, nametoid",
+                        "接受一段连续的用户名输入，返回对应的osu id，分割符为,",
+                        "Aloic", null, "2025-01-07")
+                        .addExample("/n2d Aloic,Pager,Hidden is fun,Zh_jk")
+                        .addOption(new CommandParameter("PlayerNameList","查询的玩家名称列表", CommandParameter.ParameterType.MUST)));
     }
 }

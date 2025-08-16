@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Slf4j
 public class PlayerInfoSVGMapper extends LazybotSVGMapper
@@ -220,8 +221,8 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("bp-artist-4").setTextContent(artistForBp4);
 
 
-        doc.getElementById("pp").setTextContent(CommonTool.toString(player.getInfo().getPerformancePoint()));
-        doc.getElementById("rank").setTextContent(CommonTool.formatNumber(player.getInfo().getGlobalRank()));
+        doc.getElementById("pp").setTextContent(CommonTool.toString(Optional.ofNullable(player.getInfo().getPerformancePoint()).orElse(0D)));
+        doc.getElementById("rank").setTextContent(CommonTool.formatNumber(Optional.ofNullable(player.getInfo().getGlobalRank()).orElse(0)));
         doc.getElementById("playCount").setTextContent(CommonTool.transformNumber(player.getInfo().getPlayCount()));
         doc.getElementById("playTime").setTextContent(CommonTool.formatSecondsToHours(player.getInfo().getTotalPlayTime()).concat("h"));
         doc.getElementById("accuracy").setTextContent(CommonTool.toString(player.getInfo().getAccuracy()).concat("%"));

@@ -8,6 +8,8 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -15,6 +17,7 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -93,5 +96,18 @@ public class CardCommand implements LazybotSlashCommand
             params.setMode(event.getOsuMode().getDescribe());
         params.validateParams();
         return params;
+    }
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Card","Card",
+                        "查询个人资料, 生成小型卡片样式",
+                        "Aloic", "Aloic", "2024-03-22")
+                        .addExample("/Card")
+                        .addExample("/Card Aloic")
+                        .addExample("/Card &")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Version","存在&则以新版样式输出", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

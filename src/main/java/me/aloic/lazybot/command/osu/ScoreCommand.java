@@ -8,6 +8,8 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -15,6 +17,7 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -82,5 +85,20 @@ public class ScoreCommand implements LazybotSlashCommand
             params.setMode(event.getOsuMode().getDescribe());
         params.validateParams();
         return params;
+    }
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Score","Score",
+                        "按照指定用户查询指定地图下的指定Mod组合中分数最高的成绩",
+                        "Aloic", "Slayemus, Aloic", "2024-04-06")
+                        .addExample("/Score 4889657+HDHR")
+                        .addExample("/Score Aloic 4889657")
+                        .addExample("/Score Aloic 4889657+HDHR &")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("BID","查询的地图ID", CommandParameter.ParameterType.MUST))
+                        .addOption(new CommandParameter("Mod","Mod过滤项", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Version","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

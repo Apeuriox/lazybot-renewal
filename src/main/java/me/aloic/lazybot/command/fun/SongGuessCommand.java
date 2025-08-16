@@ -5,6 +5,8 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.entity.SongGuessWithTime;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotSongGuessData;
@@ -14,6 +16,7 @@ import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
@@ -220,6 +223,15 @@ public class SongGuessCommand implements LazybotSlashCommand
         ImageIO.write(image, format, baos);
         return baos.toByteArray();
     }
-
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(new CommandHelp("Song Title Guess","song",
+                "从数据库随机查询一位玩家的的随机bp背景用于游戏，输入/song &以获取提示，输入/song &&以提前结束，一个群同时只能存在一场游戏，只保留最后的结果",
+                "Aloic", null, "2025-07-30")
+                .addExample("/song example")
+                .addExample("/song &")
+                .addOption(new CommandParameter("输入内容","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL)));
+    }
 }
 

@@ -8,6 +8,8 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
@@ -16,6 +18,7 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ProfileParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -82,5 +85,15 @@ public class ProfileCommand implements LazybotSlashCommand
         params.validateParams();
         return params;
     }
-
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Player Info","Info, Profile",
+                        "查询玩家的个人资料，背景可自定义",
+                        "Aloic", "Slayemus, Aloic", "2025-02-12")
+                        .addExample("/Profile")
+                        .addExample("/Info Aloic")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+    }
 }

@@ -5,11 +5,14 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.entity.GameWithTime;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -233,5 +236,17 @@ public class NameGuessCommand implements LazybotSlashCommand
         String obfuscatedName = obfuscateString(token.getPlayer_name());
         existingGameMap.put(identity, new GameWithTime(token.getPlayer_name(), LocalDateTime.now(),obfuscatedName));
         return "[Lazybot] 您的题目是 " + obfuscatedName;
+    }
+
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Player Name Guess","name",
+                "从数据库随机查询一位玩家的名字用于游戏，仅限初次绑定时缓存，输入/name &以提前结束，一个群同时只能存在一场游戏",
+                "Aloic", null, "2025-07-30")
+                .addExample("/name")
+                .addExample("/name &")
+                .addOption(new CommandParameter("输入内容","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL)));
     }
 }
