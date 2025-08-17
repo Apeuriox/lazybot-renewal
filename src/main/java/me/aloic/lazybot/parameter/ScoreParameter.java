@@ -81,7 +81,6 @@ public class ScoreParameter extends LazybotCommandParameter
             }
         }
         if (!params.isEmpty()) result.setPlayerName(String.join(" ", params).trim());
-        System.out.println(result.toString());
         return result;
     }
     public static void setupDefaultValue(ScoreParameter scoreParameter, AccessTokenPO accessTokenPO)

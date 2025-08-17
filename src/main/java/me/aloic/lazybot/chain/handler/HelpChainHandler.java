@@ -24,11 +24,8 @@ public class HelpChainHandler implements CommandHandlerInterface {
                 && !event.getCommandParameters().isEmpty()
                 && "*help".equalsIgnoreCase(event.getCommandParameters().getFirst())) {
             testOutputTool.writeStringToFile(command.getHelp());
-            System.out.println("did check");
-            System.out.println(Arrays.toString(event.getCommandParameters().toArray()));
             return;
         }
-        System.out.println("did check");
         chain.doHandle(event, command);
     }
 

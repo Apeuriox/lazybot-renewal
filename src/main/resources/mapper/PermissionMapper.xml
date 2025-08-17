@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.PermissionPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="target_id" jdbcType="BIGINT" property="target_id"/>
+        <result column="target_type" jdbcType="VARCHAR" property="target_type"/>
+        <result column="version" jdbcType="INTEGER" property="version"/>
+        <result column="command" jdbcType="VARCHAR" property="command"/>
+        <result column="created_at" jdbcType="DATE" property="created_at"/>
+    </resultMap>
+    <sql id = "Base_Column_List">
+        id, target_type, target_id, command, version, created_at
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from permission
+        where id =#{id}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM permission
+    </select>
+
+    <select id="selectByStats" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM permission
+        WHERE
+            target_id =#{target_id}
+          AND target_type =#{target_type}
+          AND command =#{command}
+          AND version =#{version}
+    </select>
+
+    <delete id="deleteByStats">
+        DELETE FROM permission WHERE target_id =#{target_id} AND command =#{command} AND version =#{version}
+    </delete>
+    <delete id="deleteByUserId" parameterType="java.lang.Long">
+        DELETE FROM permission WHERE target_type = USER AND target_id =#{target_id}
+    </delete>
+
+</mapper>

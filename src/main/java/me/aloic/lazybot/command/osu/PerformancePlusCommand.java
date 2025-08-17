@@ -59,7 +59,7 @@ public class PerformancePlusCommand implements LazybotSlashCommand
         return HelpFormatter.format(
                 new CommandHelp("Performance Plus Card","Ppp, Plus",
                         "查询对应玩家的重算版pp+，输入&以Corsace样式输出结果，主色调跟随玩家主页",
-                        "Aloic", "Aloic", "2024-06-09")
+                        "Aloic", "Aloic", "2025-06-09")
                         .addExample("/Plus")
                         .addExample("/Plus Aloic &")
                         .addExample("/Ppp &")

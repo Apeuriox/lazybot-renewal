@@ -66,7 +66,9 @@ public class AddScoreCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Add Score","AddScore, AddScores, Add", "以BID申请pp+重算，取最大结果","Aloic", "Aloic", "2025-07-22")
+                new CommandHelp("Add Score","AddScore, AddScores, Add",
+                        "以BID申请pp+重算，取最大结果",
+                        "Aloic", "Aloic", "2025-07-22")
                         .addExample("/Addscore 4889657")
                         .addExample("/Addscore Aloic 4889657")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))

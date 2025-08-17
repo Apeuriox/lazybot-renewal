@@ -108,6 +108,6 @@ public class CardCommand implements LazybotSlashCommand
                         .addExample("/Card Aloic")
                         .addExample("/Card &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","存在&则以新版样式输出", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Version","存在&则以测试版样式输出", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

@@ -221,7 +221,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("bp-artist-4").setTextContent(artistForBp4);
 
 
-        doc.getElementById("pp").setTextContent(CommonTool.toString(Optional.ofNullable(player.getInfo().getPerformancePoint()).orElse(0D)));
+        doc.getElementById("pp").setTextContent(String.valueOf(Math.round(Optional.ofNullable(player.getInfo().getPerformancePoint()).orElse(0D))));
         doc.getElementById("rank").setTextContent(CommonTool.formatNumber(Optional.ofNullable(player.getInfo().getGlobalRank()).orElse(0)));
         doc.getElementById("playCount").setTextContent(CommonTool.transformNumber(player.getInfo().getPlayCount()));
         doc.getElementById("playTime").setTextContent(CommonTool.formatSecondsToHours(player.getInfo().getTotalPlayTime()).concat("h"));
