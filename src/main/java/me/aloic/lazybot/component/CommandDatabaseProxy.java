@@ -36,7 +36,7 @@ public class CommandDatabaseProxy
         try {
             if (testEnabled) tokenPO = tokenMapper.selectByQq_code(testIdentity);
             else tokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-            if (tokenPO == null) throw new LazybotRuntimeException("[Lazybot] 请先使用/link 你的osu用户名 绑定osu账号");
+            if (tokenPO == null) throw new LazybotRuntimeException("[Lazybot] 请先使用/link 你的osu用户名 绑定osu账号，请注意不要绑定他人账户，取消绑定会删除相关组件的所有数据");
             return tokenPO;
         }
         catch (LazybotRuntimeException e) {
