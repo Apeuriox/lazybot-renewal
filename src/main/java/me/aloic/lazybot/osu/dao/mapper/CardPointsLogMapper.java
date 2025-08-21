@@ -10,5 +10,6 @@ import java.util.List;
 @Mapper
 public interface CardPointsLogMapper extends BaseMapper<CardUserPointsLogPO> {
     List<CardUserPointsLogPO> selectById(@Param("user_id")Integer user_id);
+    void deleteById(@Param("user_id")Integer user_id);
 
 }

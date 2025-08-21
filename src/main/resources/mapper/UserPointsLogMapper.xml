@@ -19,5 +19,11 @@
         LIMIT 20
     </select>
 
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE
+        FROM card_user_points_log
+        WHERE user_id =#{user_id}
+    </delete>
+
 
 </mapper>

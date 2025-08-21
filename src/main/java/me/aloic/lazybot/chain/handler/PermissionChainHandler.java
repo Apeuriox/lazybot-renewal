@@ -10,6 +10,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 @Component
 @Order(0)
@@ -17,6 +19,8 @@ public class PermissionChainHandler implements CommandHandlerInterface {
 
     @Resource
     private PermissionService permissionService;
+
+    private final List<Long> adminBypass = List.of(1524185356L);
 
     @Override
     public void handle(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception
@@ -32,6 +36,7 @@ public class PermissionChainHandler implements CommandHandlerInterface {
     @Override
     public void handle(Bot bot, LazybotSlashCommand command, LazybotSlashCommandEvent event, CommandHandlerChain chain) throws Exception
     {
+        if (adminBypass.contains(event.getMessageEvent().getSender().getUserId())) return;
         if(!doCheck("CHANNEL", event.getMessageEvent().getGroupId(), command, event.getScorePanelVersion()))
         {
             throw new LazybotRuntimeException("[Lazybot] 此指令已在本群禁用");
