@@ -24,13 +24,13 @@
     <update id="updateStats" parameterType="map">
         UPDATE card_user_points
         SET
-            points = #{user.points},
-            last_signin_time = #{user.last_signin_time},
-            total_spent_points = #{user.total_spent_points},
-            accumulated_check_time = #{user.accumulated_check_time},
-            continuous_check_time = #{user.continuous_check_time},
-            last_signin_time = #{user.last_signin_time}
-        where user_id =#{user.user_id}
+            points = #{points},
+            last_signin_time = #{last_signin_time},
+            total_spent_points = #{total_spent_points},
+            accumulated_check_time = #{accumulated_check_time},
+            continuous_check_time = #{continuous_check_time},
+            last_signin_time = #{last_signin_time}
+        where user_id =#{user_id}
     </update>
 
 

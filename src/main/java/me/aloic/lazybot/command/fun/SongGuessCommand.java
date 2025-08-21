@@ -227,7 +227,7 @@ public class SongGuessCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(new CommandHelp("Song Title Guess","song",
-                "从数据库随机查询一位玩家的的随机bp背景用于游戏，输入/song &以获取提示，输入/song &&以提前结束，一个群同时只能存在一场游戏，只保留最后的结果",
+                "从绑定Lazybot的用户中随机查询一位玩家的的随机bp背景用于游戏，输入/song &以获取提示，输入/song &&以提前结束，一个群同时只能存在一场游戏，只保留最后的结果",
                 "Aloic", null, "2025-07-30")
                 .addExample("/song example")
                 .addExample("/song &")

@@ -243,7 +243,7 @@ public class NameGuessCommand implements LazybotSlashCommand
     {
         return HelpFormatter.format(
                 new CommandHelp("Player Name Guess","name",
-                "从数据库随机查询一位玩家的名字用于游戏，仅限初次绑定时缓存，输入/name &以提前结束，一个群同时只能存在一场游戏",
+                "从绑定Lazybot的用户中随机查询一位玩家的名字用于游戏，仅限初次绑定时缓存，输入/name &以提前结束，一个群同时只能存在一场游戏",
                 "Aloic", null, "2025-07-30")
                 .addExample("/name")
                 .addExample("/name &")

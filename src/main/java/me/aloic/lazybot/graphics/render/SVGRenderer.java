@@ -56,6 +56,7 @@ public class SVGRenderer
             throw new LazybotRuntimeException("[Lazybot] 渲染成绩图时出错");
         }
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
+
 //        try (BufferedWriter writer = new BufferedWriter(new FileWriter("X:\\lazybot-output\\test.svg"))) {
 //            writer.write(SvgUtil.documentToString(document));
 //            logger.info("成功写入字符串到{}.", "X:\\lazybot-output\\test.svg");
