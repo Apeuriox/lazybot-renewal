@@ -36,20 +36,24 @@ public class PermissionChainHandler implements CommandHandlerInterface {
     @Override
     public void handle(Bot bot, LazybotSlashCommand command, LazybotSlashCommandEvent event, CommandHandlerChain chain) throws Exception
     {
-        if (adminBypass.contains(event.getMessageEvent().getSender().getUserId())) return;
-        if(!doCheck("CHANNEL", event.getMessageEvent().getGroupId(), command, event.getScorePanelVersion()))
-        {
-            throw new LazybotRuntimeException("[Lazybot] 此指令已在本群禁用");
+        if (adminBypass.contains(event.getMessageEvent().getSender().getUserId())) {
+            chain.doHandle(bot, event, command);
         }
+        else {
+            if(!doCheck("CHANNEL", event.getMessageEvent().getGroupId(), command, event.getScorePanelVersion()))
+            {
+                throw new LazybotRuntimeException("[Lazybot] 此指令已在本群禁用");
+            }
 //        if(!doCheck("USER", event.getMessageEvent().getSender().getUserId(), command, event.getScorePanelVersion()))
 //        {
 //            throw new LazybotRuntimeException("[Lazybot] 此指令不允许该用户调用");
 //        }
-        if(!doCheck("GLOBAL", 0L, command, event.getScorePanelVersion()))
-        {
-            throw new LazybotRuntimeException("[Lazybot] 此指令已被开发者禁用");
+            if(!doCheck("GLOBAL", 0L, command, event.getScorePanelVersion()))
+            {
+                throw new LazybotRuntimeException("[Lazybot] 此指令已被开发者禁用");
+            }
+            chain.doHandle(bot, event, command);
         }
-        chain.doHandle(bot, event, command);
     }
     private boolean doCheck(String type, Long id, LazybotSlashCommand command, Integer version)
     {

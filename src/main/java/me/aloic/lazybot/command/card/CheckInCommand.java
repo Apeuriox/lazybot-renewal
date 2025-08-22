@@ -44,21 +44,29 @@ public class CheckInCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
         AccessTokenPO token =  proxy.getAccessToken(event);
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), cardService.checkIn(token.getPlayer_id()),false);
+        if (event.getScorePanelVersion() == 0)
+        {
+            ImageUploadUtil.uploadImageToOnebot(bot, event, cardService.checkIn(token));
+        }
+        else bot.sendGroupMsg(event.getMessageEvent().getGroupId(), cardService.checkIn(token.getPlayer_id()),false);
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO token =  proxy.getAccessToken(event);
-        testOutputTool.writeStringToFile(cardService.checkIn(token.getPlayer_id()));
+        if (event.getScorePanelVersion() == 0)
+        {
+            testOutputTool.saveImageToLocal(cardService.checkIn(token));
+        }
+        else testOutputTool.writeStringToFile(cardService.checkIn(token.getPlayer_id()));
 
     }
     @Override
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Check In","CheckIn, Check, CI", "签到获取LazyCoin","Aloic", null, "2025-08-21")
+                new CommandHelp("Check In","CheckIn, Check, CI", "签到获取LazyCoin","Aloic", "Aloic", "2025-08-21")
                 .addExample("/checkin")
                 .addExample("/ci"));
     }

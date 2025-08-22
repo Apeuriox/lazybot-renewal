@@ -1,6 +1,13 @@
 package me.aloic.lazybot.Service;
 
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import org.springframework.transaction.annotation.Transactional;
+
 public interface CardService
 {
+    @Transactional
     String checkIn(Integer playerId);
+
+    @Transactional
+    byte[] checkIn(AccessTokenPO token);
 }

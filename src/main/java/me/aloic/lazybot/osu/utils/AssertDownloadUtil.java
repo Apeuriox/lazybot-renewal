@@ -170,6 +170,10 @@ public class AssertDownloadUtil
         avatarDownload(scoreVO.getAvatarUrl(),playerId,override);
         return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + playerId +".jpg";
     }
+    public static String avatarAbsolutePath(int playerId)
+    {
+        return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + playerId +".jpg";
+    }
     public static String avatarAbsolutePath(PlayerInfoDTO playerInfoDTO, boolean override)
     {
         avatarDownload(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId(),override);
