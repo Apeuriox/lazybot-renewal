@@ -23,7 +23,7 @@ public class CheckInStats implements Serializable
 
     public CheckInStats(CardUserPointsPO player,int coin, AccessTokenPO token)
     {
-        this.totalCheckIns = player.getAccumulated_check_time();
+        this.totalCheckIns = player.getAccumulated_check_time()+1;
         this.continuousCheckIns = player.getContinuous_check_time();
         this.lazyCoins = player.getPoints()+coin;
         this.lazyCoinsDiff = coin;
