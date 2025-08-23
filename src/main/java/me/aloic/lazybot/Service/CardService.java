@@ -10,4 +10,8 @@ public interface CardService
 
     @Transactional
     byte[] checkIn(AccessTokenPO token);
+
+    byte[] cardGameboy(AccessTokenPO token);
+
+    byte[] cardGameGadget(AccessTokenPO token);
 }

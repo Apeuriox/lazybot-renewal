@@ -5,8 +5,10 @@ import me.aloic.lazybot.Service.CardService;
 import me.aloic.lazybot.entity.po.CardUserPointsLogPO;
 import me.aloic.lazybot.entity.po.CardUserPointsPO;
 import me.aloic.lazybot.entity.vo.CheckInStats;
+import me.aloic.lazybot.entity.vo.RetroGamerCardStats;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.documentMapper.CardCheckInSVGMapper;
+import me.aloic.lazybot.graphics.mapping.documentMapper.CardSVGMapper;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.CardPointsLogMapper;
@@ -109,4 +111,22 @@ public class CardServiceImpl implements CardService
             )
         );
     }
+
+    @Override
+    public byte[] cardGameboy(AccessTokenPO token)
+    {
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                CardSVGMapper.mapRetroStatsToGameboy(new RetroGamerCardStats(token))
+
+        );
+    }
+    @Override
+    public byte[] cardGameGadget(AccessTokenPO token)
+    {
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                CardSVGMapper.mapRetroStatsToGameGadget(new RetroGamerCardStats(token))
+
+        );
+    }
+
 }

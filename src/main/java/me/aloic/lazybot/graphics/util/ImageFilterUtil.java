@@ -84,14 +84,12 @@ public class ImageFilterUtil
             }
         }
 
-        // 扫描线
         Graphics2D g2d = crt.createGraphics();
         g2d.setColor(new Color(0, 0, 0, 60)); // 半透明黑
         for (int y = 0; y < height; y += lineSpacing) {
             g2d.drawLine(0, y, width, y);
         }
         g2d.dispose();
-
         return crt;
     }
     public static String toBase64DataUrl(BufferedImage image, String formatName) throws IOException
