@@ -84,6 +84,8 @@ public class ScoreCommand implements LazybotSlashCommand
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.validateParams();
+        if (event.getMessageEvent()!=null)
+            params.setChannelId(event.getMessageEvent().getGroupId());
         return params;
     }
     @Override

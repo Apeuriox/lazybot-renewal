@@ -19,6 +19,8 @@ public class ScoreParameter extends LazybotCommandParameter
     private String modCombination;
     private Integer beatmapId;
     private Integer version;
+
+    private Long channelId;
     public ScoreParameter(String modCombination, Integer beatmapId, String mode, Integer version, String playerName)
     {
         this.modCombination=modCombination;

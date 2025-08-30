@@ -68,7 +68,12 @@ public class CardServiceImpl implements CardService
                     ));
         }
         if (playerStats.getLast_signin_time().toLocalDate().equals(LocalDateTime.now().toLocalDate())) {
-            throw new LazybotRuntimeException("[Lazybot] 今天已经签到过了哦");
+            CheckInStats stats =  new CheckInStats(playerStats,coinThisTime,token);
+            stats.setLazyCoinsDiff(0);
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    CardCheckInSVGMapper.mapCheckinStatsToCard(stats
+                    )
+            );
         }
         else if(ChronoUnit.DAYS.between(playerStats.getLast_signin_time(), LocalDateTime.now()) <= 1)
         {

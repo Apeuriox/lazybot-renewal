@@ -79,6 +79,10 @@ public class BpCommand implements LazybotSlashCommand
         params.setVersion(event.getScorePanelVersion());
         params.setPlayerId(tokenPO.getPlayer_id());
         params.validateParams();
+        if (event.getMessageEvent()!=null)
+            params.setChannelId(event.getMessageEvent().getGroupId());
+        else
+            params.setChannelId(114514L);
         return params;
     }
     @Override

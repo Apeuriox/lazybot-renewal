@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.documentMapper.*;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
+import me.aloic.lazybot.monitor.CompareMonitor;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
@@ -60,6 +61,8 @@ public class PlayerServiceImpl implements PlayerService
                     beatmapUserScoreLazer.getScore(),
                     false);
         verifyBeatmapsCache(scoreVO);
+        if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return SVGRenderer.renderSVGDocumentToByteArray(
                 ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
         );
@@ -92,6 +95,7 @@ public class PlayerServiceImpl implements PlayerService
         }
         mapScoreList=mapScoreList.stream().sorted(Comparator.comparing(MapScore::getPp).reversed()).toList();
         verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapDTO.getChecksum());
+        CompareMonitor.saveRecentBeatmap(params.getChannelId(), params.getBeatmapId());
         return SVGRenderer.renderSVGDocumentToByteArray(
                 MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScoreList,beatmapPerformance),
                 2f);
@@ -110,6 +114,7 @@ public class PlayerServiceImpl implements PlayerService
                 scoreList.get(params.getIndex() - 1),
                 false);
         verifyBeatmapsCache(scoreVO);
+        CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return SVGRenderer.renderSVGDocumentToByteArray(
                 ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
         );
@@ -129,6 +134,7 @@ public class PlayerServiceImpl implements PlayerService
                 scoreDTO.getFirst(),
                 false);
         verifyBeatmapsCache(scoreVO);
+        CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return SVGRenderer.renderSVGDocumentToByteArray(
                 ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
         );

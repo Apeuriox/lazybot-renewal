@@ -103,6 +103,8 @@ public class PlayRecentCommand implements LazybotSlashCommand
             params.setMode(event.getOsuMode().getDescribe());
         params.setVersion(event.getScorePanelVersion());
         params.validateParams();
+        if (event.getMessageEvent()!=null)
+            params.setChannelId(event.getMessageEvent().getGroupId());
         return params;
     }
     @Override

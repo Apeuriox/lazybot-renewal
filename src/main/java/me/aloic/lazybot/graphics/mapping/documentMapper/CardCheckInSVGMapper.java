@@ -47,7 +47,13 @@ public class CardCheckInSVGMapper extends LazybotSVGMapper
         document.getElementById("name").setTextContent(stats.getPlayerName());
         document.getElementById("month").setTextContent(today.format(DateTimeFormatter.ofPattern("MMM. yyyy", Locale.ENGLISH)));
         document.getElementById("lazycoin").setTextContent(String.valueOf(stats.getLazyCoins()));
-        document.getElementById("lazycoinDiff").setTextContent(String.format(" (+%s) LazyCoins",stats.getLazyCoinsDiff()));
+        if(stats.getLazyCoinsDiff()<=0) {
+            document.getElementById("lazycoinDiff").setTextContent("LazyCoins");
+        }
+        else {
+            document.getElementById("lazycoinDiff").setTextContent(String.format(" (+%s) LazyCoins",stats.getLazyCoinsDiff()));
+        }
+
         document.getElementById("lazycoinTotal").setTextContent(String.valueOf(stats.getTotalLazyCoins()));
 
         document.getElementById("cumDay").setTextContent(String.valueOf(stats.getTotalCheckIns()));
