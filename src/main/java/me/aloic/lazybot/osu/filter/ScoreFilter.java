@@ -89,11 +89,9 @@ public interface ScoreFilter {
                         .map(Mod::getAcronym)
                         .sorted()
                         .collect(Collectors.joining());
-                System.out.println(modsStr);
                 String inputStr = Arrays.stream(target.split("(?<=\\G.{2})"))
                         .sorted()
                         .collect(Collectors.joining());
-                System.out.println(inputStr);
                 return modsStr.equalsIgnoreCase(inputStr);
             }
             throw new IllegalArgumentException("[Lazybot] 不合法的运算符类型: " + operator.getSymbol());

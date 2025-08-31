@@ -74,10 +74,10 @@ public class FilterCommand implements LazybotSlashCommand
     {
         return HelpFormatter.format(
                 new CommandHelp("Filter","Filter, F",
-                        "【测试阶段】以指定的条件过滤用户的BP 200成绩，大小写不敏感，参数结构为 [字段][运算符][预期值]，分隔符号为半角逗号，最大渲染数量为50",
+                        "【测试阶段】以指定的条件过滤用户的BP 200成绩，大小写不敏感，参数结构为 [字段][运算符][预期值]，分隔符号为半角逗号，最大渲染数量为51",
                         "Aloic", "Aloic", "2025-08-31")
                         .addExample("/Filter Star>7")
-                        .addExample("/F Aloic Star>7, Bpm<230, Title^=I")
+                        .addExample("/F Star>7, Bpm<230, Title^=I")
                         .addOption(new CommandParameter("Statement", """
                                 过滤的条件，支持的条件为：
                                 Accuracy, acc: 准确率

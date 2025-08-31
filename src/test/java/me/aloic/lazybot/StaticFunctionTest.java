@@ -2,6 +2,7 @@ package me.aloic.lazybot;
 
 import me.aloic.lazybot.enums.FilterOperatorEnum;
 import me.aloic.lazybot.graphics.util.ImageFilterUtil;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.filter.ScoreFilter;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.osu.utils.SvgUtil;
@@ -14,6 +15,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 
 import javax.imageio.ImageIO;
@@ -106,7 +109,14 @@ public class StaticFunctionTest
 //                "image.jpg");
 //
 //    }
-
+//@Test
+//public void modsFilterTest() throws IOException
+//{
+//
+//    List<Mod> mods=List.of(new Mod("HD",null),new Mod("DT",null));
+//    System.out.println(ScoreFilter.modsComparison(FilterOperatorEnum.CT, mods, "DT"));
+//
+//}
 
     private static byte[] toByteArray(BufferedImage image, String format) throws IOException
     {

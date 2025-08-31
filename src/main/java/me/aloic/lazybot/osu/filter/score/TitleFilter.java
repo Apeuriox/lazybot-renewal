@@ -12,6 +12,6 @@ public class TitleFilter implements ScoreFilter
 
     @Override
     public boolean filter(ScoreLazerDTO score) {
-        return ScoreFilter.stringComparison(operator, score.getBeatmapset().getArtist(), target);
+        return ScoreFilter.stringComparison(operator, score.getBeatmapset().getTitle(), target);
     }
 }

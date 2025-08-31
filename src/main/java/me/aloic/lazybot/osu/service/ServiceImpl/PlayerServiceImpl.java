@@ -178,13 +178,11 @@ public class PlayerServiceImpl implements PlayerService
             scoreDTOList.get(i).setPosition(i);
         }
         OsuToolsUtil.setupModStats(scoreDTOList);
-        System.out.println("Filter size: " + params.getFilters().size());
         List<ScoreLazerDTO> filteredScores = scoreDTOList.stream()
                 .filter(score -> params.getFilters().stream().allMatch(f -> f.filter(score)))
                 .sorted(Comparator.comparing(ScoreLazerDTO::getPp).reversed())
-                .limit(50)
+                .limit(51)
                 .toList();
-        System.out.println("Final size:" + filteredScores.size());
         if(filteredScores.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 没有找到符合条件的bp");
 
         List<ScoreVO> scoreVOList=TransformerUtil.scoreTransformForListWithIndex(filteredScores);
