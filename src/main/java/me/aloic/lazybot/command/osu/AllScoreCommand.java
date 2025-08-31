@@ -63,6 +63,10 @@ public class AllScoreCommand implements LazybotSlashCommand
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.validateParams();
+        if (event.getMessageEvent()!=null)
+            params.setChannelId(event.getMessageEvent().getGroupId());
+        else
+            params.setChannelId(114514L);
         return params;
     }
     @Override

@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.dao.entity.dto.beatmap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.osu.dao.entity.vo.BeatmapAttributeVO;
 
 import java.util.List;
 
@@ -30,5 +31,10 @@ public class BeatmapDTO extends BeatmapCompactDTO
     private Integer ranked;
     private String url;
     private List<MapOwnersDTO> owners;
+
+
+
+    //no
+    private BeatmapAttributeVO attributes;
 
 }

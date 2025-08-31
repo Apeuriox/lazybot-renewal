@@ -95,7 +95,8 @@ public class PlayerServiceImpl implements PlayerService
         }
         mapScoreList=mapScoreList.stream().sorted(Comparator.comparing(MapScore::getPp).reversed()).toList();
         verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapDTO.getChecksum());
-        CompareMonitor.saveRecentBeatmap(params.getChannelId(), params.getBeatmapId());
+        if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), params.getBeatmapId());
         return SVGRenderer.renderSVGDocumentToByteArray(
                 MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScoreList,beatmapPerformance),
                 2f);
@@ -152,6 +153,41 @@ public class PlayerServiceImpl implements PlayerService
         List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         return SVGRenderer.renderSVGDocumentToByteArray(
                 ScoreListSVGMapper.mapScoreListToBpCard(info,scoreVOArray,params.getFrom(),1)
+        );
+    }
+
+
+    @Override
+    public byte[] bpScoreFilter(ScoreFilterParameter params) throws Exception
+    {
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestScoreList(
+                String.valueOf(info.getId()),
+                100,0,params.getMode());
+        if (scoreDTOList.size() < 110) {
+            scoreDTOList.addAll(dataExtractor.extractUserBestScoreList(
+                    String.valueOf(info.getId()),
+                    100,101,params.getMode()));
+        }
+        for(int i=0;i<scoreDTOList.size();i++) {
+            scoreDTOList.get(i).setPosition(i);
+        }
+        OsuToolsUtil.setupModStats(scoreDTOList);
+        System.out.println("Filter size: " + params.getFilters().size());
+        List<ScoreLazerDTO> filteredScores = scoreDTOList.stream()
+                .filter(score -> params.getFilters().stream().allMatch(f -> f.filter(score)))
+                .sorted(Comparator.comparing(ScoreLazerDTO::getPp).reversed())
+                .limit(50)
+                .toList();
+        System.out.println("Final size:" + filteredScores.size());
+        if(filteredScores.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 没有找到符合条件的bp");
+
+        List<ScoreVO> scoreVOList=TransformerUtil.scoreTransformForListWithIndex(filteredScores);
+        OsuToolsUtil.setUpImageStatic(scoreVOList);
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreListSVGMapper.mapScoreListToBpCard(info,scoreVOList,1,4,
+                        "Current Command: /Filter, get desired best performances with given statements.")
         );
     }
 

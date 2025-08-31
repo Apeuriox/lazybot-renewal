@@ -19,6 +19,8 @@ public interface PlayerService
 
     byte[] bplistListView(BplistParameter params) throws Exception;
 
+    byte[] bpScoreFilter(ScoreFilterParameter params) throws Exception;
+
     byte[] playRecentSeries(GeneralParameter params, int type, int style) throws Exception;
 
     byte[] todayBp(TodaybpParameter params) throws Exception;
