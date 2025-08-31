@@ -102,7 +102,7 @@ public class FilterCommand implements LazybotSlashCommand
                                 Slider： 谱面的滑条数量
                                 Spinner： 谱面的转盘数量
                                 Star： 谱面的难度星级
-                                Title, Name： 谱面标题""", CommandParameter.ParameterType.OPTIONAL))
+                                Title, Name： 谱面标题""", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Operator", """
                                 过滤的运算符，支持的运算符号为：
                                 数字: >  大于
@@ -118,7 +118,10 @@ public class FilterCommand implements LazybotSlashCommand
                                      =  包含
                                      !=  不相等
                                 模组: =  包含
-                                     == 完全相等""", CommandParameter.ParameterType.OPTIONAL)));
+                                     == 完全相等""", CommandParameter.ParameterType.MUST))
+                        .addOption(new CommandParameter("Value","过滤的值", CommandParameter.ParameterType.MUST))
+
+        );
     }
 
 }

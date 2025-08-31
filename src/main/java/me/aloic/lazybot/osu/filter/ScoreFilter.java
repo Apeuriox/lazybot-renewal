@@ -81,17 +81,19 @@ public interface ScoreFilter {
     static boolean modsComparison(FilterOperatorEnum operator, List<Mod> mods, String target)
     {
         try{
-            if (operator==FilterOperatorEnum.EQ) {
+            if (operator==FilterOperatorEnum.CT) {
                 return mods.stream().anyMatch(m -> m.getAcronym().equalsIgnoreCase(target));
             }
-            else if (operator==FilterOperatorEnum.CT) {
+            else if (operator==FilterOperatorEnum.EQ) {
                 String modsStr = mods.stream()
                         .map(Mod::getAcronym)
                         .sorted()
                         .collect(Collectors.joining());
+                System.out.println(modsStr);
                 String inputStr = Arrays.stream(target.split("(?<=\\G.{2})"))
                         .sorted()
                         .collect(Collectors.joining());
+                System.out.println(inputStr);
                 return modsStr.equalsIgnoreCase(inputStr);
             }
             throw new IllegalArgumentException("[Lazybot] 不合法的运算符类型: " + operator.getSymbol());

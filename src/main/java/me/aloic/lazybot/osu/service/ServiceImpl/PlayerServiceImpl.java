@@ -162,14 +162,18 @@ public class PlayerServiceImpl implements PlayerService
     {
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
-        List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestScoreList(
-                String.valueOf(info.getId()),
-                100,0,params.getMode());
+        CompletableFuture<List<ScoreLazerDTO>> futurePage1 = CompletableFuture.supplyAsync(() ->
+                dataExtractor.extractUserBestScoreList(String.valueOf(info.getId()), 100, 0, params.getMode())
+        );
+        CompletableFuture<List<ScoreLazerDTO>> futurePage2 = CompletableFuture.supplyAsync(() ->
+                dataExtractor.extractUserBestScoreList(String.valueOf(info.getId()), 100, 101, params.getMode())
+        );
+
+        List<ScoreLazerDTO> scoreDTOList = futurePage1.get();
         if (scoreDTOList.size() < 110) {
-            scoreDTOList.addAll(dataExtractor.extractUserBestScoreList(
-                    String.valueOf(info.getId()),
-                    100,101,params.getMode()));
+            scoreDTOList.addAll(futurePage2.get());
         }
+
         for(int i=0;i<scoreDTOList.size();i++) {
             scoreDTOList.get(i).setPosition(i);
         }
