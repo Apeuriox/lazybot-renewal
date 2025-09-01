@@ -21,4 +21,9 @@ public class SVGElementHelper
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
         return dateTime.format(outputFormatter);
     }
+    public static String dateNow() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
+        return dateTime.format(outputFormatter);
+    }
 }

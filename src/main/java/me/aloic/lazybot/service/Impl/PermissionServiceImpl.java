@@ -1,6 +1,6 @@
-package me.aloic.lazybot.Service.Impl;
+package me.aloic.lazybot.service.Impl;
 import jakarta.annotation.Resource;
-import me.aloic.lazybot.Service.PermissionService;
+import me.aloic.lazybot.service.PermissionService;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.entity.po.PermissionPO;
 import me.aloic.lazybot.osu.dao.mapper.PermissionMapper;

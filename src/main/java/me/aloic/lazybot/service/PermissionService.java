@@ -1,4 +1,4 @@
-package me.aloic.lazybot.Service;
+package me.aloic.lazybot.service;
 
 import me.aloic.lazybot.command.LazybotSlashCommand;
 

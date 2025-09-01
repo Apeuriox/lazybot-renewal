@@ -2,7 +2,7 @@ package me.aloic.lazybot.chain.handler;
 
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
-import me.aloic.lazybot.Service.PermissionService;
+import me.aloic.lazybot.service.PermissionService;
 import me.aloic.lazybot.chain.model.CommandHandlerChain;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.exception.LazybotRuntimeException;

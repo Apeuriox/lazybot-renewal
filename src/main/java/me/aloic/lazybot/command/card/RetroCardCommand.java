@@ -2,7 +2,7 @@ package me.aloic.lazybot.command.card;
 
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
-import me.aloic.lazybot.Service.CardService;
+import me.aloic.lazybot.service.CardService;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;

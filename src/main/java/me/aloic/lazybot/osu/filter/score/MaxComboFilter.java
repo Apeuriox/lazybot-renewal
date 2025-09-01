@@ -2,10 +2,11 @@ package me.aloic.lazybot.osu.filter.score;
 
 import lombok.AllArgsConstructor;
 import me.aloic.lazybot.enums.FilterOperatorEnum;
-import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.filter.ScoreFilter;
 
+
+//disabled due to insufficient data
 @AllArgsConstructor
 public class MaxComboFilter implements ScoreFilter
 {

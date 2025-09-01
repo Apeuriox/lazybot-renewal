@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.enums.MoelleuxTypeEnum;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
+import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoMoelleux;
@@ -140,7 +141,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
 
         doc.getElementById("Moelleux").setAttribute("fill", new HSL(primaryHue, 75*saturationFactor, 95).toString());
         doc.getElementById("footer-bg").setAttribute("fill", mainBorderColor.toString());
-
+        doc.getElementById("renderTime").setTextContent(SVGElementHelper.dateNow());
         doc.getElementById("name-1").setTextContent(player.getInfo().getPlayerName().replace("-", "").replaceAll("\\d", ""));
         doc.getElementById("name-1").setAttribute("fill", new HSL(primaryHue, 9*saturationFactor, 75).toString());
         doc.getElementById("name-2").setTextContent(player.getInfo().getPlayerName().toUpperCase());

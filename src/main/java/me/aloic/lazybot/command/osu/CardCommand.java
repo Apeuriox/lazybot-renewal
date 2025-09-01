@@ -65,10 +65,9 @@ public class CardCommand implements LazybotSlashCommand
             );
         else
         {
-            ImageUploadUtil.uploadImageToOnebotWithText(bot,event,playerService.cardMoelleux(
+            ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.cardMoelleux(
                             setupParameter(event, proxy.getAccessToken(event))
-                    ),
-                    "[Lazybot] 开发中预览，不代表最终品质");
+                    ));
         }
     }
 
@@ -103,11 +102,11 @@ public class CardCommand implements LazybotSlashCommand
         return HelpFormatter.format(
                 new CommandHelp("Card","Card",
                         "查询个人资料, 生成小型卡片样式",
-                        "Aloic", "Aloic", "2024-03-22")
+                        "Aloic", "Aloic", "2024-03-22 (原版) / 2025-08-05 (Moelleux样式)")
                         .addExample("/Card")
                         .addExample("/Card Aloic")
                         .addExample("/Card &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","存在&则以测试版样式输出", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Version","存在&则以Moelleux样式输出，需要有足够权限", CommandParameter.ParameterType.OPTIONAL)));
     }
 }
