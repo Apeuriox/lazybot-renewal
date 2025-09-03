@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.utils;
 import cn.hutool.json.JSONUtil;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
 import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
@@ -21,6 +22,12 @@ public class RosuUtil
 {
     public static PerformanceVO getPPStats(Path pathToOsuFile, ScoreVO scoreVO) throws IOException {
         return getPPStats(pathToOsuFile, JSONUtil.toJsonStr(scoreVO.getModJSON()) ,scoreVO.getStatistics(),scoreVO.getMode(),scoreVO.getMaxCombo(),scoreVO.getIsLazer());
+    }
+    public static PerformanceVO getPPStats(Path pathToOsuFile, ScoreLazerDTO score) throws IOException {
+        return getPPStats(pathToOsuFile, JSONUtil.toJsonStr(score.getMods()) ,score.getStatistics(),String.valueOf(score.getRuleset_id()),score.getMax_combo(), score.getLegacy_total_score() == 0);
+    }
+    public static PerformanceVO getCurrentPP(Path pathToOsuFile, ScoreLazerDTO score) throws IOException {
+        return getCurrentPP(pathToOsuFile, JSONUtil.toJsonStr(score.getMods()) ,score.getStatistics(),String.valueOf(score.getRuleset_id()),score.getMax_combo(), score.getLegacy_total_score() == 0);
     }
     public static PerformanceVO getPPStats(Path pathToOsuFile, ScoreSequence scoreSequence) throws IOException {
         return getPPStats(pathToOsuFile, JSONUtil.toJsonStr(scoreSequence.getModList()) ,scoreSequence.getStatistics(), String.valueOf(scoreSequence.getRulesetId()),scoreSequence.getMaxCombo(),scoreSequence.getIsLazer());
@@ -88,6 +95,16 @@ public class RosuUtil
             throw new LazybotRuntimeException("Error when calculating max stats with path of " + pathToOsuFile);
         }
         return setUpMapStatics(rosuResult,resultPerformance,maxStats);
+    }
+
+    private static PerformanceVO getCurrentPP(Path pathToOsuFile, String modJSON, ScoreStatisticsLazer statistics, String mode, Integer maxCombo, boolean isLazerScore) throws IOException
+    {
+        PerformanceVO resultPerformance=new PerformanceVO();
+        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(pathToOsuFile));
+        JniPerformanceAttributes rosuResult=getPPStats(beatmap,modJSON,statistics,mode,maxCombo,isLazerScore);
+        resultPerformance.setStar(rosuResult.getStarRating());
+        resultPerformance.setCurrentPP(rosuResult.getPP());
+        return resultPerformance;
     }
 
     private static PerformanceVO setUpMapStatics(JniPerformanceAttributes rosuResult, PerformanceVO resultPerformance, List<Double> maxStats)

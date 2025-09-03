@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.util.CommonTool;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,6 +19,8 @@ public class ScoreParameter extends LazybotCommandParameter
     private String modCombination;
     private Integer beatmapId;
     private Integer version;
+
+    private Long channelId;
     public ScoreParameter(String modCombination, Integer beatmapId, String mode, Integer version, String playerName)
     {
         this.modCombination=modCombination;
@@ -81,7 +81,6 @@ public class ScoreParameter extends LazybotCommandParameter
             }
         }
         if (!params.isEmpty()) result.setPlayerName(String.join(" ", params).trim());
-        System.out.println(result.toString());
         return result;
     }
     public static void setupDefaultValue(ScoreParameter scoreParameter, AccessTokenPO accessTokenPO)

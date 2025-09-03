@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.util.CommonTool;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +17,8 @@ public class RecentParameter extends LazybotCommandParameter
 {
     private Integer index;
     private Integer version;
+
+    private Long channelId;
     public RecentParameter(String mode, Integer index, Integer version, String playerName)
     {
         this.setMode(mode);

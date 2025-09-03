@@ -6,10 +6,13 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -36,7 +39,7 @@ public class ModCommand implements LazybotSlashCommand
     }
 
     @Override
-    public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
+    public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
         GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
         params.validateParams();
@@ -61,5 +64,14 @@ public class ModCommand implements LazybotSlashCommand
             throw new LazybotRuntimeException("[Lazybot] 要么你输入的Mod名有问题，要么此Mod的页面还未创建");
         }
 
+    }
+    @Override
+    public String getHelp()
+    {
+        return HelpFormatter.format(
+                new CommandHelp("Mod Info","Mod, modInfo, mi", "查看Osu!下指定Mod的信息","Aloic", "Aloic", "2025-05-09")
+                .addExample("/mod Hidden")
+                .addExample("/mod HD")
+                .addOption(new CommandParameter("Mod名称","Mod的名称，支持全称及缩写", CommandParameter.ParameterType.MUST)));
     }
 }

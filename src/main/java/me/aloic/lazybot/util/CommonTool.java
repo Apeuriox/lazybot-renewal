@@ -3,6 +3,7 @@ package me.aloic.lazybot.util;
 import de.androidpit.colorthief.ColorThief;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,6 +28,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class CommonTool {
     public static boolean isEmpty(String s) {
@@ -85,7 +87,10 @@ public class CommonTool {
         return obj.toString();
 
     }
-
+    public static String transformNumber(int number)
+    {
+        return transformNumber(String.valueOf(number));
+    }
     public static String transformNumber(String number){
         int length = number.length();
         int offset = length%3;
@@ -464,9 +469,17 @@ public class CommonTool {
     }
     public static boolean modsContainsAnyOfStarChanging(String[] array)
     {
-        List<String> elements = Arrays.asList("HR","DT","HT","EZ","FL","NC","TD");
+        List<String> elements = Arrays.asList("HR","DT","HT","EZ","FL","NC","TD","BL","DC");
         return Arrays.stream(array).anyMatch(elements::contains);
     }
+    public static boolean modsContainsAnyOfStarChanging(List<Mod> mods)
+    {
+        if (mods==null || mods.isEmpty()) return false;
+        return modsContainsAnyOfStarChanging(mods.stream()
+                .map(Mod::getAcronym)
+                .toArray(String[]::new));
+    }
+
     public static String hslFormat(Integer hue, Integer saturation, Integer value)
     {
         return String.format("hsl(%d,%d%%,%d%%)", hue, saturation, value);

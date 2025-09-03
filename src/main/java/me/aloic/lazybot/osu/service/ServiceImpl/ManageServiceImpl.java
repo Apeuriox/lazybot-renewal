@@ -129,20 +129,20 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String verify(VerifyParameter params)
     {
-        if(!adminMap.containsKey(params.getQqCode())) throw new LazybotRuntimeException("你没有权限");
+        if(!adminMap.containsKey(params.getQqCode())) throw new LazybotRuntimeException("[Lazybot] 你没有权限");
         if(Objects.equals(params.getType(), "view")) {
             return showUnverifiedCustomization();
         }
         else if(Objects.equals(params.getType(), "profile")) {
             return verifyProfileCustomization(params);
         }
-        return "未知二级命令";
+        return "[Lazybot] 未知二级命令";
     }
 
     @Override
     public String addTips(ContentParameter params)
     {
-            if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("你没有权限");
+            if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("[Lazybot] 你没有权限");
             try{
                 TipsPO tipsPO=new TipsPO();
                 tipsPO.setContent(params.getContent());
@@ -153,20 +153,20 @@ public class ManageServiceImpl implements ManageService
                     tipsMapper.insert(tipsPO);
                 }
                 catch (Exception e){
-                    throw new RuntimeException("添加提示时失败" + e.getMessage());
+                    throw new RuntimeException("[Lazybot] 添加提示时失败" + e.getMessage());
                 }
             }
             catch (Exception e) {
                 logger.error("添加提示时失败",e);
-                return "添加tips失败，详情请见log";
+                return "[Lazybot] 添加tips失败，详情请见log";
             }
-            return "成功添加";
+            return "[Lazybot] 成功添加";
     }
 
     @Override
     public String ppTest(ScoreParameter params, Long userIdentity)
     {
-        if(!adminMap.containsKey(userIdentity)) throw new LazybotRuntimeException("你没有权限");
+        if(!adminMap.containsKey(userIdentity)) throw new LazybotRuntimeException("[Lazybot] 你没有权限");
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
@@ -179,13 +179,13 @@ public class ManageServiceImpl implements ManageService
     private String verifyProfileCustomization(VerifyParameter params)
     {
         customizationMapper.updateVerified(2,params.getCustomizeId());
-        return "成功设置";
+        return "[Lazybot] 成功设置";
     }
 
     private String showUnverifiedCustomization()
     {
         List<ProfileCustomizationPO> profiles=customizationMapper.selectUnverified();
-        StringBuffer sb = new StringBuffer("所有客制化请求均已完成审核");
+        StringBuffer sb = new StringBuffer("[Lazybot] 所有客制化请求均已完成审核");
         if(profiles!=null && !profiles.isEmpty()) {
             sb.delete(0,sb.length());
             for(ProfileCustomizationPO profile:profiles) {

@@ -75,7 +75,7 @@ public class ResourceMonitor
                                 throw new IOException("无法创建目录：" + targetFile.getAbsolutePath());
                             }
                         } else {
-                            logger.info("正在提取资源：{}", targetFile.getAbsolutePath());
+                            logger.debug("正在提取资源：{}", targetFile.getAbsolutePath());
                             copyResourceFromJar(jar, entry, targetFile);
                         }
                     }
@@ -122,7 +122,7 @@ public class ResourceMonitor
                 out.write(buffer, 0, bytesRead);
             }
         }
-        logger.info("资源已提取：{}", targetFile.getAbsolutePath());
+        logger.debug("资源已提取：{}", targetFile.getAbsolutePath());
     }
 
     /**
@@ -189,6 +189,7 @@ public class ResourceMonitor
         createDirectoryIfNotExists(assetsDir);
         createDirectoryIfNotExists(osuResDir);
         createDirectoryIfNotExists(fonts);
+        logger.info("工作目录结构成功初始化");
     }
 
     /**
@@ -204,9 +205,9 @@ public class ResourceMonitor
             if (!created) {
                 throw new IOException("无法创建目录：" + dir.getAbsolutePath());
             }
-            logger.info("目录已创建：{}", dir.getAbsolutePath());
+            logger.debug("目录已创建：{}", dir.getAbsolutePath());
         } else {
-            logger.info("目录已存在：{}", dir.getAbsolutePath());
+            logger.debug("目录已存在：{}", dir.getAbsolutePath());
         }
     }
 

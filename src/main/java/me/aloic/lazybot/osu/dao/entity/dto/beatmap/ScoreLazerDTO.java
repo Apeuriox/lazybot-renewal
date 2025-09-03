@@ -8,6 +8,8 @@ import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.MaximumStatist
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.player.CurrentUserAttributes;
+import me.aloic.lazybot.osu.dao.entity.vo.BeatmapAttributeVO;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.List;
@@ -49,6 +51,9 @@ public class ScoreLazerDTO implements Serializable
     private BeatmapDTO beatmap;
     private PlayerInfoDTO user;
     private BeatmapsetDTO beatmapset;
+
+    private Integer position;
+    private Boolean difficultChangedMod;
 
 
     public String[] getModsArray()

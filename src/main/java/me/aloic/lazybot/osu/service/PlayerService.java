@@ -19,6 +19,8 @@ public interface PlayerService
 
     byte[] bplistListView(BplistParameter params) throws Exception;
 
+    byte[] bpScoreFilter(ScoreFilterParameter params) throws Exception;
+
     byte[] playRecentSeries(GeneralParameter params, int type, int style) throws Exception;
 
     byte[] todayBp(TodaybpParameter params) throws Exception;
@@ -28,6 +30,8 @@ public interface PlayerService
     byte[] noChoke(GeneralParameter params, int type) throws Exception;
 
     byte[] card(GeneralParameter params) throws Exception;
+
+    byte[] cardMoelleux(GeneralParameter params) throws Exception;
 
     byte[] performancePlus(GeneralParameter params) throws Exception;
 

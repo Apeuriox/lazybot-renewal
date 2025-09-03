@@ -116,25 +116,65 @@ public class OsuToolsUtil
         List<CompletableFuture<ScoreSequence>> futureList = scoreSequences.stream()
                 .map(scoreSequence -> CompletableFuture.supplyAsync(() -> {
                     scoreSequence.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreSequence.getBeatmap().getBeatmapset_id()));
-                    ModCalculatorUtil.setupBpmChange(scoreSequence);
-                    try
-                    {
-                        scoreSequence.setPpDetails(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(), false), scoreSequence));
-                        if (scoreSequence.getPpDetails().getStar() != null)
-                        {
-                            scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
-                        }
-                    } catch (Exception e)
-                    {
-                        throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
-                    }
-                    return scoreSequence;
+                    return calcPerformanceForSequence(scoreSequence);
                 }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
                 .toList();
 
         return futureList.stream()
                 .map(CompletableFuture::join)
                 .collect(Collectors.toList());
+    }
+    public static List<ScoreLazerDTO> setupModStats(List<ScoreLazerDTO> scores)
+    {
+        List<CompletableFuture<ScoreLazerDTO>> futureList = scores.stream()
+                .map(score -> CompletableFuture.supplyAsync(() -> {
+                    ModCalculatorUtil.afterModMapInfo(score);
+                    if (CommonTool.modsContainsAnyOfStarChanging(score.getMods()))
+                    {
+                        try {
+                           PerformanceVO performance = RosuUtil.getCurrentPP(AssertDownloadUtil.beatmapPath(score.getBeatmap().getId(), false), score);
+                           score.getBeatmap().setDifficulty_rating(performance.getStar());
+                        } catch (Exception e) {
+                            throw new LazybotRuntimeException("[Lazybot] 重算成绩详情时出错: " + e.getMessage());
+                        }
+                    }
+                    return score;
+                }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
+                .toList();
+
+        return futureList.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+    }
+    public static List<ScoreSequence> setUpPerformanceSequence(List<ScoreSequence> scoreSequences)
+    {
+        List<CompletableFuture<ScoreSequence>> futureList = scoreSequences.stream()
+                .map(scoreSequence -> CompletableFuture.supplyAsync(() -> {
+                    return calcPerformanceForSequence(scoreSequence);
+                }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
+                .toList();
+
+        return futureList.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+    }
+
+    @NotNull
+    public static ScoreSequence calcPerformanceForSequence(ScoreSequence scoreSequence)
+    {
+        ModCalculatorUtil.setupBpmChange(scoreSequence);
+        try
+        {
+            scoreSequence.setPpDetails(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(), false), scoreSequence));
+            if (scoreSequence.getPpDetails().getStar() != null)
+            {
+                scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
+            }
+        } catch (Exception e)
+        {
+            throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
+        }
+        return scoreSequence;
     }
 
 

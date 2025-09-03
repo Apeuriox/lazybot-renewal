@@ -9,6 +9,8 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.mapper.CardPointsLogMapper;
+import me.aloic.lazybot.osu.dao.mapper.CardPointsMapper;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
@@ -17,6 +19,7 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.DataExtractor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -29,6 +32,10 @@ public class UserServiceImpl implements UserService
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private TokenMapper tokenMapper;
+    @Resource
+    private CardPointsMapper cardPointsMapper;
+    @Resource
+    private CardPointsLogMapper cardPointsLogMapper;
 
     @Resource
     private DataExtractor dataExtractor;
@@ -103,13 +110,18 @@ public class UserServiceImpl implements UserService
                         this::createNotBindError);
         event.getHook().sendMessage("[Lazybot] 已解除绑定: " +event.getOption("username").getAsString()).queue();
     }
+
+    @Transactional
     @Override
     public void unlinkUser(Bot bot, LazybotSlashCommandEvent event)
     {
-        Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
+        AccessTokenPO accessTokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
+        Optional.ofNullable(accessTokenPO)
                 .ifPresentOrElse(
                         token -> tokenMapper.deleteByQQ(event.getMessageEvent().getSender().getUserId()),
                         this::createNotBindError);
+        cardPointsMapper.deleteById(accessTokenPO.getPlayer_id());
+        cardPointsLogMapper.deleteById(accessTokenPO.getPlayer_id());
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功解除绑定").build(),false);
     }
     private void insertUserToTable(SlashCommandInteractionEvent event, @Nonnull String username){

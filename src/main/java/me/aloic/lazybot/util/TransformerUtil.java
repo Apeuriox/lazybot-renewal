@@ -123,6 +123,39 @@ public class TransformerUtil
         }
         return scoreVO;
     }
+    public static List<ScoreVO> scoreTransformForListWithIndex(List<ScoreLazerDTO> scoreDTO)
+    {
+        List<ScoreVO> scoreVO=new ArrayList<>();
+        for (ScoreLazerDTO scoreLazerDTO : scoreDTO) {
+            ScoreVO temp = new ScoreVO();
+            temp.setScore(scoreLazerDTO.getClassic_total_score());
+            temp.setAccuracy(scoreLazerDTO.getAccuracy());
+            temp.setMods(scoreLazerDTO.getMods().stream()
+                    .map(Mod::getAcronym)
+                    .toArray(String[]::new));
+            temp.setModJSON(scoreLazerDTO.getMods());
+            temp.setCreate_at(scoreLazerDTO.getEnded_at());
+            temp.setMaxCombo(scoreLazerDTO.getMax_combo());
+            temp.setPositionInList(scoreLazerDTO.getPosition());
+            temp.setPp(scoreLazerDTO.getPp());
+            if(scoreLazerDTO.getPassed()) {
+                temp.setRank(scoreLazerDTO.getRank());
+            }
+            else {
+                temp.setRank("F");
+            }
+            //do not download avatar here
+            temp.setAvatarUrl(scoreLazerDTO.getUser().getAvatar_url());
+            temp.setUser_name(scoreLazerDTO.getUser().getUsername());
+            temp.setIsLazer(scoreLazerDTO.getLegacy_total_score() == 0);
+            temp.setStatistics(scoreLazerDTO.getStatistics());
+            temp.setBeatmap(TransformerUtil.beatmapTransform(scoreLazerDTO.getBeatmap(), scoreLazerDTO.getBeatmapset()));
+            temp.setMode(String.valueOf(scoreLazerDTO.getRuleset_id()));
+            temp.setIsPerfectCombo(scoreLazerDTO.getIs_perfect_combo());
+            scoreVO.add(temp);
+        }
+        return scoreVO;
+    }
     public static List<ScoreSequence> scoreSequenceListTransform(List<ScoreLazerDTO> scoreLazerDTOS, boolean disableDifference)
     {
         List<ScoreSequence> scoreSequences=new ArrayList<>();

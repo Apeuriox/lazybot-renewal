@@ -1,14 +1,18 @@
 package me.aloic.lazybot.graphics.mapping.documentMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import me.aloic.lazybot.enums.MoelleuxTypeEnum;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
+import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoMoelleux;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.PerformanceDimensionLimit;
 import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
@@ -24,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Slf4j
 public class PlayerInfoSVGMapper extends LazybotSVGMapper
@@ -124,6 +129,165 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             throw new LazybotRuntimeException("[Lazybot] Info卡片生成失败");
         }
     }
+    public static Document mapPlayerInfoMoelleuxToCard(PlayerInfoMoelleux player, int primaryHue)
+    {
+        Document doc = SVGTemplateLoader.loadSVGTemplate("CardMoelleux");
+        int saturationFactor = 1;
+        if (primaryHue > 360) saturationFactor = 0;
+        HSL mainBorderColor = new HSL(CommonTool.circularHueSubtract(primaryHue,7), 44*saturationFactor, 41);
+        HSL lighterOverlayColor = new HSL(CommonTool.circularHueSubtract(primaryHue,-5), 33*saturationFactor, 98);
+        HSL ellisColor = new HSL(CommonTool.circularHueSubtract(primaryHue,2), 40*saturationFactor, 51);
+
+
+        doc.getElementById("Moelleux").setAttribute("fill", new HSL(primaryHue, 75*saturationFactor, 95).toString());
+        doc.getElementById("footer-bg").setAttribute("fill", mainBorderColor.toString());
+        doc.getElementById("renderTime").setTextContent(SVGElementHelper.dateNow());
+        player.getInfo().setPlayerName(player.getInfo().getPlayerName().toLowerCase());
+        doc.getElementById("name-1").setTextContent((player.getInfo().getPlayerName().substring(0, 1).toUpperCase() + player.getInfo().getPlayerName().substring(1))
+                .replace("-", "").replaceAll("\\d", ""));
+//        if(!Character.isUpperCase(player.getInfo().getPlayerName().charAt(0)))
+//        {
+//            doc.getElementById("name-1").setAttribute("text-anchor","middle");
+//            doc.getElementById("name-1").setAttribute("transform","rotate(90 356 64) translate(940 360)");
+//        }
+        doc.getElementById("name-1").setAttribute("fill", new HSL(primaryHue, 9*saturationFactor, 75).toString());
+        doc.getElementById("name-2").setTextContent(player.getInfo().getPlayerName().toUpperCase());
+
+        doc.getElementById("card-bg-border").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("card-left-border").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("right-1-border").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("right-2-border").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("right-3-border").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("right-4-border").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("right-s-border").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("right-b-border").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("bp-border-1").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("bp-border-2").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("bp-border-3").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("bp-border-4").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("diamonds").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("diamonds2").setAttribute("stroke", mainBorderColor.toString());
+        doc.getElementById("avatar-border").setAttribute("stroke", mainBorderColor.toString());
+
+        doc.getElementById("index-bg").setAttribute("fill", mainBorderColor.toString());
+        doc.getElementById("lazybot-bg").setAttribute("fill", mainBorderColor.toString());
+        doc.getElementById("logo-text").setAttribute("fill", mainBorderColor.toString());
+
+
+        doc.getElementById("card-left-border").setAttribute("fill", lighterOverlayColor.toString());
+        doc.getElementById("right-1-border").setAttribute("fill", lighterOverlayColor.toString());
+        doc.getElementById("right-4-border").setAttribute("fill", lighterOverlayColor.toString());
+        doc.getElementById("right-b-border").setAttribute("fill", lighterOverlayColor.toString());
+
+        doc.getElementById("avatar-block-bg").setAttribute("fill", ellisColor.toString());
+        doc.getElementById("right-1-label-bg").setAttribute("fill", ellisColor.toString());
+        doc.getElementById("right-2-label-bg").setAttribute("fill", ellisColor.toString());
+        doc.getElementById("right-3-label-bg").setAttribute("fill", ellisColor.toString());
+        doc.getElementById("right-4-label-bg").setAttribute("fill", ellisColor.toString());
+        doc.getElementById("right-s-label-bg").setAttribute("fill", ellisColor.toString());
+        doc.getElementById("right-b-label-bg").setAttribute("fill", ellisColor.toString());
+        doc.getElementById("bp-elli-3").setAttribute("fill", ellisColor.toString());
+        doc.getElementById("bp-elli-4").setAttribute("fill", ellisColor.toString());
+
+        MoelleuxTypeEnum type = MoelleuxTypeEnum.fromHue(primaryHue);
+        doc.getElementById("index").setTextContent("#"+type.ordinal());
+        doc.getElementById("card-type").setTextContent(type.getName());
+        doc.getElementById("info").setTextContent(type.getName()+": "+player.getInfo().getPlayerName());
+
+        moelleuxBpTitleFontSize(doc,player.getBps());
+        doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getInfo().getAvatarUrl());
+        doc.getElementById("bp-name-1").setTextContent(player.getBps().getFirst().getBeatmap().getCreator().toUpperCase());
+        doc.getElementById("bp-name-1").setAttribute("fill",mainBorderColor.toString().toUpperCase());
+        doc.getElementById("bp-1").setAttributeNS(xlinkns, "xlink:href", player.getBps().getFirst().getBeatmap().getBgUrl());
+        doc.getElementById("bp-layer-border-1").setAttribute("stroke",mainBorderColor.toString());
+        doc.getElementById("bp-bid-1").setTextContent(String.valueOf(player.getBps().getFirst().getBeatmap().getBid()));
+        doc.getElementById("bp-bid-1").setAttribute("fill",mainBorderColor.toString());
+
+        doc.getElementById("bp-name-2").setTextContent(player.getBps().get(1).getBeatmap().getCreator());
+        doc.getElementById("bp-name-2").setAttribute("fill",mainBorderColor.toString().toUpperCase());
+        doc.getElementById("bp-2").setAttributeNS(xlinkns, "xlink:href", player.getBps().get(1).getBeatmap().getBgUrl());
+        doc.getElementById("right-inner-border-2").setAttribute("stroke",mainBorderColor.toString());
+        doc.getElementById("bp-bid-2").setAttribute("fill",mainBorderColor.toString());
+        doc.getElementById("bp-bid-2").setTextContent(String.valueOf(player.getBps().get(1).getBeatmap().getBid()));
+        doc.getElementById("bp-artist-2").setTextContent(player.getBps().get(1).getBeatmap().getArtist());
+
+
+        doc.getElementById("bp-name-3").setTextContent(player.getBps().get(2).getBeatmap().getCreator().toUpperCase());
+        doc.getElementById("bp-name-3").setAttribute("fill",mainBorderColor.toString());
+        doc.getElementById("bp-3").setAttributeNS(xlinkns, "xlink:href", player.getBps().get(2).getBeatmap().getBgUrl());
+        doc.getElementById("bp-bid-3").setTextContent(String.valueOf(player.getBps().get(2).getBeatmap().getBid()));
+        String artistForBp3=player.getBps().get(2).getBeatmap().getArtist();
+        if (artistForBp3.length()>11) artistForBp3=artistForBp3.substring(0,10).concat("...");
+        doc.getElementById("bp-artist-3").setTextContent(artistForBp3);
+
+        doc.getElementById("bp-name-4").setAttribute("fill",mainBorderColor.toString());
+        doc.getElementById("bp-name-4").setTextContent(player.getBps().get(3).getBeatmap().getCreator().toUpperCase());
+        doc.getElementById("bp-4").setAttributeNS(xlinkns, "xlink:href", player.getBps().get(3).getBeatmap().getBgUrl());
+        doc.getElementById("bp-bid-4").setTextContent(String.valueOf(player.getBps().get(3).getBeatmap().getBid()));
+        String artistForBp4=player.getBps().get(3).getBeatmap().getArtist();
+        if (artistForBp4.length()>7) artistForBp4=artistForBp4.substring(0,5).concat("...");
+        doc.getElementById("bp-artist-4").setTextContent(artistForBp4);
+
+
+        doc.getElementById("pp").setTextContent(String.valueOf(Math.round(Optional.ofNullable(player.getInfo().getPerformancePoint()).orElse(0D))));
+        doc.getElementById("rank").setTextContent(CommonTool.formatNumber(Optional.ofNullable(player.getInfo().getGlobalRank()).orElse(0)));
+        doc.getElementById("playCount").setTextContent(CommonTool.transformNumber(player.getInfo().getPlayCount()));
+        doc.getElementById("playTime").setTextContent(CommonTool.formatSecondsToHours(player.getInfo().getTotalPlayTime()).concat("h"));
+        doc.getElementById("accuracy").setTextContent(CommonTool.toString(player.getInfo().getAccuracy()).concat("%"));
+
+
+        double jumpScaled= CommonTool.getScaledRatio(player.getPlus().getPpJumpAim(), PerformanceDimensionLimit.JUMP.getLimitExpertPlus(), PerformanceDimensionLimit.JUMP.getScaleFactor());
+        double flowScaled= CommonTool.getScaledRatio(player.getPlus().getPpFlowAim(), PerformanceDimensionLimit.FLOW.getLimitExpertPlus(), PerformanceDimensionLimit.FLOW.getScaleFactor());
+        double speedScaled= CommonTool.getScaledRatio(player.getPlus().getPpSpeed(), PerformanceDimensionLimit.SPEED.getLimitExpertPlus(), PerformanceDimensionLimit.SPEED.getScaleFactor());
+        double staminaScaled= CommonTool.getScaledRatio(player.getPlus().getPpStamina(), PerformanceDimensionLimit.STAMINA.getLimitExpertPlus(), PerformanceDimensionLimit.STAMINA.getScaleFactor());
+        double precisionScaled= CommonTool.getScaledRatio(player.getPlus().getPpPrecision(), PerformanceDimensionLimit.PRECISION.getLimitExpertPlus(), PerformanceDimensionLimit.PRECISION.getScaleFactor());
+        double accuracyScaled= CommonTool.getScaledRatio(player.getPlus().getPpAcc(), PerformanceDimensionLimit.ACCURACY.getLimitExpertPlus(), PerformanceDimensionLimit.ACCURACY.getScaleFactor());
+
+        doc.getElementById("aim-square").setAttribute("fill", new HSL(primaryHue,50*saturationFactor,50).toString());
+        doc.getElementById("aim-value").setTextContent(String.valueOf(Math.round(jumpScaled*15)));
+        doc.getElementById("aim-label").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,-32),50*saturationFactor,20).toString());
+        doc.getElementById("aim-value").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,-30),51*saturationFactor,23).toString());
+
+
+        doc.getElementById("flow-square-1").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,-35),50*saturationFactor,60).toString());
+        doc.getElementById("flow-square-2").setAttribute("stroke", new HSL(CommonTool.circularHueSubtract(primaryHue,-35),50*saturationFactor,60).toString());
+        doc.getElementById("flow-value").setTextContent(String.valueOf(Math.round(flowScaled*15)));
+        doc.getElementById("flow-label").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,-53),50*saturationFactor,20).toString());
+        doc.getElementById("flow-value").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,-53),51*saturationFactor,23).toString());
+
+
+        doc.getElementById("pre-square-1").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,18),14*saturationFactor,68).toString());
+        doc.getElementById("pre-square-2").setAttribute("stroke", new HSL(CommonTool.circularHueSubtract(primaryHue,20),15*saturationFactor,84).toString());
+        doc.getElementById("pre-value").setTextContent(String.valueOf(Math.round(precisionScaled*15)));
+        doc.getElementById("pre-label").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,18),50*saturationFactor,20).toString());
+        doc.getElementById("pre-value").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,18),51*saturationFactor,23).toString());
+
+
+        doc.getElementById("speed-square").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,82),46*saturationFactor,83).toString());
+        doc.getElementById("speed-square").setAttribute("stroke", new HSL(CommonTool.circularHueSubtract(primaryHue,101),46*saturationFactor,60).toString());
+        doc.getElementById("spd-value").setTextContent(String.valueOf(Math.round(speedScaled*15)));
+        doc.getElementById("spd-label").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,83),50*saturationFactor,20).toString());
+        doc.getElementById("spd-value").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,83),51*saturationFactor,23).toString());
+
+
+        doc.getElementById("sta-square-1").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,128),54*saturationFactor,91).toString());
+        doc.getElementById("sta-square-2").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,123),60*saturationFactor,80).toString());
+        doc.getElementById("sta-value").setTextContent(String.valueOf(Math.round(staminaScaled*15)));
+        doc.getElementById("sta-label").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,132),50*saturationFactor,20).toString());
+        doc.getElementById("sta-value").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,132),51*saturationFactor,23).toString());
+
+        doc.getElementById("acc-square-1").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,193),54*saturationFactor,86).toString());
+        doc.getElementById("acc-square-2").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,192),54*saturationFactor,93).toString());
+        doc.getElementById("acc-value").setTextContent(String.valueOf(Math.round(accuracyScaled*15)));
+        doc.getElementById("acc-label").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,184),50*saturationFactor,20).toString());
+        doc.getElementById("acc-value").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,184),51*saturationFactor,23).toString());
+
+        return doc;
+    }
+
+
+
+
     public static Document mapPlayerInfoToProfilePanel(PlayerInfoVO playerInfo, ProfileTheme theme) throws IOException
     {
         Document document = SVGTemplateLoader.loadSVGTemplate("InfoV2-WhiteSpace");
@@ -558,6 +722,30 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
 
 
 
+
+    }
+    private static void moelleuxBpTitleFontSize(Document doc, List<ScoreVO> scores)
+    {
+        for (int i=0;i<4;i++)
+        {
+            String title= scores.get(i).getBeatmap().getTitle();
+            if (title.length()>15) {
+                title= title.substring(0,13)+"...";
+            }
+            if (title.length()>11) {
+                doc.getElementById("bp-title-"+(i+1)).setAttribute("font-size","25");
+            }
+            if (title.length()<=11) {
+                doc.getElementById("bp-title-"+(i+1)).setAttribute("font-size","28");
+            }
+            if (title.length()<8) {
+                doc.getElementById("bp-title-"+(i+1)).setAttribute("font-size","30");
+            }
+            if (title.length()<5) {
+                doc.getElementById("bp-title-"+(i+1)).setAttribute("font-size","35");
+            }
+            doc.getElementById("bp-title-"+(i+1)).setTextContent(title);
+        }
 
     }
 }

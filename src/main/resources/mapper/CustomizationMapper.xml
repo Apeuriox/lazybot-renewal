@@ -34,10 +34,10 @@
     <update id="updateCustomize" parameterType="map">
         UPDATE profile_customization
         SET
-            verified = #{custom.verified},
-            hue = #{custom.hue},
-            original_url = #{custom.original_url}
-        where player_id =#{custom.player_id}
+            verified = #{verified},
+            hue = #{hue},
+            original_url = #{original_url}
+        where player_id =#{player_id}
     </update>
 
     <update id="updatePreferredType" parameterType="map">

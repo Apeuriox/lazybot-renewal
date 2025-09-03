@@ -22,6 +22,8 @@ public class BpParameter extends LazybotCommandParameter
 {
     private Integer version;
     private Integer index;
+
+    private Long channelId;
     private static final int MAX_INDEXED = 200;
 
     public BpParameter(String playerName, String mode, Integer version, Integer index)

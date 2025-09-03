@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.utils;
 
 
+import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapAttributeVO;
@@ -22,6 +23,14 @@ public class ModCalculatorUtil
                                                             initialScore.getBeatmap().getBpm(), initialScore.getMode(), initialScore.getBeatmap().getTotal_length());
         initialScore.getBeatmap().setAttributes(calcAllValues(attributes,initialScore.getModJSON(), OsuMode.getMode(initialScore.getMode())));
     }
+    public static void afterModMapInfo(ScoreLazerDTO initialScore)
+    {
+        BeatmapAttributeVO attributes=new BeatmapAttributeVO(initialScore.getBeatmap().getAr(), initialScore.getBeatmap().getAccuracy(),
+                initialScore.getBeatmap().getCs(), initialScore.getBeatmap().getDrain(),
+                initialScore.getBeatmap().getBpm(), OsuMode.getMode(String.valueOf(initialScore.getRuleset_id())).getDescribe(), initialScore.getBeatmap().getTotal_length());
+        initialScore.getBeatmap().setAttributes(calcAllValues(attributes,initialScore.getMods(), OsuMode.getMode(initialScore.getRuleset_id())));
+    }
+
     public static void setupBpmChange(ScoreSequence initialScore)
     {
         setupBpmChange(initialScore.getBeatmap(),initialScore.getModList());

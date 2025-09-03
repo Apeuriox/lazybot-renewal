@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.CardPointsMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.CardUserPointsPO">
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <result column="points" jdbcType="INTEGER" property="points"/>
+        <result column="total_history_points" jdbcType="INTEGER" property="total_history_points"/>
+        <result column="total_spent_points" jdbcType="INTEGER" property="total_spent_points"/>
+        <result column="accumulated_check_time" jdbcType="INTEGER" property="accumulated_check_time"/>
+        <result column="continuous_check_time" jdbcType="INTEGER" property="continuous_check_time"/>
+        <result column="last_signin_time" jdbcType="DATE" property="last_signin_time"/>
+    </resultMap>
+    <sql id = "Base_Column_List">
+        user_id, points, total_history_points, total_spent_points, accumulated_check_time, continuous_check_time, last_signin_time
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from card_user_points
+        where user_id =#{user_id}
+    </select>
+
+    <update id="updateStatsCheck" parameterType="map">
+        UPDATE card_user_points
+        SET
+            points = #{points},
+            last_signin_time = #{last_signin_time},
+            total_history_points = #{total_history_points},
+            accumulated_check_time = #{accumulated_check_time},
+            continuous_check_time = #{continuous_check_time}
+        where user_id =#{user_id}
+    </update>
+
+    <update id="updateStatsConsume" parameterType="map">
+        UPDATE card_user_points
+        SET
+            points = #{points},
+            total_spent_points = #{total_spent_points}
+        where user_id =#{user_id}
+    </update>
+
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM card_user_points WHERE user_id =#{user_id}
+    </delete>
+
+
+</mapper>

@@ -1,27 +1,18 @@
 package me.aloic.lazybot.osu.utils;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.http.HttpUtil;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.util.ContentUtil;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.RuntimeMBeanException;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -38,7 +29,7 @@ public class AssertDownloadUtil
     private static final int MAX_RETRIES;
 
     static{
-        MAX_DOWNLOADS_PER_MINUTE=64;
+        MAX_DOWNLOADS_PER_MINUTE=96;
         ONE_MINUTE_IN_MS=60*1000;
         delayQueue=new DelayQueue<>();
         executor=Executors.newScheduledThreadPool(6);
@@ -168,6 +159,10 @@ public class AssertDownloadUtil
     public static String avatarAbsolutePath(ScoreVO scoreVO, int playerId, boolean override)
     {
         avatarDownload(scoreVO.getAvatarUrl(),playerId,override);
+        return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + playerId +".jpg";
+    }
+    public static String avatarAbsolutePath(int playerId)
+    {
         return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + playerId +".jpg";
     }
     public static String avatarAbsolutePath(PlayerInfoDTO playerInfoDTO, boolean override)

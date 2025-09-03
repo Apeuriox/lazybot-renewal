@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.CardPointsLogMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.CardUserPointsLogPO">
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <result column="change_amount" jdbcType="INTEGER" property="change_amount"/>
+        <result column="reason" jdbcType="VARCHAR" property="reason"/>
+        <result column="create_time" jdbcType="DATE" property="create_time"/>
+    </resultMap>
+    <sql id = "Base_Column_List">
+        user_id, change_amount, reason, create_time
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM card_user_points_log
+        WHERE user_id =#{user_id}
+        LIMIT 20
+    </select>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE
+        FROM card_user_points_log
+        WHERE user_id =#{user_id}
+    </delete>
+
+
+</mapper>
