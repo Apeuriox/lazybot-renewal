@@ -142,7 +142,14 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("Moelleux").setAttribute("fill", new HSL(primaryHue, 75*saturationFactor, 95).toString());
         doc.getElementById("footer-bg").setAttribute("fill", mainBorderColor.toString());
         doc.getElementById("renderTime").setTextContent(SVGElementHelper.dateNow());
-        doc.getElementById("name-1").setTextContent(player.getInfo().getPlayerName().replace("-", "").replaceAll("\\d", ""));
+        player.getInfo().setPlayerName(player.getInfo().getPlayerName().toLowerCase());
+        doc.getElementById("name-1").setTextContent((player.getInfo().getPlayerName().substring(0, 1).toUpperCase() + player.getInfo().getPlayerName().substring(1))
+                .replace("-", "").replaceAll("\\d", ""));
+//        if(!Character.isUpperCase(player.getInfo().getPlayerName().charAt(0)))
+//        {
+//            doc.getElementById("name-1").setAttribute("text-anchor","middle");
+//            doc.getElementById("name-1").setAttribute("transform","rotate(90 356 64) translate(940 360)");
+//        }
         doc.getElementById("name-1").setAttribute("fill", new HSL(primaryHue, 9*saturationFactor, 75).toString());
         doc.getElementById("name-2").setTextContent(player.getInfo().getPlayerName().toUpperCase());
 
