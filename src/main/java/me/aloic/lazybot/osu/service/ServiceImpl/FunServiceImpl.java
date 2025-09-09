@@ -123,7 +123,7 @@ public class FunServiceImpl implements FunService
             throw new LazybotRuntimeException("[Lazybot] 获取whatIf 新pp rank时出错");
         }
         String rankDifference = originalRank-rankFictional>0?"+"+(originalRank-rankFictional):" - ";
-        StringBuilder result= new StringBuilder(playerInfo.getUsername() + "的pp变化情况：\n")
+        StringBuilder result= new StringBuilder("[Lazybot] " + playerInfo.getUsername() + "的pp变化情况：\n")
                 .append("原pp: ").append(df.format(originalTotalPp+bonusPp)).append("\n")
                 .append("现pp: ").append(df.format(totalPp+bonusPp))
                 .append(" (+").append(df.format(totalPp-originalTotalPp)).append(") ").append("\n")

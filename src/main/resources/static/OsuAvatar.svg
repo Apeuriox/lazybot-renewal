@@ -34,12 +34,12 @@
 		 fill="#111111" id="name">Aloic</text>
 
 		<text class="cls-1" font-size="80" x="713" y="840" text-anchor="end"
-			  fill="#111111" opacity="0.03" id="team">SQL</text>
+			  fill="#111111" opacity="0.03" id="team"> </text>
 		<text class="cls-1" font-size="80" x="713" y="950" text-anchor="end"
 		 fill="#111111" opacity="0.03" id="area">CN</text>
 
 		<text class="cls-1" font-size="25" x="119" y="950"
-		 fill="#111111" opacity="0.8">
+		 fill="#111111" opacity="0.8" id="oldnameall">
 			<tspan>formerly known as </tspan>
 			<tspan id="oldname">Apeuriox</tspan>
 		</text>

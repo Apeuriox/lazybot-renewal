@@ -29,8 +29,9 @@ public class AvatarSVGMapper extends LazybotSVGMapper
 
         if (player.getTeamShortName()!=null)
             doc.getElementById("team").setTextContent(player.getTeamShortName());
-        if (player.getPreviousNames()!=null)
+        if (player.getPreviousNames()!=null && player.getPreviousNames().length>0)
             doc.getElementById("oldname").setTextContent(String.join(", ", player.getPreviousNames()));
+        else doc.getElementById("oldnameall").setAttribute("opacity", "0");
 
         doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getAvatarUrl());
         if (type==1)

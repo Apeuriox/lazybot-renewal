@@ -40,7 +40,7 @@ public class TransformerUtil
         playerInfoVO.setLevel(playerInfoDTO.getStatistics().getLevel().getCurrent());
         playerInfoVO.setLevelProgress(playerInfoDTO.getStatistics().getLevel().getProgress());
         playerInfoVO.setTotalScore(playerInfoDTO.getStatistics().getTotal_score());
-        playerInfoVO.setTeamShortName(playerInfoDTO.getTeam().getShort_name());
+        if (playerInfoDTO.getTeam() != null) playerInfoVO.setTeamShortName(playerInfoDTO.getTeam().getShort_name());
         playerInfoVO.setPreviousNames(playerInfoDTO.getPrevious_usernames());
         try{
             playerInfoVO.setRankHistory(List.of(playerInfoDTO.getRank_history().getData()));
