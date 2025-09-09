@@ -30,4 +30,5 @@ public class PlayerInfoDTO extends UserCompactDTO
     private String title_url;
     private String twitter;
     private String website;
+    private TeamDTO team;
 }

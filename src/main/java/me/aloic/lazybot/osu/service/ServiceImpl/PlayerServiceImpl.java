@@ -339,7 +339,7 @@ public class PlayerServiceImpl implements PlayerService
     }
     @Override
     public byte[] cardMoelleux(GeneralParameter params) throws Exception {
-        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] 测试期间仅支持osu模式");
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] 此样式仅支持osu模式");
         PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
         playerInfoVO.setMode(params.getMode());
         PPPlusPerformance performance;
@@ -518,5 +518,21 @@ public class PlayerServiceImpl implements PlayerService
         return playerInfoDTO;
     }
 
+    @Override
+    public byte[] avatar(GeneralParameter params, int type) throws Exception {
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
+        playerInfoVO.setMode(params.getMode());
+        if (type==1)
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    AvatarSVGMapper.mapPlayerInfoToAvatar(playerInfoVO,
+                            CommonTool.getDominantHueColorThief(new File(playerInfoVO.getAvatarUrl())),
+                    type)
+            );
+        else
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    AvatarSVGMapper.mapPlayerInfoToAvatar(playerInfoVO,
+                            215,
+                            type));
+    }
 
 }

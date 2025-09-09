@@ -40,4 +40,6 @@ public interface PlayerService
     byte[] profile(ProfileParameter params) throws Exception;
 
     String nameToId(NameToIdParameter params) throws Exception;
+
+    byte[] avatar(GeneralParameter params, int type) throws Exception;
 }
