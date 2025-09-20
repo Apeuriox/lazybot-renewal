@@ -339,7 +339,7 @@ public class PlayerServiceImpl implements PlayerService
         );
     }
     @Override
-    public byte[] cardMoelleux(GeneralParameter params) throws Exception {
+    public byte[] cardMoelleux(CardMoelleuxParameter params) throws Exception {
         if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] 此样式仅支持osu模式");
         PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
         playerInfoVO.setMode(params.getMode());
@@ -360,18 +360,28 @@ public class PlayerServiceImpl implements PlayerService
                 scoreVOArray,
                 performance);
         HSL mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getAvatarUrl()));
+
         boolean isTooDarkOrBright = mainColor.getSaturation()<4 || mainColor.getLightness()>94;
         boolean isLowSaturation = mainColor.getSaturation()<18;
-        boolean enableWhiteMask = params.getVersion()==2;
+        boolean enableWhiteMask = params.getVersion()!=2;
         if (isTooDarkOrBright) {
             isLowSaturation=false;
         }
         if (params.getVersion()==3) {
             isLowSaturation=false;
         }
-
+        if (params.getVersion()==4) {
+            isLowSaturation=true;
+        }
+        int primaryHue;
+        if (params.getOverrideHue()!=null) {
+            primaryHue = params.getOverrideHue();
+        }
+        else{
+            primaryHue = isTooDarkOrBright?361:mainColor.getHue();
+        }
         return SVGRenderer.renderSVGDocumentToByteArray(
-                PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCard(playerInfoMoelleux, isTooDarkOrBright?361:mainColor.getHue(),isLowSaturation,!enableWhiteMask)
+                PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCard(playerInfoMoelleux, primaryHue, isLowSaturation, enableWhiteMask)
                 ,2
         );
     }

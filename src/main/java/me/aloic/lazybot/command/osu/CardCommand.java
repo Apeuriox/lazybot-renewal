@@ -15,6 +15,7 @@ import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.parameter.CardMoelleuxParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -60,7 +61,7 @@ public class CardCommand implements LazybotSlashCommand
         if (event.getScorePanelVersion()==1)
             ImageUploadUtil.uploadImageToOnebot(bot,event,
                     playerService.card(
-                            setupParameter(event, proxy.getAccessToken(event))
+                            setupParameterGeneral(event, proxy.getAccessToken(event))
                     )
             );
         else
@@ -77,7 +78,7 @@ public class CardCommand implements LazybotSlashCommand
         if (event.getScorePanelVersion()==1)
             testOutputTool.saveImageToLocal(
                     playerService.card(
-                            setupParameter(event, proxy.getAccessToken(event))
+                            setupParameterGeneral(event, proxy.getAccessToken(event))
                     )
             );
         else
@@ -87,10 +88,21 @@ public class CardCommand implements LazybotSlashCommand
                     )
             );
     }
-    private GeneralParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    private CardMoelleuxParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    {
+        CardMoelleuxParameter params=CardMoelleuxParameter.analyzeParameter(event.getCommandParameters());
+        CardMoelleuxParameter.setupDefaultValue(params,tokenPO);
+        params.setVersion(event.getScorePanelVersion());
+        if(event.getOsuMode()!=null)
+            params.setMode(event.getOsuMode().getDescribe());
+        params.validateParams();
+        return params;
+    }
+    private GeneralParameter setupParameterGeneral(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {
         GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
         GeneralParameter.setupDefaultValue(params,tokenPO);
+        params.setVersion(event.getScorePanelVersion());
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.validateParams();
@@ -107,6 +119,7 @@ public class CardCommand implements LazybotSlashCommand
                         .addExample("/Card Aloic")
                         .addExample("/Card &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","一个&则以原版样式输出，两个&将会禁用BP白色蒙层，三个&将强制以中等对比度输出", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Hue","覆盖默认取色算法的色相值，格式为hue=100，色相为0至360的整数，超出会取余", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Version","一个&则以原版样式输出，两个&将会禁用BP白色蒙层，三个&将强制以中等对比度输出，四个&以低对比度输出", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

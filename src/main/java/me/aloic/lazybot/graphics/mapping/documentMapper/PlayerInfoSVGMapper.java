@@ -151,7 +151,6 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         }
 
 
-
         if (lowSaturation)
             doc.getElementById("Moelleux").setAttribute("fill", new HSL(primaryHue, 17*saturationFactor, 95).toString());
         else
@@ -159,12 +158,13 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
 
         doc.getElementById("footer-bg").setAttribute("fill", mainBorderColor.toString());
         doc.getElementById("renderTime").setTextContent(SVGElementHelper.dateNow());
+        String namePlayer =  player.getInfo().getPlayerName().toLowerCase()
+                        .replace("-", "")
+                .replaceAll("\\d", "");
+
         player.getInfo().setPlayerName(
-                player.getInfo().getPlayerName().toLowerCase().
-                        replace("-", "")
-                        .replaceAll("\\d", "")
-                        .substring(0, 1).toUpperCase()
-                        + player.getInfo().getPlayerName().substring(1)
+                namePlayer.substring(0, 1).toUpperCase()
+                        + namePlayer.substring(1)
         );
 
         doc.getElementById("name-1").setTextContent((player.getInfo().getPlayerName()));
