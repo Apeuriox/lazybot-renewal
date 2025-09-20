@@ -17,11 +17,14 @@ import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
+import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
+import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,6 +34,8 @@ public class DataExtractor
 {
     @Resource
     private ApiRequestExecutor apiRequestExecutor;
+    @Resource
+    private TokenMapper tokenMapper;
 
 
     public PlayerInfoDTO extractPlayerInfoDTO(String playerName, String mode)
@@ -45,7 +50,8 @@ public class DataExtractor
             if(playerInfoDTO.getId()==null) {
                 throw new LazybotRuntimeException("[Lazybot] 没这B人: " + playerName);
             }
-            return playerInfoDTO;
+            AccessTokenPO tokenPO = tokenMapper.selectByPlayername(playerName);
+            return checkCachedAvatar(playerInfoDTO, tokenPO);
         }
         catch (LazybotNotFoundException e) {
             throw new LazybotRuntimeException("[Lazybot] 没这B人: " + playerName);
@@ -63,11 +69,23 @@ public class DataExtractor
            if(playerInfoDTO.getId()==null) {
                throw new LazybotRuntimeException("[Lazybot] 没这B人: " + playerId);
            }
-           return playerInfoDTO;
+           AccessTokenPO tokenPO = tokenMapper.selectByPlayerId(playerId);
+           return checkCachedAvatar(playerInfoDTO, tokenPO);
        }
        catch (LazybotNotFoundException e) {
            throw new LazybotRuntimeException("[Lazybot] 没这B人: " + playerId);
        }
+    }
+
+    public PlayerInfoDTO checkCachedAvatar(PlayerInfoDTO playerInfoDTO, AccessTokenPO tokenPO)
+    {
+        if (tokenPO == null)
+            return playerInfoDTO;
+        if (tokenPO.getAvatar_url()==null || !playerInfoDTO.getAvatar_url().equals(tokenPO.getAvatar_url())) {
+            AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true);
+            tokenMapper.updateAvatar(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId());
+        }
+        return playerInfoDTO;
     }
 
     public PPPlusPerformance extractPerformancePlusPlayerTotal(Integer playerId)

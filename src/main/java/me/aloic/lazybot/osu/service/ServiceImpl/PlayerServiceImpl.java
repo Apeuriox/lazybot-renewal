@@ -15,6 +15,7 @@ import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileLightTheme;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.osu.utils.*;
@@ -358,9 +359,19 @@ public class PlayerServiceImpl implements PlayerService
         PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
                 scoreVOArray,
                 performance);
+        HSL mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getAvatarUrl()));
+        boolean isTooDarkOrBright = mainColor.getSaturation()<4 || mainColor.getLightness()>94;
+        boolean isLowSaturation = mainColor.getSaturation()<18;
+        boolean enableWhiteMask = params.getVersion()==2;
+        if (isTooDarkOrBright) {
+            isLowSaturation=false;
+        }
+        if (params.getVersion()==3) {
+            isLowSaturation=false;
+        }
 
         return SVGRenderer.renderSVGDocumentToByteArray(
-                PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCard(playerInfoMoelleux,CommonTool.getDominantHueColorThief(new File(playerInfoVO.getAvatarUrl())))
+                PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCard(playerInfoMoelleux, isTooDarkOrBright?361:mainColor.getHue(),isLowSaturation,!enableWhiteMask)
                 ,2
         );
     }

@@ -129,27 +129,50 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             throw new LazybotRuntimeException("[Lazybot] Info卡片生成失败");
         }
     }
-    public static Document mapPlayerInfoMoelleuxToCard(PlayerInfoMoelleux player, int primaryHue)
+    public static Document mapPlayerInfoMoelleuxToCard(PlayerInfoMoelleux player, int primaryHue, boolean lowSaturation, boolean enableWhiteMask)
     {
         Document doc = SVGTemplateLoader.loadSVGTemplate("CardMoelleux");
         int saturationFactor = 1;
         if (primaryHue > 360) saturationFactor = 0;
-        HSL mainBorderColor = new HSL(CommonTool.circularHueSubtract(primaryHue,7), 44*saturationFactor, 41);
-        HSL lighterOverlayColor = new HSL(CommonTool.circularHueSubtract(primaryHue,-5), 33*saturationFactor, 98);
-        HSL ellisColor = new HSL(CommonTool.circularHueSubtract(primaryHue,2), 40*saturationFactor, 51);
+        HSL mainBorderColor;
+        HSL lighterOverlayColor;
+        HSL ellisColor;
+        if (lowSaturation)
+        {
+            mainBorderColor = new HSL(CommonTool.circularHueSubtract(primaryHue,1), 14*saturationFactor, 56);
+            lighterOverlayColor = new HSL(CommonTool.circularHueSubtract(primaryHue,-5), 33*saturationFactor, 98);
+            ellisColor = new HSL(CommonTool.circularHueSubtract(primaryHue,2), 13*saturationFactor, 51);
+        }
+        else
+        {
+            mainBorderColor = new HSL(CommonTool.circularHueSubtract(primaryHue,2), 44*saturationFactor, 41);
+            lighterOverlayColor = new HSL(CommonTool.circularHueSubtract(primaryHue,-5), 33*saturationFactor, 98);
+            ellisColor = new HSL(CommonTool.circularHueSubtract(primaryHue,2), 40*saturationFactor, 51);
+        }
 
 
-        doc.getElementById("Moelleux").setAttribute("fill", new HSL(primaryHue, 75*saturationFactor, 95).toString());
+
+        if (lowSaturation)
+            doc.getElementById("Moelleux").setAttribute("fill", new HSL(primaryHue, 17*saturationFactor, 95).toString());
+        else
+            doc.getElementById("Moelleux").setAttribute("fill", new HSL(primaryHue, 75*saturationFactor, 95).toString());
+
         doc.getElementById("footer-bg").setAttribute("fill", mainBorderColor.toString());
         doc.getElementById("renderTime").setTextContent(SVGElementHelper.dateNow());
-        player.getInfo().setPlayerName(player.getInfo().getPlayerName().toLowerCase());
-        doc.getElementById("name-1").setTextContent((player.getInfo().getPlayerName().substring(0, 1).toUpperCase() + player.getInfo().getPlayerName().substring(1))
-                .replace("-", "").replaceAll("\\d", ""));
-//        if(!Character.isUpperCase(player.getInfo().getPlayerName().charAt(0)))
-//        {
-//            doc.getElementById("name-1").setAttribute("text-anchor","middle");
-//            doc.getElementById("name-1").setAttribute("transform","rotate(90 356 64) translate(940 360)");
-//        }
+        player.getInfo().setPlayerName(
+                player.getInfo().getPlayerName().toLowerCase().
+                        replace("-", "")
+                        .replaceAll("\\d", "")
+                        .substring(0, 1).toUpperCase()
+                        + player.getInfo().getPlayerName().substring(1)
+        );
+
+        doc.getElementById("name-1").setTextContent((player.getInfo().getPlayerName()));
+        if(player.getInfo().getPlayerName().length() <= 4)
+        {
+            doc.getElementById("name-1").setAttribute("text-anchor","middle");
+            doc.getElementById("name-1").setAttribute("transform","rotate(90 356 64) translate(940 360)");
+        }
         doc.getElementById("name-1").setAttribute("fill", new HSL(primaryHue, 9*saturationFactor, 75).toString());
         doc.getElementById("name-2").setTextContent(player.getInfo().getPlayerName().toUpperCase());
 
@@ -282,6 +305,12 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("acc-label").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,184),50*saturationFactor,20).toString());
         doc.getElementById("acc-value").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,184),51*saturationFactor,23).toString());
 
+        if(!enableWhiteMask) {
+            doc.getElementById("bp-1-mask").setAttribute("opacity", "0");
+            doc.getElementById("bp-2-mask").setAttribute("opacity", "0");
+            doc.getElementById("bp-3-mask").setAttribute("opacity", "0");
+            doc.getElementById("bp-4-mask").setAttribute("opacity", "0");
+        }
         return doc;
     }
 

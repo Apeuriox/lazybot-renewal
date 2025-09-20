@@ -57,7 +57,7 @@ public class CardCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        if (event.getScorePanelVersion()==0)
+        if (event.getScorePanelVersion()==1)
             ImageUploadUtil.uploadImageToOnebot(bot,event,
                     playerService.card(
                             setupParameter(event, proxy.getAccessToken(event))
@@ -74,7 +74,7 @@ public class CardCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        if (event.getScorePanelVersion()==0)
+        if (event.getScorePanelVersion()==1)
             testOutputTool.saveImageToLocal(
                     playerService.card(
                             setupParameter(event, proxy.getAccessToken(event))
@@ -107,6 +107,6 @@ public class CardCommand implements LazybotSlashCommand
                         .addExample("/Card Aloic")
                         .addExample("/Card &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","存在&则以Moelleux样式输出，需要有足够权限", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Version","一个&则以原版样式输出，两个&将会禁用BP白色蒙层，三个&将强制以中等对比度输出", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

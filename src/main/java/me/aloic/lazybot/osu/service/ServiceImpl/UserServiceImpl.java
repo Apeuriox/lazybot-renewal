@@ -142,6 +142,7 @@ public class UserServiceImpl implements UserService
         user.setDefault_mode("osu");
         user.setQq_code(event.getMessageEvent().getSender().getUserId());
         user.setValid(1);
+        user.setAvatar_url(player.getAvatar_url());
         Optional.ofNullable(tokenMapper.selectByPlayername(player.getUsername()))
                 .ifPresentOrElse(
                         userToken -> tokenMapper.updateByToken(user),
@@ -149,8 +150,6 @@ public class UserServiceImpl implements UserService
                 );
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功绑定用户: " +username).build(),false);
     }
-
-
 
 
 

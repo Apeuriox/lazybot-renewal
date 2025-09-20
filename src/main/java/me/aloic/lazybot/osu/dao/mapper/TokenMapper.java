@@ -12,7 +12,9 @@ public interface TokenMapper extends BaseMapper<AccessTokenPO> {
     String selectDefaultModeByQq_code(@Param("qq_code")Long qq_code);
     void updateByToken(AccessTokenPO accessTokenPO);
     AccessTokenPO selectByPlayername(String player_name);
+    AccessTokenPO selectByPlayerId(Integer player_id);
     void updateClientToken(@Param("access_token")String access_token);
     void updateDefaultMode(@Param("default_mode")String default_mode, @Param("qq_code")Long qq_code);
     void deleteByQQ(@Param("qq_code")Long qq_code);
+    void updateAvatar(@Param("avatar_url")String avatar_url, @Param("player_id")Integer player_id);
 }

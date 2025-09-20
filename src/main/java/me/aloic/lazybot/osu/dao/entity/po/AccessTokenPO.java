@@ -31,6 +31,7 @@ public class AccessTokenPO implements Serializable {
 
     private String default_mode;
     private Integer valid;
+    private String avatar_url;
     public AccessTokenPO(String refresh_token,String access_token) {
         this.refresh_token = refresh_token;
         this.access_token = access_token;
