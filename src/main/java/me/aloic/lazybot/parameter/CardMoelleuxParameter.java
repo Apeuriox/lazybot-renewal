@@ -24,6 +24,13 @@ public class CardMoelleuxParameter extends LazybotCommandParameter
     public CardMoelleuxParameter() {
         this.setVersion(0);
     }
+    public CardMoelleuxParameter(Integer playerId, Integer hue, Integer version)
+    {
+        this.setPlayerId(playerId);
+        this.overrideHue=hue;
+        this.version=version;
+        this.setMode("osu");
+    }
 
     public static CardMoelleuxParameter analyzeParameter(List<String> params)
     {
@@ -60,7 +67,6 @@ public class CardMoelleuxParameter extends LazybotCommandParameter
     public static CardMoelleuxParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {
         CardMoelleuxParameter params= CardMoelleuxParameter.analyzeParameter(event.getCommandParameters());
-        System.out.println(event.getScorePanelVersion());
         params.setVersion(event.getScorePanelVersion());
         CardMoelleuxParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
