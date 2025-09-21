@@ -241,5 +241,14 @@ public class URLBuildUtil
                 .addQuery("beatmapId",beatmapId);
         return builder.build();
     }
+    public static String buildURLOfUpdatePerformancePlus(Integer id)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000", CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("player")
+                .addPath("update")
+                .addQuery("id", id);
+        return builder.build();
+    }
 
 }

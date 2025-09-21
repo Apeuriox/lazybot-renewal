@@ -35,7 +35,7 @@ public class SVGRenderer
         }
         catch (Exception e) {
             logger.error(e.getMessage());
-            throw new LazybotRuntimeException("[Lazybot] 渲染成绩图时出错");
+            throw new LazybotRuntimeException("渲染成绩图时出错");
         }
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
         return convertByteArrayToOutputStream(result);
@@ -53,7 +53,7 @@ public class SVGRenderer
         }
         catch (Exception e){
             logger.error(e.getMessage());
-            throw new LazybotRuntimeException("[Lazybot] 渲染成绩图时出错");
+            throw new LazybotRuntimeException("渲染成绩图时出错");
         }
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
 
@@ -74,7 +74,7 @@ public class SVGRenderer
         }
         catch (Exception e)
         {
-            throw new LazybotRuntimeException("[Lazybot] Error convert Byte Array into Output Stream");
+            throw new LazybotRuntimeException("将Byte Array转换成Output Stream时失败");
         }
         return outputStream;
     }

@@ -151,7 +151,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         } catch (Exception e)
         {
             log.error("Error while generating score panel: {}", e);
-            throw new LazybotRuntimeException("[Lazybot] 亮色模式Score panel生成失败");
+            throw new LazybotRuntimeException("亮色模式Score panel生成失败");
         }
     }
     private static Document mapScoreToScorePanelMaterial(ScoreVO targetScore,int[] primaryColor)
@@ -649,7 +649,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc = mapScoreToScorePanelWhite(targetScore);
         else if (version==2)
             doc = mapScoreToScorePanelMaterial(targetScore,primaryColor);
-        else throw new LazybotRuntimeException("[Lazybot] 不支持的面板版本: " + version);
+        else throw new LazybotRuntimeException("不支持的面板版本: " + version);
         return doc;
     }
 }

@@ -126,7 +126,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         }
         catch (Exception e) {
             log.error(e.getMessage());
-            throw new LazybotRuntimeException("[Lazybot] Info卡片生成失败");
+            throw new LazybotRuntimeException("Info卡片生成失败");
         }
     }
     public static Document mapPlayerInfoMoelleuxToCard(PlayerInfoMoelleux player, int primaryHue, boolean lowSaturation, boolean enableWhiteMask)

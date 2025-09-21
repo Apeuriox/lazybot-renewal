@@ -29,11 +29,11 @@ public class CompareMonitor
     public static Integer getRecentBeatmap(long channelId, int indexFromLast) {
         Deque<Integer> deque = recentBeatmaps.get(channelId);
         if (deque == null || deque.isEmpty()) {
-            throw new LazybotRuntimeException("[Lazybot] 没有查询到最近的成绩缓存，请先查询一次");
+            throw new LazybotRuntimeException("没有查询到最近的成绩缓存，请先查询一次");
         }
         int size = deque.size();
         if (indexFromLast <= 0 || indexFromLast > size) {
-            throw new LazybotRuntimeException("[Lazybot] 索引超出现缓存上限");
+            throw new LazybotRuntimeException("索引超出现缓存上限");
         }
         return deque.toArray(new Integer[0])[size - indexFromLast];
     }

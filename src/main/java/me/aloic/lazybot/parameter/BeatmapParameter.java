@@ -23,8 +23,8 @@ public class BeatmapParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (bid == null) throw new LazybotRuntimeException("[Lazybot] bid为空!");
-        if(mod!=null && (mod.length()&1)!=0) throw new LazybotRuntimeException("[Lazybot] 无效mod组合: " + mod);
+        if (bid == null) throw new LazybotRuntimeException("bid为空!");
+        if(mod!=null && (mod.length()&1)!=0) throw new LazybotRuntimeException("无效mod组合: " + mod);
     }
     public BeatmapParameter(Integer bid) {
         this.bid=bid;
@@ -42,13 +42,13 @@ public class BeatmapParameter extends LazybotCommandParameter
                         parameter.setMod(paras[1]);
                     }
                     else
-                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误,length=1, mod=true");
+                        throw new LazybotRuntimeException("参数解析错误,length=1, mod=true");
                 }
                 else {
                     if(CommonTool.isPositiveInteger(params.getFirst()))
                         parameter.setBid(Integer.valueOf(params.getFirst()));
                     else
-                        throw new LazybotRuntimeException("[Lazybot] 参数解析错误, length=1, mod=false");
+                        throw new LazybotRuntimeException("参数解析错误, length=1, mod=false");
                 }
             }
             else {
@@ -57,7 +57,7 @@ public class BeatmapParameter extends LazybotCommandParameter
                         parameter.setMod(params.get(1));
                     }
                     else
-                        throw new LazybotRuntimeException("[Lazybot] 输入bid不为正整数");
+                        throw new LazybotRuntimeException("输入bid不为正整数");
             }
         }
         return parameter;

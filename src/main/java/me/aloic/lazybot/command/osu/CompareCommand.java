@@ -64,11 +64,11 @@ public class CompareCommand implements LazybotSlashCommand
                 index = Integer.parseInt(event.getCommandParameters().getFirst());
             }
             catch (Exception e){
-                throw new IllegalArgumentException("[Lazybot] 索引输入错误，请检查");
+                throw new IllegalArgumentException("索引输入错误，请检查");
             }
         }
         if(index>5||index<0) {
-            throw new IllegalArgumentException("[Lazybot] 索引范围为1至5");
+            throw new IllegalArgumentException("索引范围为1至5");
         }
         ScoreParameter params=new ScoreParameter();
         if (event.getMessageEvent()!=null)

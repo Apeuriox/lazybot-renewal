@@ -26,6 +26,6 @@ public enum FilterOperatorEnum
                 return op;
             }
         }
-        throw new IllegalArgumentException("[Lazybot] 未知运算符: " + s);
+        throw new IllegalArgumentException("未知运算符: " + s);
     }
 }

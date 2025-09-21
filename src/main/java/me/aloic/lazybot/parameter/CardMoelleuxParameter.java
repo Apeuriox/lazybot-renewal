@@ -39,7 +39,7 @@ public class CardMoelleuxParameter extends LazybotCommandParameter
                     try {
                         parameter.setOverrideHue(Integer.parseInt(s.substring(4))%360);
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("[Lazybot] 输入色相值不合法，应为0至360");
+                        throw new IllegalArgumentException("输入色相值不合法，应为0至360");
                     }
                 }
                 it.remove();

@@ -56,7 +56,7 @@ public class WhatIfParameter extends LazybotCommandParameter
                 if (key<=0.0) throw new LazybotRuntimeException("输入的pp值不能小于等于0");
                 if (key>=3000) throw new LazybotRuntimeException("本指令暂不支持外星人使用");
                 if (count<=0) throw new LazybotRuntimeException("输入的次数不能小于等于0");
-                if (count>100) throw new LazybotRuntimeException("bp会被裁剪成100长度，所以我是不是应该请你当测试员呢");
+                if (count>100) count=100;
             }
             catch (LazybotRuntimeException e) {
                 throw e;

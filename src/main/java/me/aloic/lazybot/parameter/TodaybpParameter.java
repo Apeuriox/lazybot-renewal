@@ -33,11 +33,11 @@ public class TodaybpParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if(maxDays<=0) {
-            throw new IllegalArgumentException("[Lazybot] 查询的天数需要为正整数");
+            throw new IllegalArgumentException("查询的天数需要为正整数");
         }
         if(maxDays>=10000)
         {
-            throw new IllegalArgumentException("[Lazybot] 查询的天数不能大于Osu的整个生命周期");
+            throw new IllegalArgumentException("查询的天数不能大于Osu的整个生命周期");
         }
     }
     public static TodaybpParameter analyzeParameter(List<String> params)

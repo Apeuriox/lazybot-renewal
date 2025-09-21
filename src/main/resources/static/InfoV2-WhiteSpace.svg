@@ -291,10 +291,10 @@
        <rect width="415" height="100" rx="15" ry="15" x="25" y="580"/>
     </clipPath>
     <clipPath id="avatar-block-clip">
-       <rect class="cls-18" width="980" height="270" rx="20" ry="20" y="80"/>
+       <rect class="cls-18" width="1000" x="-20" height="270" rx="20" ry="20" y="80"/>
     </clipPath>
         <clipPath id="status-block-clip">
-        <rect fill="#e5eff0" width="940" height="270" rx="20" ry="20" y="230" />
+        <rect fill="#e5eff0" width="960" x="-20" height="270" rx="20" ry="20" y="230" />
     </clipPath>
 
      <clipPath id="performance-block-clip">
@@ -333,7 +333,7 @@
     <rect fill="#08afda" width="1920" height="62" id="headerBorder"/>
     <rect fill="#e6f2f4" width="1920" height="60" id="header"/>
 
-    <rect fill="#f1f4f3" width="980" height="270" rx="20" ry="20" y="80"
+    <rect fill="#f1f4f3" width="1000" x="-20" height="270" rx="20" ry="20" y="80"
     stroke-width="2" stroke-opacity="0.8" stroke="#92e8fc" id="avatar-block"/>
       <image
               xlink:href="assets/whitespace_0.png"
@@ -346,7 +346,7 @@
               filter="url(#blur)"
               clip-path="url(#avatar-block-clip)" opacity="0.3"/>
 
-    <rect fill="#e5eff0" width="940" height="270" rx="20" ry="20" y="230" 
+    <rect fill="#e5eff0" width="960" x="-20" height="270" rx="20" ry="20" y="230"
     stroke-width="2" stroke-opacity="0.8" stroke="#f1f3f5" id="status-block"/>
       <image
               xlink:href="assets/whitespace_0.png"
@@ -398,7 +398,7 @@
     <g transform="translate(0,10)" id="bp-block-all">
 
 
-      <rect fill="#f1f4f3" width="900" height="440" rx="20" ry="20" x="0" y="520"
+      <rect fill="#f1f4f3" width="920" height="440" rx="20" ry="20" x="-20" y="520"
             stroke-width="2" stroke-opacity="0.8" stroke="hsl(192, 76%, 85%)" id="bp-block"/>
 
         <text class="cls-23" id="bpLabel" transform="translate(30 555)">Best Performances</text>

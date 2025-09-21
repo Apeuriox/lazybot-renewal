@@ -44,7 +44,7 @@ public class SvgUtil
         } catch (TransformerConfigurationException e)
         {
             logger.error(e.getMessage());
-            throw new LazybotRuntimeException("[Lazybot] Batik转换器初始化失败");
+            throw new LazybotRuntimeException("Batik转换器初始化失败");
         }
     }
 

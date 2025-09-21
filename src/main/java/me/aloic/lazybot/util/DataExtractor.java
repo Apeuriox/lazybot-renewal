@@ -48,13 +48,13 @@ public class DataExtractor
                     null,
                     PlayerInfoDTO.class);
             if(playerInfoDTO.getId()==null) {
-                throw new LazybotRuntimeException("[Lazybot] 没这B人: " + playerName);
+                throw new LazybotRuntimeException("没这B人: " + playerName);
             }
             AccessTokenPO tokenPO = tokenMapper.selectByPlayername(playerName);
             return checkCachedAvatar(playerInfoDTO, tokenPO);
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] 没这B人: " + playerName);
+            throw new LazybotRuntimeException("没这B人: " + playerName);
         }
     }
 
@@ -67,13 +67,13 @@ public class DataExtractor
                    null,
                    PlayerInfoDTO.class);
            if(playerInfoDTO.getId()==null) {
-               throw new LazybotRuntimeException("[Lazybot] 没这B人: " + playerId);
+               throw new LazybotRuntimeException("没这B人: " + playerId);
            }
            AccessTokenPO tokenPO = tokenMapper.selectByPlayerId(playerId);
            return checkCachedAvatar(playerInfoDTO, tokenPO);
        }
        catch (LazybotNotFoundException e) {
-           throw new LazybotRuntimeException("[Lazybot] 没这B人: " + playerId);
+           throw new LazybotRuntimeException("没这B人: " + playerId);
        }
     }
 
@@ -98,12 +98,30 @@ public class DataExtractor
                     null,
                     LazybotWebPlayerPerformance.class);
             if(performance.getData()==null) {
-                throw new LazybotRuntimeException("[Lazybot] 获取" + playerId + "用户pp+失败");
+                throw new LazybotRuntimeException("获取" + playerId + "用户pp+失败");
             }
             return performance.getData().getPerformances();
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] 获取" + playerId + "用户pp+失败");
+            throw new LazybotRuntimeException("获取" + playerId + "用户pp+失败");
+        }
+    }
+    public PPPlusPerformance extractPerformancePlusPlayerUpdate(Integer playerId)
+    {
+        try{
+            LazybotWebPlayerPerformance performance = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfUpdatePerformancePlus(playerId),
+                    HTTPTypeEnum.POST,
+                    TokenMonitor.getLazybotToken(),
+                    null,
+                    LazybotWebPlayerPerformance.class);
+            if(performance.getData()==null) {
+                throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败");
+            }
+            return performance.getData().getPerformances();
+        }
+        catch (LazybotNotFoundException e) {
+            throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败");
         }
     }
     public LazybotScorePerformance extractPerformancePlusAddScore(Integer playerId, Integer beatmapId)
@@ -116,12 +134,12 @@ public class DataExtractor
                     null,
                     new TypeReference<LazybotWebResult<LazybotScorePerformance>>() {});
             if(result.getData()==null) {
-                throw new LazybotRuntimeException("[Lazybot] 添加用户" + playerId + "在" +beatmapId +"上的成绩失败");
+                throw new LazybotRuntimeException("添加用户" + playerId + "在" +beatmapId +"上的成绩失败");
             }
             return result.getData();
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] 添加用户" + playerId + "在" +beatmapId +"上的成绩失败");
+            throw new LazybotRuntimeException("添加用户" + playerId + "在" +beatmapId +"上的成绩失败");
         }
     }
 
@@ -135,11 +153,11 @@ public class DataExtractor
                     TokenMonitor.getToken(),
                     null,
                     new TypeReference<List<ScoreLazerDTO>>() {});
-            if(scoreLazerDTOS==null|| scoreLazerDTOS.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 小妹妹打都没打在这查哪个成绩呢");
+            if(scoreLazerDTOS==null|| scoreLazerDTOS.isEmpty()) throw new LazybotRuntimeException("小妹妹打都没打在这查哪个成绩呢");
             return scoreLazerDTOS;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] 小妹妹打都没打在这查哪个成绩呢");
+            throw new LazybotRuntimeException("小妹妹打都没打在这查哪个成绩呢");
         }
     }
 
@@ -166,11 +184,11 @@ public class DataExtractor
                         BeatmapUserScoreLazer.class);
             }
             if(beatmapUserScoreLazer==null||beatmapUserScoreLazer.getScore()==null)
-                throw new LazybotRuntimeException("[Lazybot] 没这成绩: Bid=" +beatmapId + " PlayerID=" + playerId +" Mode="+mode);
+                throw new LazybotRuntimeException("没这成绩: Bid=" +beatmapId + " PlayerID=" + playerId +" Mode="+mode);
             return beatmapUserScoreLazer;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] 没这成绩: Bid=" +beatmapId + " PlayerID=" + playerId +" Mode="+mode);
+            throw new LazybotRuntimeException("没这成绩: Bid=" +beatmapId + " PlayerID=" + playerId +" Mode="+mode);
         }
     }
 
@@ -186,7 +204,7 @@ public class DataExtractor
             return scoreAll;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] 没有找到" + playerId +"在" + beatmapId+ "上的成绩");
+            throw new LazybotRuntimeException("没有找到" + playerId +"在" + beatmapId+ "上的成绩");
         }
 
     }
@@ -201,12 +219,12 @@ public class DataExtractor
                     null,
                     BeatmapDTO.class);
             if(beatmapDTO.getId()==null) {
-                throw new LazybotRuntimeException("[Lazybot] 没这地图: BID=" + beatmapId + " Mode=" +mode);
+                throw new LazybotRuntimeException("没这地图: BID=" + beatmapId + " Mode=" +mode);
             }
             return beatmapDTO;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] 没这地图: BID=" + beatmapId + " Mode=" +mode);
+            throw new LazybotRuntimeException("没这地图: BID=" + beatmapId + " Mode=" +mode);
         }
     }
     public List<ScoreLazerDTO> extractUserBestScoreList(String playerId, Integer offset , String mode)
@@ -219,12 +237,12 @@ public class DataExtractor
                     null,
                     new TypeReference<List<ScoreLazerDTO>>() {});
             if(scoreLazerDTOS==null|| scoreLazerDTOS.isEmpty()) {
-                throw new LazybotRuntimeException("[Lazybot] 没这成绩: " +"Index=" + offset+1 + " PlayerID=" + playerId);
+                throw new LazybotRuntimeException("没这成绩: " +"Index=" + offset+1 + " PlayerID=" + playerId);
             }
             return scoreLazerDTOS;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] 没这成绩: " +"Index=" + offset+1 + " PlayerID=" + playerId);
+            throw new LazybotRuntimeException("没这成绩: " +"Index=" + offset+1 + " PlayerID=" + playerId);
         }
     }
     public List<ScoreLazerDTO> extractUserBestScoreList(String playerId, Integer limit , Integer offset, String mode)
@@ -237,12 +255,12 @@ public class DataExtractor
                    null,
                    new TypeReference<List<ScoreLazerDTO>>() {});
            if(scoreLazerDTOS==null|| scoreLazerDTOS.isEmpty()) {
-               throw new LazybotRuntimeException("[Lazybot] 没这成绩: " +"index=" + (offset+1) + " player=" + playerId + " mode=" +mode);
+               throw new LazybotRuntimeException("没这成绩: " +"index=" + (offset+1) + " player=" + playerId + " mode=" +mode);
            }
            return scoreLazerDTOS;
        }
        catch (LazybotNotFoundException e) {
-           throw new LazybotRuntimeException("[Lazybot] 没这成绩: " +"index=" + (offset+1) + " player=" + playerId + " mode=" +mode);
+           throw new LazybotRuntimeException("没这成绩: " +"index=" + (offset+1) + " player=" + playerId + " mode=" +mode);
        }
     }
     public List<ScoreLazerDTO> extractUserBestAll(String playerId, String mode)
@@ -256,7 +274,7 @@ public class DataExtractor
                     new TypeReference<List<ScoreLazerDTO>>() {}
             );
             if (scoreLazerDTOS == null || scoreLazerDTOS.isEmpty()) {
-                throw new LazybotNotFoundException("[Lazybot] 找不到"+playerId+"的成绩");
+                throw new LazybotNotFoundException("找不到"+playerId+"的成绩");
             }
             if (scoreLazerDTOS.size() < 110) {
                 scoreLazerDTOS.addAll(apiRequestExecutor.execute(
@@ -269,7 +287,7 @@ public class DataExtractor
             return scoreLazerDTOS;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] 找不到"+playerId+"的成绩");
+            throw new LazybotRuntimeException("找不到"+playerId+"的成绩");
         }
     }
 
@@ -286,12 +304,12 @@ public class DataExtractor
                     null,
                     new TypeReference<List<HitScore>>() {}));
             if(hitScoreVOs.isEmpty()) {
-                throw new LazybotRuntimeException("[Lazybot] OsuTrack暂无数据");
+                throw new LazybotRuntimeException("OsuTrack暂无数据");
             }
             return hitScoreVOs;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("[Lazybot] OsuTrack暂无数据");
+            throw new LazybotRuntimeException("OsuTrack暂无数据");
         }
     }
     public List<BestPlay> extractOsuTrackBestPlay(Integer limit, Integer mode)
@@ -303,7 +321,7 @@ public class DataExtractor
                 null,
                 new TypeReference<List<BestPlay>>() {});
         if(bestPlayList.isEmpty()) {
-            throw new LazybotRuntimeException("[Lazybot] OsuTrack BestPlay暂无数据");
+            throw new LazybotRuntimeException("OsuTrack BestPlay暂无数据");
         }
         return bestPlayList;
     }

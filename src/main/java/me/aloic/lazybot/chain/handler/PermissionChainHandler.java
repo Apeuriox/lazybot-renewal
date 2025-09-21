@@ -27,7 +27,7 @@ public class PermissionChainHandler implements CommandHandlerInterface {
     {
         if(!doCheck("TEST", 0L, command, event.getScorePanelVersion()))
         {
-            throw new LazybotRuntimeException("[Lazybot] [TEST]权限检查失败，已停止执行");
+            throw new LazybotRuntimeException("[TEST]权限检查失败，已停止执行");
         }
         chain.doHandle(event, command);
 
@@ -42,15 +42,15 @@ public class PermissionChainHandler implements CommandHandlerInterface {
         else {
             if(!doCheck("CHANNEL", event.getMessageEvent().getGroupId(), command, event.getScorePanelVersion()))
             {
-                throw new LazybotRuntimeException("[Lazybot] 此指令已在本群禁用");
+                throw new LazybotRuntimeException("此指令已在本群禁用");
             }
 //        if(!doCheck("USER", event.getMessageEvent().getSender().getUserId(), command, event.getScorePanelVersion()))
 //        {
-//            throw new LazybotRuntimeException("[Lazybot] 此指令不允许该用户调用");
+//            throw new LazybotRuntimeException("此指令不允许该用户调用");
 //        }
             if(!doCheck("GLOBAL", 0L, command, event.getScorePanelVersion()))
             {
-                throw new LazybotRuntimeException("[Lazybot] 此指令已被开发者禁用");
+                throw new LazybotRuntimeException("此指令已被开发者禁用");
             }
             chain.doHandle(bot, event, command);
         }
@@ -63,7 +63,7 @@ public class PermissionChainHandler implements CommandHandlerInterface {
         }
         catch (Exception e)
         {
-            throw new LazybotRuntimeException("[Lazybot] 权限检查失败，已跳过执行");
+            throw new LazybotRuntimeException("权限检查失败，已跳过执行");
         }
 
     }

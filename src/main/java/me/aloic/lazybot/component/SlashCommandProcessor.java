@@ -66,7 +66,7 @@ public class SlashCommandProcessor
             }
         } catch (LazybotRuntimeException | IllegalArgumentException e) {
             logger.error(e.getMessage());
-            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(e.getMessage()).build(), false);
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] " + e.getMessage()).build(), false);
         }
         catch (ExecutionException e) {
             Throwable rootCause = e.getCause();
@@ -79,7 +79,7 @@ public class SlashCommandProcessor
         }
         catch (Exception e) {
             logger.error(e.getMessage());
-            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("出现未知错误").build(), false);
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 出现未知错误").build(), false);
         }
         return CompletableFuture.completedFuture(null);
     }
