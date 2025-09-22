@@ -117,7 +117,7 @@ public class CardCommand implements LazybotSlashCommand
                         "Aloic", "Aloic", "2024-03-22 (原版) / 2025-08-05 (Moelleux样式)")
                         .addExample("/Card")
                         .addExample("/Card Aloic")
-                        .addExample("/Card &")
+                        .addExample("/Card Aloic hue=340 &&&")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Hue","覆盖默认取色算法的色相值，格式为hue=100，色相为0至360的整数，超出会取余", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","一个&则以原版样式输出，两个&将会禁用BP白色蒙层，三个&将强制以中等对比度输出，四个&以低对比度输出", CommandParameter.ParameterType.OPTIONAL)));

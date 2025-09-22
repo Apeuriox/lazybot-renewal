@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@LazybotCommandMapping({"pr","rp","playrecent","re","recent"})
+@LazybotCommandMapping({"pr","rp","playrecent","re","recent","p","r"})
 @Component
 public class PlayRecentCommand implements LazybotSlashCommand
 {
@@ -54,7 +54,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
         params.validateParams();
-        if (event.getFullCommandName().equals("rp")||event.getFullCommandName().equals("pr")||event.getFullCommandName().equals("playrecent"))
+        if (event.getFullCommandName().equals("rp")||event.getFullCommandName().equals("pr")||event.getFullCommandName().equals("playrecent")||event.getFullCommandName().equals("p"))
             ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,1));
         else
             ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,0));
@@ -111,7 +111,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Play Recently","Pr, Rp, Playrecent, Re, Recent",
+                new CommandHelp("Play Recently","Pr, Rp, Playrecent, Re, Recent, P, R",
                         "查询指定用户的最近游玩成绩中的指定的第几个",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Pr #1")

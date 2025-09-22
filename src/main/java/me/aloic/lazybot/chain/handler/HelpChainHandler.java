@@ -20,11 +20,11 @@ public class HelpChainHandler implements CommandHandlerInterface {
 
     @Override
     public void handle(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception {
-        if (event.getCommandParameters() != null
-                && !event.getCommandParameters().isEmpty()
-                && "*help".equalsIgnoreCase(event.getCommandParameters().getFirst())) {
-            testOutputTool.writeStringToFile(command.getHelp());
-            return;
+        if (event.getCommandParameters() != null && !event.getCommandParameters().isEmpty()) {
+            if ("*help".equalsIgnoreCase(event.getCommandParameters().getFirst()) || "*h".equalsIgnoreCase(event.getCommandParameters().getFirst())) {
+                testOutputTool.writeStringToFile(command.getHelp());
+                return;
+            }
         }
         chain.doHandle(event, command);
     }
@@ -32,11 +32,11 @@ public class HelpChainHandler implements CommandHandlerInterface {
     @Override
     public void handle(Bot bot, LazybotSlashCommand command, LazybotSlashCommandEvent event, CommandHandlerChain chain) throws Exception
     {
-        if (event.getCommandParameters()!=null
-                && !event.getCommandParameters().isEmpty()
-                && "*help".equalsIgnoreCase(event.getCommandParameters().getFirst())) {
-            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), command.getHelp(), false);
-            return;
+        if (event.getCommandParameters()!=null && !event.getCommandParameters().isEmpty()) {
+            if ("*help".equalsIgnoreCase(event.getCommandParameters().getFirst()) || "*h".equalsIgnoreCase(event.getCommandParameters().getFirst())) {
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), command.getHelp(), false);
+                return;
+            }
         }
         chain.doHandle(bot, event, command);
     }

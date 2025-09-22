@@ -23,7 +23,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
-@LazybotCommandMapping({"score"})
+@LazybotCommandMapping({"score","s"})
 @Component
 public class ScoreCommand implements LazybotSlashCommand
 {
@@ -92,7 +92,7 @@ public class ScoreCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Score","Score",
+                new CommandHelp("Score","Score, S",
                         "按照指定用户查询指定地图下的指定Mod组合中分数最高的成绩",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Score 4889657+HDHR")
