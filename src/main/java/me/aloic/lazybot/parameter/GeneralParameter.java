@@ -47,7 +47,6 @@ public class GeneralParameter extends LazybotCommandParameter
     public static GeneralParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {
         GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
-        System.out.println(event.getScorePanelVersion());
         params.setVersion(event.getScorePanelVersion());
         GeneralParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
