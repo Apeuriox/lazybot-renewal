@@ -67,6 +67,29 @@ public class SVGRenderer
 
         return result;
     }
+    public static byte[] renderSVGDocumentToByteArrayPNG(Document document, float scale)
+    {
+        long startingTime = System.currentTimeMillis();
+        byte[] result;
+        try{
+            result = renderer.RenderPng(SvgUtil.documentToString(document),scale);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("渲染成绩图时出错");
+        }
+        logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("X:\\lazybot-output\\test.svg"))) {
+            writer.write(SvgUtil.documentToString(document));
+            logger.info("成功写入字符串到{}.", "X:\\lazybot-output\\test.svg");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
     private static OutputStream convertByteArrayToOutputStream(byte[] byteArray) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try{

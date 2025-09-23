@@ -33,6 +33,8 @@ public interface PlayerService
 
     byte[] cardMoelleux(CardMoelleuxParameter params) throws Exception;
 
+    byte[] cardMoelleuxTrimmed(CardMoelleuxParameter params) throws Exception;
+
     byte[] performancePlus(GeneralParameter params) throws Exception;
 
     byte[] addScoreForPerformancePlus(ScoreParameter params);

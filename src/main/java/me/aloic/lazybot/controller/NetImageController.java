@@ -34,11 +34,27 @@ public class NetImageController
             version = 0;
         byte[] image = playerService.cardMoelleux(new CardMoelleuxParameter(playerId,hue,version));
         HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.maxAge(8, TimeUnit.HOURS).cachePublic());
+        headers.setCacheControl(CacheControl.maxAge(24, TimeUnit.HOURS).cachePublic());
 
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentType(MediaType.IMAGE_JPEG)
+                .body(image);
+    }
+    @GetMapping(value = "/trim", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> renderMoelleuxCardTrimmed(
+            @RequestParam(value = "id", required = true) Integer playerId,
+            @RequestParam(value = "hue", required = false) Integer hue) throws Exception
+    {
+//        if (!BETA_USER.contains(playerId))
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        byte[] image = playerService.cardMoelleuxTrimmed(new CardMoelleuxParameter(playerId,hue,0));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.maxAge(24, TimeUnit.HOURS).cachePublic());
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.IMAGE_PNG)
                 .body(image);
     }
 }

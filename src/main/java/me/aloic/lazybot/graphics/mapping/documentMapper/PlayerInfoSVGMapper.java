@@ -25,10 +25,8 @@ import org.w3c.dom.NodeList;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Slf4j
 public class PlayerInfoSVGMapper extends LazybotSVGMapper
@@ -258,7 +256,130 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("playTime").setTextContent(CommonTool.formatSecondsToHours(player.getInfo().getTotalPlayTime()).concat("h"));
         doc.getElementById("accuracy").setTextContent(CommonTool.toString(player.getInfo().getAccuracy()).concat("%"));
 
+        setupMoelleuxPPPlus(doc,player, primaryHue, saturationFactor);
 
+        if(!enableWhiteMask) {
+            doc.getElementById("bp-1-mask").setAttribute("opacity", "0");
+            doc.getElementById("bp-2-mask").setAttribute("opacity", "0");
+            doc.getElementById("bp-3-mask").setAttribute("opacity", "0");
+            doc.getElementById("bp-4-mask").setAttribute("opacity", "0");
+        }
+        return doc;
+    }
+    public static Document mapPlayerInfoMoelleuxToCardTrimmed(PlayerInfoMoelleux player, int primaryHue)
+    {
+        Document doc = SVGTemplateLoader.loadSVGTemplate("CardMoelleuxTrimmed");
+        int saturationFactor = 1;
+        if (primaryHue > 360) saturationFactor = 0;
+        Element svgRoot = doc.getDocumentElement();
+        doc.getElementById("banner").setAttributeNS(xlinkns, "xlink:href", player.getInfo().getBannerUrl());
+        doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getInfo().getAvatarUrl());
+
+        Node linearGradientNode = doc.createElementNS(namespaceSVG, "linearGradient");
+        Element linearGradient = (Element) linearGradientNode;
+        linearGradient.setAttributeNS(null, "id", "gradient-1");
+        linearGradient.setAttributeNS(null, "x1", "917");
+        linearGradient.setAttributeNS(null, "y1", "190");
+
+        linearGradient.setAttributeNS(null, "x2", "0");//control the width
+        linearGradient.setAttributeNS(null, "y2", "222");
+        linearGradient.setAttributeNS(null, "gradientUnits", "userSpaceOnUse");
+
+        String stopColor= new HSL(primaryHue-22,54*saturationFactor,89).toString();
+        String stopColor2= new HSL(primaryHue,54*saturationFactor,76).toString();
+        String stopColor3= new HSL(primaryHue-24,97*saturationFactor,85).toString();
+        Element stop1 = doc.createElementNS(namespaceSVG, "stop");
+        stop1.setAttributeNS(null, "offset", "0");
+        stop1.setAttributeNS(null, "stop-opacity", "1");
+        stop1.setAttributeNS(null, "stop-color", stopColor);
+        linearGradient.appendChild(stop1);
+
+        Element stop2 = doc.createElementNS(namespaceSVG, "stop");
+        stop2.setAttributeNS(null, "offset", "0.6");
+        stop2.setAttributeNS(null, "stop-opacity", "1");
+        stop2.setAttributeNS(null, "stop-color", stopColor2);
+        linearGradient.appendChild(stop2);
+
+
+        Element stop3 = doc.createElementNS(namespaceSVG, "stop");
+        stop3.setAttributeNS(null, "offset", "1");
+        stop3.setAttributeNS(null, "stop-opacity", "0");
+        stop3.setAttributeNS(null, "stop-color", stopColor3);
+        linearGradient.appendChild(stop3);
+
+        Node linearGradientNode2 = doc.createElementNS(namespaceSVG, "linearGradient");
+        Element linearGradient2 = (Element) linearGradientNode2;
+        linearGradient2.setAttributeNS(null, "id", "gradient-2");
+        linearGradient2.setAttributeNS(null, "x1", "919");
+        linearGradient2.setAttributeNS(null, "y1", "191");
+
+        linearGradient2.setAttributeNS(null, "x2", "0");//control the width
+        linearGradient2.setAttributeNS(null, "y2", "234");
+        linearGradient2.setAttributeNS(null, "gradientUnits", "userSpaceOnUse");
+
+        String stopColor12= new HSL(primaryHue-18,54*saturationFactor,89).toString();
+        String stopColor22= new HSL(primaryHue+14,54*saturationFactor,76).toString();
+        String stopColor32= new HSL(primaryHue-17,97*saturationFactor,85).toString();
+        Element stop12 = doc.createElementNS(namespaceSVG, "stop");
+        stop12.setAttributeNS(null, "offset", "0");
+        stop12.setAttributeNS(null, "stop-opacity", "1");
+        stop12.setAttributeNS(null, "stop-color", stopColor12);
+        linearGradient2.appendChild(stop12);
+
+        Element stop22 = doc.createElementNS(namespaceSVG, "stop");
+        stop22.setAttributeNS(null, "offset", "0.6");
+        stop22.setAttributeNS(null, "stop-opacity", "1");
+        stop22.setAttributeNS(null, "stop-color", stopColor22);
+        linearGradient2.appendChild(stop22);
+
+
+        Element stop32 = doc.createElementNS(namespaceSVG, "stop");
+        stop32.setAttributeNS(null, "offset", "1");
+        stop32.setAttributeNS(null, "stop-opacity", "0");
+        stop32.setAttributeNS(null, "stop-color", stopColor32);
+        linearGradient2.appendChild(stop32);
+
+        svgRoot.appendChild(linearGradient2);
+        svgRoot.appendChild(linearGradient);
+
+        doc.getElementById("bg-linear-1").setAttribute("fill","url(#gradient-1)");
+        doc.getElementById("bg-linear-2").setAttribute("fill","url(#gradient-2)");
+
+        doc.getElementById("bush-line").setAttribute("stroke",new HSL(primaryHue-120,15*saturationFactor,57).toString());
+        doc.getElementById("bushi-line-2").setAttribute("stroke",new HSL(primaryHue-120,15*saturationFactor,57).toString());
+        doc.getElementById("bush-circle").setAttribute("fill",new HSL(primaryHue-120,15*saturationFactor,57).toString());
+        doc.getElementById("bushi-circle-2").setAttribute("fill",new HSL(primaryHue-120,15*saturationFactor,57).toString());
+        Random random=new Random();
+        doc.getElementById("Bush1").setAttribute("transform","translate(" +  (random.nextInt(20)-10) +"," + (random.nextInt(6)-6) +")");
+        doc.getElementById("Bush2").setAttribute("transform","translate(" +  (random.nextInt(20)-10) +"," + (random.nextInt(8)+2) +")");
+
+        HSL fontColor =new HSL(primaryHue,7,51);
+        doc.getElementById("circle-1").setAttribute("fill",new HSL(primaryHue-17,97*saturationFactor,88).toString());
+        doc.getElementById("circle-2").setAttribute("fill",new HSL(primaryHue+33,96*saturationFactor,90).toString());
+        doc.getElementById("circle-3").setAttribute("fill",new HSL(primaryHue-58,77*saturationFactor,76).toString());
+        doc.getElementById("date").setTextContent(String.valueOf(LocalDateTime.now().getDayOfMonth()));
+        doc.getElementById("name").setTextContent(player.getInfo().getPlayerName());
+        doc.getElementById("name").setAttribute("fill",fontColor.toString());
+        doc.getElementById("date").setAttribute("fill",fontColor.toString());
+        doc.getElementById("team").setAttribute("fill",fontColor.toString());
+        doc.getElementById("level").setAttribute("fill",fontColor.toString());
+        doc.getElementById("info-rect-bg").setAttribute("fill", "url(#gradient-2)");
+        doc.getElementById("team").setTextContent("["+player.getInfo().getTeamShortName()+"]");
+        doc.getElementById("level").setTextContent(String.valueOf(player.getInfo().getLevel()));
+
+        doc.getElementById("pp").setTextContent(String.valueOf(Math.round(Optional.ofNullable(player.getInfo().getPerformancePoint()).orElse(0D))));
+        doc.getElementById("rank").setTextContent("#" + CommonTool.transformNumber(Optional.ofNullable(player.getInfo().getGlobalRank()).orElse(0)));
+        doc.getElementById("pc").setTextContent(CommonTool.transformNumber(player.getInfo().getPlayCount()));
+        doc.getElementById("time").setTextContent(CommonTool.formatSecondsToHours(player.getInfo().getTotalPlayTime()).concat("h"));
+        doc.getElementById("acc").setTextContent(CommonTool.toString(player.getInfo().getAccuracy()).concat("%"));
+        doc.getElementById("logo-rect").setAttribute("fill", String.valueOf(new HSL(primaryHue,17*saturationFactor,60)));
+
+        setupMoelleuxPPPlus(doc,player, primaryHue, saturationFactor);
+        return doc;
+    }
+
+    private static void setupMoelleuxPPPlus(Document doc, PlayerInfoMoelleux player, int primaryHue, int saturationFactor)
+    {
         double jumpScaled= CommonTool.getScaledRatio(player.getPlus().getPpJumpAim(), PerformanceDimensionLimit.JUMP.getLimitExpertPlus(), PerformanceDimensionLimit.JUMP.getScaleFactor());
         double flowScaled= CommonTool.getScaledRatio(player.getPlus().getPpFlowAim(), PerformanceDimensionLimit.FLOW.getLimitExpertPlus(), PerformanceDimensionLimit.FLOW.getScaleFactor());
         double speedScaled= CommonTool.getScaledRatio(player.getPlus().getPpSpeed(), PerformanceDimensionLimit.SPEED.getLimitExpertPlus(), PerformanceDimensionLimit.SPEED.getScaleFactor());
@@ -305,13 +426,6 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("acc-label").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,184),50*saturationFactor,20).toString());
         doc.getElementById("acc-value").setAttribute("fill", new HSL(CommonTool.circularHueSubtract(primaryHue,184),51*saturationFactor,23).toString());
 
-        if(!enableWhiteMask) {
-            doc.getElementById("bp-1-mask").setAttribute("opacity", "0");
-            doc.getElementById("bp-2-mask").setAttribute("opacity", "0");
-            doc.getElementById("bp-3-mask").setAttribute("opacity", "0");
-            doc.getElementById("bp-4-mask").setAttribute("opacity", "0");
-        }
-        return doc;
     }
 
 

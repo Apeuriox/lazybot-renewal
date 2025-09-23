@@ -29,6 +29,7 @@ public class PlayerInfoVO
     private String fixedPPString;
     private Integer primaryColor;
     private String[] previousNames;
+    private String bannerUrl;
 
     private Integer level;
     private Integer levelProgress;

@@ -385,6 +385,45 @@ public class PlayerServiceImpl implements PlayerService
                 ,2
         );
     }
+
+    @Override
+    public byte[] cardMoelleuxTrimmed(CardMoelleuxParameter params) throws Exception {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("此样式仅支持osu模式");
+        PlayerInfoDTO player = getTargetPlayerInfoDTO(params);
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(player);
+        playerInfoVO.setMode(params.getMode());
+        PPPlusPerformance performance;
+        try{
+            performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
+        }
+        catch (LazybotRuntimeException e) {
+            throw new LazybotRuntimeException("Pp+数据获取失败，请稍后再试");
+        }
+        playerInfoVO.setBannerUrl(AssertDownloadUtil.bannerAbsolutePath(player,false));
+        PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
+                null,
+                performance);
+        HSL mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getBannerUrl()));
+
+        boolean isTooDarkOrBright = mainColor.getSaturation()<4 || mainColor.getLightness()>94;
+        if (isTooDarkOrBright)
+        {
+            mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getAvatarUrl()));
+            isTooDarkOrBright = mainColor.getSaturation()<4 || mainColor.getLightness()>94;
+            playerInfoVO.setBannerUrl(playerInfoVO.getAvatarUrl());
+        }
+        int primaryHue;
+        if (params.getOverrideHue()!=null) {
+            primaryHue = params.getOverrideHue();
+        }
+        else{
+            primaryHue = isTooDarkOrBright?361:mainColor.getHue();
+        }
+        return SVGRenderer.renderSVGDocumentToByteArrayPNG(
+                PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCardTrimmed(playerInfoMoelleux, primaryHue)
+                ,1
+        );
+    }
     @Override
     public byte[] performancePlus(GeneralParameter params)
     {
