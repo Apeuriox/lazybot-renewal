@@ -1,0 +1,241 @@
+<svg
+ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="1960" height="1200" fill="none">
+	<defs>
+		<filter id="filter_0" width="2020" height="1300" x="-20" y="-50" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="16.666666" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="filter_2" width="1910" height="1071" x="25" y="1" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="1.66666663" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="bg-avatar-filter" width="1950" height="1111" x="5" y="-19" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="8.33333302" result="effect_layerBlur_1" />
+		</filter>
+
+		
+		<filter id="filter_4" width="742" height="240" x="767.423828" y="63" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="filter_5" width="363.930664" height="240" x="1543.423828" y="63" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+	
+		<filter id="filter_6" width="365.760986" height="132" x="762.296875" y="263" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="filter_7" width="370.813965" height="132" x="1151.189453" y="263" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+	
+		<filter id="filter_8" width="346.773682" height="132" x="1566.183105" y="263" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+	<clipPath id="avatarClip">
+		<rect width="192" height="192" x="110" y="152" rx="48" fill="rgb(255,255,255)" />
+	</clipPath>
+	<clipPath id="bg-avatar-clip">
+		<rect id="total-1" width="640" height="240" x="86" y="128" rx="48" fill="rgb(0,0,0)" fill-opacity="0.349999994" />
+	</clipPath>
+	<clipPath id="bg-header-clip">
+		<rect id="header-mask" width="1900" height="495" x="10" y="6" rx="50" />
+	</clipPath>
+	<clipPath id="attrClip-1">
+		<rect width="200" height="80" x="1618" y="560" rx="24" fill="rgb(0,0,0)"/>
+	</clipPath>
+	<clipPath id="attrClip-2">
+		<rect width="260" height="80" x="1558" y="560" rx="24" fill="#ffffff"/>
+	</clipPath>
+	<clipPath id="attrClip-3">
+		<rect width="330" height="80" x="1488" y="560" rx="24" fill="#ffffff"/>
+	</clipPath>
+	<style>
+	 .cls-1 {
+        font-family: Torus-Regular, Torus;
+      }
+	</style>
+	</defs>
+
+	<image
+	  		filter="url(#filter_0)"
+            xlink:href="assets/zet.jpg"
+            width="1920" height="1200"
+            preserveAspectRatio="xMidYMid slice"
+            id="bg"/>
+	<rect width="1920" height="1200" fill="rgb(0,0,0)" fill-opacity="0.65" />
+	
+	<g id="Header-BG">
+		<image
+	  		filter="url(#filter_2)"
+            xlink:href="assets/zet.jpg"
+			clip-path="url(#bg-header-clip)"
+            width="1900" height="1060" x="10" y="6"
+            preserveAspectRatio="xMidYMid slice"
+            id="bg-header"/>
+
+		<rect id="header-mask" width="1900" height="495" x="10" y="6" rx="50" opacity="0.35" fill="rgb(0,0,0)" />
+	</g>
+
+	<g id="avatar-block">
+	   <image
+	  		filter="url(#bg-avatar-filter)"
+            xlink:href="assets/zet.jpg"
+        	clip-path="url(#bg-avatar-clip)"
+            width="1900" height="1060" x="10" y="6"
+            preserveAspectRatio="xMidYMid slice"
+            id="bg-avatar"/>
+
+		<rect id="total-1" width="640" height="240" x="86" y="128" rx="48" fill="rgb(0,0,0)" fill-opacity="0.349999994" />
+		<rect id="total-2" width="640" height="240" x="86" y="128" rx="48" fill="rgb(0,0,0)" fill-opacity="0.300000012" />
+		<image
+            xlink:href="assets/avatar.jpg"
+        	clip-path="url(#avatarClip)"
+            width="192"
+			x="110"
+			y="152"
+            height="192"
+            preserveAspectRatio="xMidYMid slice"
+            id="avatar"/>
+		<text class="cls-1" id="name" font-weight="600" font-size="80" fill="#ffffff" x="335" y="236">Aloic</text>
+		<rect id="area-block" width="72" height="52" x="338" y="270" rx="12" fill="rgb(196,196,196)" />
+		<rect id="team-block" width="104" height="52" x="416" y="270" rx="12" fill="rgb(196,196,196)" />
+	</g>
+
+	<g id="Header-Text">
+		<g filter="url(#filter_4)">
+			<text id="pp-s" class="cls-1" font-weight="600" font-size="200" fill="rgb(0,0,0)" fill-opacity="0.6" x="774" y="260">2000PP</text>
+			</g>
+		<g filter="url(#filter_5)">
+			<text id="miss" class="cls-1" text-anchor="end" font-weight="600" font-size="200" fill="rgb(0,0,0)" fill-opacity="0.6" x="1904" y="260">20X</text>
+		</g>
+		<g filter="url(#filter_6)">
+			<text id="ranking" class="cls-1" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="774" y="367">#2000</text>
+		</g>
+		<g filter="url(#filter_7)">
+				<text id="accuracy" class="cls-1" text-anchor="middle" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="1344" y="367">99.99%</text>
+		</g>
+		<g filter="url(#filter_8)">
+				<text id="combo" class="cls-1" text-anchor="end" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="1904" y="367">2210X</text>
+		</g>
+		<text id="pp" class="cls-1" font-weight="600" font-size="200" fill="#FFD633" x="770" y="256">2000PP</text>
+		<text id="miss" class="cls-1" text-anchor="end" font-weight="600" font-size="200" fill="#FF3333" x="1900" y="256">20X</text>
+		<text id="ranking" class="cls-1" font-weight="600" font-size="110" fill="#ffffff" x="770" y="363">#2000</text>
+		<text id="accuracy" class="cls-1" text-anchor="middle" font-weight="600" font-size="110" fill="#ffffff" x="1340" y="363">99.99%</text>
+		<text id="combo" class="cls-1" text-anchor="end" font-weight="600" font-size="110" fill="#ffffff" x="1900" y="363">2210X</text>
+		
+	</g>
+
+
+	<g>
+		<rect id="rank-status-bg" width="216" height="108" x="86" y="546" rx="54" fill="rgb(0,0,0)" fill-opacity="0.349999994" />
+		<g id="ranked">
+			<rect id="rank-circle" width="108" height="108" x="86" y="546" rx="54" fill="rgb(19,200,236)" />
+			<g id="ranked-icon">
+				<path d="M116 597L140 581L164 597" fill-rule="nonzero" stroke="rgb(255,255,255)" stroke-linecap="square" stroke-width="8" />
+				<path d="M116 619L140 603L164 619" fill-rule="nonzero" stroke="rgb(255,255,255)" stroke-linecap="square" stroke-width="8" />
+			</g>
+		</g>
+		<g id="std">
+			<ellipse rx="33.333305" ry="33.333313" cx="248.000061" cy="600.000061" stroke="rgb(255,255,255)" stroke-width="5.33333015" />
+			<ellipse rx="21.333305" ry="21.333313" cx="248.000061" cy="600.000061" fill="rgb(255,255,255)" />
+		</g>
+		<g id="map-attr">
+
+			<g clip-path="url(#attrClip-1)" id="hp-block" opacity="0">
+				<rect width="95" height="80" x="1618" y="560" fill="#4CA6FF"/>
+				<rect width="105" height="80" x="1713" y="560" fill="#fff"/>
+				<text class="cls-1" font-weight="600" font-size="50" fill="#ffffff"
+				 x="1640" y="616">hp</text>
+				<text id="hp-value" class="cls-1" font-weight="600" text-anchor="middle" font-size="50" fill="#333333"
+				x="1768" y="616">6.0</text>
+			</g>
+			<g clip-path="url(#attrClip-1)" id="cs-block" opacity="0">
+				<rect width="95" height="80" x="1618" y="560" fill="#80D926"/>
+				<rect width="105" height="80" x="1713" y="560" fill="#fff"/>
+				<text class="cls-1" font-weight="600" font-size="50" fill="#ffffff"
+				 x="1640" y="616">cs</text>
+				<text id="cs-value" class="cls-1" font-weight="600" text-anchor="middle" font-size="50" fill="#333333"
+				x="1768" y="616">6.0</text>
+			</g>
+			<g clip-path="url(#attrClip-1)" id="od-block" opacity="0">
+				<rect width="95" height="80" x="1618" y="560" fill="#BD660F"/>
+				<rect width="105" height="80" x="1713" y="560" fill="#fff"/>
+				<text class="cls-1" font-weight="600" font-size="50" fill="#ffffff"
+				 x="1640" y="616">od</text>
+				<text id="od-value" class="cls-1" font-weight="600" text-anchor="middle" font-size="50" fill="#333333"
+				x="1768" y="616">6.0</text>
+			</g>
+			<g clip-path="url(#attrClip-1)" id="ar-block" opacity="0">
+				<rect width="95" height="80" x="1618" y="560" fill="#FF4C4C"/>
+				<rect width="105" height="80" x="1713" y="560" fill="#fff"/>
+				<text class="cls-1" font-weight="600" font-size="50" fill="#ffffff"
+				 x="1640" y="616">ar</text>
+				<text id="ar-value" class="cls-1" font-weight="600" text-anchor="middle" font-size="50" fill="#333333"
+				x="1768" y="616">6.0</text>
+			</g>
+			<g clip-path="url(#attrClip-2)" id="bpm-block" opacity="0">
+	
+				<rect width="140" height="80" x="1558" y="560" fill="#C44DFF"/>
+				<rect width="120" height="80" x="1698" y="560" fill="#fff"/>
+				<text class="cls-1" font-weight="600" font-size="50" fill="#ffffff"
+				 x="1580" y="616">bpm</text>
+				<text id="bpm-value" class="cls-1" font-weight="600" text-anchor="middle" font-size="50" fill="#333333"
+				x="1753" y="616">235</text>
+			</g>
+			<g clip-path="url(#attrClip-3)" id="length-block" opacity="1">
+	
+				<rect width="180" height="80" x="1488" y="560" fill="#C44DFF"/>
+				<rect width="150" height="80" x="1668" y="560" fill="#fff"/>
+				<text class="cls-1" font-weight="600" font-size="50" fill="#ffffff"
+				 x="1510" y="616">length</text>
+				<text id="length-value" class="cls-1" font-weight="600" text-anchor="middle" font-size="50" fill="#333333"
+				x="1745" y="616">10:00</text>
+			</g>
+		</g>
+	</g>
+	<text id="title" class="cls-1" font-weight="600" text-anchor="middle"
+	 font-size="100" fill="#f3f3f3" x="960" y="780">Song Title That Should be Long</text>
+
+	<rect id="star-bg" width="626" height="108" x="86" y="860" rx="54" fill="#6f5edc"/>
+	<path id="star" fill="#f0d97b" d="M140.928 907.84L154.972 909.511L144.592 919.117L147.343 932.989L135 926.086L122.657 932.989L125.408 919.117L115.028 909.511L129.072 907.84L135 895L140.928 907.84Z" fill-rule="evenodd" />
+	<text id="starrating" class="cls-1" font-weight="600" text-anchor="middle"
+	 font-size="65" fill="#f0d97b" x="230" y="936">6.61</text>
+	<circle id="version-dot" cx="320" cy="914" r="9" fill="rgb(255,217,102)" />
+	<text id="version" class="cls-1" font-weight="600"
+	 font-size="65" fill="#f0d97b" x="360" y="936">Impossible</text>
+
+	<g id="mods">
+
+		<g>
+				<rect width="144" height="80" x="1670" y="874" rx="40" fill="rgb(255,255,255)" />
+		<path d="M1721.75 933L1705.44 895.2L1714.89 895.2L1729.15 928.68L1723.59 928.68L1738.06 895.2L1746.75 895.2L1730.39 933L1721.75 933ZM1748 933L1748 927.33L1762.58 913.56C1763.73 912.516 1764.58 911.58 1765.12 910.752C1765.66 909.924 1766.02 909.168 1766.2 908.484C1766.41 907.8 1766.52 907.17 1766.52 906.594C1766.52 905.082 1766 903.93 1764.96 903.138C1763.95 902.31 1762.45 901.896 1760.47 901.896C1758.89 901.896 1757.41 902.202 1756.05 902.814C1754.71 903.426 1753.58 904.38 1752.64 905.676L1746.27 901.572C1747.71 899.412 1749.73 897.702 1752.32 896.442C1754.91 895.182 1757.9 894.552 1761.28 894.552C1764.09 894.552 1766.54 895.02 1768.63 895.956C1770.75 896.856 1772.39 898.134 1773.54 899.79C1774.73 901.446 1775.32 903.426 1775.32 905.73C1775.32 906.954 1775.16 908.178 1774.84 909.402C1774.55 910.59 1773.94 911.85 1773 913.182C1772.1 914.514 1770.77 916.008 1769.01 917.664L1756.91 929.058L1755.24 925.872L1776.57 925.872L1776.57 933L1748 933Z" fill="rgb(0,0,0)" fill-rule="nonzero" />
+	
+		</g>
+		<g transform="translate(-160,0)">
+			<rect width="144" height="80" x="1670" y="874" rx="40" fill="rgb(255,255,255)" />
+			<path d="M1721.75 933L1705.44 895.2L1714.89 895.2L1729.15 928.68L1723.59 928.68L1738.06 895.2L1746.75 895.2L1730.39 933L1721.75 933ZM1748 933L1748 927.33L1762.58 913.56C1763.73 912.516 1764.58 911.58 1765.12 910.752C1765.66 909.924 1766.02 909.168 1766.2 908.484C1766.41 907.8 1766.52 907.17 1766.52 906.594C1766.52 905.082 1766 903.93 1764.96 903.138C1763.95 902.31 1762.45 901.896 1760.47 901.896C1758.89 901.896 1757.41 902.202 1756.05 902.814C1754.71 903.426 1753.58 904.38 1752.64 905.676L1746.27 901.572C1747.71 899.412 1749.73 897.702 1752.32 896.442C1754.91 895.182 1757.9 894.552 1761.28 894.552C1764.09 894.552 1766.54 895.02 1768.63 895.956C1770.75 896.856 1772.39 898.134 1773.54 899.79C1774.73 901.446 1775.32 903.426 1775.32 905.73C1775.32 906.954 1775.16 908.178 1774.84 909.402C1774.55 910.59 1773.94 911.85 1773 913.182C1772.1 914.514 1770.77 916.008 1769.01 917.664L1756.91 929.058L1755.24 925.872L1776.57 925.872L1776.57 933L1748 933Z" fill="rgb(0,0,0)" fill-rule="nonzero" />
+		</g>
+	</g>
+
+	<text id="comment" class="cls-1" text-anchor="middle"
+	 font-size="75" fill="#f3f3f3" x="960" y="1100">Comment</text>
+</svg>
