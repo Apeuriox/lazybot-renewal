@@ -31,7 +31,7 @@ public class MessageEventFactory
                 ":2",OsuMode.Catch,
                 ":3",OsuMode.Mania);
 
-        NON_OSU_COMMAND = List.of("help", "customize","addtips","tips");
+        NON_OSU_COMMAND = List.of("help", "customize","addtips","tips","tns");
     }
 
 

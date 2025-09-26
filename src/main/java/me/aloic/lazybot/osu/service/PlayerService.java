@@ -11,6 +11,10 @@ public interface PlayerService
 
     byte[] allScore(ScoreParameter params) throws Exception;
 
+    byte[] thumbnailClassicalScore(ThumbnailParameter params);
+
+    byte[] thumbnailClassicalRecent(ThumbnailParameter params);
+
     byte[] recent(RecentParameter params, int type) throws IOException;
 
     byte[] bp(BpParameter params) throws Exception;

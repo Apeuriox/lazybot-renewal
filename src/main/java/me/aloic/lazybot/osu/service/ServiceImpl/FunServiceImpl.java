@@ -78,6 +78,7 @@ public class FunServiceImpl implements FunService
             }
         }
     }
+
     @Override
     public String whatIfIGotSomePP(WhatIfParameter params)
     {

@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.documentMapper.*;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
@@ -101,6 +102,61 @@ public class PlayerServiceImpl implements PlayerService
         return SVGRenderer.renderSVGDocumentToByteArray(
                 MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScoreList,beatmapPerformance),
                 2f);
+    }
+    @Override
+    public byte[] thumbnailClassicalScore(ThumbnailParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+        List<ScoreLazerDTO> scoreList = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), playerInfoDTO.getId(), params.getMode());
+        if (scoreList==null || scoreList.isEmpty()) throw new LazybotRuntimeException("没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
+        scoreList.get(params.getIndex()-1).setUser(playerInfoDTO);
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
+                scoreList.get(params.getIndex()-1),
+                false);
+        if (!scoreVO.getIsLazer())
+        {
+            scoreVO.setModJSON(scoreVO.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
+        }
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        ThumbnailClassicalVO tbc = new ThumbnailClassicalVO(info,scoreVO,params.getComment(),
+                params.getPosition()==null ? null:String.valueOf(params.getPosition())
+        );
+        if (params.getAttributes()!=null && !params.getAttributes().isEmpty())
+        {
+            tbc.setAttributes(params.getAttributes());
+        }
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ThumbnailSVGMapper.mapToThumbnailClassical(tbc));
+    }
+    @Override
+    public byte[] thumbnailClassicalRecent(ThumbnailParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+        List<ScoreLazerDTO> scoreList = dataExtractor.extractRecentScoreList(playerInfoDTO.getId(), 1, params.getIndex(), params.getMode());
+        if(params.getIndex()>scoreList.size()) {
+            throw new LazybotRuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " + scoreList.size());
+        }
+        scoreList.get(params.getIndex()-1).setUser(playerInfoDTO);
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                dataExtractor.extractBeatmap(String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
+                scoreList.get(params.getIndex()-1),
+                false);
+        if (!scoreVO.getIsLazer())
+        {
+            scoreVO.setModJSON(scoreVO.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
+        }
+        verifyBeatmapsCache(scoreVO);
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        ThumbnailClassicalVO tbc = new ThumbnailClassicalVO(info,scoreVO,params.getComment(),
+                params.getPosition()==null ? null:String.valueOf(params.getPosition())
+        );
+        if (params.getAttributes()!=null && !params.getAttributes().isEmpty())
+        {
+            tbc.setAttributes(params.getAttributes());
+        }
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ThumbnailSVGMapper.mapToThumbnailClassical(tbc));
     }
 
     @Override

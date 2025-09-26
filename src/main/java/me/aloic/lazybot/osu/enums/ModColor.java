@@ -67,6 +67,8 @@ public enum ModColor
             new HSL(0, 0, 28),
             new HSL(89, 89, 86)),
 
+    NM(HT.detailedPrimaryColor,HT.detailedSecondaryColor,HT.detailedSideColor,HT.typeColor),
+
     DC(new HSL(97, 21, 52),
             new HSL(92, 22, 56),
             new HSL(89, 22, 60),
