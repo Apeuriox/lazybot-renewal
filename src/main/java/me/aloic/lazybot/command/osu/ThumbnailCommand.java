@@ -6,16 +6,10 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
-import me.aloic.lazybot.discord.util.ErrorResultHandler;
-import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
-import me.aloic.lazybot.parameter.RecentParameter;
 import me.aloic.lazybot.parameter.ThumbnailParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -25,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@LazybotCommandMapping({"tns","tnp"})
+@LazybotCommandMapping({"tns","tnp","thumbnail"})
 @Component
 public class ThumbnailCommand implements LazybotSlashCommand
 {
@@ -47,7 +41,7 @@ public class ThumbnailCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equalsIgnoreCase("tns"))
+        if (event.getCommandType().equalsIgnoreCase("tns") || event.getCommandType().equalsIgnoreCase("thumbnail"))
             ImageUploadUtil.uploadImageToOnebot(bot,event,
                     playerService.thumbnailClassicalScore(
                             setupParameter(event,tokenPO, 0))
@@ -103,15 +97,19 @@ public class ThumbnailCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Thumbnail","Tns, Thp",
-                        "快捷生成视频封面,TNS以score形式选取，TBP以最近游玩形式选取",
+                new CommandHelp("Thumbnail","Tns, Tnp",
+                        "快捷生成视频封面,TNS以score形式选取，TNP以最近游玩形式选取，注意此指令的参数需要填写在{}中，具体请看示例",
                         "Aloic", "Alivemaster", "2025-09-26")
-                        .addExample("/Pr #1")
-                        .addExample("/Re Aloic #10")
-                        .addExample("/Pr Aloic #10 &")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Index","指定查询的索引，范围 1-50，默认为1", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
+                        .addExample("/Tns {id=2570594} {u=Aloic} {i=1} {p=123} {attr=ar od cs} {c=Comment Test}")
+                        .addExample("/Tns {id=2570594}")
+                        .addExample("/Tnp")
+                        .addExample("/Tnp {u=Aloic} {i=2}")
+                        .addOption(new CommandParameter("id","地图IO，仅限TNS", CommandParameter.ParameterType.MUST))
+                        .addOption(new CommandParameter("p","成绩的位次，默认为空", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("u","用户名，默认为自己", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("i","查询成绩的索引，由1开始，默认为1", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("c","评论文本，默认为空", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("attr","需要展示的地图参数，间隔符为空格，可选项为ar od cs hp length bpm，默认为cs和ar", CommandParameter.ParameterType.OPTIONAL)));
     }
 
 }

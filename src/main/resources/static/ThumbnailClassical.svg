@@ -8,7 +8,7 @@
 			<feGaussianBlur stdDeviation="16.666666" result="effect_layerBlur_1" />
 		</filter>
 
-		<filter id="filter_2" width="1910" height="1071" x="25" y="1" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+		<filter id="filter_2" width="1910" height="1071" x="10" y="1" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 			<feFlood flood-opacity="0" result="BackgroundImageFix" />
 			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
 			<feGaussianBlur stdDeviation="1.66666663" result="effect_layerBlur_1" />
@@ -77,7 +77,7 @@
 
 	<image
 			filter="url(#filter_0)"
-			xlink:href="assets/zet.jpg"
+			xlink:href="assets/emptyBG.png"
 			width="1920" height="1200"
 			preserveAspectRatio="xMidYMid slice"
 			id="bg"/>
@@ -86,7 +86,7 @@
 	<g id="Header-BG">
 		<image
 				filter="url(#filter_2)"
-				xlink:href="assets/zet.jpg"
+				xlink:href="assets/emptyBG.png"
 				clip-path="url(#bg-header-clip)"
 				width="1900" height="1060" x="10" y="6"
 				preserveAspectRatio="xMidYMid slice"
@@ -98,7 +98,7 @@
 	<g id="avatar-block">
 		<image
 				filter="url(#bg-avatar-filter)"
-				xlink:href="assets/zet.jpg"
+				xlink:href="assets/emptyBG.png"
 				clip-path="url(#bg-avatar-clip)"
 				width="1900" height="1060" x="10" y="6"
 				preserveAspectRatio="xMidYMid slice"
@@ -124,25 +124,25 @@
 
 	<g id="Header-Text">
 		<g filter="url(#filter_4)">
-			<text id="pp-s" class="cls-1" font-weight="600" font-size="200" fill="rgb(0,0,0)" fill-opacity="0.6" x="774" y="260">2000PP</text>
+			<text id="pp-s" class="cls-1" font-weight="600" font-size="195" fill="rgb(0,0,0)" fill-opacity="0.6" x="774" y="260">2000PP</text>
 		</g>
 		<g filter="url(#filter_5)">
-			<text id="miss-s" class="cls-1" text-anchor="end" font-weight="600" font-size="200" fill="rgb(0,0,0)" fill-opacity="0.6" x="1904" y="260">20X</text>
+			<text id="miss-s" class="cls-1" text-anchor="end" font-weight="600" font-size="200" fill="rgb(0,0,0)" fill-opacity="0.6" x="1874" y="260">20X</text>
 		</g>
 		<g filter="url(#filter_6)">
 			<text id="ranking-s" class="cls-1" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="774" y="367">#2000</text>
 		</g>
 		<g filter="url(#filter_7)">
-			<text id="accuracy-s" class="cls-1" text-anchor="middle" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="1344" y="367">99.99%</text>
+			<text id="accuracy-s" class="cls-1" text-anchor="middle" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="1334" y="367">99.99%</text>
 		</g>
 		<g filter="url(#filter_8)">
-			<text id="combo-s" class="cls-1" text-anchor="end" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="1904" y="367">2210X</text>
+			<text id="combo-s" class="cls-1" text-anchor="end" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="1874" y="367">2210X</text>
 		</g>
-		<text id="pp" class="cls-1" font-weight="600" font-size="200" fill="#FFD633" x="770" y="256">2000PP</text>
-		<text id="miss" class="cls-1" text-anchor="end" font-weight="600" font-size="200" fill="#FF3333" x="1900" y="256">20X</text>
+		<text id="pp" class="cls-1" font-weight="600" font-size="195" fill="#FFD633" x="770" y="256">2000PP</text>
+		<text id="miss" class="cls-1" text-anchor="end" font-weight="600" font-size="200" fill="#FF3333" x="1870" y="256">20X</text>
 		<text id="ranking" class="cls-1" font-weight="600" font-size="110" fill="#ffffff" x="770" y="363">#2000</text>
-		<text id="accuracy" class="cls-1" text-anchor="middle" font-weight="600" font-size="110" fill="#ffffff" x="1340" y="363">99.99%</text>
-		<text id="combo" class="cls-1" text-anchor="end" font-weight="600" font-size="110" fill="#ffffff" x="1900" y="363">2210X</text>
+		<text id="accuracy" class="cls-1" text-anchor="middle" font-weight="600" font-size="110" fill="#ffffff" x="1330" y="363">99.99%</text>
+		<text id="combo" class="cls-1" text-anchor="end" font-weight="600" font-size="110" fill="#ffffff" x="1870" y="363">2210X</text>
 
 	</g>
 

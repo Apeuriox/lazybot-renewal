@@ -76,6 +76,8 @@ public class ThumbnailSVGMapper extends LazybotSVGMapper
         if (data.getScore().getBeatmap().getDifficult_rating() < 3.0)
             versionColor = "#1c1719";
         doc.getElementById("title").setTextContent(data.getScore().getBeatmap().getTitle());
+        int titleFontSize = Math.min(100, 100 + (33 - data.getScore().getBeatmap().getTitle().length()));
+        doc.getElementById("title").setAttribute("font-size", String.valueOf(titleFontSize));
         doc.getElementById(OsuMode.convertMode(data.getScore().getMode()).getDescribe()).setAttribute("opacity","1");
         try{
             doc.getElementById(data.getScore().getBeatmap().getStatus()).setAttribute("opacity", "1");
@@ -135,7 +137,7 @@ public class ThumbnailSVGMapper extends LazybotSVGMapper
             else
             {
                 doc.getElementById("miss").setTextContent("0X");
-                doc.getElementById("miss").setTextContent("0X");
+                doc.getElementById("miss-s").setTextContent("0X");
                 doc.getElementById("miss").setAttribute("fill", "#abb0c0");
             }
         }

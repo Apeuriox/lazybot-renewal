@@ -89,9 +89,6 @@ public class ThumbnailParameter extends LazybotCommandParameter
                 result.setPosition(po);
             }
         }
-        else {
-            throw new LazybotRuntimeException("输入参数为空");
-        }
         return result;
     }
     public static void setupDefaultValue(ThumbnailParameter scoreParameter, AccessTokenPO accessTokenPO)
