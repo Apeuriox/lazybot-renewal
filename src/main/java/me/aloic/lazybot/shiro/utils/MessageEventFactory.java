@@ -2,7 +2,6 @@ package me.aloic.lazybot.shiro.utils;
 
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import org.slf4j.Logger;
@@ -21,7 +20,7 @@ public class MessageEventFactory
 
     private static final Map<String, OsuMode> modeMap;
 
-    private static final List<String> NON_OSU_COMMAND;
+    private static final List<String> IGNORE_PREPROCESS_COMMANDS;
 
     private static final Logger logger = LoggerFactory.getLogger(MessageEventFactory.class);
     static{
@@ -31,7 +30,7 @@ public class MessageEventFactory
                 ":2",OsuMode.Catch,
                 ":3",OsuMode.Mania);
 
-        NON_OSU_COMMAND = List.of("help", "customize","addtips","tips","tns");
+        IGNORE_PREPROCESS_COMMANDS = List.of("help", "customize","addtips","tips","tns","tnp","thumbnail");
     }
 
 
@@ -67,7 +66,7 @@ public class MessageEventFactory
         String s = convertString(command);
         s=s.substring(1);
         List<String> information = new java.util.ArrayList<>(List.of(s.split(" ")));
-        if (!NON_OSU_COMMAND.contains(information.getFirst().toLowerCase().trim())) {
+        if (!IGNORE_PREPROCESS_COMMANDS.contains(information.getFirst().toLowerCase().trim())) {
             s = formatCommand(s);
             slashCommandEvent.setScorePanelVersion(countOccurrences(s, '&'));
             s = s.replace("&", "");
@@ -87,7 +86,7 @@ public class MessageEventFactory
                 }
             }
         }
-        slashCommandEvent.setCommandType(information.getFirst());
+        slashCommandEvent.setCommandType(information.getFirst().toLowerCase());
         slashCommandEvent.setCommandParameters(information.subList(1, information.size()));
     }
     private static String formatCommand(String s)

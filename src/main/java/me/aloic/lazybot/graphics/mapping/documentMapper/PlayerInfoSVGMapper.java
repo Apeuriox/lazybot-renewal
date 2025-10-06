@@ -156,10 +156,15 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
 
         doc.getElementById("footer-bg").setAttribute("fill", mainBorderColor.toString());
         doc.getElementById("renderTime").setTextContent(SVGElementHelper.dateNow());
+
+        MoelleuxTypeEnum type = MoelleuxTypeEnum.fromHue(primaryHue);
+
         String namePlayer =  player.getInfo().getPlayerName().toLowerCase()
                         .replace("-", "")
                 .replaceAll("\\d", "");
-
+        if (namePlayer.isEmpty()) {
+            namePlayer = type.getName();
+        }
         player.getInfo().setPlayerName(
                 namePlayer.substring(0, 1).toUpperCase()
                         + namePlayer.substring(1)
@@ -210,7 +215,6 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("bp-elli-3").setAttribute("fill", ellisColor.toString());
         doc.getElementById("bp-elli-4").setAttribute("fill", ellisColor.toString());
 
-        MoelleuxTypeEnum type = MoelleuxTypeEnum.fromHue(primaryHue);
         doc.getElementById("index").setTextContent("#"+type.ordinal());
         doc.getElementById("card-type").setTextContent(type.getName());
         doc.getElementById("info").setTextContent(type.getName()+": "+player.getInfo().getPlayerName());
