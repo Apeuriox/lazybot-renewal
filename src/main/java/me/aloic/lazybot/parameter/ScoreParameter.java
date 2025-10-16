@@ -33,13 +33,13 @@ public class ScoreParameter extends LazybotCommandParameter
     @Override
     public void validateParams() {
         if(beatmapId==null) {
-            throw new IllegalArgumentException("[Lazybot] bid输入值为空");
+            throw new IllegalArgumentException("bid输入值为空");
         }
         if(beatmapId<=0) {
-            throw new IllegalArgumentException("[Lazybot] bid输入值不合法: " + beatmapId);
+            throw new IllegalArgumentException("bid输入值不合法: " + beatmapId);
         }
         if(modCombination!=null && modCombination.length()%2!=0) {
-            throw new IllegalArgumentException("[Lazybot] mod输入值不合法: " + modCombination);
+            throw new IllegalArgumentException("mod输入值不合法: " + modCombination);
         }
         if(version==null) {
             version=0;
@@ -55,7 +55,7 @@ public class ScoreParameter extends LazybotCommandParameter
                 int idVal = Integer.parseInt(m.group(1));
                 String modVal = m.group(2);
                 if (modVal.length() % 2 != 0) {
-                    throw new IllegalArgumentException("[Lazybot] 不合法的Mods组合: " + modVal);
+                    throw new IllegalArgumentException("不合法的Mods组合: " + modVal);
                 }
                 result.beatmapId = idVal;
                 result.modCombination = modVal;
@@ -67,7 +67,7 @@ public class ScoreParameter extends LazybotCommandParameter
             if (maybeMods.startsWith("+")) {
                 String modStr = maybeMods.substring(1);
                 if (modStr.length() % 2 != 0) {
-                    throw new IllegalArgumentException("[Lazybot] 不合法的Mods组合: " + modStr);
+                    throw new IllegalArgumentException("不合法的Mods组合: " + modStr);
                 }
                 result.modCombination = modStr;
                 params.removeLast();

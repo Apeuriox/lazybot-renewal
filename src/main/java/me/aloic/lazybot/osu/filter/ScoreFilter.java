@@ -23,7 +23,7 @@ public interface ScoreFilter {
                 case LTE -> value <= threshold;
                 case EQ,CT -> value == threshold;
                 case NE -> value != threshold;
-                default -> throw new IllegalArgumentException("[Lazybot] 不合法的运算符类型: " + operator.getSymbol());
+                default -> throw new IllegalArgumentException("不合法的运算符类型: " + operator.getSymbol());
             };
         }
         catch (IllegalArgumentException iae) {
@@ -44,7 +44,7 @@ public interface ScoreFilter {
                 case LTE -> value <= threshold;
                 case EQ,CT -> value == threshold;
                 case NE -> value != threshold;
-                default -> throw new IllegalArgumentException("[Lazybot] 不合法的运算符类型: " + operator.getSymbol());
+                default -> throw new IllegalArgumentException("不合法的运算符类型: " + operator.getSymbol());
             };
         }
         catch (IllegalArgumentException iae) {
@@ -67,7 +67,7 @@ public interface ScoreFilter {
                 case CT -> existing.contains(target);
                 case NE -> !existing.contains(target);
                 case LIKE -> new JaroWinklerSimilarity().apply(existing, target)>0.7;
-                default -> throw new IllegalArgumentException("[Lazybot] 不合法的运算符类型: " + operator.getSymbol());
+                default -> throw new IllegalArgumentException("不合法的运算符类型: " + operator.getSymbol());
             };
         }
         catch (IllegalArgumentException iae) {
@@ -94,7 +94,7 @@ public interface ScoreFilter {
                         .collect(Collectors.joining());
                 return modsStr.equalsIgnoreCase(inputStr);
             }
-            throw new IllegalArgumentException("[Lazybot] 不合法的运算符类型: " + operator.getSymbol());
+            throw new IllegalArgumentException("不合法的运算符类型: " + operator.getSymbol());
         }
         catch (IllegalArgumentException iae) {
             throw iae;

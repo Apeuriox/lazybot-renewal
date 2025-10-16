@@ -30,12 +30,12 @@ public class ScoreFilterParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (this.getFilters()==null || this.getFilters().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 你这过滤器怎么是空的啊，小妹妹打错字了吧");
+        if (this.getFilters()==null || this.getFilters().isEmpty()) throw new LazybotRuntimeException("你这过滤器怎么是空的啊，小妹妹打错字了吧");
     }
     public static ScoreFilterParameter analyzeParameter(List<String> params)
     {
         ScoreFilterParameter parameter=new ScoreFilterParameter();
-        if (params == null||params.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 参数呢?");
+        if (params == null||params.isEmpty()) throw new LazybotRuntimeException("参数呢?");
         else {
             String userInput = String.join(" ", params);
             List<ScoreFilter> filters = Arrays.stream(userInput.split(","))

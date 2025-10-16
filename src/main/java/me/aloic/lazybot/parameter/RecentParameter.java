@@ -30,7 +30,7 @@ public class RecentParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if (index<=0||index>100) {
-            throw new IllegalArgumentException("[Lazybot] 索引必须介于 1 和 100 之间");
+            throw new IllegalArgumentException("索引必须介于 1 和 100 之间");
         }
         if(version==null) {
             version=0;

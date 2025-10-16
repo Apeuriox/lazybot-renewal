@@ -9,6 +9,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.RankColor;
+import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -150,27 +151,30 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         } catch (Exception e)
         {
             log.error("Error while generating score panel: {}", e);
-            throw new LazybotRuntimeException("[Lazybot] 亮色模式Score panel生成失败");
+            throw new LazybotRuntimeException("亮色模式Score panel生成失败");
         }
     }
     private static Document mapScoreToScorePanelMaterial(ScoreVO targetScore,int[] primaryColor)
     {
         try{
-            List<Double> hsl = CommonTool.rgbToHslDetailed(primaryColor);
-            String color =String.format("hsl(%.0f, %.0f%%, %.0f%%)", hsl.get(0),  hsl.get(1) * 100,  (hsl.get(2) * 100)+20>94?94:(hsl.get(2) * 100)+20);
+           HSL hsl = CommonTool.rgbToHslDetailed(primaryColor);
+           if (hsl.getLightness() > 72)
+               hsl.setLightness(92);
+           else
+               hsl.setLightness(hsl.getLightness()+20);
             Document document = SVGTemplateLoader.loadSVGTemplate("ScorePanelMaterialDesign-Reranged");
             Element svgRoot = document.getDocumentElement();
-            document.getElementById("color-0").setAttribute("fill",color);
-            document.getElementById("color-1").setAttribute("fill",color);
-            document.getElementById("color-2").setAttribute("fill",color);
-            document.getElementById("color-3").setAttribute("fill",color);
-            document.getElementById("color-4").setAttribute("fill",color);
-            document.getElementById("color-5").setAttribute("fill",color);
-            document.getElementById("color-6").setAttribute("fill",color);
-            document.getElementById("color-7").setAttribute("fill",color);
-            document.getElementById("color-8").setAttribute("fill",color);
-            document.getElementById("color-9").setAttribute("fill",color);
-            document.getElementById("color-10").setAttribute("fill",color);
+            document.getElementById("color-0").setAttribute("fill",hsl.toString());
+            document.getElementById("color-1").setAttribute("fill",hsl.toString());
+            document.getElementById("color-2").setAttribute("fill",hsl.toString());
+            document.getElementById("color-3").setAttribute("fill",hsl.toString());
+            document.getElementById("color-4").setAttribute("fill",hsl.toString());
+            document.getElementById("color-5").setAttribute("fill",hsl.toString());
+            document.getElementById("color-6").setAttribute("fill",hsl.toString());
+            document.getElementById("color-7").setAttribute("fill",hsl.toString());
+            document.getElementById("color-8").setAttribute("fill",hsl.toString());
+            document.getElementById("color-9").setAttribute("fill",hsl.toString());
+            document.getElementById("color-10").setAttribute("fill",hsl.toString());
             document.getElementById("mapBg").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
             document.getElementById("mapBg-mask").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
             document.getElementById("playername").setTextContent(targetScore.getUser_name());
@@ -645,7 +649,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc = mapScoreToScorePanelWhite(targetScore);
         else if (version==2)
             doc = mapScoreToScorePanelMaterial(targetScore,primaryColor);
-        else throw new LazybotRuntimeException("[Lazybot] 不支持的面板版本: " + version);
+        else throw new LazybotRuntimeException("不支持的面板版本: " + version);
         return doc;
     }
 }

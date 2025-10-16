@@ -132,6 +132,15 @@ public class StaticFunctionTest
           e.printStackTrace();
         }
     }
+    @Test
+    public void test()
+    {
+        String player = "wux1n".replace("-", "")
+                .replaceAll("\\d", "");
+       System.out.println( player.toLowerCase()
+               .substring(0, 1).toUpperCase()
+               + player.substring(1));
+    }
 
 
 }

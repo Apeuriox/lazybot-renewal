@@ -14,6 +14,7 @@ public class PPPlusPerformance
     private Double ppStamina;
     private Double ppAcc;
     private Double effectiveMissCount;
+    private Double iffc;
 
     @Override
     public String toString()
@@ -28,6 +29,7 @@ public class PPPlusPerformance
                 ", ppStamina=" + ppStamina +
                 ", ppAcc=" + ppAcc +
                 ", effectiveMissCount=" + effectiveMissCount +
+                ", iffc=" + iffc +
                 '}';
     }
 }

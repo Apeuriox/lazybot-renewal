@@ -7,10 +7,12 @@ import me.aloic.lazybot.graphics.mapping.documentMapper.UsageSVGMapper;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.monitor.CommandMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebPlayerPerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.*;
+import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
@@ -60,14 +62,16 @@ public class ManageServiceImpl implements ManageService
     public String update(UpdateParameter params)
     {
         if(params==null || params.getType()==null)
-            return "[Lazybot] 输入Update avatar 用户名 以更新头像\n输入 Update track 用户名  以更新ppmap数据\n输入Update banner 用户名 以更新用户横幅";
+            return "[Lazybot] 输入Update avatar 用户名 以更新头像\n输入 Update track 用户名  以更新ppmap数据\n输入Update banner 用户名 以更新用户横幅\n输入Update plus 用户名 以更新pp+数据";
         else if(params.getType().equals("avatar"))
             return updateAvatar(params);
         else if(params.getType().equals("track"))
             return updateOsuTrack(params);
         else if(params.getType().equals("banner"))
             return updateBanner(params);
-        return "[Lazybot] 输入Update avatar 用户名 以更新头像\n输入 Update track 用户名  以更新ppmap数据\n输入Update banner 用户名 以更新用户横幅";
+        else if(params.getType().equals("plus"))
+            return updatePlus(params);
+        return "[Lazybot] 输入Update avatar 用户名 以更新头像\n输入 Update track 用户名  以更新ppmap数据\n输入Update banner 用户名 以更新用户横幅\n输入Update plus 用户名 以更新pp+数据";
     }
     private String updateAvatar(UpdateParameter params)
     {
@@ -75,7 +79,7 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
 
-        playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true)));
+        playerInfoDTO.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true));
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的头像缓存";
     }
     private String updateBanner(UpdateParameter params)
@@ -96,11 +100,19 @@ public class ManageServiceImpl implements ManageService
         UserDifference userDifference = trackApiRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_POST, UserDifference.class);
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的Osu Track数据";
     }
+    private String updatePlus(UpdateParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+        else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+        dataExtractor.extractPerformancePlusPlayerUpdate(playerInfoDTO.getId());
+        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的PP+数据";
+    }
 
     @Override
     public String verifyBeatmap(BeatmapParameter params)
     {
-        if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("[Lazybot] 你没有权限");
+        if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("你没有权限");
         File beatmapFile;
         try{
             beatmapFile = new File(AssertDownloadUtil.beatmapPath(params.getBid(),false).toUri());
@@ -129,7 +141,7 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String verify(VerifyParameter params)
     {
-        if(!adminMap.containsKey(params.getQqCode())) throw new LazybotRuntimeException("[Lazybot] 你没有权限");
+        if(!adminMap.containsKey(params.getQqCode())) throw new LazybotRuntimeException("你没有权限");
         if(Objects.equals(params.getType(), "view")) {
             return showUnverifiedCustomization();
         }
@@ -142,7 +154,7 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String addTips(ContentParameter params)
     {
-            if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("[Lazybot] 你没有权限");
+            if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("你没有权限");
             try{
                 TipsPO tipsPO=new TipsPO();
                 tipsPO.setContent(params.getContent());
@@ -153,7 +165,7 @@ public class ManageServiceImpl implements ManageService
                     tipsMapper.insert(tipsPO);
                 }
                 catch (Exception e){
-                    throw new RuntimeException("[Lazybot] 添加提示时失败" + e.getMessage());
+                    throw new LazybotRuntimeException("添加提示时失败" + e.getMessage());
                 }
             }
             catch (Exception e) {
@@ -166,7 +178,7 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String ppTest(ScoreParameter params, Long userIdentity)
     {
-        if(!adminMap.containsKey(userIdentity)) throw new LazybotRuntimeException("[Lazybot] 你没有权限");
+        if(!adminMap.containsKey(userIdentity)) throw new LazybotRuntimeException("你没有权限");
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(

@@ -56,28 +56,29 @@ public class FunServiceImpl implements FunService
         if (parameter.getId() == null || parameter.getId() == 0) {
             return Optional.ofNullable(tipsMapper.selectRandom())
                     .map(TipsPO::builderContent)
-                    .orElseThrow(() -> new LazybotRuntimeException("[Lazybot] 数据库查询出错"));
+                    .orElseThrow(() -> new LazybotRuntimeException("数据库查询出错"));
         }
         else {
           return Optional.ofNullable(tipsMapper.selectById(parameter.getId()))
                   .map(TipsPO::builderContent)
-                  .orElseThrow(() -> new LazybotRuntimeException("[Lazybot] 要么你参数输入错误，要么这个ID对应的tip不存在"));
+                  .orElseThrow(() -> new LazybotRuntimeException("要么你参数输入错误，要么这个ID对应的tip不存在"));
         }
     }
     @Override
     public Path modInfo(GeneralParameter parameter)
     {
-        if (parameter.getPlayerName() == null || parameter.getPlayerName().length() < 2) throw new LazybotRuntimeException("[Lazybot] 参数输入错误或为空");
+        if (parameter.getPlayerName() == null || parameter.getPlayerName().length() < 2) throw new LazybotRuntimeException("参数输入错误或为空");
         else {
             try{
                 return ResourceMonitor.getResourcePath().resolve("static/modifier/"+ OsuMod.findAcronym(parameter.getPlayerName()) +".png");
             }
             catch (Exception e){
                 logger.warn(e.getMessage());
-                throw new LazybotRuntimeException("[Lazybot] 路径处理时出错");
+                throw new LazybotRuntimeException("路径处理时出错");
             }
         }
     }
+
     @Override
     public String whatIfIGotSomePP(WhatIfParameter params)
     {
@@ -100,7 +101,7 @@ public class FunServiceImpl implements FunService
         try{
             bonusPp=playerInfo.getStatistics().getPp()-originalTotalPp;
         } catch (Exception e){
-            throw new LazybotRuntimeException("[Lazybot] 获取用户pp错误");
+            throw new LazybotRuntimeException("获取用户pp错误");
         }
         Integer originalRank = Optional.ofNullable(playerInfo.getRank_history().getData()[playerInfo.getRank_history().getData().length-1]).orElse(-1);
 
@@ -120,10 +121,10 @@ public class FunServiceImpl implements FunService
         catch (Exception e)
         {
             logger.error("获取whatIf 新pp rank时出错:{}", e.getMessage());
-            throw new LazybotRuntimeException("[Lazybot] 获取whatIf 新pp rank时出错");
+            throw new LazybotRuntimeException("获取whatIf 新pp rank时出错");
         }
         String rankDifference = originalRank-rankFictional>0?"+"+(originalRank-rankFictional):" - ";
-        StringBuilder result= new StringBuilder(playerInfo.getUsername() + "的pp变化情况：\n")
+        StringBuilder result= new StringBuilder("[Lazybot] " + playerInfo.getUsername() + "的pp变化情况：\n")
                 .append("原pp: ").append(df.format(originalTotalPp+bonusPp)).append("\n")
                 .append("现pp: ").append(df.format(totalPp+bonusPp))
                 .append(" (+").append(df.format(totalPp-originalTotalPp)).append(") ").append("\n")
@@ -144,7 +145,7 @@ public class FunServiceImpl implements FunService
                 index,
                 params.getMode());
         if (scoreDTO==null || scoreDTO.isEmpty()) {
-            throw new LazybotRuntimeException("[Lazybot] 请重试，查询的用户bp未满200");
+            throw new LazybotRuntimeException("请重试，查询的用户bp未满200");
         }
         ScoreLazerDTO score = scoreDTO.getFirst();
         result.setMeta(new SongGuessWithTime(
@@ -163,7 +164,7 @@ public class FunServiceImpl implements FunService
         }
         catch (Exception e){
             logger.error("获取歌曲图片时出错:{}", e.getMessage());
-            throw new LazybotRuntimeException("[Lazybot] 获取歌曲图片时出错");
+            throw new LazybotRuntimeException("获取歌曲图片时出错");
         }
     }
 

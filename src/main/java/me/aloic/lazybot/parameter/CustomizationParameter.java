@@ -20,7 +20,7 @@ public class CustomizationParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if (otherParams==null)
-            throw new LazybotRuntimeException("[Lazybot] 三级参数无效");
+            throw new LazybotRuntimeException("三级参数为空");
     }
     public CustomizationParameter(String playerName, String type) {
         this.setPlayerName(playerName);
@@ -35,9 +35,9 @@ public class CustomizationParameter extends LazybotCommandParameter
                 parameter.setTargetUrl(String.join(" ", params.subList(1, params.size())));
                 parameter.setOtherParams(String.join(" ", params.subList(1, params.size())));
             }
-            else throw new LazybotRuntimeException("[Lazybot] 使用方法: /customize <类型> <图片链接>，具体请参考help页面");
+            else throw new LazybotRuntimeException("使用方法: /customize <类型> <图片链接>，具体请参考help页面");
         }
-        else throw new LazybotRuntimeException("[Lazybot] 使用方法: /customize <类型> <图片链接>，具体请参考help页面");
+        else throw new LazybotRuntimeException("使用方法: /customize <类型> <图片链接>，具体请参考help页面");
         return parameter;
     }
     public static void setupDefaultValue(CustomizationParameter parameter, AccessTokenPO accessTokenPO)

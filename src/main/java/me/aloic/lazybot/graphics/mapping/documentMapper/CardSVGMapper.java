@@ -23,7 +23,7 @@ public class CardSVGMapper extends LazybotSVGMapper
                             ImageIO.read(new File(stats.getAvatarUrl())),2), "jpg"));
         }
         catch (Exception e){
-            throw new LazybotRuntimeException("[Lazybot] 为图片施加像素化归一滤镜时失败");
+            throw new LazybotRuntimeException("为图片施加像素化归一滤镜时失败");
         }
         return document;
     }
@@ -37,7 +37,7 @@ public class CardSVGMapper extends LazybotSVGMapper
                             ImageIO.read(new File(stats.getAvatarUrl())),2,2), "jpg"));
         }
         catch (Exception e){
-            throw new LazybotRuntimeException("[Lazybot] 为图片施加CRT滤镜时失败");
+            throw new LazybotRuntimeException("为图片施加CRT滤镜时失败");
         }
         return document;
     }

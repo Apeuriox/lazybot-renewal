@@ -1,0 +1,196 @@
+<svg
+		xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+		width="1920" height="1200" fill="none">
+	<defs>
+		<filter id="filter_0" width="2020" height="1300" x="-20" y="-50" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="16.666666" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="filter_2" width="1910" height="1071" x="10" y="1" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="1.66666663" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="bg-avatar-filter" width="1950" height="1111" x="5" y="-19" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="8.33333302" result="effect_layerBlur_1" />
+		</filter>
+
+
+		<filter id="filter_4" width="742" height="240" x="767.423828" y="63" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="filter_5" width="363.930664" height="240" x="1543.423828" y="63" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="filter_6" width="365.760986" height="132" x="762.296875" y="263" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="filter_7" width="370.813965" height="132" x="1151.189453" y="263" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+
+		<filter id="filter_8" width="346.773682" height="132" x="1566.183105" y="263" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" mode="normal" />
+			<feGaussianBlur stdDeviation="4" result="effect_layerBlur_1" />
+		</filter>
+		<clipPath id="avatarClip">
+			<rect width="192" height="192" x="110" y="152" rx="48" fill="rgb(255,255,255)" />
+		</clipPath>
+		<clipPath id="bg-avatar-clip">
+			<rect width="640" height="240" x="86" y="128" rx="48" fill="rgb(0,0,0)" fill-opacity="0.349999994" />
+		</clipPath>
+		<clipPath id="bg-header-clip">
+			<rect width="1900" height="495" x="10" y="6" rx="50" />
+		</clipPath>
+		<clipPath id="attrClip-95">
+			<rect width="200" height="80" x="1618" y="560" rx="24" fill="rgb(0,0,0)"/>
+		</clipPath>
+		<clipPath id="attrClip-140">
+			<rect width="260" height="80" x="1558" y="560" rx="24" fill="#ffffff"/>
+		</clipPath>
+		<clipPath id="attrClip-180">
+			<rect width="330" height="80" x="1488" y="560" rx="24" fill="#ffffff"/>
+		</clipPath>
+		<style>
+			.cls-1 {
+			font-family: Torus-Regular, Torus;
+			}
+		</style>
+	</defs>
+
+	<image
+			filter="url(#filter_0)"
+			xlink:href="assets/emptyBG.png"
+			width="1920" height="1200"
+			preserveAspectRatio="xMidYMid slice"
+			id="bg"/>
+	<rect width="1920" height="1200" fill="rgb(0,0,0)" fill-opacity="0.65" />
+
+	<g id="Header-BG">
+		<image
+				filter="url(#filter_2)"
+				xlink:href="assets/emptyBG.png"
+				clip-path="url(#bg-header-clip)"
+				width="1900" height="1060" x="10" y="6"
+				preserveAspectRatio="xMidYMid slice"
+				id="bg-header"/>
+
+		<rect id="header-mask" width="1900" height="495" x="10" y="6" rx="50" opacity="0.35" fill="rgb(0,0,0)" />
+	</g>
+
+	<g id="avatar-block">
+		<image
+				filter="url(#bg-avatar-filter)"
+				xlink:href="assets/emptyBG.png"
+				clip-path="url(#bg-avatar-clip)"
+				width="1900" height="1060" x="10" y="6"
+				preserveAspectRatio="xMidYMid slice"
+				id="bg-avatar"/>
+
+		<rect id="total-1" width="640" height="240" x="86" y="128" rx="48" fill="rgb(0,0,0)" fill-opacity="0.349999994" />
+		<rect id="total-2" width="640" height="240" x="86" y="128" rx="48" fill="rgb(0,0,0)" fill-opacity="0.300000012" />
+		<image
+				xlink:href="assets/avatar.jpg"
+				clip-path="url(#avatarClip)"
+				width="192"
+				x="110"
+				y="152"
+				height="192"
+				preserveAspectRatio="xMidYMid slice"
+				id="avatar"/>
+		<text class="cls-1" id="name" font-weight="600" font-size="80" fill="#ffffff" x="335" y="236">Aloic</text>
+		<rect id="area-block" width="72.000000" height="52.000000" x="338.000000" y="270.000000" rx="12.000000" fill="#f3f3f3" />
+		<rect id="team-block" width="99.000000" height="47.000000" x="418.500000" y="272.500000" rx="12.000000" fill="none" stroke="rgb(255,255,255)" stroke-width="5"/>
+		<text class="cls-1" id="area" text-anchor="middle" font-weight="600" font-size="35" fill="#333333" x="373" y="308">CN</text>
+		<text class="cls-1" id="team" text-anchor="middle" font-weight="600" font-size="35" fill="#F3F3F3" x="470" y="308">SQL</text>
+	</g>
+
+	<g id="Header-Text">
+		<g filter="url(#filter_4)">
+			<text id="pp-s" class="cls-1" font-weight="600" font-size="195" fill="rgb(0,0,0)" fill-opacity="0.6" x="774" y="260">2000PP</text>
+		</g>
+		<g filter="url(#filter_5)">
+			<text id="miss-s" class="cls-1" text-anchor="end" font-weight="600" font-size="200" fill="rgb(0,0,0)" fill-opacity="0.6" x="1874" y="260">20X</text>
+		</g>
+		<g filter="url(#filter_6)">
+			<text id="ranking-s" class="cls-1" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="774" y="367">#2000</text>
+		</g>
+		<g filter="url(#filter_7)">
+			<text id="accuracy-s" class="cls-1" text-anchor="middle" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="1334" y="367">99.99%</text>
+		</g>
+		<g filter="url(#filter_8)">
+			<text id="combo-s" class="cls-1" text-anchor="end" font-weight="600" font-size="110" fill="rgb(0,0,0)" fill-opacity="0.6" x="1874" y="367">2210X</text>
+		</g>
+		<text id="pp" class="cls-1" font-weight="600" font-size="195" fill="#FFD633" x="770" y="256">2000PP</text>
+		<text id="miss" class="cls-1" text-anchor="end" font-weight="600" font-size="200" fill="#FF3333" x="1870" y="256">20X</text>
+		<text id="ranking" class="cls-1" font-weight="600" font-size="110" fill="#ffffff" x="770" y="363">#2000</text>
+		<text id="accuracy" class="cls-1" text-anchor="middle" font-weight="600" font-size="110" fill="#ffffff" x="1330" y="363">99.99%</text>
+		<text id="combo" class="cls-1" text-anchor="end" font-weight="600" font-size="110" fill="#ffffff" x="1870" y="363">2210X</text>
+
+	</g>
+
+
+	<g>
+		<rect id="rank-status-bg" width="216" height="108" x="86" y="546" rx="54" fill="rgb(0,0,0)" fill-opacity="0.349999994" />
+		<g>
+			<g id="unknown" opacity="1">
+				<rect width="108" height="108" x="86" y="546" rx="54" fill="#666666" />
+				<path d="M134.139 603.136C134.139 602.027 134.502 601.109 135.227 600.384C135.952 599.616 136.87 599.232 137.979 599.232C139.728 599.232 141.307 598.976 142.715 598.464C144.123 597.909 145.232 597.035 146.043 595.84C146.896 594.645 147.323 593.067 147.323 591.104C147.323 589.653 146.96 588.373 146.235 587.264C145.552 586.155 144.592 585.28 143.355 584.64C142.16 584 140.795 583.68 139.259 583.68C138.064 583.68 136.934 583.893 135.867 584.32C134.843 584.747 133.904 585.323 133.051 586.048C132.368 586.645 131.536 587.093 130.555 587.392C129.616 587.648 128.656 587.413 127.675 586.688C126.651 585.92 126.096 585.003 126.011 583.936C125.926 582.869 126.331 581.888 127.227 580.992C128.763 579.413 130.555 578.197 132.603 577.344C134.694 576.448 136.912 576 139.259 576C142.203 576 144.848 576.683 147.195 578.048C149.584 579.371 151.483 581.163 152.891 583.424C154.299 585.685 155.003 588.245 155.003 591.104C155.003 593.237 154.683 595.136 154.043 596.8C153.403 598.421 152.486 599.829 151.291 601.024C150.139 602.176 148.774 603.115 147.195 603.84C145.659 604.523 143.974 605.013 142.139 605.312C142.054 605.355 141.968 605.397 141.883 605.44C141.84 605.483 141.819 605.547 141.819 605.632L141.819 608C141.819 609.109 141.456 610.048 140.731 610.816C140.006 611.541 139.088 611.904 137.979 611.904C136.87 611.904 135.952 611.541 135.227 610.816C134.502 610.048 134.139 609.109 134.139 608L134.139 603.136ZM137.659 623.36C136.422 623.36 135.462 623.04 134.779 622.4C134.139 621.717 133.819 620.757 133.819 619.52L133.819 618.432C133.819 617.195 134.139 616.256 134.779 615.616C135.462 614.933 136.422 614.592 137.659 614.592L138.491 614.592C139.728 614.592 140.667 614.933 141.307 615.616C141.99 616.256 142.331 617.195 142.331 618.432L142.331 619.52C142.331 620.757 141.99 621.717 141.307 622.4C140.667 623.04 139.728 623.36 138.491 623.36L137.659 623.36Z" fill="rgb(255,255,255)" fill-rule="nonzero" />
+			</g>
+			<g id="ranked" opacity="0">
+				<rect width="108" height="108" x="86" y="546" rx="54" fill="rgb(19,200,236)" />
+
+				<path d="M116 597L140 581L164 597" fill-rule="nonzero" stroke="rgb(255,255,255)" stroke-linecap="square" stroke-width="8" />
+				<path d="M116 619L140 603L164 619" fill-rule="nonzero" stroke="rgb(255,255,255)" stroke-linecap="square" stroke-width="8" />
+			</g>
+			<g id="approved" opacity="0">
+				<rect width="108" height="108" x="86" y="546" rx="54" fill="#99db00" />
+				<path d="M167 584L135 616L119 600" fill-rule="nonzero" stroke="rgb(255,255,255)" stroke-linecap="square" stroke-width="8" />
+
+			</g>
+			<g id="loved" opacity="0">
+				<rect width="108" height="108" x="86" y="546" rx="54" fill="#ff4080" />
+				<path d="M115 599C115 589 120 583 128 583C128 583 133 583 139 589.25C145 583 150 583 150 583C158 583 163 589 163 599C163 609 152 620 139 625C126 620 115 609 115 599Z" fill="rgb(255,255,255)" fill-rule="nonzero" />
+			</g>
+
+
+		</g>
+		<path id="osu" opacity="0" d="M247.5 569.25C264.733 569.25 278.75 583.267 278.75 600.5C278.75 617.733 264.733 631.75 247.5 631.75C230.267 631.75 216.25 617.733 216.25 600.5C216.25 583.267 230.267 569.25 247.5 569.25ZM247.5 563C226.783 563 210 579.783 210 600.5C210 621.217 226.783 638 247.5 638C268.217 638 285 621.217 285 600.5C285 579.783 268.217 563 247.5 563ZM247.5 575.5C233.7 575.5 222.5 586.7 222.5 600.5C222.5 614.3 233.7 625.5 247.5 625.5C261.3 625.5 272.5 614.3 272.5 600.5C272.5 586.7 261.3 575.5 247.5 575.5Z" fill="rgb(230,230,230)" fill-rule="nonzero" />
+		<path id="taiko" opacity="0" d="M247.5 569.25C264.733 569.25 278.75 583.267 278.75 600.5C278.75 617.733 264.733 631.75 247.5 631.75C230.267 631.75 216.25 617.733 216.25 600.5C216.25 583.267 230.267 569.25 247.5 569.25ZM247.5 563C226.783 563 210 579.783 210 600.5C210 621.217 226.783 638 247.5 638C268.217 638 285 621.217 285 600.5C285 579.783 268.217 563 247.5 563ZM247.5 581.75C257.833 581.75 266.25 590.167 266.25 600.5C266.25 610.833 257.833 619.25 247.5 619.25C237.167 619.25 228.75 610.833 228.75 600.5C228.75 590.167 237.167 581.75 247.5 581.75ZM247.5 575.5C233.7 575.5 222.5 586.7 222.5 600.5C222.5 614.3 233.7 625.5 247.5 625.5C261.3 625.5 272.5 614.3 272.5 600.5C272.5 586.7 261.3 575.5 247.5 575.5ZM250.633 576.75L244.383 576.75L244.383 624.25L250.633 624.25L250.633 576.75Z" fill="rgb(230,230,230)" fill-rule="nonzero" />
+		<path id="ctb" opacity="0" d="M247.5 569.25C264.733 569.25 278.75 583.267 278.75 600.5C278.75 617.733 264.733 631.75 247.5 631.75C230.267 631.75 216.25 617.733 216.25 600.5C216.25 583.267 230.267 569.25 247.5 569.25ZM247.5 563C226.783 563 210 579.783 210 600.5C210 621.217 226.783 638 247.5 638C268.217 638 285 621.217 285 600.5C285 579.783 268.217 563 247.5 563ZM250.633 588C250.633 591.45 247.833 594.25 244.383 594.25C240.933 594.25 238.133 591.45 238.133 588C238.133 584.55 240.933 581.75 244.383 581.75C247.833 581.75 250.633 584.55 250.633 588ZM244.367 606.75C240.917 606.75 238.117 609.55 238.117 613C238.117 616.45 240.917 619.25 244.367 619.25C247.817 619.25 250.617 616.45 250.617 613C250.617 609.55 247.817 606.75 244.367 606.75ZM256.867 594.25C253.417 594.25 250.617 597.05 250.617 600.5C250.617 603.95 253.417 606.75 256.867 606.75C260.317 606.75 263.117 603.95 263.117 600.5C263.117 597.05 260.317 594.25 256.867 594.25Z" fill="rgb(230,230,230)" fill-rule="nonzero" />
+		<path id="mania" opacity="0" d="M247.5 569.25C264.733 569.25 278.75 583.267 278.75 600.5C278.75 617.733 264.733 631.75 247.5 631.75C230.267 631.75 216.25 617.733 216.25 600.5C216.25 583.267 230.267 569.25 247.5 569.25ZM247.5 563C226.783 563 210 579.783 210 600.5C210 621.217 226.783 638 247.5 638C268.217 638 285 621.217 285 600.5C285 579.783 268.217 563 247.5 563ZM250.633 625.5L250.633 575.5C250.633 573.767 249.233 572.367 247.5 572.367C245.767 572.367 244.367 573.767 244.367 575.5L244.367 625.5C244.367 627.233 245.767 628.633 247.5 628.633C249.233 628.633 250.633 627.233 250.633 625.5ZM263.133 613L263.133 588C263.133 586.267 261.733 584.867 260 584.867C258.267 584.867 256.867 586.267 256.867 588L256.867 613C256.867 614.733 258.267 616.133 260 616.133C261.733 616.133 263.133 614.733 263.133 613ZM238.133 613L238.133 588C238.133 586.267 236.733 584.867 235 584.867C233.267 584.867 231.867 586.267 231.867 588L231.867 613C231.867 614.733 233.267 616.133 235 616.133C236.733 616.133 238.133 614.733 238.133 613Z" fill="rgb(230,230,230)" fill-rule="nonzero" />
+
+	</g>
+	<text id="title" class="cls-1" font-weight="600" text-anchor="middle"
+		  font-size="100" fill="#f3f3f3" x="960" y="780">Song Title That Should be Long</text>
+
+	<rect id="star-bg" width="630" height="108" x="86" y="860" rx="54" fill="#6f5edc"/>
+	<path id="star" fill="#f0d97b" d="M140.928 907.84L154.972 909.511L144.592 919.117L147.343 932.989L135 926.086L122.657 932.989L125.408 919.117L115.028 909.511L129.072 907.84L135 895L140.928 907.84Z" fill-rule="evenodd" />
+	<text id="starrating" class="cls-1" font-weight="600" text-anchor="middle"
+		  font-size="65" fill="#f0d97b" x="230" y="936">6.61</text>
+	<circle id="version-dot" cx="320" cy="914" r="9" fill="rgb(255,217,102)" />
+	<text id="version" class="cls-1" font-weight="600"
+		  font-size="65" fill="#f0d97b" x="355" y="936">Abcdefgh</text>
+
+
+
+	<text id="comment" class="cls-1" text-anchor="middle"
+		  font-size="75" fill="#f3f3f3" x="960" y="1100">Comment</text>
+</svg>

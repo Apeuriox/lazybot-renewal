@@ -39,25 +39,25 @@ public enum OsuMode
     }
 
     public static OsuMode getMode(String name) {
-        if (name == null) throw new LazybotRuntimeException("[Lazybot] Null mode provided");
+        if (name == null) throw new LazybotRuntimeException("传入模式为空");
         return switch (name.toLowerCase().trim())
         {
             case "osu", "o", "0", "std", "standard" -> Osu;
             case "taiko", "t", "1", "tk" -> Taiko;
             case "catch", "c", "ctb", "fruits", "fruit", "f", "2" -> Catch;
             case "mania", "m", "3", "mn" -> Mania;
-            default -> throw new LazybotRuntimeException("Invalid mode provided: " + name);
+            default -> throw new LazybotRuntimeException("无效的模式: " + name);
         };
     }
     public static org.spring.osu.OsuMode convertMode(String name) {
-        if (name == null) throw new LazybotRuntimeException("Null mode provided");
+        if (name == null) throw new LazybotRuntimeException("传入模式为空");
         return switch (name.toLowerCase().trim())
         {
             case "osu", "o", "0", "std", "standard" -> org.spring.osu.OsuMode.Osu;
             case "taiko", "t", "1", "tk" -> org.spring.osu.OsuMode.Taiko;
             case "catch", "c", "ctb", "fruits", "fruit", "f", "2" -> org.spring.osu.OsuMode.Catch;
             case "mania", "m", "3", "mn" -> org.spring.osu.OsuMode.Mania;
-            default -> throw new LazybotRuntimeException("Invalid mode provided: " + name);
+            default -> throw new LazybotRuntimeException("无效的模式: " + name);
         };
     }
     @Override

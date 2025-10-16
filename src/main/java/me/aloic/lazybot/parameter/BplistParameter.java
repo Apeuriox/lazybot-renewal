@@ -39,17 +39,17 @@ public class BplistParameter extends LazybotCommandParameter
     @Override
     public void validateParams()
     {
-        if (from > 200 || to > 200) throw new IllegalArgumentException("[Lazybot] {FROM} 和 {TO}必须大于: " + MAX_INDEXED);
-        if (from >= to) throw new IllegalArgumentException("[Lazybot] {FROM} 必须小于 {TO}");
-        if (from <= 0) throw new IllegalArgumentException("[Lazybot] {FROM} 和 {TO} 必须大于0");
-        if (to-from> MAX_RANGE) throw new IllegalArgumentException("[Lazybot] 请不要一次性请求渲染过多成绩，现在最大限制为: " + MAX_RANGE);
+        if (from > 200 || to > 200) throw new IllegalArgumentException("{FROM} 和 {TO}必须大于: " + MAX_INDEXED);
+        if (from >= to) throw new IllegalArgumentException("{FROM} 必须小于 {TO}");
+        if (from <= 0) throw new IllegalArgumentException("{FROM} 和 {TO} 必须大于0");
+        if (to-from> MAX_RANGE) throw new IllegalArgumentException("请不要一次性请求渲染过多成绩，现在最大限制为: " + MAX_RANGE);
     }
 
     public static BplistParameter analyzeParameter(List<String> params)
     {
         BplistParameter parameter = new BplistParameter();
         if (params == null)
-            throw new LazybotRuntimeException("[Lazybot] 请输入范围，例/bplist 1-100");
+            throw new LazybotRuntimeException("请输入范围，例/bplist 1-100");
         else if (params.size() == 1)
                 setupParameterIndexes(parameter, params.getFirst());
         else if (params.size() > 1)
@@ -58,7 +58,7 @@ public class BplistParameter extends LazybotCommandParameter
             params.removeLast();
             parameter.setPlayerName(String.join(" ", params).trim());
         }
-        else throw new LazybotRuntimeException("[Lazybot] 请检查输入参数");
+        else throw new LazybotRuntimeException("请检查输入参数");
         return parameter;
     }
 

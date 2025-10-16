@@ -135,7 +135,7 @@ public class AssertDownloadUtil
         catch (Exception e)
         {
             logger.error("下载失败: {}", e.getMessage());
-            throw new LazybotRuntimeException("[Lazybot] 下载线程出错: "+ e.getMessage());
+            throw new LazybotRuntimeException("下载线程出错: "+ e.getMessage());
         }
         return Paths.get(desiredLocalPath);
     }

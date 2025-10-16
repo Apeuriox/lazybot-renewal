@@ -23,7 +23,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
-@LazybotCommandMapping({"score"})
+@LazybotCommandMapping({"score","s","pscore"})
 @Component
 public class ScoreCommand implements LazybotSlashCommand
 {
@@ -59,22 +59,39 @@ public class ScoreCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        ImageUploadUtil.uploadImageToOnebot(bot,event,
-                playerService.score(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
-        );
+        if (event.getCommandType().equalsIgnoreCase("pscore")) {
+            ImageUploadUtil.uploadImageToOnebot(bot,event,
+                    playerService.scorePlus(
+                            setupParameter(event,
+                                    proxy.getAccessToken(event))
+                    )
+            );
+        }
+        else
+            ImageUploadUtil.uploadImageToOnebot(bot,event,
+                    playerService.score(
+                            setupParameter(event,
+                                    proxy.getAccessToken(event))
+                    )
+            );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(playerService.score(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
-        );
+        if (event.getCommandType().equalsIgnoreCase("pscore")) {
+            testOutputTool.saveImageToLocal(playerService.scorePlus(
+                            setupParameter(event,
+                                    proxy.getAccessToken(event))
+                    )
+            );
+        }
+        else
+            testOutputTool.saveImageToLocal(playerService.score(
+                            setupParameter(event,
+                                    proxy.getAccessToken(event))
+                    )
+            );
     }
     protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
     {
@@ -92,8 +109,8 @@ public class ScoreCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Score","Score",
-                        "按照指定用户查询指定地图下的指定Mod组合中分数最高的成绩",
+                new CommandHelp("Score","Score, S, Pscore",
+                        "按照指定用户查询指定地图下的指定Mod组合中分数最高的成绩, Pscore会以PP+数据返回",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Score 4889657+HDHR")
                         .addExample("/Score Aloic 4889657")

@@ -10,7 +10,7 @@
     </parent>
     <groupId>me.aloic</groupId>
     <artifactId>lazybot</artifactId>
-    <version>1.1.52</version>
+    <version>1.1.60</version>
     <name>lazybot-renewal</name>
     <description>lazybot-renewal</description>
     <url/>
@@ -138,6 +138,16 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bucket4j</groupId>
+            <artifactId>bucket4j_jdk17-core</artifactId>
+            <version>8.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.zhjk</groupId>
+            <artifactId>rosu-ppplus</artifactId>
+            <version>0.2.2</version>
         </dependency>
     </dependencies>
 

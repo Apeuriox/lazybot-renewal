@@ -135,7 +135,7 @@ public class OsuToolsUtil
                            PerformanceVO performance = RosuUtil.getCurrentPP(AssertDownloadUtil.beatmapPath(score.getBeatmap().getId(), false), score);
                            score.getBeatmap().setDifficulty_rating(performance.getStar());
                         } catch (Exception e) {
-                            throw new LazybotRuntimeException("[Lazybot] 重算成绩详情时出错: " + e.getMessage());
+                            throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
                         }
                     }
                     return score;

@@ -21,7 +21,7 @@ public class SVGTemplateLoader
         catch (Exception e)
         {
             log.error("SVG模板载入失败", e);
-            throw new LazybotRuntimeException("[Lazybot] SVG模板载入失败");
+            throw new LazybotRuntimeException("SVG模板载入失败");
         }
     }
 }

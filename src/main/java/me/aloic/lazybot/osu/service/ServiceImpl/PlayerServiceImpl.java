@@ -1,6 +1,8 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
+import desu.life.RosuFFI;
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.documentMapper.*;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
@@ -15,6 +17,7 @@ import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileLightTheme;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.osu.utils.*;
@@ -49,6 +52,25 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] score(ScoreParameter params) throws Exception
     {
+        ScoreVO scoreVO = processScoreScore(params);
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+        );
+    }
+    @Override
+    public byte[] scorePlus(ScoreParameter params) throws Exception
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("QuadraGrid样式仅支持Std模式，因为其他模式没有PP+数据");
+        ScoreVO scoreVO = processScoreScore(params);
+        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
+        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                PlusScoreSVGMapper.mapPlusScoreToQuadraGrid(scorePlus,CommonTool.getDominantHueColorThief(new File(scoreVO.getBeatmap().getBgUrl())))
+        );
+    }
+    private ScoreVO processScoreScore(ScoreParameter params)
+    {
         if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()),
@@ -57,23 +79,25 @@ public class PlayerServiceImpl implements PlayerService
                 params.getModCombination()
         );
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
-                    dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
-                    beatmapUserScoreLazer.getScore(),
-                    false);
+                dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
+                beatmapUserScoreLazer.getScore(),
+                false);
         verifyBeatmapsCache(scoreVO);
         if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
-        return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
-        );
+        return scoreVO;
     }
+
+
+
+
     @Override
     public byte[] allScore(ScoreParameter params) throws Exception
     {
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
 
         List<ScoreLazerDTO> scoreList = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), playerInfoDTO.getId(), params.getMode());
-        if (scoreList==null || scoreList.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
+        if (scoreList==null || scoreList.isEmpty()) throw new LazybotRuntimeException("没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
         List<MapScore> mapScoreList=TransformerUtil.mapScoreTransform(scoreList);
 
         OsuToolsUtil.setupPlayerStatics(mapScoreList,playerInfoDTO);
@@ -90,7 +114,7 @@ public class PlayerServiceImpl implements PlayerService
                 }
                 catch (Exception e) {
                     logger.error(e.getMessage());
-                    throw new LazybotRuntimeException("[Lazybot] Error during recalculations/重算成绩时出错: " + e.getMessage());
+                    throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
                 }
         }
         mapScoreList=mapScoreList.stream().sorted(Comparator.comparing(MapScore::getPp).reversed()).toList();
@@ -101,28 +125,110 @@ public class PlayerServiceImpl implements PlayerService
                 MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScoreList,beatmapPerformance),
                 2f);
     }
+    @Override
+    public byte[] thumbnailClassicalScore(ThumbnailParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+        List<ScoreLazerDTO> scoreList = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), playerInfoDTO.getId(), params.getMode());
+        if (scoreList==null || scoreList.isEmpty()) throw new LazybotRuntimeException("没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
+        scoreList.get(params.getIndex()-1).setUser(playerInfoDTO);
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
+                scoreList.get(params.getIndex()-1),
+                false);
+        if (!scoreVO.getIsLazer())
+        {
+            scoreVO.setModJSON(scoreVO.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
+        }
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        ThumbnailClassicalVO tbc = new ThumbnailClassicalVO(info,scoreVO,params.getComment(),
+                params.getPosition()==null ? null:String.valueOf(params.getPosition())
+        );
+        if (params.getAttributes()!=null && !params.getAttributes().isEmpty())
+        {
+            tbc.setAttributes(params.getAttributes());
+        }
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ThumbnailSVGMapper.mapToThumbnailClassical(tbc));
+    }
+    @Override
+    public byte[] thumbnailClassicalRecent(ThumbnailParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+        List<ScoreLazerDTO> scoreList = dataExtractor.extractRecentScoreList(playerInfoDTO.getId(), 1, params.getIndex(), params.getMode());
+        if(params.getIndex()>scoreList.size()) {
+            throw new LazybotRuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " + scoreList.size());
+        }
+        scoreList.get(params.getIndex()-1).setUser(playerInfoDTO);
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                dataExtractor.extractBeatmap(String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
+                scoreList.get(params.getIndex()-1),
+                false);
+        if (!scoreVO.getIsLazer())
+        {
+            scoreVO.setModJSON(scoreVO.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
+        }
+        verifyBeatmapsCache(scoreVO);
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        ThumbnailClassicalVO tbc = new ThumbnailClassicalVO(info,scoreVO,params.getComment(),
+                params.getPosition()==null ? null:String.valueOf(params.getPosition())
+        );
+        if (params.getAttributes()!=null && !params.getAttributes().isEmpty())
+        {
+            tbc.setAttributes(params.getAttributes());
+        }
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ThumbnailSVGMapper.mapToThumbnailClassical(tbc));
+    }
 
     @Override
     public byte[] recent(RecentParameter params, int type) throws IOException
     {
+        ScoreVO scoreVO = processRecentScore(params, type);
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+        );
+    }
+    private ScoreVO processRecentScore(RecentParameter params, int type)
+    {
         if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
         List<ScoreLazerDTO> scoreList = dataExtractor.extractRecentScoreList(params.getPlayerId(), type, params.getIndex(), params.getMode());
         if(params.getIndex()>scoreList.size()) {
-            throw new LazybotRuntimeException("[Lazybot] 超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " + scoreList.size());
+            throw new LazybotRuntimeException("当前超出能索引的最大距离，当前为: "+params.getIndex());
         }
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
                 scoreList.get(params.getIndex() - 1),
                 false);
         verifyBeatmapsCache(scoreVO);
-        CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        if (params.getChannelId()!=null)
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        return scoreVO;
+    }
+
+    @Override
+    public byte[] recentPlus(RecentParameter params, int type) throws IOException, RosuFFI.FFIException
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("QuadraGrid样式仅支持Std模式，因为其他模式没有PP+数据");
+        ScoreVO scoreVO = processRecentScore(params, type);
+        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
+        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+
         return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+                PlusScoreSVGMapper.mapPlusScoreToQuadraGrid(scorePlus,CommonTool.getDominantHueColorThief(new File(scoreVO.getBeatmap().getBgUrl())))
         );
 
     }
     @Override
     public byte[] bp(BpParameter params) throws IOException
+    {
+        ScoreVO scoreVO = processBpScore(params);
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+        );
+    }
+    private ScoreVO processBpScore(BpParameter params)
     {
         if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
         List<ScoreLazerDTO> scoreDTO = dataExtractor.extractUserBestScoreList(
@@ -136,8 +242,18 @@ public class PlayerServiceImpl implements PlayerService
                 false);
         verifyBeatmapsCache(scoreVO);
         CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        return scoreVO;
+    }
+    @Override
+    public byte[] bpPlus(BpParameter params) throws IOException, RosuFFI.FFIException
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("QuadraGrid样式仅支持Std模式，因为其他模式没有PP+数据");
+        ScoreVO scoreVO = processBpScore(params);
+        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
+        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
         return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+                PlusScoreSVGMapper.mapPlusScoreToQuadraGrid(scorePlus,CommonTool.getDominantHueColorThief(new File(scoreVO.getBeatmap().getBgUrl())))
         );
     }
     @Override
@@ -183,7 +299,7 @@ public class PlayerServiceImpl implements PlayerService
                 .sorted(Comparator.comparing(ScoreLazerDTO::getPp).reversed())
                 .limit(51)
                 .toList();
-        if(filteredScores.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 没有找到符合条件的bp");
+        if(filteredScores.isEmpty()) throw new LazybotRuntimeException("没有找到符合条件的bp");
 
         List<ScoreVO> scoreVOList=TransformerUtil.scoreTransformForListWithIndex(filteredScores);
         OsuToolsUtil.setUpImageStatic(scoreVOList);
@@ -241,7 +357,7 @@ public class PlayerServiceImpl implements PlayerService
                     ZonedDateTime scoreTime = ZonedDateTime.parse(score.getCreate_at(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
                     return scoreTime.isAfter(now.minusDays(params.getMaxDays()));
                 }).collect(Collectors.toList());
-        if(scoreVOList.isEmpty()) throw new LazybotRuntimeException("[Lazybot] 没有找到符合条件的bp");
+        if(scoreVOList.isEmpty()) throw new LazybotRuntimeException("没有找到符合条件的bp");
 
         OsuToolsUtil.setUpImageStatic(scoreVOList);
         return SVGRenderer.renderSVGDocumentToByteArray(
@@ -260,7 +376,7 @@ public class PlayerServiceImpl implements PlayerService
                 dto.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(dto, false));
                 return dto;
             } catch (Exception e) {
-                throw new LazybotRuntimeException("[Lazybot] 异步获取玩家" + params.getPlayerName() + "数据失败"+ e.getMessage());
+                throw new LazybotRuntimeException("异步获取玩家" + params.getPlayerName() + "数据失败"+ e.getMessage());
             }
         });
 
@@ -270,13 +386,13 @@ public class PlayerServiceImpl implements PlayerService
                 dto.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(dto, false));
                 return dto;
             } catch (Exception e) {
-                throw new LazybotRuntimeException("[Lazybot] 异步获取玩家" + params.getComparePlayerName() + "数据失败"+ e.getMessage());
+                throw new LazybotRuntimeException("异步获取玩家" + params.getComparePlayerName() + "数据失败"+ e.getMessage());
             }
         });
 
         CompletableFuture<byte[]> resultFuture = playerInfoFuture.thenCombineAsync(comparePlayerInfoFuture, (playerInfoDTO, comparePlayerInfoDTO) -> {
             try {
-                if (Objects.equals(playerInfoDTO.getId(), comparePlayerInfoDTO.getId())) throw new LazybotRuntimeException("[Lazybot] 你不能和自己对比");
+                if (Objects.equals(playerInfoDTO.getId(), comparePlayerInfoDTO.getId())) throw new LazybotRuntimeException("你不能和自己对比");
                 CompletableFuture<List<ScoreLazerDTO>> scoreFuture = CompletableFuture.supplyAsync(() ->
                         dataExtractor.extractUserBestScoreList(String.valueOf(playerInfoDTO.getId()), 100, 0, params.getMode()));
 
@@ -338,8 +454,8 @@ public class PlayerServiceImpl implements PlayerService
         );
     }
     @Override
-    public byte[] cardMoelleux(GeneralParameter params) throws Exception {
-        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] 测试期间仅支持osu模式");
+    public byte[] cardMoelleux(CardMoelleuxParameter params) throws Exception {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("此样式仅支持osu模式，请输入/card &使用老版样式");
         PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
         playerInfoVO.setMode(params.getMode());
         PPPlusPerformance performance;
@@ -347,7 +463,7 @@ public class PlayerServiceImpl implements PlayerService
             performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
         }
         catch (LazybotRuntimeException e) {
-            throw new LazybotRuntimeException("[Lazybot] Pp+数据获取失败，请稍后再试");
+            throw new LazybotRuntimeException("Pp+数据获取失败，请稍后再试");
         }
         List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(
                 String.valueOf(playerInfoVO.getId()),
@@ -358,16 +474,75 @@ public class PlayerServiceImpl implements PlayerService
         PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
                 scoreVOArray,
                 performance);
+        HSL mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getAvatarUrl()));
 
+        boolean isTooDarkOrBright = mainColor.getSaturation()<4 || mainColor.getLightness()>94;
+        boolean isLowSaturation = mainColor.getSaturation()<18;
+        boolean enableWhiteMask = params.getVersion()!=2;
+        if (isTooDarkOrBright) {
+            isLowSaturation=false;
+        }
+        if (params.getVersion()==3) {
+            isLowSaturation=false;
+        }
+        if (params.getVersion()==4) {
+            isLowSaturation=true;
+        }
+        int primaryHue;
+        if (params.getOverrideHue()!=null) {
+            primaryHue = params.getOverrideHue();
+        }
+        else{
+            primaryHue = isTooDarkOrBright?361:mainColor.getHue();
+        }
         return SVGRenderer.renderSVGDocumentToByteArray(
-                PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCard(playerInfoMoelleux,CommonTool.getDominantHueColorThief(new File(playerInfoVO.getAvatarUrl())))
+                PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCard(playerInfoMoelleux, primaryHue, isLowSaturation, enableWhiteMask)
                 ,2
+        );
+    }
+
+    @Override
+    public byte[] cardMoelleuxTrimmed(CardMoelleuxParameter params) throws Exception {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("此样式仅支持osu模式");
+        PlayerInfoDTO player = getTargetPlayerInfoDTO(params);
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(player);
+        playerInfoVO.setMode(params.getMode());
+        PPPlusPerformance performance;
+        try{
+            performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
+        }
+        catch (LazybotRuntimeException e) {
+            throw new LazybotRuntimeException("Pp+数据获取失败，请稍后再试");
+        }
+        playerInfoVO.setBannerUrl(AssertDownloadUtil.bannerAbsolutePath(player,false));
+        PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
+                null,
+                performance);
+        HSL mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getBannerUrl()));
+
+        boolean isTooDarkOrBright = mainColor.getSaturation()<4 || mainColor.getLightness()>94;
+        if (isTooDarkOrBright)
+        {
+            mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getAvatarUrl()));
+            isTooDarkOrBright = mainColor.getSaturation()<4 || mainColor.getLightness()>94;
+            playerInfoVO.setBannerUrl(playerInfoVO.getAvatarUrl());
+        }
+        int primaryHue;
+        if (params.getOverrideHue()!=null) {
+            primaryHue = params.getOverrideHue();
+        }
+        else{
+            primaryHue = isTooDarkOrBright?361:mainColor.getHue();
+        }
+        return SVGRenderer.renderSVGDocumentToByteArrayPNG(
+                PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCardTrimmed(playerInfoMoelleux, primaryHue)
+                ,1
         );
     }
     @Override
     public byte[] performancePlus(GeneralParameter params)
     {
-        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] Pp+目前仅支持osu模式");
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("Pp+目前仅支持osu模式");
         try{
             PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
             playerInfoVO.setMode(params.getMode());
@@ -385,7 +560,7 @@ public class PlayerServiceImpl implements PlayerService
             throw e;
         }
         catch (Exception e){
-            throw new LazybotRuntimeException("[Lazybot] Pp+服务正在维护或生成失败，请稍后再试");
+            throw new LazybotRuntimeException("Pp+服务正在维护或生成失败，请稍后再试");
         }
 
     }
@@ -394,7 +569,7 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] addScoreForPerformancePlus(ScoreParameter params)
     {
-        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("[Lazybot] Pp+相关操作目前仅支持osu模式");
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("Pp+相关操作目前仅支持osu模式");
         try{
             if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
             BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
@@ -418,7 +593,7 @@ public class PlayerServiceImpl implements PlayerService
         }
         catch (Exception e){
             e.printStackTrace();
-            throw new LazybotRuntimeException("[Lazybot] 添加失败");
+            throw new LazybotRuntimeException("成绩添加失败");
         }
 
     }
@@ -518,5 +693,21 @@ public class PlayerServiceImpl implements PlayerService
         return playerInfoDTO;
     }
 
+    @Override
+    public byte[] avatar(GeneralParameter params, int type) throws Exception {
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
+        playerInfoVO.setMode(params.getMode());
+        if (type==1)
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    AvatarSVGMapper.mapPlayerInfoToAvatar(playerInfoVO,
+                            CommonTool.getDominantHueColorThief(new File(playerInfoVO.getAvatarUrl())),
+                    type)
+            );
+        else
+            return SVGRenderer.renderSVGDocumentToByteArray(
+                    AvatarSVGMapper.mapPlayerInfoToAvatar(playerInfoVO,
+                            215,
+                            type));
+    }
 
 }

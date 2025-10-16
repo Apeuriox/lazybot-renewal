@@ -13,7 +13,7 @@ public class FilterParser {
     public static ScoreFilter parse(String expr) {
         Matcher m = EXPR_PATTERN.matcher(expr.trim());
         if (!m.matches()) {
-            throw new IllegalArgumentException("[Lazybot] 非法的表达式: " + expr + " 请检查输入符号的全半角，仅支持半角符号");
+            throw new IllegalArgumentException("非法的表达式: " + expr + " 请检查输入符号的全半角，仅支持半角符号");
         }
 
         String field = m.group(1).trim();
@@ -45,7 +45,7 @@ public class FilterParser {
 //            case "maxcombo" -> new MaxComboFilter(Integer.parseInt(value), op);
             case "pp", "performance" -> new PerformanceFilter(Double.parseDouble(value), op);
             case "star", "s" -> new StarFilter(Double.parseDouble(value), op);
-            default -> throw new IllegalArgumentException("[Lazybot] 未知字段: " + field);
+            default -> throw new IllegalArgumentException("未知字段: " + field);
         };
     }
 }

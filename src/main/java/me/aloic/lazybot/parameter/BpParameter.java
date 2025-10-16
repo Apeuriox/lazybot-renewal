@@ -38,7 +38,7 @@ public class BpParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if (index<=0||index > MAX_INDEXED) {
-            throw new LazybotRuntimeException("[Lazybot] Bp查询区间为 1 到 " + MAX_INDEXED);
+            throw new LazybotRuntimeException("Bp查询区间为 1 到 " + MAX_INDEXED);
         }
         if(version==null) {
             version=0;

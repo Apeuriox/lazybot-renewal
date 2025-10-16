@@ -75,3 +75,8 @@ async:
       queue_capacity: 1000
       name:
         prefix: api_request_pool-
+
+rate-limit:
+  capacity: 24
+  refill: 8
+  enabled: true

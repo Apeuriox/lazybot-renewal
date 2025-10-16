@@ -11,9 +11,10 @@
         <result column="refresh_token" jdbcType="VARCHAR" property="refresh_token"/>
         <result column="player_name" jdbcType="VARCHAR" property="player_name"/>
         <result column="default_mode" jdbcType="INTEGER" property="default_mode"/>
+        <result column="avatar_url" jdbcType="VARCHAR" property="avatar_url"/>
     </resultMap>
     <sql id = "Base_Column_List">
-        id, qq_code, player_id, access_token, refresh_token, expires_in, default_mode, player_name, valid
+        id, qq_code, player_id, access_token, refresh_token, expires_in, default_mode, player_name, valid, avatar_url
     </sql>
 
     <select id="selectByQq_code" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -26,6 +27,12 @@
         select <include refid="Base_Column_List"/>
         from token
         where player_name =#{player_name}
+    </select>
+
+    <select id="selectByPlayerId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from token
+        where player_id =#{player_id}
     </select>
 
     <select id="selectRandom" resultMap="BaseResultMap">
@@ -62,6 +69,14 @@
             access_token=#{access_token},
         </set>
         where qq_code = 0
+    </update>
+
+    <update id="updateAvatar" parameterType="map">
+        update token
+        <set>
+            avatar_url=#{avatar_url},
+        </set>
+        where player_id = #{player_id}
     </update>
 
     <delete id="deleteByQQ" parameterType="java.lang.Long">

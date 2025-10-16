@@ -17,6 +17,7 @@ public class PlayerInfoVO
     private Double performancePoint;
     private Integer globalRank;
     private String country;
+    private String teamShortName;
     private Integer countryRank;
     private Long rankTotalScore;
     private Double accuracy;
@@ -27,6 +28,8 @@ public class PlayerInfoVO
     private String profileBackgroundUrl;
     private String fixedPPString;
     private Integer primaryColor;
+    private String[] previousNames;
+    private String bannerUrl;
 
     private Integer level;
     private Integer levelProgress;

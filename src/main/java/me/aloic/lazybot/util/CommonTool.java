@@ -5,6 +5,7 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.theme.Color.HSL;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -527,6 +528,9 @@ public class CommonTool {
     public static Integer getDominantHueColorThief(File imageFile) throws IOException {
         return rgbToHue(getDominantColorColorThief(imageFile));
     }
+    public static HSL getDominantHSLColorThief(File imageFile) throws IOException {
+        return rgbToHslDetailed(getDominantColorColorThief(imageFile));
+    }
 
     public static String rgbToHsl(int[] rgb) {
         double r=rgb[0];
@@ -559,7 +563,7 @@ public class CommonTool {
         }
         return String.format("hsl(%.0f, %.0f%%, %.0f%%)", h, s * 100, l * 100);
     }
-    public static List<Double> rgbToHslDetailed(int[] rgb) {
+    public static HSL rgbToHslDetailed(int[] rgb) {
         double r=rgb[0];
         double g=rgb[1];
         double b=rgb[2];
@@ -588,7 +592,7 @@ public class CommonTool {
         if (h < 0) {
             h += 360;
         }
-        return List.of(h,s,l);
+        return new HSL((int) h, (int) (s*100), (int) (l*100));
     }
 
     private static Integer rgbToHue(double r, double g, double b) {

@@ -106,8 +106,8 @@ public class NameGuessCommand implements LazybotSlashCommand
 
     private String checkUsernameGuess(String username, String original, String identity)
     {
-        if (username == null) throw new LazybotRuntimeException("[Lazybot] 参数输入为空");
-        if (original == null) throw new LazybotRuntimeException("[Lazybot] 还没有正在进行的游戏呢，请输入/name新建游戏");
+        if (username == null) throw new LazybotRuntimeException("参数输入为空");
+        if (original == null) throw new LazybotRuntimeException("还没有正在进行的游戏呢，请输入/name新建游戏");
         if (username.toLowerCase().trim().equals(original.toLowerCase().trim()))
         {
             existingGameMap.remove(identity);
@@ -210,7 +210,7 @@ public class NameGuessCommand implements LazybotSlashCommand
 
     public static String revealOneChar(String original, String masked) {
         if (original == null || masked == null || original.length() != masked.length()) {
-            throw new IllegalArgumentException("[Lazybot] 内部错误,原始字符串和混淆字符串长度不一致或为空");
+            throw new IllegalArgumentException("内部错误,原始字符串和混淆字符串长度不一致或为空");
         }
 
         List<Integer> unrevealedIndices = new ArrayList<>();
@@ -232,7 +232,7 @@ public class NameGuessCommand implements LazybotSlashCommand
     private String createNewGame(String identity)
     {
         AccessTokenPO token = tokenMapper.selectRandom();
-        if (token==null) throw new LazybotRuntimeException("[Lazybot] 数据库数据不足或获取失败");
+        if (token==null) throw new LazybotRuntimeException("数据库数据不足或获取失败");
         String obfuscatedName = obfuscateString(token.getPlayer_name());
         existingGameMap.put(identity, new GameWithTime(token.getPlayer_name(), LocalDateTime.now(),obfuscatedName));
         return "[Lazybot] 您的题目是 " + obfuscatedName;

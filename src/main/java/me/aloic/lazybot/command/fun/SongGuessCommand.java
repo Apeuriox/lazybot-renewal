@@ -79,11 +79,11 @@ public class SongGuessCommand implements LazybotSlashCommand
                         "[Lazybot] 取自"+tokenPO.getPlayer_name()+"的BP前200\n缩放等级: " + songGuessData.getResizeLevel());
             }
             else if (event.getScorePanelVersion()==0) {
-                if (event.getCommandParameters() == null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 点击输入文本");
+                if (event.getCommandParameters() == null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("点击输入文本");
                 String guessed = String.join(" ", event.getCommandParameters()).toLowerCase();
                 JaroWinklerSimilarity jws = new JaroWinklerSimilarity();
                 if (guessed.length()>original.getTitle().length()*1.5) {
-                    throw new LazybotRuntimeException("[Lazybot] 我觉得你在瞎写");
+                    throw new LazybotRuntimeException("我觉得你在瞎写");
                 }
                 double score = jws.apply(original.getTitle().toLowerCase(), guessed);
                 if (score>0.7) {
@@ -94,7 +94,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                                "[Lazybot] 回答正确，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
                    }
                    catch (Exception e){
-                       throw new LazybotRuntimeException("[Lazybot] 加载歌曲图片时出错");
+                       throw new LazybotRuntimeException("加载歌曲图片时出错");
                    }
                 }
                 else {
@@ -114,7 +114,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                             "[Lazybot] 已提前结束，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
                 }
                 catch (Exception e){
-                    throw new LazybotRuntimeException("[Lazybot] 加载歌曲图片时出错");
+                    throw new LazybotRuntimeException("加载歌曲图片时出错");
                 }
             }
         }
@@ -144,7 +144,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                 testOutputTool.saveImageAndTextToLocal(songGuessData.getImg(), "[Lazybot] 取自"+tokenPO.getPlayer_name()+"的bp200");
             }
             else if (event.getScorePanelVersion()==0) {
-                if (event.getCommandParameters() == null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 请输入文本");
+                if (event.getCommandParameters() == null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("请输入文本");
                 String guessed = String.join(" ", event.getCommandParameters());
                 if (isFuzzyMatch(original.getTitle(),guessed,0.3)) {
                     existingGameMap.remove(identity);
@@ -154,7 +154,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                                 "[Lazybot] 回答正确，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
                     }
                     catch (Exception e){
-                        throw new LazybotRuntimeException("[Lazybot] 加载歌曲图片时出错");
+                        throw new LazybotRuntimeException("加载歌曲图片时出错");
                     }
                 }
                 else {
@@ -174,7 +174,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                             "[Lazybot] 已提前结束，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
                 }
                 catch (Exception e){
-                    throw new LazybotRuntimeException("[Lazybot] 加载歌曲图片时出错");
+                    throw new LazybotRuntimeException("加载歌曲图片时出错");
                 }
             }
         }
@@ -183,7 +183,7 @@ public class SongGuessCommand implements LazybotSlashCommand
     }
     private String checkGuessed(String guessed, SongGuessWithTime original, Long identity)
     {
-        if (original == null) throw new LazybotRuntimeException("[Lazybot] 还没有正在进行的游戏呢，请输入/song新建游戏");
+        if (original == null) throw new LazybotRuntimeException("还没有正在进行的游戏呢，请输入/song新建游戏");
         if (isFuzzyMatch(guessed,original.getTitle(),0.35))
         {
             existingGameMap.remove(identity);

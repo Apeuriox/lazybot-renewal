@@ -46,9 +46,9 @@ public class UserServiceImpl implements UserService
     public void updateDefaultMode(SlashCommandInteractionEvent event)
     {
         event.deferReply().queue();
-        if(event.getOption("mode")==null) throw new LazybotRuntimeException("[Lazybot] 请输入模式");
+        if(event.getOption("mode")==null) throw new LazybotRuntimeException("请输入模式");
         OsuMode mode = OsuMode.getMode(event.getOption("mode").getAsString());
-        if (mode == OsuMode.Default) throw new LazybotRuntimeException("[Lazybot] 未知的模式: " + event.getOption("mode").getAsString());
+        if (mode == OsuMode.Default) throw new LazybotRuntimeException("未知的模式: " + event.getOption("mode").getAsString());
         BiConsumer<SlashCommandInteractionEvent, UserTokenPO> createBindError =  ErrorResultHandler::createBindError;
         if(event.getOption("username")==null)
             ErrorResultHandler.createParameterError(event);
@@ -61,9 +61,9 @@ public class UserServiceImpl implements UserService
     @Override
     public void updateDefaultMode(Bot bot, LazybotSlashCommandEvent event)
     {
-        if (event.getCommandParameters()==null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 请输入模式");
+        if (event.getCommandParameters()==null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("请输入模式");
         OsuMode mode = OsuMode.getMode(event.getCommandParameters().getFirst());
-        if (mode == OsuMode.Default) throw new LazybotRuntimeException("[Lazybot] 未知的模式: " + event.getCommandParameters().getFirst());
+        if (mode == OsuMode.Default) throw new LazybotRuntimeException("未知的模式: " + event.getCommandParameters().getFirst());
         Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
                 .ifPresentOrElse(
                         token -> tokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getMessageEvent().getSender().getUserId()),
@@ -142,6 +142,7 @@ public class UserServiceImpl implements UserService
         user.setDefault_mode("osu");
         user.setQq_code(event.getMessageEvent().getSender().getUserId());
         user.setValid(1);
+        user.setAvatar_url(player.getAvatar_url());
         Optional.ofNullable(tokenMapper.selectByPlayername(player.getUsername()))
                 .ifPresentOrElse(
                         userToken -> tokenMapper.updateByToken(user),
@@ -152,23 +153,21 @@ public class UserServiceImpl implements UserService
 
 
 
-
-
     private void createBindError(AccessTokenPO token){
-        throw new LazybotRuntimeException("[Lazybot] 您已绑定用户: " +token.getPlayer_name());
+        throw new LazybotRuntimeException("您已绑定用户: " +token.getPlayer_name());
     }
     private void createAlreadyBindError(AccessTokenPO token){
-        throw new LazybotRuntimeException("[Lazybot] 该用户已绑定账户: " +token.getQq_code());
+        throw new LazybotRuntimeException("该用户已绑定账户: " +token.getQq_code());
     }
     private void createNotBindError(){
         {
-            throw new LazybotRuntimeException("[Lazybot] 您并未绑定");
+            throw new LazybotRuntimeException("您并未绑定");
         }
     }
     public static boolean isValidUsername(String input) {
-        if (input==null||input.trim().isEmpty()) throw new LazybotRuntimeException("[Lazybot] 输入用户名为空");
-        if(input.trim().length()>15) throw new LazybotRuntimeException("[Lazybot] 输入用户名过长");
-        if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) throw new LazybotRuntimeException("[Lazybot] 已输入的用户名含有非法字符");
+        if (input==null||input.trim().isEmpty()) throw new LazybotRuntimeException("输入用户名为空");
+        if(input.trim().length()>15) throw new LazybotRuntimeException("输入用户名过长");
+        if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) throw new LazybotRuntimeException("已输入的用户名含有非法字符");
         return true;
     }
 }

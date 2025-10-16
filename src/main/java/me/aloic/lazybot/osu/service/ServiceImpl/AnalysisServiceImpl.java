@@ -9,7 +9,6 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
-import me.aloic.lazybot.osu.utils.SvgUtil;
 import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.util.CommonTool;
@@ -39,7 +38,7 @@ public class AnalysisServiceImpl implements AnalysisService
                         scoreList.stream().limit(30).collect(Collectors.toList()),
                         0,
                         3,
-                        "/BpIf: Recalculate your Bps with desired mods. +mod to insert, -mod to remove, +mod! to replace.")
+                        "/BpIf: Recalculate your Bps with desired mods. +mod to insert, -mod to remove, !mod to replace.")
         );
     }
     @Override
