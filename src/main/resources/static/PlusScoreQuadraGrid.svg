@@ -86,7 +86,7 @@
 		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" x="1124" id="pre-ppp" y="229.42">999/9999 (11.11%)</text>
 		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="400" y="262.98">Speed</tspan></text>
 		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" x="1124" id="spd-ppp" y="262.62">999/9999 (11.11%)</text>
-		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="400" y="295.82">Stanmina</tspan></text>
+		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="400" y="295.82">Stamina</tspan></text>
 		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" x="1124" id="sta-ppp" y="295.82">999/9999 (11.11%)</text>
 		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="400" y="329.02">Accuracy</tspan></text>
 		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" x="1124" id="acc-ppp" y="329.02">999/9999 (11.11%)</text>
@@ -134,7 +134,7 @@
 		</g>
 		<path d="M1155 60V450" stroke="black"/>
 
-		<text fill="#0D0D0D" class="cls-1" font-size="45"><tspan x="1195" y="120.42">Banchor PP Breakdown</tspan></text>
+		<text fill="#0D0D0D" class="cls-1" font-size="45"><tspan x="1195" y="120.42">Bancho PP Breakdown</tspan></text>
 		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="1195" y="163.02">Aim</tspan></text>
 		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" id="aim-pp" x="1900" y="163.02">999/9999 (11.11%)</text>
 		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="1195" y="204.52">Speed</tspan></text>

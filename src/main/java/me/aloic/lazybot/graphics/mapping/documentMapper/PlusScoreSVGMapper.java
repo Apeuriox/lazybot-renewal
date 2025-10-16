@@ -162,7 +162,7 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
                     .map(Mod::getAcronym)
                     .collect(Collectors.joining());
 
-        if (modStr !=null)
+        if (modStr ==null)
             document.getElementById("mod").setTextContent("Nomod Play");
         else  document.getElementById("mod").setTextContent("+" + modStr);
 
@@ -171,7 +171,7 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
 
 
         document.getElementById("300").setTextContent(String.valueOf(score.getStatistics().getGreat()));
-        document.getElementById("100").setTextContent(String.valueOf(score.getStatistics().getGood()));
+        document.getElementById("100").setTextContent(String.valueOf(score.getStatistics().getOk()));
         document.getElementById("50").setTextContent(String.valueOf(score.getStatistics().getMeh()));
         document.getElementById("miss").setTextContent(String.valueOf(score.getStatistics().getMiss()));
         document.getElementById("combo").setTextContent(CommonTool.toString(score.getMaxCombo()).concat("x/")
@@ -181,6 +181,9 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
         document.getElementById("accuracy").setTextContent(CommonTool.toString(score.getAccuracy()*100) +"%");
         document.getElementById("rank").setTextContent(score.getRank());
         document.getElementById("rankRect").setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
+        if (score.getRank().length()>1) {
+            document.getElementById("rankRect").setAttribute("x", "95");
+        }
         document.getElementById(score.getBeatmap().getStatus()).setAttribute("opacity", "1");
 
         document.getElementById("mapBG").setAttributeNS(xlinkns, "xlink:href", score.getBeatmap().getBgUrl());
@@ -194,16 +197,16 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
         document.getElementById("sta-ppp").setTextContent(concatValueString(score.getPlusPerformance().getPpStamina(), score.getMaxPerformance().getPpStamina()));
         document.getElementById("pre-ppp").setTextContent(concatValueString(score.getPlusPerformance().getPpPrecision()*10.0, score.getMaxPerformance().getPpPrecision()*10.0));
         document.getElementById("acc-ppp").setTextContent(concatValueString(score.getPlusPerformance().getPpAcc(), score.getMaxPerformance().getPpAcc()));
-        document.getElementById("pp-ppp").setTextContent(String.valueOf(Math.round(score.getPlusPerformance().getPp())));
-        document.getElementById("fc-ppp").setTextContent(String.valueOf(Math.round(score.getPlusPerformance().getIffc())));
+        document.getElementById("pp-ppp").setTextContent(Math.round(score.getPlusPerformance().getPp())+"pp");
+        document.getElementById("fc-ppp").setTextContent(Math.round(score.getPlusPerformance().getIffc())+"pp");
 
 
 
         document.getElementById("aim-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getAimPP(), score.getPpDetailsLocal().getAimPPMax()));
         document.getElementById("spd-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getSpdPP(), score.getPpDetailsLocal().getSpdPPMax()));
         document.getElementById("acc-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getAccPP(), score.getPpDetailsLocal().getAccPPMax()));
-        document.getElementById("pp-pp").setTextContent(String.valueOf(Math.round(score.getPp())));
-        document.getElementById("fc-pp").setTextContent(String.valueOf(Math.round(score.getPpDetailsLocal().getIfFc())));
+        document.getElementById("pp-pp").setTextContent(Math.round(score.getPp())+"pp");
+        document.getElementById("fc-pp").setTextContent(Math.round(score.getPpDetailsLocal().getIfFc())+"pp");
 
         String titleAndArtist=score.getBeatmap().getTitle().concat(" - ").concat(score.getBeatmap().getArtist());
         if (titleAndArtist.length()>32) titleAndArtist=titleAndArtist.substring(0,31)+"...";

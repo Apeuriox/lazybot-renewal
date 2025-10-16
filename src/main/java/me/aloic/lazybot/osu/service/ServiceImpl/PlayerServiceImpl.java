@@ -91,9 +91,6 @@ public class PlayerServiceImpl implements PlayerService
 
 
 
-
-
-
     @Override
     public byte[] allScore(ScoreParameter params) throws Exception
     {
