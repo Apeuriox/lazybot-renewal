@@ -165,13 +165,10 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         if (namePlayer.isEmpty()) {
             namePlayer = type.getName();
         }
-        player.getInfo().setPlayerName(
-                namePlayer.substring(0, 1).toUpperCase()
-                        + namePlayer.substring(1)
-        );
+        namePlayer = namePlayer.substring(0, 1).toUpperCase() + namePlayer.substring(1);
 
-        doc.getElementById("name-1").setTextContent((player.getInfo().getPlayerName()));
-        if(player.getInfo().getPlayerName().length() <= 4)
+        doc.getElementById("name-1").setTextContent(namePlayer);
+        if(namePlayer.length() <= 4)
         {
             doc.getElementById("name-1").setAttribute("text-anchor","middle");
             doc.getElementById("name-1").setAttribute("transform","rotate(90 356 64) translate(940 360)");

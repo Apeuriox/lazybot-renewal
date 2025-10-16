@@ -3,7 +3,9 @@ package me.aloic.lazybot.graphics.mapping.documentMapper;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
+import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
@@ -12,6 +14,8 @@ import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class PlusScoreSVGMapper extends LazybotSVGMapper
@@ -129,6 +133,78 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
 
         return document;
     }
+
+    public static Document mapPlusScoreToQuadraGrid(PPPlusScore score, Integer hue) throws IOException
+    {
+        Document document = SVGTemplateLoader.loadSVGTemplate("PlusScoreQuadraGrid");
+        HSL plusRectColor = new HSL(hue, 28, 93);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss");
+        document.getElementById("playername").setTextContent(score.getUser_name());
+        document.getElementById("time").setTextContent(sdf.format(new Date(score.getCreate_at())));
+        document.getElementById("mod").setTextContent(CommonTool.modArrayToString(score.getMods()));
+
+
+        document.getElementById("300").setTextContent(String.valueOf(score.getStatistics().getGreat()));
+        document.getElementById("100").setTextContent(String.valueOf(score.getStatistics().getGood()));
+        document.getElementById("50").setTextContent(String.valueOf(score.getStatistics().getMeh()));
+        document.getElementById("Miss").setTextContent(String.valueOf(score.getStatistics().getMiss()));
+        document.getElementById("combo").setTextContent(CommonTool.toString(score.getMaxCombo()).concat("x/")
+                .concat(CommonTool.toString(score.getBeatmap().getMax_combo())
+                        .concat("x")).concat(" (").
+                concat(CommonTool.toString(((double) score.getMaxCombo() / (double) score.getBeatmap().getMax_combo()) * 100.0).concat("%)")));
+        document.getElementById("accuracy").setTextContent(CommonTool.toString(score.getAccuracy()*100) +"%");
+        document.getElementById("rank").setTextContent(score.getRank());
+        document.getElementById("rankRect").setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
+        document.getElementById(score.getBeatmap().getStatus()).setAttribute("opacity", "1");
+
+        document.getElementById("mapBG").setAttributeNS(xlinkns, "xlink:href", score.getBeatmap().getBgUrl());
+        document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", score.getAvatarUrl());
+
+        document.getElementById("ppp-rect-1").setAttribute("fill",plusRectColor.toString());
+        document.getElementById("ppp-rect-2").setAttribute("fill",plusRectColor.toString());
+        document.getElementById("jump-ppp").setTextContent(concatValueString(score.getPlusPerformance().getPpJumpAim(), score.getMaxPerformance().getPpJumpAim()));
+        document.getElementById("flow-ppp").setTextContent(concatValueString(score.getPlusPerformance().getPpFlowAim(), score.getMaxPerformance().getPpFlowAim()));
+        document.getElementById("spd-ppp").setTextContent(concatValueString(score.getPlusPerformance().getPpSpeed(), score.getMaxPerformance().getPpSpeed()));
+        document.getElementById("sta-ppp").setTextContent(concatValueString(score.getPlusPerformance().getPpStamina(), score.getMaxPerformance().getPpStamina()));
+        document.getElementById("pre-ppp").setTextContent(concatValueString(score.getPlusPerformance().getPpPrecision(), score.getMaxPerformance().getPpPrecision()));
+        document.getElementById("acc-ppp").setTextContent(concatValueString(score.getPlusPerformance().getPpAcc(), score.getMaxPerformance().getPpAcc()));
+        document.getElementById("pp-ppp").setTextContent(String.valueOf(Math.round(score.getPlusPerformance().getPp())));
+        document.getElementById("fc-ppp").setTextContent(String.valueOf(Math.round(score.getPlusPerformance().getIffc())));
+
+
+
+        document.getElementById("aim-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getAimPP(), score.getPpDetailsLocal().getAimPPMax()));
+        document.getElementById("spd-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getSpdPP(), score.getPpDetailsLocal().getSpdPPMax()));
+        document.getElementById("acc-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getAccPP(), score.getPpDetailsLocal().getAccPPMax()));
+        document.getElementById("pp-pp").setTextContent(String.valueOf(Math.round(score.getPp())));
+        document.getElementById("fc-pp").setTextContent(String.valueOf(Math.round(score.getPpDetailsLocal().getIfFc())));
+
+        String titleAndArtist=score.getBeatmap().getTitle().concat(" - ").concat(score.getBeatmap().getArtist());
+        if (titleAndArtist.length()>32) titleAndArtist=titleAndArtist.substring(0,31)+"...";
+        document.getElementById("titleAndArtist").setTextContent(titleAndArtist);
+        document.getElementById("version").setTextContent(score.getBeatmap().getVersion());
+        document.getElementById("mapper").setTextContent(score.getBeatmap().getCreator());
+        document.getElementById("bid").setTextContent(String.valueOf(score.getBeatmap().getBid()));
+
+        document.getElementById("bpm").setTextContent(CommonTool.toString(score.getBeatmap().getAttributes().getBpm()));
+        document.getElementById("length").setTextContent(CommonTool.formatHitLength(score.getBeatmap().getAttributes().getLength()));
+        document.getElementById("AR").setTextContent(CommonTool.toString(score.getBeatmap().getAttributes().getAr()));
+        document.getElementById("OD").setTextContent(CommonTool.toString(score.getBeatmap().getAttributes().getOd()));
+        document.getElementById("HP").setTextContent(CommonTool.toString(score.getBeatmap().getAttributes().getHp()));
+        document.getElementById("CS").setTextContent(CommonTool.toString(score.getBeatmap().getAttributes().getCs()));
+
+        document.getElementById("star-1").setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()));
+        document.getElementById("star-2").setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()));
+        String starTextColor = "#fed867";
+        if (score.getBeatmap().getDifficult_rating() < 7.0 && score.getBeatmap().getDifficult_rating() % 1.0 < 0.5)
+            starTextColor = "#1c1719";
+        document.getElementById("star-rect").setAttribute("fill", starTextColor);
+        document.getElementById("lower-linear").setAttribute("fill", "url(#gradient1)");
+
+
+        return document;
+    }
     private static String evaluateType(double jump, double flow, double speed, double stamina, double precision)
     {
         double[] values = {jump, flow, speed, stamina, precision};
@@ -145,5 +221,11 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
         }
 
         return labels[maxIndex];
+    }
+    private static String concatValueString(double current, double max)
+    {
+        return CommonTool.toString(current)
+                .concat(CommonTool.toString(max)).concat(" (").
+                concat(CommonTool.toString((current / (double) max) * 100.0).concat("%)"));
     }
 }
