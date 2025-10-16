@@ -22,7 +22,7 @@ import me.aloic.lazybot.util.ImageUploadUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bp","best"})
+@LazybotCommandMapping({"bp","best","pbp","pb","b"})
 @Component
 public class BpCommand implements LazybotSlashCommand
 {
@@ -60,14 +60,22 @@ public class BpCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bp(setupParameter(event,tokenPO)));
+        if (event.getCommandType().equalsIgnoreCase("pbp") || event.getCommandType().equalsIgnoreCase("pb")) {
+            ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bpPlus(setupParameter(event,tokenPO)));
+        }
+        else
+            ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bp(setupParameter(event,tokenPO)));
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        testOutputTool.saveImageToLocal(playerService.bp(setupParameter(event,tokenPO)));
+        if (event.getCommandType().equalsIgnoreCase("pbp") || event.getCommandType().equalsIgnoreCase("pb")) {
+            testOutputTool.saveImageToLocal(playerService.bpPlus(setupParameter(event,tokenPO)));
+        }
+        else
+            testOutputTool.saveImageToLocal(playerService.bp(setupParameter(event,tokenPO)));
     }
 
     private BpParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
@@ -89,8 +97,8 @@ public class BpCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Best Performance","Bp, Best",
-                        "查询指定用户的最佳成绩中的指定的第几个",
+                new CommandHelp("Best Performance","Bp, Best, Pbp, Pb",
+                        "查询指定用户的最佳成绩中的指定的第几个，Pbp即Pb会包含PP+数据",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Bp #1")
                         .addExample("/Bp Aloic #10")

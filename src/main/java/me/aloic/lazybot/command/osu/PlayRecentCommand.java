@@ -1,6 +1,7 @@
 package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
+import desu.life.RosuFFI;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@LazybotCommandMapping({"pr","rp","playrecent","re","recent","p","r"})
+@LazybotCommandMapping({"pr","rp","playrecent","re","recent","p","r","ppr","pre"})
 @Component
 public class PlayRecentCommand implements LazybotSlashCommand
 {
@@ -39,7 +40,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
 
 
     @Override
-    public void execute(SlashCommandInteractionEvent event) throws IOException
+    public void execute(SlashCommandInteractionEvent event) throws IOException, RosuFFI.FFIException
     {
         event.deferReply().queue();
         UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
@@ -56,43 +57,71 @@ public class PlayRecentCommand implements LazybotSlashCommand
         params.validateParams();
         if (event.getFullCommandName().equals("rp")||event.getFullCommandName().equals("pr")||event.getFullCommandName().equals("playrecent")||event.getFullCommandName().equals("p"))
             ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,1));
+        else if(event.getFullCommandName().equals("ppr"))
+        {
+            ImageUploadUtil.uploadImageToDiscord(event,playerService.recentPlus(params,1));
+        }
+        else if (event.getFullCommandName().equals("pre"))
+        {
+            ImageUploadUtil.uploadImageToDiscord(event,playerService.recentPlus(params,0));
+        }
         else
             ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,0));
     }
 
     @Override
-    public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
+    public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException, RosuFFI.FFIException
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equalsIgnoreCase("rp")||
-                event.getCommandType().equalsIgnoreCase("pr")||
-                event.getCommandType().equalsIgnoreCase("playrecent"))
-            ImageUploadUtil.uploadImageToOnebot(bot,event,
-                    playerService.recent(
-                            setupParameter(event,tokenPO),
-                            1)
-            );
-        else  ImageUploadUtil.uploadImageToOnebot(bot,event,
-                playerService.recent(
-                        setupParameter(event,tokenPO),
-                        0)
-        );
+        String commandType = event.getCommandType().toLowerCase();
+        switch (commandType) {
+            case "rp" ,"pr" ,"playrecent" ->
+                    ImageUploadUtil.uploadImageToOnebot(bot, event,
+                        playerService.recent(setupParameter(event, tokenPO), 1));
+            case "ppr" ->
+                ImageUploadUtil.uploadImageToOnebot(bot, event,
+                        playerService.recentPlus(setupParameter(event, tokenPO), 1));
+
+            case "pre" ->
+                ImageUploadUtil.uploadImageToOnebot(bot, event,
+                        playerService.recentPlus(setupParameter(event, tokenPO), 0));
+            default ->
+                ImageUploadUtil.uploadImageToOnebot(bot, event,
+                        playerService.recent(setupParameter(event, tokenPO), 0));
+
+        }
+
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equals("rp")||event.getCommandType().equals("pr")||event.getCommandType().equals("playrecent"))
-            testOutputTool.saveImageToLocal(playerService.recent(
+        String commandType = event.getCommandType().toLowerCase();
+        switch (commandType) {
+            case "rp" ,"pr" ,"playrecent" ->
+                    testOutputTool.saveImageToLocal(playerService.recent(
                             setupParameter(event,tokenPO),
                             1)
-            );
-        else
-            testOutputTool.saveImageToLocal(playerService.recent(
-                setupParameter(event,tokenPO),
-                0)
-        );
+                    );
+            case "ppr" ->
+                    testOutputTool.saveImageToLocal(playerService.recentPlus(
+                            setupParameter(event,tokenPO),
+                            1)
+                    );
+
+            case "pre" ->
+                    testOutputTool.saveImageToLocal(playerService.recentPlus(
+                            setupParameter(event,tokenPO),
+                            0)
+                    );
+            default ->
+                    testOutputTool.saveImageToLocal(playerService.recent(
+                            setupParameter(event,tokenPO),
+                            0)
+                    );
+
+        }
 
     }
     private RecentParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
@@ -111,8 +140,8 @@ public class PlayRecentCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Play Recently","Pr, Rp, Playrecent, Re, Recent, P, R",
-                        "查询指定用户的最近游玩成绩中的指定的第几个",
+                new CommandHelp("Play Recently","Pr, Rp, Playrecent, Re, Recent, P, R, Ppr, Pre",
+                        "查询指定用户的最近游玩成绩中的指定的第几个,Ppr即Pre会包含PP+数据",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Pr #1")
                         .addExample("/Re Aloic #10")

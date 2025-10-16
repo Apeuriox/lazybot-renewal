@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.service;
 
+import desu.life.RosuFFI;
 import me.aloic.lazybot.parameter.*;
 
 import java.io.IOException;
@@ -9,6 +10,8 @@ public interface PlayerService
 
     byte[] score(ScoreParameter params) throws Exception;
 
+    byte[] scorePlus(ScoreParameter params) throws Exception;
+
     byte[] allScore(ScoreParameter params) throws Exception;
 
     byte[] thumbnailClassicalScore(ThumbnailParameter params);
@@ -17,7 +20,11 @@ public interface PlayerService
 
     byte[] recent(RecentParameter params, int type) throws IOException;
 
+    byte[] recentPlus(RecentParameter params, int type) throws IOException, RosuFFI.FFIException;
+
     byte[] bp(BpParameter params) throws Exception;
+
+    byte[] bpPlus(BpParameter params) throws IOException, RosuFFI.FFIException;
 
     byte[] bplistCardView(BplistParameter params) throws Exception;
 

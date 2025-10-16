@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
+import desu.life.RosuFFI;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
@@ -51,6 +52,25 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] score(ScoreParameter params) throws Exception
     {
+        ScoreVO scoreVO = processScoreScore(params);
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+        );
+    }
+    @Override
+    public byte[] scorePlus(ScoreParameter params) throws Exception
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("QuadraGrid样式仅支持Std模式，因为其他模式没有PP+数据");
+        ScoreVO scoreVO = processScoreScore(params);
+        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
+        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                PlusScoreSVGMapper.mapPlusScoreToQuadraGrid(scorePlus,CommonTool.getDominantHueColorThief(new File(scoreVO.getBeatmap().getBgUrl())))
+        );
+    }
+    private ScoreVO processScoreScore(ScoreParameter params)
+    {
         if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()),
@@ -59,16 +79,21 @@ public class PlayerServiceImpl implements PlayerService
                 params.getModCombination()
         );
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
-                    dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
-                    beatmapUserScoreLazer.getScore(),
-                    false);
+                dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
+                beatmapUserScoreLazer.getScore(),
+                false);
         verifyBeatmapsCache(scoreVO);
         if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
-        return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
-        );
+        return scoreVO;
     }
+
+
+
+
+
+
+
     @Override
     public byte[] allScore(ScoreParameter params) throws Exception
     {
@@ -162,24 +187,51 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public byte[] recent(RecentParameter params, int type) throws IOException
     {
+        ScoreVO scoreVO = processRecentScore(params, type);
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+        );
+    }
+    private ScoreVO processRecentScore(RecentParameter params, int type)
+    {
         if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
         List<ScoreLazerDTO> scoreList = dataExtractor.extractRecentScoreList(params.getPlayerId(), type, params.getIndex(), params.getMode());
         if(params.getIndex()>scoreList.size()) {
-            throw new LazybotRuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " + scoreList.size());
+            throw new LazybotRuntimeException("当前超出能索引的最大距离，当前为: "+params.getIndex());
         }
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
                 scoreList.get(params.getIndex() - 1),
                 false);
         verifyBeatmapsCache(scoreVO);
-        CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        if (params.getChannelId()!=null)
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        return scoreVO;
+    }
+
+    @Override
+    public byte[] recentPlus(RecentParameter params, int type) throws IOException, RosuFFI.FFIException
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("QuadraGrid样式仅支持Std模式，因为其他模式没有PP+数据");
+        ScoreVO scoreVO = processRecentScore(params, type);
+        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
+        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+
         return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+                PlusScoreSVGMapper.mapPlusScoreToQuadraGrid(scorePlus,CommonTool.getDominantHueColorThief(new File(scoreVO.getBeatmap().getBgUrl())))
         );
 
     }
     @Override
     public byte[] bp(BpParameter params) throws IOException
+    {
+        ScoreVO scoreVO = processBpScore(params);
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+        );
+    }
+    private ScoreVO processBpScore(BpParameter params)
     {
         if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
         List<ScoreLazerDTO> scoreDTO = dataExtractor.extractUserBestScoreList(
@@ -193,8 +245,18 @@ public class PlayerServiceImpl implements PlayerService
                 false);
         verifyBeatmapsCache(scoreVO);
         CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        return scoreVO;
+    }
+    @Override
+    public byte[] bpPlus(BpParameter params) throws IOException, RosuFFI.FFIException
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("QuadraGrid样式仅支持Std模式，因为其他模式没有PP+数据");
+        ScoreVO scoreVO = processBpScore(params);
+        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
+        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
         return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreSVGMapper.renderScoreToImage(scoreVO, params.getVersion(), getDominantColorArray(scoreVO))
+                PlusScoreSVGMapper.mapPlusScoreToQuadraGrid(scorePlus,CommonTool.getDominantHueColorThief(new File(scoreVO.getBeatmap().getBgUrl())))
         );
     }
     @Override

@@ -16,4 +16,20 @@ public class PPPlusPerformance
     private Double effectiveMissCount;
     private Double iffc;
 
+    @Override
+    public String toString()
+    {
+        return "PPPlusPerformance{" +
+                "pp=" + pp +
+                ", ppAim=" + ppAim +
+                ", ppJumpAim=" + ppJumpAim +
+                ", ppFlowAim=" + ppFlowAim +
+                ", ppPrecision=" + ppPrecision +
+                ", ppSpeed=" + ppSpeed +
+                ", ppStamina=" + ppStamina +
+                ", ppAcc=" + ppAcc +
+                ", effectiveMissCount=" + effectiveMissCount +
+                ", iffc=" + iffc +
+                '}';
+    }
 }
