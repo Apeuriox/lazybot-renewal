@@ -177,6 +177,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             document.getElementById("color-10").setAttribute("fill",hsl.toString());
             document.getElementById("mapBg").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
             document.getElementById("mapBg-mask").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
+//            document.getElementById("mapBg-mask").setAttribute("opacity", "0.6");
             document.getElementById("playername").setTextContent(targetScore.getUser_name());
             document.getElementById("achievedTime").setTextContent(CommonTool.timestampSpilt(targetScore.getCreate_at())[0]);
             document.getElementById("title").setTextContent(targetScore.getBeatmap().getTitle());
@@ -292,6 +293,8 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                 doc.getElementById("starRating").setAttribute("fill", "#fed867");
                 doc.getElementById("starRatingStar").setAttribute("fill", "#fed867");
                 doc.getElementById("starRatingBG").setAttribute("width", "150");
+                doc.getElementById("starRating").setAttribute("text-anchor", "middle");
+                doc.getElementById("starRating").setAttribute("transform", "translate(270, 568)");
             }
             else
             {

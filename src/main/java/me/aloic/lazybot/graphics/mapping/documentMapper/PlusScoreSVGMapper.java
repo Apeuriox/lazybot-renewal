@@ -162,9 +162,9 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
                     .map(Mod::getAcronym)
                     .collect(Collectors.joining());
 
-        if (modStr ==null)
+        if (modStr == null || modStr.isEmpty())
             document.getElementById("mod").setTextContent("Nomod Play");
-        else  document.getElementById("mod").setTextContent("+" + modStr);
+        else document.getElementById("mod").setTextContent("+" + modStr);
 
         if (score.getIsLazer())
              document.getElementById("client").setTextContent("Lazer");
@@ -208,8 +208,8 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
         document.getElementById("pp-pp").setTextContent(Math.round(score.getPp())+"pp");
         document.getElementById("fc-pp").setTextContent(Math.round(score.getPpDetailsLocal().getIfFc())+"pp");
 
-        String titleAndArtist=score.getBeatmap().getTitle().concat(" - ").concat(score.getBeatmap().getArtist());
-        if (titleAndArtist.length()>32) titleAndArtist=titleAndArtist.substring(0,31)+"...";
+        String titleAndArtist=score.getBeatmap().getArtist().concat(" - ").concat(score.getBeatmap().getTitle());
+        if (titleAndArtist.length()>46) titleAndArtist=titleAndArtist.substring(0,44)+"...";
         document.getElementById("titleAndArtist").setTextContent(titleAndArtist);
         document.getElementById("version").setTextContent(score.getBeatmap().getVersion());
         document.getElementById("mapper").setTextContent(score.getBeatmap().getCreator());

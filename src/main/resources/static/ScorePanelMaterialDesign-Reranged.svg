@@ -558,19 +558,19 @@
         <path id="color-10" class="cls-34" d="M1045,765h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(115 1965) rotate(-90)"/>
       </g>
     </g>
-        <g id="WhiteLayer">
+        <g id="WhiteLayer" opacity="0.2">
       <g class="cls-67">
-        <rect fill="#ffffff" opacity="0.2" x="915" y="75" width="90" height="1920" transform="translate(-75 1995) rotate(-90)"/>
-        <rect fill="#ffffff" opacity="0.2" x="10" y="60" width="460" height="400" rx="30" ry="30" transform="translate(-20 500) rotate(-90)"/>
-        <rect fill="#ffffff" opacity="0.2" x="20" y="530" width="440" height="400" rx="20" ry="20" transform="translate(970 490) rotate(90)"/>
-        <circle fill="#ffffff" opacity="0.2" cx="1720" cy="320" r="160"/>
-        <rect fill="#ffffff" opacity="0.2" x="1615" y="455" width="210" height="320" rx="30" ry="30" transform="translate(2335 -1105) rotate(90)"/>
-        <rect fill="#ffffff" opacity="0.2" x="595" y="685" width="210" height="320" rx="30" ry="30" transform="translate(1545 145) rotate(90)"/>
-        <rect fill="#ffffff" opacity="0.2" x="1445" y="515" width="210" height="660" rx="30" ry="30" transform="translate(2395 -705) rotate(90)"/>
-        <path fill="#ffffff" opacity="0.2" d="M1045,605h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(1805 -275) rotate(90)"/>
-        <rect fill="#ffffff" opacity="0.2" x="1015" y="658.33" width="50" height="320" rx="5" ry="5" transform="translate(1858.33 -221.67) rotate(90)"/>
-        <rect fill="#ffffff" opacity="0.2" x="1015" y="711.67" width="50" height="320" rx="5" ry="5" transform="translate(1911.67 -168.33) rotate(90)"/>
-        <path fill="#ffffff" opacity="0.2" d="M1045,765h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(115 1965) rotate(-90)"/>
+        <rect fill="#ffffff" x="915" y="75" width="90" height="1920" transform="translate(-75 1995) rotate(-90)"/>
+        <rect fill="#ffffff" x="10" y="60" width="460" height="400" rx="30" ry="30" transform="translate(-20 500) rotate(-90)"/>
+        <rect fill="#ffffff" x="20" y="530" width="440" height="400" rx="20" ry="20" transform="translate(970 490) rotate(90)"/>
+        <circle fill="#ffffff" cx="1720" cy="320" r="160"/>
+        <rect fill="#ffffff" x="1615" y="455" width="210" height="320" rx="30" ry="30" transform="translate(2335 -1105) rotate(90)"/>
+        <rect fill="#ffffff" x="595" y="685" width="210" height="320" rx="30" ry="30" transform="translate(1545 145) rotate(90)"/>
+        <rect fill="#ffffff" x="1445" y="515" width="210" height="660" rx="30" ry="30" transform="translate(2395 -705) rotate(90)"/>
+        <path fill="#ffffff" d="M1045,605h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(1805 -275) rotate(90)"/>
+        <rect fill="#ffffff" x="1015" y="658.33" width="50" height="320" rx="5" ry="5" transform="translate(1858.33 -221.67) rotate(90)"/>
+        <rect fill="#ffffff" x="1015" y="711.67" width="50" height="320" rx="5" ry="5" transform="translate(1911.67 -168.33) rotate(90)"/>
+        <path fill="#ffffff" d="M1045,765h15c2.76,0,5,2.24,5,5v310c0,2.76-2.24,5-5,5h-15c-16.56,0-30-13.44-30-30v-260c0-16.56,13.44-30,30-30Z" transform="translate(115 1965) rotate(-90)"/>
       </g>
     </g>
   </g>
