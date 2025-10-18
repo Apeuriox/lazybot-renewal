@@ -7,6 +7,7 @@ import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.RankColor;
+import me.aloic.lazybot.osu.enums.RankedMods;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
@@ -15,10 +16,8 @@ import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -148,7 +147,10 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss");
         document.getElementById("playername").setTextContent(score.getUser_name());
         document.getElementById("time").setTextContent(odt.toLocalDateTime().format(outputFormatter));
+
         if (score.getModJSON() != null && !score.getModJSON().isEmpty()) {
+            if (!score.getIsRankedScore())
+                document.getElementById("InCompatible Notice").setAttribute("opacity","1");
             if (!score.getIsLazer())
                 score.setModJSON(
                         score.getModJSON().stream()

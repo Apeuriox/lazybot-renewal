@@ -370,6 +370,7 @@ public class TransformerUtil
         score.setCreate_at(scoreLazer.getEnded_at());
         score.setMaxCombo(scoreLazer.getMax_combo());
         score.setPp(scoreLazer.getPp());
+        score.setIsRankedScore(scoreLazer.getPp()!=null);
         score.setStatistics(scoreLazer.getStatistics());
         if (scoreLazer.getPassed()) {
             score.setRank(scoreLazer.getRank());
