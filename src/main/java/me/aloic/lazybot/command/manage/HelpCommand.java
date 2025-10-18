@@ -35,7 +35,7 @@ public class HelpCommand implements LazybotSlashCommand
     {
         Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
         try{
-            ImageUploadUtil.uploadImageToOnebotWithText(bot,event,Files.readAllBytes(Paths.get(filePath.toUri())),"帮助页面现已合并至细分指令，输入/指令名 *h即可查询，例/card *h");
+            ImageUploadUtil.uploadImageToOnebotWithText(bot,event,Files.readAllBytes(Paths.get(filePath.toUri())),"[Lazybot] 帮助页面现已合并至细分指令，输入/指令名 *h即可查询，例/card *h，进入官方群以获取更多信息，具体请看下面图片");
         }
         catch (Exception e) {
             throw new LazybotRuntimeException("读取Help页面失败");

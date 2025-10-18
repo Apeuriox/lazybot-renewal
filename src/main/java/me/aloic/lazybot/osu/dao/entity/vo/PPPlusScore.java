@@ -30,7 +30,6 @@ public class PPPlusScore extends ScoreVO
         this.setPpDetailsLocal(scoreVO.getPpDetailsLocal());
         this.setIsLazer(scoreVO.getIsLazer());
         this.setIsPerfectCombo(scoreVO.getIsPerfectCombo());
-        this.setIsRankedScore(scoreVO.getIsRankedScore());
 
 
     }

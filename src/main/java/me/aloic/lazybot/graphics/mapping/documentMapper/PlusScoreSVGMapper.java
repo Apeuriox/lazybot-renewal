@@ -6,6 +6,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.enums.PPPlusIncompatibleMods;
 import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.enums.RankedMods;
 import me.aloic.lazybot.osu.theme.Color.HSL;
@@ -149,7 +150,7 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
         document.getElementById("time").setTextContent(odt.toLocalDateTime().format(outputFormatter));
 
         if (score.getModJSON() != null && !score.getModJSON().isEmpty()) {
-            if (!score.getIsRankedScore())
+            if (!PPPlusIncompatibleMods.checkModsCompatibility(score.getModJSON()))
                 document.getElementById("InCompatible Notice").setAttribute("opacity","1");
             if (!score.getIsLazer())
                 score.setModJSON(

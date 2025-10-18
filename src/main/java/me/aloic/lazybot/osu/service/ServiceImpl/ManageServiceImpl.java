@@ -106,7 +106,7 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
         dataExtractor.extractPerformancePlusPlayerUpdate(playerInfoDTO.getId());
-        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的PP+数据";
+        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的PP+数据，请注意此更新仅更新最近游玩，若想添加指定成绩请使用/add";
     }
 
     @Override

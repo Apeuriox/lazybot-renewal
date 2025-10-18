@@ -30,7 +30,6 @@ public class ScoreVO implements Comparable<ScoreVO>
     private PerformanceVO ppDetailsLocal;
     private Boolean isLazer;
     private Boolean isPerfectCombo;
-    private Boolean isRankedScore;
 
     @Override
     public int compareTo(@NotNull ScoreVO o)
