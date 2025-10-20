@@ -14,16 +14,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@TableName(value = "card_definition", autoResultMap = true)
-public class CardDefinitionPO implements Serializable
+@TableName(value = "badge_user_owned", autoResultMap = true)
+public class BadgeUserOwnedPO implements Serializable
 {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private Integer osu_id;
-    private String name;
-    private String rarity;
-    private String description;
-    private String type;
-    private String image_url;
+
+    private Integer user_ud;
+    private Integer badge_id;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime obtain_time;
+    private Integer source_challenge_id;
+    private String source_text;
 
 }

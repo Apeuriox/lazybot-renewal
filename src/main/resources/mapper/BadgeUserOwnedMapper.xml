@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.BadgeUserOwnedMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.BadgeUserOwnedPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <result column="badge_id" jdbcType="INTEGER" property="badge_id"/>
+        <result column="source_challenge_id" jdbcType="INTEGER" property="source_challenge_id"/>
+        <result column="source_text" jdbcType="VARCHAR" property="source_text"/>
+        <result column="obtain_time" jdbcType="DATE" property="obtain_time"/>
+    </resultMap>
+    <sql id = "Base_Column_List">
+        id, user_id, badge_id, source_challenge_id, source_text, obtain_time
+    </sql>
+
+    <select id="selectUserBadges" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_user_owned
+        WHERE user_id =#{user_id}
+    </select>
+
+    <select id="selectUserSingleBadge" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_user_owned
+        WHERE user_id =#{user_id}
+        AND badge_id = #{badge_id}
+    </select>
+
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE
+        FROM badge_user_owned
+        WHERE user_id = #{user_id}
+        AND badge_id = #{badge_id}
+    </delete>
+
+
+</mapper>

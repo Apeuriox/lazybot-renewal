@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.BadgeUserOwnedMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.BadgeChallengeDefinitionPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="badge_id" jdbcType="INTEGER" property="badge_id"/>
+        <result column="is_active" jdbcType="INTEGER" property="is_active"/>
+        <result column="create_time" jdbcType="DATE" property="create_time"/>
+    </resultMap>
+    <sql id = "Base_Column_List">
+        id, badge_id, name, description, is_active,create_time
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_challenge_definition
+        WHERE id =#{id}
+        AND is_active = 1
+    </select>
+
+    <select id="selectByName" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_user_owned
+        WHERE name =#{name}
+    </select>
+
+
+
+</mapper>
