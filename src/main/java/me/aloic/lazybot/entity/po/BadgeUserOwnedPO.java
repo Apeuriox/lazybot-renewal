@@ -20,7 +20,7 @@ public class BadgeUserOwnedPO implements Serializable
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private Integer user_ud;
+    private Integer user_id;
     private Integer badge_id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

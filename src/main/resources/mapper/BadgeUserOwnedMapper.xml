@@ -27,6 +27,27 @@
         AND badge_id = #{badge_id}
     </select>
 
+    <select id="selectBadgesByUserId" resultType="me.aloic.lazybot.entity.vo.BadgeUserVO">
+        SELECT
+            b.id,
+            b.name,
+            b.description,
+            b.type,
+            b.alternative_name,
+            b.create_time,
+            ub.obtain_time,
+            ub.source_challenge_id
+        FROM
+            badge_definition b
+                INNER JOIN
+            badge_user_owned ub ON b.id = ub.badge_id
+        WHERE
+            ub.user_id = #{user_id}
+        ORDER BY
+            ub.obtain_time DESC
+    </select>
+
+
 
     <delete id="deleteById" parameterType="java.lang.Integer">
         DELETE

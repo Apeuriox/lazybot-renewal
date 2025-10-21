@@ -6,10 +6,12 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="alternative_name" jdbcType="VARCHAR" property="alternative_name"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="create_time" jdbcType="DATE" property="create_time"/>
     </resultMap>
     <sql id = "Base_Column_List">
-        id, name, description, type
+        id, name, description, type, alternative_name, create_time
     </sql>
 
     <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
