@@ -17,5 +17,6 @@ public interface BadgeUserOwnedMapper extends BaseMapper<BadgeUserOwnedPO> {
                                            @Param("badge_id")Integer badge_id);
     void deleteById(@Param("user_id")Integer user_id,
                     @Param("badge_id")Integer badge_id);
+    void deleteByBadgeId(@Param("badge_id")Integer badge_id);
 
 }

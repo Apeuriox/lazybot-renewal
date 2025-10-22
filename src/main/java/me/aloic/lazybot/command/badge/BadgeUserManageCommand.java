@@ -7,9 +7,7 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.parameter.BadgeActionParameter;
 import me.aloic.lazybot.parameter.BadgeUserActionParameter;
-import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.service.BadgeService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.AuthorityVerifier;
@@ -19,9 +17,9 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bma","bmr"})
+@LazybotCommandMapping({"bum"})
 @Component
-public class BadgeManageCommand implements LazybotSlashCommand
+public class BadgeUserManageCommand implements LazybotSlashCommand
 {
     @Resource
     private BadgeService badgeService;
@@ -42,42 +40,30 @@ public class BadgeManageCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-
-        if (event.getCommandType().equalsIgnoreCase("bma"))
-        {
-            BadgeActionParameter parameter = setupParameter(event);
-            CommandResultHandler.sendMessageToGroupOnebot(bot,event, badgeService.addBadge(parameter));
-        }
-
-        if (event.getCommandType().equalsIgnoreCase("bmr"))
-        {
-            TipsParameter parameter = TipsParameter.analyzeParameter(event.getCommandParameters());
+        BadgeUserActionParameter parameter = setupParameter(event);
+        if (parameter.getActionType() == BadgeUserActionParameter.BadgeManageType.ADD)
             CommandResultHandler.sendMessageToGroupOnebot(bot,event,
-                    badgeService.removeBadge(parameter)
+                    badgeService.addBadgeToUser(parameter)
             );
-        }
-
+        if (parameter.getActionType() == BadgeUserActionParameter.BadgeManageType.REMOVE)
+            CommandResultHandler.sendMessageToGroupOnebot(bot,event,
+                    badgeService.removeBadgeFromUser(parameter)
+            );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        if (event.getCommandType().equalsIgnoreCase("bma"))
-        {
-            BadgeActionParameter parameter = setupParameter(event);
-            testOutputTool.writeStringToFile(badgeService.addBadge(parameter));
-        }
-
-        if (event.getCommandType().equalsIgnoreCase("bmr"))
-        {
-            TipsParameter parameter = TipsParameter.analyzeParameter(event.getCommandParameters());
-            testOutputTool.writeStringToFile(badgeService.removeBadge(parameter));
-        }
+        BadgeUserActionParameter parameter = setupParameter(event);
+        if (parameter.getActionType() == BadgeUserActionParameter.BadgeManageType.ADD)
+            testOutputTool.writeStringToFile(badgeService.addBadgeToUser(parameter));
+        else if (parameter.getActionType() == BadgeUserActionParameter.BadgeManageType.REMOVE)
+            testOutputTool.writeStringToFile(badgeService.removeBadgeFromUser(parameter));
     }
 
-    private BadgeActionParameter setupParameter(LazybotSlashCommandEvent event)
+    private BadgeUserActionParameter setupParameter(LazybotSlashCommandEvent event)
     {
-        BadgeActionParameter params = BadgeActionParameter.analyzeParameter(event.getCommandParameters());
+        BadgeUserActionParameter params = BadgeUserActionParameter.analyzeParameter(event.getCommandParameters());
         if (!testEnabled) AuthorityVerifier.isAdmin(event.getMessageEvent().getSender().getUserId());
         else AuthorityVerifier.isAdmin(identity);
         return params;
@@ -87,11 +73,11 @@ public class BadgeManageCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Badge Manage","Bma, Bmr",
-                        "[管理员] 管理Badge",
+                new CommandHelp("Badge User Manage","Bum",
+                        "[管理员] 管理用户拥有的Badge",
                         "Aloic", null, "2025-10-22")
-                        .addExample("/Bma add {name=Test Badge} {desc=这是测试} {alt=Test} {type=0}")
-                        .addExample("/Bmr 6")
+                        .addExample("/Bum add 11223344:2")
+                        .addExample("/Bum rm 11223344:2")
                         .addOption(new CommandParameter("Type","二级命令类型", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Content","添加内容，格式为<playerId>:<badgeId>", CommandParameter.ParameterType.MUST)));
     }

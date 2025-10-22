@@ -73,5 +73,11 @@
         AND badge_id = #{badge_id}
     </delete>
 
+    <delete id="deleteByBadgeId" parameterType="java.lang.Integer">
+        DELETE
+        FROM badge_user_owned
+        WHERE  badge_id = #{badge_id}
+    </delete>
+
 
 </mapper>

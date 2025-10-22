@@ -17,10 +17,9 @@ public class BadgeUserActionParameter extends LazybotCommandParameter
     private List<Integer> badgeIds;
     private List<Integer> targetPlayerIds;
     private BadgeManageType actionType;
-    private Long userIdentity;
     public enum BadgeManageType
     {
-        ADD, REMOVE, ADDTOUSER, REMOVEFROMUSER
+        ADD, REMOVE
     }
 
 
@@ -63,10 +62,8 @@ public class BadgeUserActionParameter extends LazybotCommandParameter
     {
         return switch (input.toLowerCase())
         {
-            case "add" -> BadgeManageType.ADD;
-            case "remove","rm" -> BadgeManageType.REMOVE;
-            case "addto","at" -> BadgeManageType.ADDTOUSER;
-            case "removefrom","rf" -> BadgeManageType.REMOVEFROMUSER;
+            case "add","addto","at" -> BadgeManageType.ADD;
+            case "remove","rm","removefrom","rf"  -> BadgeManageType.REMOVE;
             default -> throw new LazybotRuntimeException("不兼容的二级命令");
         };
     }

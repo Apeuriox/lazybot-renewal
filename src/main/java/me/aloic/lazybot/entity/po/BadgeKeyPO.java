@@ -15,24 +15,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@TableName(value = "badge_definition", autoResultMap = true)
-public class BadgeDefinitionPO implements Serializable
+@TableName(value = "badge_key", autoResultMap = true)
+public class BadgeKeyPO implements Serializable
 {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String name;
-    private String description;
-    private String type;
-    private String alternative_name;
+    private String key;
+    private Integer badge_id;
+    private Integer max_uses;
+    private Integer used_count;
+    private Integer is_active;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime create_time;;
+    private LocalDateTime created_at;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime expired_at;
 
-    public BadgeDefinitionPO(BadgeActionParameter params)
-    {
-        this.name=params.getName();
-        this.alternative_name=params.getAltName();
-        this.description=params.getDesc();
-        this.type=params.getType();
-        this.create_time=LocalDateTime.now();
-    }
+
 }

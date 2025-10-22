@@ -10,12 +10,13 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.mapper.BadgeDefinitionMapper;
 import me.aloic.lazybot.osu.dao.mapper.BadgeUserOwnedMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.parameter.BadgeActionParameter;
 import me.aloic.lazybot.parameter.BadgeUserActionParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.service.BadgeService;
-import me.aloic.lazybot.util.AuthorityVerifier;
 import me.aloic.lazybot.util.BadgeLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,16 +32,25 @@ public class BadgeServiceImpl implements BadgeService
     @Resource
     private TokenMapper tokenMapper;
 
-    public String addBadge(String badge)
+    @Override
+    public String addBadge(BadgeActionParameter params)
     {
-        BadgeDefinitionPO badgeDefinitionPO = new BadgeDefinitionPO();
-        return null;
+        BadgeDefinitionPO badgeDefinitionPO;
+        try{
+            badgeDefinitionPO = new BadgeDefinitionPO(params);
+            badgeDefinitionMapper.insert(badgeDefinitionPO);
+        }
+        catch (Exception e)
+        {
+            log.error("添加徽章时出错: {}", e.getMessage());
+            throw new LazybotRuntimeException("添加失败");
+        }
+        return "[Lazybot] 成功创建徽章: " + params.getName() +" id: " + badgeDefinitionPO.getId();
     }
     //this func did not check whether the user got the target badge
     @Override
     public String addBadgeToUser(BadgeUserActionParameter params)
     {
-        AuthorityVerifier.isAdmin(params.getUserIdentity());
         int successCount = 0;
         for (int i=0;i<params.getBadgeIds().size();i++)
         {
@@ -64,12 +74,14 @@ public class BadgeServiceImpl implements BadgeService
     }
 
     @Override
+    @Transactional
     public String removeBadge(TipsParameter params)
     {
-//        AuthorityVerifier.isAdmin(params.getUserIdentity());
         if (params.getId()==0) throw new LazybotRuntimeException("请输入正确的id");
         try{
+            badgeUserOwnedMapper.deleteByBadgeId(params.getId());
             badgeDefinitionMapper.deleteById(params.getId());
+
         }
         catch (Exception e)
         {
@@ -81,7 +93,6 @@ public class BadgeServiceImpl implements BadgeService
     @Override
     public String removeBadgeFromUser(BadgeUserActionParameter params)
     {
-        AuthorityVerifier.isAdmin(params.getUserIdentity());
         int successCount = 0;
         for (int i=0;i<params.getBadgeIds().size();i++)
         {
@@ -137,9 +148,6 @@ public class BadgeServiceImpl implements BadgeService
     }
 
 
-
-
-
     private String inlineBadgeToString(List<BadgeUserVO> userBadges)
     {
         StringBuilder sb = new StringBuilder("[Lazybot] 该用户拥有的Badge如下:\n");
@@ -168,9 +176,9 @@ public class BadgeServiceImpl implements BadgeService
     private String inlineBadgeDescription(BadgeDefinitionPO badge, BadgeUserOwnedPO userOwned)
     {
         StringBuilder sb = new StringBuilder("[Lazybot] 名称: ");
-                sb.append(badge.getName()).append("\n")
-                .append("描述: ").append(badge.getDescription()).append("\n")
-                .append("代称: ").append(badge.getAlternative_name()).append("\n")
+                sb.append(badge.getName()).append("\n");
+                if (badge.getDescription()!=null) sb.append("描述: ").append(badge.getDescription()).append("\n");
+                sb.append("代称: ").append(badge.getAlternative_name()).append("\n")
                 .append("获得时间: ").append(userOwned.getObtain_time().toLocalDate());
                 if (userOwned.getSource_text()!=null) sb.append("\n").append("来源: ").append(userOwned.getSource_text());
         return sb.toString();
