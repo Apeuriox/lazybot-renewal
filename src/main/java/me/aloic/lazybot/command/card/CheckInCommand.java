@@ -11,7 +11,7 @@ import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +38,7 @@ public class CheckInCommand implements LazybotSlashCommand
         AccessTokenPO token =  proxy.getAccessToken(event);
         if (event.getScorePanelVersion() == 0)
         {
-            ImageUploadUtil.uploadImageToOnebot(bot, event, cardService.checkIn(token));
+            CommandResultHandler.uploadImageToOnebot(bot, event, cardService.checkIn(token));
         }
         else bot.sendGroupMsg(event.getMessageEvent().getGroupId(), cardService.checkIn(token.getPlayer_id()),false);
     }

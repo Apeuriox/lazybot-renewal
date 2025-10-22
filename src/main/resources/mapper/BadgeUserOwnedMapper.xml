@@ -9,7 +9,20 @@
         <result column="source_challenge_id" jdbcType="INTEGER" property="source_challenge_id"/>
         <result column="source_text" jdbcType="VARCHAR" property="source_text"/>
         <result column="obtain_time" jdbcType="DATE" property="obtain_time"/>
+
     </resultMap>
+
+    <resultMap id="UserBadgeVOMap" type="me.aloic.lazybot.entity.vo.BadgeUserVO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="type" column="type"/>
+        <result property="alternative_name" column="alternative_name"/>
+        <result property="create_time" column="create_time"/>
+        <result property="source_challenge_id" column="source_challenge_id"/>
+        <result property="obtain_time" column="obtain_time"/>
+    </resultMap>
+
     <sql id = "Base_Column_List">
         id, user_id, badge_id, source_challenge_id, source_text, obtain_time
     </sql>
@@ -18,6 +31,10 @@
         SELECT <include refid="Base_Column_List"/>
         FROM badge_user_owned
         WHERE user_id =#{user_id}
+        ORDER BY
+        obtain_time
+
+
     </select>
 
     <select id="selectUserSingleBadge" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -27,7 +44,7 @@
         AND badge_id = #{badge_id}
     </select>
 
-    <select id="selectBadgesByUserId" resultType="me.aloic.lazybot.entity.vo.BadgeUserVO">
+    <select id="selectBadgesByUserId" resultMap="UserBadgeVOMap">
         SELECT
             b.id,
             b.name,
@@ -44,7 +61,7 @@
         WHERE
             ub.user_id = #{user_id}
         ORDER BY
-            ub.obtain_time DESC
+            ub.obtain_time
     </select>
 
 

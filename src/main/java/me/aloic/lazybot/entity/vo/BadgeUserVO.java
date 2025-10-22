@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+
 public class BadgeUserVO implements Serializable
 {
     private Integer id;

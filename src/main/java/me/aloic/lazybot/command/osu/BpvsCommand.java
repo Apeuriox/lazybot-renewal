@@ -18,7 +18,7 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BpvsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -50,13 +50,13 @@ public class BpvsCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrException(event.getOption("target"), "请输入对比对象"));
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.bpvs(params));
+        CommandResultHandler.uploadImageToDiscord(event,playerService.bpvs(params));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        ImageUploadUtil.uploadImageToOnebot(bot,event,
+        CommandResultHandler.uploadImageToOnebot(bot,event,
                 playerService.bpvs(
                         setupParameter(event, proxy.getAccessToken(event))
                 )

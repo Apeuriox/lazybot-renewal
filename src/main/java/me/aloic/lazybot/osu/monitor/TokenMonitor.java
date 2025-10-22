@@ -30,8 +30,8 @@ public class TokenMonitor
 
     @Value("${lazybot.plus.client_id}")
     private Integer lazybotClientId;
-    @Value("${lazybot.plus.client_secret}")
-    private String lazybotClientSecret;
+    @Value("${lazybot.plus.client_password}")
+    private String lazybotClientPassword;
 
     private static final String TOKEN_URL = "https://osu.ppy.sh/oauth/token";
     private static String lazybotToken;
@@ -65,7 +65,7 @@ public class TokenMonitor
     @Scheduled(cron = "0 0 0/12 * * ? ")
     public void refreshPPPlusClientToken()
     {
-        String url =  URLBuildUtil.buildURLOfLazybotToken(lazybotClientId,lazybotClientSecret);
+        String url =  URLBuildUtil.buildURLOfLazybotToken(lazybotClientId,lazybotClientPassword);
         try {
             LazybotWebResult<String> lazybotTokenJSON = JSON.parseObject(
                     HttpUtil.createPost(url).execute().body(),

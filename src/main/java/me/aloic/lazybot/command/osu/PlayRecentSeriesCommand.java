@@ -18,7 +18,7 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -53,9 +53,9 @@ public class PlayRecentSeriesCommand implements LazybotSlashCommand
                 String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.validateParams();
         if (event.getFullCommandName().equals("prs")||event.getFullCommandName().equals("rps")||event.getFullCommandName().equals("ps"))
-            ImageUploadUtil.uploadImageToDiscord(event,playerService.playRecentSeries(params,1, style));
+            CommandResultHandler.uploadImageToDiscord(event,playerService.playRecentSeries(params,1, style));
         else
-            ImageUploadUtil.uploadImageToDiscord(event,playerService.playRecentSeries(params,0, style));
+            CommandResultHandler.uploadImageToDiscord(event,playerService.playRecentSeries(params,0, style));
     }
 
     @Override
@@ -65,12 +65,12 @@ public class PlayRecentSeriesCommand implements LazybotSlashCommand
         if (event.getCommandType().equalsIgnoreCase("rps")||
                 event.getCommandType().equalsIgnoreCase("prs")||
                 event.getCommandType().equalsIgnoreCase("ps"))
-            ImageUploadUtil.uploadImageToOnebot(bot,event,
+            CommandResultHandler.uploadImageToOnebot(bot,event,
                     playerService.playRecentSeries(
                             GeneralParameter.setupParameter(event,tokenPO),
                             1, event.getScorePanelVersion())
             );
-        else  ImageUploadUtil.uploadImageToOnebot(bot,event,
+        else  CommandResultHandler.uploadImageToOnebot(bot,event,
                 playerService.playRecentSeries(
                         GeneralParameter.setupParameter(event,tokenPO),
                         0, event.getScorePanelVersion())

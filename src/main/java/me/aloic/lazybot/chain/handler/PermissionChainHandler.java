@@ -63,7 +63,7 @@ public class PermissionChainHandler implements CommandHandlerInterface {
         }
         catch (Exception e)
         {
-            throw new LazybotRuntimeException("权限检查失败，已跳过执行");
+            throw new LazybotRuntimeException("权限检查失败，已跳过执行，请检查数据库连接");
         }
 
     }

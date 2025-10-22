@@ -19,7 +19,7 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.RecentParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -56,17 +56,17 @@ public class PlayRecentCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
         params.validateParams();
         if (event.getFullCommandName().equals("rp")||event.getFullCommandName().equals("pr")||event.getFullCommandName().equals("playrecent")||event.getFullCommandName().equals("p"))
-            ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,1));
+            CommandResultHandler.uploadImageToDiscord(event,playerService.recent(params,1));
         else if(event.getFullCommandName().equals("ppr"))
         {
-            ImageUploadUtil.uploadImageToDiscord(event,playerService.recentPlus(params,1));
+            CommandResultHandler.uploadImageToDiscord(event,playerService.recentPlus(params,1));
         }
         else if (event.getFullCommandName().equals("pre"))
         {
-            ImageUploadUtil.uploadImageToDiscord(event,playerService.recentPlus(params,0));
+            CommandResultHandler.uploadImageToDiscord(event,playerService.recentPlus(params,0));
         }
         else
-            ImageUploadUtil.uploadImageToDiscord(event,playerService.recent(params,0));
+            CommandResultHandler.uploadImageToDiscord(event,playerService.recent(params,0));
     }
 
     @Override
@@ -76,17 +76,17 @@ public class PlayRecentCommand implements LazybotSlashCommand
         String commandType = event.getCommandType().toLowerCase();
         switch (commandType) {
             case "rp" ,"pr" ,"playrecent" ->
-                    ImageUploadUtil.uploadImageToOnebot(bot, event,
+                    CommandResultHandler.uploadImageToOnebot(bot, event,
                         playerService.recent(setupParameter(event, tokenPO), 1));
             case "ppr" ->
-                ImageUploadUtil.uploadImageToOnebot(bot, event,
+                CommandResultHandler.uploadImageToOnebot(bot, event,
                         playerService.recentPlus(setupParameter(event, tokenPO), 1));
 
             case "pre" ->
-                ImageUploadUtil.uploadImageToOnebot(bot, event,
+                CommandResultHandler.uploadImageToOnebot(bot, event,
                         playerService.recentPlus(setupParameter(event, tokenPO), 0));
             default ->
-                ImageUploadUtil.uploadImageToOnebot(bot, event,
+                CommandResultHandler.uploadImageToOnebot(bot, event,
                         playerService.recent(setupParameter(event, tokenPO), 0));
 
         }

@@ -1,5 +1,6 @@
 package me.aloic.lazybot.service;
 
+import me.aloic.lazybot.entity.message.LazybotMessageWithImage;
 import me.aloic.lazybot.parameter.BadgeUserActionParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 
@@ -12,4 +13,6 @@ public interface BadgeService
     String removeBadgeFromUser(BadgeUserActionParameter param);
 
     String showUserAllBadgeText(Integer playerId);
+
+    LazybotMessageWithImage showUserOwnedSingleBadge(Integer playerId, Integer index);
 }

@@ -16,6 +16,12 @@ public class BadgeUserActionParameter extends LazybotCommandParameter
 {
     private List<Integer> badgeIds;
     private List<Integer> targetPlayerIds;
+    private BadgeManageType actionType;
+    private Long userIdentity;
+    public enum BadgeManageType
+    {
+        ADD, REMOVE, ADDTOUSER, REMOVEFROMUSER
+    }
 
 
     @Override
@@ -32,15 +38,17 @@ public class BadgeUserActionParameter extends LazybotCommandParameter
     public static BadgeUserActionParameter analyzeParameter(List<String> params)
     {
         BadgeUserActionParameter parameter=new BadgeUserActionParameter();
+        if (params==null || params.isEmpty()) throw new LazybotRuntimeException("参数输入不足");
+        parameter.setActionType(fromString(params.getFirst()));
+
         List<Integer> badgeIds = new ArrayList<>();
         List<Integer> targetPlayerIds = new ArrayList<>();
-        if (params.isEmpty()) throw new LazybotRuntimeException("参数不合法");
-        String totalParams = String.join(" ", params);
+        String totalParams = String.join(" ", params.subList(1, params.size()));
         String[] singlePart = totalParams.split("\\|");
         for (String part : singlePart)
         {
             String[] partParams = part.split(":");
-            if (partParams.length != 2) throw new LazybotRuntimeException("参数不合法");
+            if (partParams.length != 2) throw new LazybotRuntimeException("参数输入不合法: " + part);
             if (CommonTool.isPositiveInteger(partParams[0]) && CommonTool.isPositiveInteger(partParams[1]))
             {
                 targetPlayerIds.add(Integer.parseInt(partParams[0]));
@@ -50,5 +58,16 @@ public class BadgeUserActionParameter extends LazybotCommandParameter
         parameter.setBadgeIds(badgeIds);
         parameter.setTargetPlayerIds(targetPlayerIds);
         return parameter;
+    }
+    private static BadgeManageType fromString(String input)
+    {
+        return switch (input.toLowerCase())
+        {
+            case "add" -> BadgeManageType.ADD;
+            case "remove","rm" -> BadgeManageType.REMOVE;
+            case "addto","at" -> BadgeManageType.ADDTOUSER;
+            case "removefrom","rf" -> BadgeManageType.REMOVEFROMUSER;
+            default -> throw new LazybotRuntimeException("不兼容的二级命令");
+        };
     }
 }

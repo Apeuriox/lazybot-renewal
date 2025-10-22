@@ -17,7 +17,7 @@ import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 import org.springframework.stereotype.Component;
@@ -62,7 +62,7 @@ public class SongGuessCommand implements LazybotSlashCommand
         {
             LazybotSongGuessData songGuessData = funService.songGuessImage(GeneralParameter.setupParameter(event,tokenPO));
             existingGameMap.put(identity, songGuessData.getMeta());
-            ImageUploadUtil.uploadImageToOnebotWithText(bot,event,
+            CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,
                     songGuessData.getImg(),
                     "[Lazybot] 取自"+tokenPO.getPlayer_name()+"的BP前200\n缩放等级: " + songGuessData.getResizeLevel());
         }
@@ -74,7 +74,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                 existingGameMap.remove(identity);
                 LazybotSongGuessData songGuessData = funService.songGuessImage(GeneralParameter.setupParameter(event,tokenPO));
                 existingGameMap.put(identity, songGuessData.getMeta());
-                ImageUploadUtil.uploadImageToOnebotWithText(bot,event,
+                CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,
                         songGuessData.getImg(),
                         "[Lazybot] 取自"+tokenPO.getPlayer_name()+"的BP前200\n缩放等级: " + songGuessData.getResizeLevel());
             }
@@ -90,7 +90,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                     existingGameMap.remove(identity);
                    try{
                        BufferedImage fullsize = ImageIO.read(new File(AssertDownloadUtil.svgAbsolutePath(original.getSid())));
-                       ImageUploadUtil.uploadImageToOnebotWithText(bot,event,toByteArray(fullsize,"jpg"),
+                       CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,toByteArray(fullsize,"jpg"),
                                "[Lazybot] 回答正确，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
                    }
                    catch (Exception e){
@@ -110,7 +110,7 @@ public class SongGuessCommand implements LazybotSlashCommand
                 existingGameMap.remove(identity);
                 try{
                     BufferedImage fullsize = ImageIO.read(new File(AssertDownloadUtil.svgAbsolutePath(original.getSid())));
-                    ImageUploadUtil.uploadImageToOnebotWithText(bot,event,toByteArray(fullsize,"jpg"),
+                    CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,toByteArray(fullsize,"jpg"),
                             "[Lazybot] 已提前结束，答案为: " + original.getTitle() +"\nBID: " + original.getBid());
                 }
                 catch (Exception e){

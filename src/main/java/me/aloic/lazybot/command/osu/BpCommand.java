@@ -18,7 +18,7 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BpParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -53,7 +53,7 @@ public class BpCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1));
         params.validateParams();
         params.setPlayerId(tokenPO.getPlayer_id());
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.bp(params));
+        CommandResultHandler.uploadImageToDiscord(event,playerService.bp(params));
     }
 
     @Override
@@ -61,10 +61,10 @@ public class BpCommand implements LazybotSlashCommand
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
         if (event.getCommandType().equalsIgnoreCase("pbp") || event.getCommandType().equalsIgnoreCase("pb")) {
-            ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bpPlus(setupParameter(event,tokenPO)));
+            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bpPlus(setupParameter(event,tokenPO)));
         }
         else
-            ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bp(setupParameter(event,tokenPO)));
+            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bp(setupParameter(event,tokenPO)));
     }
 
     @Override

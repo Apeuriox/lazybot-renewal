@@ -1,0 +1,62 @@
+package me.aloic.lazybot.parameter;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+public class BadgeParameter extends LazybotCommandParameter
+{
+    private Integer index;
+    private BadgeActionType type;
+
+    public enum BadgeActionType {
+        VIEW, LIST
+    }
+
+    @Override
+    public void validateParams()
+    {
+        if (this.index!=null && this.index<1) throw new LazybotRuntimeException("{id}输入不合法");
+    }
+    public BadgeParameter(String playerName, String type) {
+        this.setPlayerName(playerName);
+        this.type=fromString(type);
+    }
+    public static BadgeParameter analyzeParameter(List<String> params)
+    {
+        BadgeParameter parameter=new BadgeParameter();
+        if (!params.isEmpty()) {
+            parameter.setType(fromString(params.getFirst()));
+            if (params.size() >= 2) {
+                try{
+                    parameter.index= Integer.parseInt(params.get(1));
+                }
+                catch (Exception e)
+                {
+                    throw new LazybotRuntimeException("{id}输入不合法");
+                }
+
+            }
+        }
+        else throw new LazybotRuntimeException("使用方法: /badge list或/badge view <id>");
+        return parameter;
+    }
+    public static void setupDefaultValue(BadgeParameter parameter, AccessTokenPO accessTokenPO)
+    {
+        parameter.setPlayerName(accessTokenPO.getPlayer_name());
+        parameter.setPlayerId(accessTokenPO.getPlayer_id());
+    }
+    private static BadgeActionType fromString(String input)
+    {
+        if (input.equalsIgnoreCase("list")) return BadgeActionType.LIST;
+        else if (input.equalsIgnoreCase("view")) return BadgeActionType.VIEW;
+        else throw new LazybotRuntimeException("使用方法: /badge list或/badge view <id>");
+    }
+}

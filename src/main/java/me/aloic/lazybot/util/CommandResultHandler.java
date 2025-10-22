@@ -2,27 +2,33 @@ package me.aloic.lazybot.util;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
+import me.aloic.lazybot.entity.message.LazybotMessageWithImage;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class ImageUploadUtil
+public class CommandResultHandler
 {
-    private static final Logger logger = LoggerFactory.getLogger(ImageUploadUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommandResultHandler.class);
     private static final int MAX_CACHED_FILES = 3;
     private static final Queue<File> fileQueue = new LinkedList<>();
+
+
+    public static void sendMessageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, String message)
+    {
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
+                MsgUtils.builder().text(message).build(),
+                false);
+    }
+
 
 
     public static void uploadImageToDiscord(SlashCommandInteractionEvent event, byte[] imageByteArray)
@@ -47,10 +53,24 @@ public class ImageUploadUtil
                 logger.error(e.getMessage());
         }
     }
-    public static void uploadImageToOnebotWithText(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray, String text) {
+    public static void sendMessageWithImageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray, String text) {
         try  {
             String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(text).img("base64://"+base64Image).build(), false);
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+    public static void sendMessageWithImageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, LazybotMessageWithImage result) {
+        if (result.getImage()==null)
+        {
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(result.getMessage()).build(), false);
+            return;
+        }
+        try  {
+            String base64Image = Base64.getEncoder().encodeToString(result.getImage());
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(result.getMessage()).img("base64://"+base64Image).build(), false);
         }
         catch (Exception e) {
             logger.error(e.getMessage());
