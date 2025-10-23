@@ -27,7 +27,7 @@ import java.util.Optional;
 // used command: /AllScore
 public class MapScoreSVGMapper extends LazybotSVGMapper
 {
-    public static Document mapMapScoreListToAllScorePanel(List<MapScore> scorelist, BeatmapPerformance beatmap)
+    public static Document mapMapScoreListToAllScorePanel(List<MapScore> scorelist, BeatmapPerformance beatmap, boolean ignoreBanner)
     {
         try
         {
@@ -156,7 +156,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             doc.getElementById("star-aim-label").setAttribute("fill", darkerStar.toString());
 
 
-            return setupAllScoreListElement(scorelist, doc, svgRoot, beatmap.getMode());
+            return setupAllScoreListElement(scorelist, doc, svgRoot, beatmap.getMode(), ignoreBanner);
         }
         catch (Exception e)
         {
@@ -164,7 +164,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
-    private static Document setupAllScoreListElement(List<MapScore> scorelist, Document doc, Element svgRoot, OsuMode mode)
+    private static Document setupAllScoreListElement(List<MapScore> scorelist, Document doc, Element svgRoot, OsuMode mode, boolean ignoreBanner)
     {
         int listIndex=0;
         for (MapScore score : scorelist) {
@@ -285,16 +285,19 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             divisor.setAttribute("height", "60");
             divisor.setAttribute("fill", "#262626");
 
-            Node playerBGImageNode = doc.createElementNS(namespaceSVG, "image");
-            Element playerBGImage = (Element) playerBGImageNode;
-            playerBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBannerUrl());
-            playerBGImage.setAttribute("x", "74");
-            playerBGImage.setAttribute("y", "398");
-            playerBGImage.setAttribute("width", "570");
-            playerBGImage.setAttribute("height", "60");
-            playerBGImage.setAttribute("opacity", "0.3");
-            playerBGImage.setAttribute("clip-path", "url(#bannerClip)");
-            playerBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+            if(!ignoreBanner) {
+                Node playerBGImageNode = doc.createElementNS(namespaceSVG, "image");
+                Element playerBGImage = (Element) playerBGImageNode;
+                playerBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBannerUrl());
+                playerBGImage.setAttribute("x", "74");
+                playerBGImage.setAttribute("y", "398");
+                playerBGImage.setAttribute("width", "570");
+                playerBGImage.setAttribute("height", "60");
+                playerBGImage.setAttribute("opacity", "0.3");
+                playerBGImage.setAttribute("clip-path", "url(#bannerClip)");
+                playerBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+                sectionFull.appendChild(playerBGImage);
+            }
 
             Node totalBGMaskNode = doc.createElementNS(namespaceSVG, "rect");
             Element totalBGMask = (Element) totalBGMaskNode;
@@ -420,7 +423,6 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             sectionFull.appendChild(rankGroup);
             sectionFull.appendChild(bgDim);
             sectionFull.appendChild(divisor);
-            sectionFull.appendChild(playerBGImage);
             sectionFull.appendChild(totalBGMask);
             sectionFull.appendChild(gradGray);
             sectionFull.appendChild(playerName);
