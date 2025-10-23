@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.KeyRedeemedLogMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.BadgeKeyRedeemedLogPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="key_id" jdbcType="VARCHAR" property="key_id"/>
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <result column="badge_id" jdbcType="INTEGER" property="badge_id"/>
+        <result column="redeemed_at" jdbcType="DATE" property="redeemed_at"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, key_id, user_id, badge_id, redeemed_at
+    </sql>
+
+    <select id="selectByKeyId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_key_redeem_log
+        WHERE key_id =#{key_id}
+    </select>
+
+    <select id="selectByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_key_redeem_log
+        WHERE user_id =#{user_id}
+    </select>
+
+    <select id="selectByBadgeId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_key_redeem_log
+        WHERE badge_id =#{badge_id}
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT
+        INTO badge_key_redeem_log
+            (id, key_id, user_id, badge_id, redeemed_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.key_id}, #{item.user_id}, #{item.badge_id}, #{item.redeemed_at})
+        </foreach>
+    </insert>
+
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE
+        FROM badge_key_redeem_log
+        WHERE id =#{id}
+    </delete>
+
+
+</mapper>

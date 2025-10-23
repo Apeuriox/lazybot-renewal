@@ -37,4 +37,11 @@ public class AccessTokenPO implements Serializable {
         this.access_token = access_token;
         this.default_mode="osu";
     }
+
+    public String toSimpleString()
+    {
+        return "Id="+id
+                +"\nPlayer Name=:" +player_name
+                +" Player Id:"+player_id;
+    }
 }

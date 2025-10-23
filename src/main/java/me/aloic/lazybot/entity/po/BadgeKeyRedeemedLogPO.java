@@ -25,6 +25,14 @@ public class BadgeKeyRedeemedLogPO implements Serializable
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime redeemed_at;
 
+    public BadgeKeyRedeemedLogPO(Integer key_id, Integer badge_id, Integer user_id)
+    {
+        this.key_id = key_id;
+        this.badge_id = badge_id;
+        this.user_id = user_id;
+        this.redeemed_at = LocalDateTime.now();
+    }
+
 
 
 }

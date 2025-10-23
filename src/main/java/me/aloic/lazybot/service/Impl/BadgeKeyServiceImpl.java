@@ -5,12 +5,10 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.entity.po.BadgeDefinitionPO;
 import me.aloic.lazybot.entity.po.BadgeKeyPO;
+import me.aloic.lazybot.entity.po.BadgeKeyRedeemedLogPO;
 import me.aloic.lazybot.entity.po.BadgeUserOwnedPO;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.mapper.BadgeDefinitionMapper;
-import me.aloic.lazybot.osu.dao.mapper.BadgeKeyMapper;
-import me.aloic.lazybot.osu.dao.mapper.BadgeUserOwnedMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.*;
 import me.aloic.lazybot.parameter.BadgeKeyParameter;
 import me.aloic.lazybot.service.BadgeKeyService;
 import me.aloic.lazybot.util.BadgeKeyGenerator;
@@ -30,7 +28,7 @@ public class BadgeKeyServiceImpl implements BadgeKeyService
     @Resource
     private BadgeDefinitionMapper badgeDefinitionMapper;
     @Resource
-    private TokenMapper tokenMapper;
+    private KeyRedeemedLogMapper keyRedeemedLogMapper;
 
     @Resource
     private BadgeKeyMapper badgeKeyMapper;
@@ -111,8 +109,11 @@ public class BadgeKeyServiceImpl implements BadgeKeyService
         key.setUsed_count(key.getUsed_count() + 1);
         badgeKeyMapper.updateById(key);
 
+        BadgeKeyRedeemedLogPO log = new BadgeKeyRedeemedLogPO(key.getId(), key.getBadge_id(), lazybotId);
+        keyRedeemedLogMapper.insert(log);
 
-        return "[Lazybot] 成功兑换Badge "+badge.getName();
+
+        return "[Lazybot] 成功兑换Badge: "+badge.getName();
     }
 
     private String formatKeyString(List<BadgeKeyPO> keys)

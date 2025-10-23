@@ -47,7 +47,7 @@ public class BadgeServiceImpl implements BadgeService
             log.error("添加徽章时出错: {}", e.getMessage());
             throw new LazybotRuntimeException("添加失败");
         }
-        return "[Lazybot] 成功创建徽章: " + params.getName() +" id: " + badgeDefinitionPO.getId();
+        return "[Lazybot] 成功创建徽章: " + params.getName() +", ID为: " + badgeDefinitionPO.getId();
     }
     @Override
     public String addBadgeImageRemote(BadgeImageParameter params)
