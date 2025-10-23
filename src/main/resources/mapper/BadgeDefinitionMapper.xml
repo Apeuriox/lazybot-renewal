@@ -9,6 +9,7 @@
         <result column="alternative_name" jdbcType="VARCHAR" property="alternative_name"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
         <result column="create_time" jdbcType="DATE" property="create_time"/>
+        <result column="remote_url" jdbcType="VARCHAR" property="remote_url"/>
     </resultMap>
     <sql id = "Base_Column_List">
         id, name, description, type, alternative_name, create_time
@@ -19,6 +20,16 @@
         FROM badge_definition
         WHERE id =#{id}
     </select>
+
+
+    <update id="updateImage" parameterType="me.aloic.lazybot.entity.po.BadgeDefinitionPO">
+        update badge_definition
+        <set>
+            remote_url=#{remote_url}
+        </set>
+        where id =#{id}
+    </update>
+
 
     <delete id="deleteById" parameterType="java.lang.Integer">
         DELETE

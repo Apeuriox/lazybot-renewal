@@ -76,8 +76,8 @@ public class BadgeUserManageCommand implements LazybotSlashCommand
                 new CommandHelp("Badge User Manage","Bum",
                         "[管理员] 管理用户拥有的Badge",
                         "Aloic", null, "2025-10-22")
-                        .addExample("/Bum add 11223344:2")
-                        .addExample("/Bum rm 11223344:2")
+                        .addExample("/Bum add 11:2")
+                        .addExample("/Bum rm 11:2")
                         .addOption(new CommandParameter("Type","二级命令类型", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Content","添加内容，格式为<playerId>:<badgeId>", CommandParameter.ParameterType.MUST)));
     }

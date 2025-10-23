@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.BadgeKeyMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.BadgeKeyPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="cdkey" jdbcType="VARCHAR" property="cdkey"/>
+        <result column="badge_id" jdbcType="INTEGER" property="badge_id"/>
+        <result column="max_uses" jdbcType="INTEGER" property="max_uses"/>
+        <result column="used_count" jdbcType="INTEGER" property="used_count"/>
+        <result column="is_active" jdbcType="INTEGER" property="is_active"/>
+        <result column="created_at" jdbcType="DATE" property="created_at"/>
+        <result column="expired_at" jdbcType="DATE" property="expired_at"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, cdkey, badge_id, max_uses, used_count, is_active, created_at, expired_at
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_key
+        WHERE id =#{id}
+    </select>
+
+    <select id="selectByKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_key
+        WHERE cdkey =#{key}
+    </select>
+
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT
+        INTO badge_key (cdkey, badge_id, max_uses, used_count, is_active, created_at, expired_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.cdkey}, #{item.badge_id}, #{item.max_uses}, #{item.used_count}, #{item.is_active}, #{item.created_at}, #{item.expired_at})
+        </foreach>
+    </insert>
+
+
+    <update id="updateKeyUses" parameterType="me.aloic.lazybot.entity.po.BadgeKeyPO">
+        update badge_key
+        <set>
+            used_count=#{used_count},
+            is_active  =#{is_active}
+        </set>
+        where id =#{id}
+    </update>
+
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE
+        FROM badge_key
+        WHERE id =#{id}
+    </delete>
+
+
+</mapper>

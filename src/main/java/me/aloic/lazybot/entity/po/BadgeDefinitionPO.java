@@ -24,6 +24,7 @@ public class BadgeDefinitionPO implements Serializable
     private String description;
     private String type;
     private String alternative_name;
+    private String remote_url;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime create_time;;
 

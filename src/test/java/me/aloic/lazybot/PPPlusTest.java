@@ -2,15 +2,6 @@ package me.aloic.lazybot;
 
 import desu.life.RosuFFI;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
-import org.junit.jupiter.api.Test;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class PPPlusTest
 {

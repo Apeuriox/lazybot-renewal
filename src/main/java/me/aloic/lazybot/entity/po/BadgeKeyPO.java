@@ -11,6 +11,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +22,7 @@ public class BadgeKeyPO implements Serializable
 {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String key;
+    private String cdkey;
     private Integer badge_id;
     private Integer max_uses;
     private Integer used_count;
@@ -29,6 +31,17 @@ public class BadgeKeyPO implements Serializable
     private LocalDateTime created_at;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime expired_at;
+
+    public BadgeKeyPO(String key, Integer badge_id, Integer max_uses, Integer expireTime)
+    {
+        this.cdkey=key;
+        this.badge_id=badge_id;
+        this.max_uses=max_uses;
+        this.is_active=1;
+        this.used_count=0;
+        this.created_at=LocalDateTime.now();
+        this.expired_at= LocalDateTime.now().plusSeconds(expireTime);
+    }
 
 
 }

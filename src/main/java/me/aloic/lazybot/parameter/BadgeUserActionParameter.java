@@ -15,7 +15,7 @@ import java.util.List;
 public class BadgeUserActionParameter extends LazybotCommandParameter
 {
     private List<Integer> badgeIds;
-    private List<Integer> targetPlayerIds;
+    private List<Integer> targetLazybotIds;
     private BadgeManageType actionType;
     public enum BadgeManageType
     {
@@ -27,10 +27,10 @@ public class BadgeUserActionParameter extends LazybotCommandParameter
     public void validateParams()
     {
         if (badgeIds==null||badgeIds.isEmpty()) throw new LazybotRuntimeException("参数不能为空");
-        if (badgeIds.size()!=targetPlayerIds.size()) throw new LazybotRuntimeException("参数不对称");
+        if (badgeIds.size()!= targetLazybotIds.size()) throw new LazybotRuntimeException("参数不对称");
     }
-    public BadgeUserActionParameter(List<Integer> targetPlayerId, List<Integer> badgeId) {
-        this.targetPlayerIds=targetPlayerId;
+    public BadgeUserActionParameter(List<Integer> targetLazybotIds, List<Integer> badgeId) {
+        this.targetLazybotIds =targetLazybotIds;
         this.badgeIds=badgeId;
     }
 
@@ -41,7 +41,7 @@ public class BadgeUserActionParameter extends LazybotCommandParameter
         parameter.setActionType(fromString(params.getFirst()));
 
         List<Integer> badgeIds = new ArrayList<>();
-        List<Integer> targetPlayerIds = new ArrayList<>();
+        List<Integer> targetLazybotIds = new ArrayList<>();
         String totalParams = String.join(" ", params.subList(1, params.size()));
         String[] singlePart = totalParams.split("\\|");
         for (String part : singlePart)
@@ -50,12 +50,12 @@ public class BadgeUserActionParameter extends LazybotCommandParameter
             if (partParams.length != 2) throw new LazybotRuntimeException("参数输入不合法: " + part);
             if (CommonTool.isPositiveInteger(partParams[0]) && CommonTool.isPositiveInteger(partParams[1]))
             {
-                targetPlayerIds.add(Integer.parseInt(partParams[0]));
+                targetLazybotIds.add(Integer.parseInt(partParams[0]));
                 badgeIds.add(Integer.parseInt(partParams[1]));
             }
         }
         parameter.setBadgeIds(badgeIds);
-        parameter.setTargetPlayerIds(targetPlayerIds);
+        parameter.setTargetLazybotIds(targetLazybotIds);
         return parameter;
     }
     private static BadgeManageType fromString(String input)

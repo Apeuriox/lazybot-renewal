@@ -9,5 +9,6 @@ import org.apache.ibatis.annotations.Param;
 public interface BadgeDefinitionMapper extends BaseMapper<BadgeDefinitionPO> {
     BadgeDefinitionPO selectById(@Param("id")Integer id);
     void deleteById(@Param("id")Integer id);
+    void updateImage(BadgeDefinitionPO badge);
 
 }

@@ -7,9 +7,7 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.parameter.BadgeActionParameter;
-import me.aloic.lazybot.parameter.BadgeUserActionParameter;
-import me.aloic.lazybot.parameter.TipsParameter;
+import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.service.BadgeService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.AuthorityVerifier;
@@ -19,7 +17,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bma","bmr"})
+@LazybotCommandMapping({"bma","bmr", "bm"})
 @Component
 public class BadgeManageCommand implements LazybotSlashCommand
 {
@@ -56,6 +54,13 @@ public class BadgeManageCommand implements LazybotSlashCommand
                     badgeService.removeBadge(parameter)
             );
         }
+        if (event.getCommandType().equalsIgnoreCase("bm"))
+        {
+            BadgeImageParameter badgeParameter = BadgeImageParameter.analyzeParameter(event.getCommandParameters());
+            CommandResultHandler.sendMessageToGroupOnebot(bot,event,
+                    badgeService.addBadgeImageRemote(badgeParameter)
+            );
+        }
 
     }
 
@@ -73,6 +78,12 @@ public class BadgeManageCommand implements LazybotSlashCommand
             TipsParameter parameter = TipsParameter.analyzeParameter(event.getCommandParameters());
             testOutputTool.writeStringToFile(badgeService.removeBadge(parameter));
         }
+        if (event.getCommandType().equalsIgnoreCase("bm"))
+        {
+            BadgeImageParameter badgeParameter = BadgeImageParameter.analyzeParameter(event.getCommandParameters());
+            testOutputTool.writeStringToFile(badgeService.addBadgeImageRemote(badgeParameter)
+            );
+        }
     }
 
     private BadgeActionParameter setupParameter(LazybotSlashCommandEvent event)
@@ -87,13 +98,13 @@ public class BadgeManageCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Badge Manage","Bma, Bmr",
+                new CommandHelp("Badge Manage","Bma, Bmr, Bm",
                         "[管理员] 管理Badge",
                         "Aloic", null, "2025-10-22")
-                        .addExample("/Bma add {name=Test Badge} {desc=这是测试} {alt=Test} {type=0}")
+                        .addExample("/Bma {name=Test Badge} {desc=这是测试} {alt=Test} {type=0}")
                         .addExample("/Bmr 6")
-                        .addOption(new CommandParameter("Type","二级命令类型", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Content","添加内容，格式为<playerId>:<badgeId>", CommandParameter.ParameterType.MUST)));
+                        .addExample("/Bm 2 https://this.is.link")
+                        .addOption(new CommandParameter("Content","命令内容", CommandParameter.ParameterType.MUST)));
     }
 
 }

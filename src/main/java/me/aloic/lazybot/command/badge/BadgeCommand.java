@@ -41,11 +41,11 @@ public class BadgeCommand implements LazybotSlashCommand
         BadgeParameter badgeParameter=BadgeParameter.analyzeParameter(event.getCommandParameters());
         if (badgeParameter.getType()== BadgeParameter.BadgeActionType.LIST)
             CommandResultHandler.sendMessageToGroupOnebot(bot,event,
-                    badgeService.showUserAllBadgeText(proxy.getAccessToken(event).getPlayer_id())
+                    badgeService.showUserAllBadgeText(proxy.getAccessToken(event).getId())
             );
         else if (badgeParameter.getType()== BadgeParameter.BadgeActionType.VIEW)
             CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,
-                    badgeService.showUserOwnedSingleBadge(proxy.getAccessToken(event).getPlayer_id(),badgeParameter.getIndex())
+                    badgeService.showUserOwnedSingleBadge(proxy.getAccessToken(event).getId(),badgeParameter.getIndex())
             );
     }
 
@@ -54,10 +54,10 @@ public class BadgeCommand implements LazybotSlashCommand
     {
         BadgeParameter badgeParameter=BadgeParameter.analyzeParameter(event.getCommandParameters());
         if (badgeParameter.getType()== BadgeParameter.BadgeActionType.LIST)
-            testOutputTool.writeStringToFile(badgeService.showUserAllBadgeText(proxy.getAccessToken(event).getPlayer_id()));
+            testOutputTool.writeStringToFile(badgeService.showUserAllBadgeText(proxy.getAccessToken(event).getId()));
         else if (badgeParameter.getType()== BadgeParameter.BadgeActionType.VIEW)
             testOutputTool.saveImageAndTextToLocal(
-                    badgeService.showUserOwnedSingleBadge(proxy.getAccessToken(event).getPlayer_id(),badgeParameter.getIndex())
+                    badgeService.showUserOwnedSingleBadge(proxy.getAccessToken(event).getId(),badgeParameter.getIndex())
             );
     }
 
