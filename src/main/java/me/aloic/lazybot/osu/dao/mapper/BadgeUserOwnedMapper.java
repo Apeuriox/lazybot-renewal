@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper
 public interface BadgeUserOwnedMapper extends BaseMapper<BadgeUserOwnedPO> {
     List<BadgeUserOwnedPO> selectUserBadges(@Param("user_id")Integer user_id);
+    BadgeUserOwnedPO selectByUserIdAndBadgeId(@Param("user_id")Integer user_id, @Param("badge_id")Integer badge_id);
     List<BadgeUserVO> selectBadgesByUserId(@Param("user_id")Integer user_id);
     BadgeUserOwnedPO selectUserSingleBadge(@Param("user_id")Integer user_id,
                                            @Param("badge_id")Integer badge_id);

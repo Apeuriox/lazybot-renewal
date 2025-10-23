@@ -19,12 +19,12 @@ public class BadgeLoader
     private static final String BADGE_RELATIVE_PATH;
 
     static{
-        BADGE_RELATIVE_PATH = "/static/badge/";
+        BADGE_RELATIVE_PATH = "static/badge/";
     }
 
     public static byte[] loadBadgeImage(Integer id) throws IOException
     {
-        Path filePath = ResourceMonitor.getResourcePath().resolve(BADGE_RELATIVE_PATH + id + ".png");
+        Path filePath = ResourceMonitor.getResourcePath().toAbsolutePath().resolve(BADGE_RELATIVE_PATH + id + ".png");
         File image = filePath.toFile();
         if (image.exists()) {
             return Files.readAllBytes(Paths.get(filePath.toUri()));

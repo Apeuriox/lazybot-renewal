@@ -47,6 +47,7 @@ public class ScoreRankCommand implements LazybotSlashCommand
         }
         ScoreParameter scoreParameter = ScoreCommand.setupParameter(event, proxy.getAccessToken(event));
         scoreParameter.setGroupUserIds(members.stream().map(GroupMemberInfoResp::getUserId).collect(Collectors.toList()));
+        CommandResultHandler.sendMessageToGroupOnebot(bot,event, "[Lazybot] 正在渲染，请稍后...");
         CommandResultHandler.uploadImageToOnebot(bot,event, playerService.scoreRank(scoreParameter));
     }
 

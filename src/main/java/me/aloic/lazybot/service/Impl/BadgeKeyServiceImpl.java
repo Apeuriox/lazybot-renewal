@@ -91,13 +91,15 @@ public class BadgeKeyServiceImpl implements BadgeKeyService
             return "[Lazybot] 此Badge奖励不可兑换，因为其是保留类型";
         }
 
-        Long exists = badgeUserOwnedMapper.selectCount(
-                new QueryWrapper<BadgeUserOwnedPO>()
-                        .eq("user_id", lazybotId)
-                        .eq("badge_id", key.getId())
-        );
-        if (exists > 0) {
-            return "[Lazybot] 你已经拥有此奖励";
+        try{
+            BadgeUserOwnedPO badgeUserOwnedPO = badgeUserOwnedMapper.selectByUserIdAndBadgeId(lazybotId, key.getBadge_id());
+            if (badgeUserOwnedPO !=null) {
+                return "[Lazybot] 你已经拥有此奖励";
+            }
+        }
+        catch (Exception e)
+        {
+            throw new LazybotRuntimeException("此奖励不适用");
         }
 
         BadgeUserOwnedPO ub = new BadgeUserOwnedPO();

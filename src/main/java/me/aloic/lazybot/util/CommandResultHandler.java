@@ -68,13 +68,7 @@ public class CommandResultHandler
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(result.getMessage()).build(), false);
             return;
         }
-        try  {
-            String base64Image = Base64.getEncoder().encodeToString(result.getImage());
-            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(result.getMessage()).img("base64://"+base64Image).build(), false);
-        }
-        catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+        sendMessageWithImageToGroupOnebot(bot,event, result.getImage(),result.getMessage());
     }
 
 //    public static File saveBytesToFile(byte[] imageBytes, String fileName) throws IOException {

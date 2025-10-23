@@ -33,8 +33,12 @@
         WHERE user_id =#{user_id}
         ORDER BY
         obtain_time
-
-
+    </select>
+    <select id="selectByUserIdAndBadgeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_user_owned
+        WHERE user_id =#{user_id}
+        AND badge_id =#{badge_id}
     </select>
 
     <select id="selectUserSingleBadge" parameterType="java.lang.Integer" resultMap="BaseResultMap">

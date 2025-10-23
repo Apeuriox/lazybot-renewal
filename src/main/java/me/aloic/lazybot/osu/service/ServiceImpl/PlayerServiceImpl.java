@@ -710,7 +710,7 @@ public class PlayerServiceImpl implements PlayerService
                 throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
             }
         }
-        mapScores=mapScores.stream().sorted(Comparator.comparing(MapScore::getScore).reversed()).toList();
+        mapScores=mapScores.stream().sorted(Comparator.comparing(MapScore::getScore).reversed()).limit(30).toList();
         verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapPerformance.getChecksum());
         return SVGRenderer.renderSVGDocumentToByteArray(
                 MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScores,beatmapPerformance, true),

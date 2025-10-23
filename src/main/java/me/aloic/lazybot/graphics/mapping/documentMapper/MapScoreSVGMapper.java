@@ -3,6 +3,7 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
 import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
+import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
@@ -315,11 +316,11 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             gradGray.setAttribute("y", "398");
             gradGray.setAttribute("width", "590");
             gradGray.setAttribute("height", "60");
-            gradGray.setAttribute("fill", "url(#gray-1)");
-            if (!ignoreBanner)
-            {
+            if (ignoreBanner) {
                 gradGray.setAttribute("fill", "#424242");
             }
+            else
+                gradGray.setAttribute("fill", "url(#gray-1)");
 
             Node playerNameNode = doc.createElementNS(namespaceSVG, "text");
             Element playerName = (Element) playerNameNode;
@@ -411,7 +412,15 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
 
             Node avatarNode = doc.createElementNS(namespaceSVG, "image");
             Element avatar = (Element) avatarNode;
-            avatar.setAttributeNS(xlinkns, "xlink:href", score.getAvatarUrl());
+
+            if (score.getAvatarUrl()==null)
+            {
+                avatar.setAttributeNS(xlinkns, "xlink:href", ResourceMonitor.getResourcePath().resolve("static/assets/guestAvatar.png").toAbsolutePath().toString());
+            }
+            else
+            {
+                avatar.setAttributeNS(xlinkns, "xlink:href", score.getAvatarUrl());
+            }
             avatar.setAttribute("preserveAspectRatio", "xMidYMid slice");
             avatar.setAttribute("x", "30");
             avatar.setAttribute("y", "398");

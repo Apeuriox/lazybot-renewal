@@ -196,6 +196,7 @@ public class BadgeServiceImpl implements BadgeService
                     .append("[").append(userBadges.get(i).getObtain_time().toLocalDate()).append("]")
                     .append("\n");
         }
+        sb.deleteCharAt(sb.length()-1);
         return sb.toString();
     }
 
