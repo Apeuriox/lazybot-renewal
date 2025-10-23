@@ -215,6 +215,29 @@ public class TransformerUtil
         return mapScoreList;
     }
 
+    public static MapScore mapScoreTransform(ScoreLazerDTO scoreLazerDTOS)
+    {
+        MapScore score = new MapScore();
+        score.setAccuracy(scoreLazerDTOS.getAccuracy());
+        score.setModList(scoreLazerDTOS.getMods());
+        score.setAchievedTime(scoreLazerDTOS.getEnded_at());
+        score.setMaxCombo(scoreLazerDTOS.getMax_combo());
+        score.setPp(scoreLazerDTOS.getPp());
+        score.setIsLazer(scoreLazerDTOS.getLegacy_total_score() == 0);
+        score.setStatistics(scoreLazerDTOS.getStatistics());
+        score.setRulesetId(scoreLazerDTOS.getRuleset_id());
+        score.setIsPerfectCombo(scoreLazerDTOS.getIs_perfect_combo());
+        score.setModJSON(scoreLazerDTOS.getMods());
+        score.setScore(Long.valueOf(scoreLazerDTOS.getTotal_score()));
+        if(scoreLazerDTOS.getPassed()) {
+            score.setRank(scoreLazerDTOS.getRank());
+        }
+        else {
+            score.setRank("D");
+        }
+        return score;
+    }
+
 
     public static BeatmapVO beatmapTransform(BeatmapDTO beatmapDTO){
         BeatmapVO beatmapVO=new BeatmapVO();

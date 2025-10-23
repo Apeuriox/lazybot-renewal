@@ -1,8 +1,10 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
+import com.alibaba.fastjson.JSON;
 import desu.life.RosuFFI;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
+import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.documentMapper.*;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
@@ -13,6 +15,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
@@ -23,6 +26,7 @@ import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.osu.extended.rosu.JniBeatmap;
@@ -33,6 +37,7 @@ import java.nio.file.Files;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -92,8 +97,7 @@ public class PlayerServiceImpl implements PlayerService
 
 
     @Override
-    public byte[] allScore(ScoreParameter params) throws Exception
-    {
+    public byte[] allScore(ScoreParameter params) throws Exception {
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
 
         List<ScoreLazerDTO> scoreList = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), playerInfoDTO.getId(), params.getMode());
@@ -122,7 +126,7 @@ public class PlayerServiceImpl implements PlayerService
         if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), params.getBeatmapId());
         return SVGRenderer.renderSVGDocumentToByteArray(
-                MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScoreList,beatmapPerformance),
+                MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScoreList,beatmapPerformance, false),
                 2f);
     }
     @Override
@@ -560,6 +564,7 @@ public class PlayerServiceImpl implements PlayerService
             throw e;
         }
         catch (Exception e){
+            logger.error("Pp+服务正在维护或生成失败，请稍后再试.params:{}", JSON.toJSONString(params), e);
             throw new LazybotRuntimeException("Pp+服务正在维护或生成失败，请稍后再试");
         }
 
@@ -666,6 +671,51 @@ public class PlayerServiceImpl implements PlayerService
         );
     }
 
+    @Override
+    public byte[] scoreRank(ScoreParameter params) throws Exception {
+        List<AccessTokenPO> users = dataExtractor.extractPlayerInfoByUserIdBatch(params.getGroupUserIds());
+        if(CollectionUtils.isEmpty(users)) {
+            throw new LazybotRuntimeException("当前群聊没有人绑定账号");
+        }
+        // 挨个查询每个用户在当前beatmap的最好成绩score
+        List<MapScore> mapScores = new ArrayList<>();
+        for(AccessTokenPO player : users) {
+            try {
+                ScoreLazerDTO score = dataExtractor.extractBeatmapUserScore(params.getBeatmapId().toString(), player.getPlayer_id(), params.getMode(), params.getModCombination()).getScore();
+                MapScore mapScore = TransformerUtil.mapScoreTransform(score);
+                PlayerInfoDTO playerInfoDTO = new PlayerInfoDTO();
+                playerInfoDTO.setId(player.getPlayer_id());
+                playerInfoDTO.setAvatar_url(player.getAvatar_url());
+                OsuToolsUtil.setupPlayerStatics(mapScore, playerInfoDTO);
+                mapScore.setPlayerName(player.getPlayer_name());
+                mapScores.add(mapScore);
+            }catch (LazybotRuntimeException e) {
+                continue;
+            }
+        }
+
+        BeatmapPerformance beatmapPerformance = TransformerUtil.beatmapPerformanceTransform(dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()),params.getMode()));
+        // 调用svg渲染
+        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
+        beatmapPerformance.setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, beatmapPerformance.getMode().getDescribe()));
+        beatmapPerformance.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapPerformance.getSid()));
+        beatmapPerformance.setLengthBonus(CommonTool.lengthBonusCalc(beatmapPerformance.getCountCircles()+beatmapPerformance.getCountSliders()+beatmapPerformance.getCountSpinners()));
+        for (MapScore mapScore:mapScores) {
+            try {
+                RosuUtil.setupMapScorePerformance(beatmap, mapScore);
+                mapScore.setupBpm(mapScore,beatmapPerformance);
+            }
+            catch (Exception e) {
+                logger.error(e.getMessage());
+                throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
+            }
+        }
+        mapScores=mapScores.stream().sorted(Comparator.comparing(MapScore::getScore).reversed()).toList();
+        verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapPerformance.getChecksum());
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScores,beatmapPerformance, true),
+                2f);
+    }
 
 
     private boolean verifyBeatmapsCache(ScoreVO scoreVO) {

@@ -37,12 +37,14 @@ public class CommandDatabaseProxy
         else identity=event.getMessageEvent().getSender().getUserId();
         return getAccessToken(identity,false);
     }
-    public AccessTokenPO getAccessToken(Long qqCode, Boolean ignoreTest)
+    public AccessTokenPO getAccessToken(Long qqCode, Boolean isExternalQuery)
     {
         AccessTokenPO tokenPO;
         try {
-            if (testEnabled && !ignoreTest) tokenPO = tokenMapper.selectByQq_code(testIdentity);
-            else tokenPO = tokenMapper.selectByQq_code(qqCode);
+            tokenPO = tokenMapper.selectByQq_code(qqCode);
+            if (isExternalQuery){
+                if (tokenPO == null) throw new LazybotRuntimeException("此用户并未绑定");
+            };
             if (tokenPO == null) throw new LazybotRuntimeException("请先使用/link 你的osu用户名 绑定osu账号，请注意不要绑定他人账户，取消绑定会删除相关组件的所有数据");
             return tokenPO;
         }

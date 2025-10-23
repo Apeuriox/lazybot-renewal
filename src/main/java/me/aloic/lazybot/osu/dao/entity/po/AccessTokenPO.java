@@ -40,8 +40,8 @@ public class AccessTokenPO implements Serializable {
 
     public String toSimpleString()
     {
-        return "Id="+id
+        return "Lazybot ID="+id
                 +"\nPlayer Name=:" +player_name
-                +" Player Id:"+player_id;
+                +"\nPlayer Id:"+player_id;
     }
 }

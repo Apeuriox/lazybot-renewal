@@ -34,5 +34,5 @@ build/
 ### custom ###
 src/main/resources/application.properties.backup
 /src/main/resources/application.yaml.backup
-/src/main/resources/application.yaml
+/src/main/resources/application*.yaml
 /src/main/resources/application-test.yaml.backup
