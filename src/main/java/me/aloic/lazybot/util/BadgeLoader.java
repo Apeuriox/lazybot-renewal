@@ -32,6 +32,18 @@ public class BadgeLoader
         log.warn("Image of Badge {} not found", id);
         return null;
     }
+    public static String loadBadgeImagePath(Integer id)
+    {
+        Path filePath = ResourceMonitor.getResourcePath().toAbsolutePath().resolve(BADGE_RELATIVE_PATH + id + ".png");
+        File image = filePath.toFile();
+        if (image.exists()) {
+            return filePath.toAbsolutePath().toString();
+        }
+        log.warn("Image of Badge Path {} not found", id);
+        return null;
+    }
+
+
     public static void badgeImageCacheDownload(BadgeImageParameter params)
     {
         badgeImageCacheDownload(params.getBadgeId(),params.getTargetUrl());

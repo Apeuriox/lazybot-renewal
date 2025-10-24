@@ -1,6 +1,9 @@
 package me.aloic.lazybot.graphics.mapping.documentMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import me.aloic.lazybot.entity.po.BadgeDefinitionPO;
+import me.aloic.lazybot.entity.po.BadgeUserShowcasePO;
+import me.aloic.lazybot.entity.vo.BadgeUserVO;
 import me.aloic.lazybot.enums.MoelleuxTypeEnum;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
@@ -16,6 +19,7 @@ import me.aloic.lazybot.osu.enums.PerformanceDimensionLimit;
 import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
+import me.aloic.lazybot.util.BadgeLoader;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -432,7 +436,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
 
 
 
-    public static Document mapPlayerInfoToProfilePanel(PlayerInfoVO playerInfo, ProfileTheme theme) throws IOException
+    public static Document mapPlayerInfoToProfilePanel(PlayerInfoVO playerInfo, ProfileTheme theme, List<BadgeUserShowcasePO> playerBadges)
     {
         Document document = SVGTemplateLoader.loadSVGTemplate("InfoV2-WhiteSpace");
         NumberFormat formatter = NumberFormat.getInstance(Locale.US);
@@ -467,8 +471,41 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         setupProfileBps(document,playerInfo,theme);
         profileColorTheme(document,theme);
         setupProfileBackground(document,playerInfo.getProfileBackgroundUrl(),true);
+        setupPlayerBadges(document,playerBadges);
         return document;
     }
+    private static void setupPlayerBadges(Document document, List<BadgeUserShowcasePO> playerBadges)
+    {
+        if (playerBadges==null || playerBadges.isEmpty())
+        {
+            log.info("用户无Badge，跳过执行");
+            return;
+        }
+        Element svgRoot = document.getDocumentElement();
+        int validBadgeCount=0;
+        for (BadgeUserShowcasePO playerBadge : playerBadges)
+        {
+            String badgePath = BadgeLoader.loadBadgeImagePath(playerBadge.getBadge_id());
+            if (badgePath == null) continue;
+            Element badgeImage = document.createElementNS(namespaceSVG, "image");
+            badgeImage.setAttributeNS(xlinkns, "xlink:href", badgePath);
+            badgeImage.setAttribute("x", "165");
+            badgeImage.setAttribute("y", "160");
+            badgeImage.setAttribute("width", "72");
+            badgeImage.setAttribute("opacity", "0.9");
+            badgeImage.setAttribute("height", "36");
+            badgeImage.setAttribute("clip-path", "url(#badgeClip)");
+            badgeImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+            badgeImage.setAttribute("transform", "translate(" + (validBadgeCount * 80) + " 0)");
+            svgRoot.appendChild(badgeImage);
+            validBadgeCount++;
+        }
+        if (validBadgeCount>0) {
+            document.getElementById("playername").setAttribute("transform","translate(165 145)");
+        }
+    }
+
+
     private static void setupProfileRankGraph(Document document,PlayerInfoVO playerInfo,ProfileTheme theme)
     {
         Element rankGraphGroup=document.getElementById("rankGraphGroup");

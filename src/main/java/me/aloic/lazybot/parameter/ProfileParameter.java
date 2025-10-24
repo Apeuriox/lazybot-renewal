@@ -15,6 +15,7 @@ import java.util.List;
 public class ProfileParameter extends LazybotCommandParameter
 {
     private ProfileCustomizationPO profileCustomizationPO;
+    private Integer lazybotId;
     @Override
     public void validateParams()
     {
@@ -38,5 +39,7 @@ public class ProfileParameter extends LazybotCommandParameter
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
+        if (parameter.getLazybotId() == null)
+            parameter.setLazybotId(accessTokenPO.getId());
     }
 }

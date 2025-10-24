@@ -5,17 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.entity.message.LazybotMessageWithImage;
 import me.aloic.lazybot.entity.po.BadgeDefinitionPO;
 import me.aloic.lazybot.entity.po.BadgeUserOwnedPO;
+import me.aloic.lazybot.entity.po.BadgeUserShowcasePO;
 import me.aloic.lazybot.entity.vo.BadgeUserVO;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.mapper.BadgeDefinitionMapper;
+import me.aloic.lazybot.osu.dao.mapper.BadgeShowcaseMapper;
 import me.aloic.lazybot.osu.dao.mapper.BadgeUserOwnedMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.service.BadgeService;
 import me.aloic.lazybot.util.BadgeLoader;
-import me.aloic.lazybot.util.CommonTool;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +32,8 @@ public class BadgeServiceImpl implements BadgeService
     private BadgeDefinitionMapper badgeDefinitionMapper;
     @Resource
     private TokenMapper tokenMapper;
+    @Resource
+    private BadgeShowcaseMapper showcaseMapper;
 
     @Override
     public String addBadge(BadgeActionParameter params)
@@ -173,6 +174,38 @@ public class BadgeServiceImpl implements BadgeService
 //            throw new LazybotRuntimeException("加载Badge图片失败:" + userBadges.get(index-1).getBadge_id());
         }
         return message;
+    }
+
+    @Override
+    @Transactional
+    public String userSetShowcaseBadge(Integer lazybotId, List<Integer> indexes)
+    {
+        if (indexes==null || indexes.isEmpty()) throw new LazybotRuntimeException("请输入正确的索引...");
+        if (indexes.size()>4) throw new LazybotRuntimeException("最多只能设置4个Badge");
+        List<BadgeUserShowcasePO> userSetBadges = new ArrayList<>();
+        List<BadgeUserVO> ownedBadges = badgeUserOwnedMapper.selectBadgesByUserId(lazybotId);
+        if (ownedBadges==null || ownedBadges.isEmpty()) throw new LazybotRuntimeException("用户还没有任何徽章呢...");
+        for (int index: indexes)
+        {
+            try{
+                userSetBadges.add(new BadgeUserShowcasePO(ownedBadges.get(index-1).getId(), lazybotId));
+            }
+            catch (Exception e)
+            {
+                throw new LazybotRuntimeException("索引越界或不合法");
+            }
+        }
+        showcaseMapper.deleteAllUser(lazybotId);
+        showcaseMapper.insertBatch(userSetBadges);
+        return "[Lazybot] 成功设置展示，共设置"+indexes.size()+"个";
+    }
+
+    @Transactional
+    @Override
+    public String clearUserShowcaseBadge(Integer lazybotId)
+    {
+        showcaseMapper.deleteAllUser(lazybotId);
+        return "[Lazybot] 成功清除";
     }
 
     public String submitScoreToChallenge()

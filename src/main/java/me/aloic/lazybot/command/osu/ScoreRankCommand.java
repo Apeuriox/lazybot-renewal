@@ -4,6 +4,7 @@ import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.action.response.GroupMemberInfoResp;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
+import me.aloic.lazybot.annotation.LazybotRateLimit;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.entity.CommandHelp;
@@ -18,9 +19,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @LazybotCommandMapping({"rank","sr","scorerank"})
+@LazybotRateLimit(capacity = 4, refillTokens = 1, refillPeriod = 20, unit = TimeUnit.SECONDS, scope = LazybotRateLimit.Scope.CHANNEL)
 @Component
 public class ScoreRankCommand implements LazybotSlashCommand
 {
