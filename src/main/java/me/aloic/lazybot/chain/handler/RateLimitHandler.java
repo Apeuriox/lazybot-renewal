@@ -9,9 +9,11 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import me.aloic.lazybot.util.LazybotCommandRateLimitManager;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
+@Order(2)
 public class RateLimitHandler implements CommandHandlerInterface {
 
     @Resource
@@ -51,15 +53,16 @@ public class RateLimitHandler implements CommandHandlerInterface {
         LazybotRateLimit rateLimit = command.getClass().getAnnotation(LazybotRateLimit.class);
         if (rateLimit == null)
         {
-            chain.doHandle(event, command);
+            chain.doHandle(bot, event, command);
             return;
         }
 
         String key = buildKey(rateLimit.scope(), event);
 
         if (!rateLimitManager.tryConsume(key, rateLimit)) {
-            CommandResultHandler.sendMessageToGroupOnebot(bot,event,"[Lazybot] 达到速率限制，请等待20秒");
+            CommandResultHandler.sendMessageToGroupOnebot(bot,event,"[Lazybot] 达到速率限制，请等待50秒");
+            return;
         }
-        chain.doHandle(event, command);
+        chain.doHandle(bot, event, command);
     }
 }

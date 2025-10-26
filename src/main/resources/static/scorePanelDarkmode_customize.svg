@@ -693,8 +693,7 @@
       <text class="cls-30" transform="translate(80 218.59)">Player Name</text>
     </g>
     <g>
-      <text id="roughTime" class="cls-23" transform="translate(550 248.59)">0000/00/00</text>
-      <text id="preciseTime" class="cls-23" transform="translate(770 248.59)">00:00:00</text>
+      <text id="achievedTime" class="cls-23" transform="translate(550 248.59)">0000/00/00</text>
     </g>
     <g>
       <text class="cls-30" transform="translate(550 218.59)">Achieved Time</text>

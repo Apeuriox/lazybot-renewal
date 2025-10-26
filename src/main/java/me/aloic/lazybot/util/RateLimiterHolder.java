@@ -6,7 +6,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class RateLimiterHolder {
-    private static final int REQUESTS_PER_SECOND = 10;
+    public static final int REQUESTS_PER_SECOND = 8;
     private static final Semaphore SEMAPHORE = new Semaphore(REQUESTS_PER_SECOND);
 
     static {

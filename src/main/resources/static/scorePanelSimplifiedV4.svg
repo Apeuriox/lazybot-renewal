@@ -516,8 +516,8 @@
     <g class="cls-29">
         <text class="cls-6" transform="translate(660 180)">Achieved Time</text>
     </g>
-    <text id="roughTime" class="cls-6" transform="translate(660 206.67)">2024/01/01</text>
-    <text id="preciseTime" class="cls-6" transform="translate(833.33 206.67)">00:00:00</text>
+    <text id="achievedTime" class="cls-6" transform="translate(660 206.67)">2024/01/01</text>
+
     <text id="totalPP" class="cls-8" text-anchor="middle" transform="translate(1530 218.25)">0000 PP</text>
     <g class="cls-29">
         <text class="cls-10" transform="translate(1200 300.75)">Details</text>

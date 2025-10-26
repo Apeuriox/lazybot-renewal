@@ -16,7 +16,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.List;
 
 @Slf4j
 public class ScoreSVGMapper extends LazybotSVGMapper
@@ -63,8 +62,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc.getElementById("mapperName").setTextContent(targetScore.getBeatmap().getCreator());
             doc.getElementById("beatmapId").setTextContent(String.valueOf(targetScore.getBeatmap().getBid()));
             doc.getElementById("starRating").setTextContent(CommonTool.toString(targetScore.getBeatmap().getDifficult_rating()));
-            doc.getElementById("roughTime").setTextContent(CommonTool.timestampSpilt(targetScore.getCreate_at())[0]);
-            doc.getElementById("preciseTime").setTextContent(CommonTool.timestampSpilt(targetScore.getCreate_at())[1]);
+            doc.getElementById("achievedTime").setTextContent(CommonTool.formattingDate(targetScore.getCreate_at(),"yyyy-MM-dd   HH:mm:ss"));
             if (targetScore.getPp() != null)
             {
                 doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat(" PP"));
@@ -179,7 +177,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             document.getElementById("mapBg-mask").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
 //            document.getElementById("mapBg-mask").setAttribute("opacity", "0.6");
             document.getElementById("playername").setTextContent(targetScore.getUser_name());
-            document.getElementById("achievedTime").setTextContent(CommonTool.timestampSpilt(targetScore.getCreate_at())[0]);
+            document.getElementById("achievedTime").setTextContent(CommonTool.formattingDate(targetScore.getCreate_at(),"yyyy-MM-dd"));
             document.getElementById("title").setTextContent(targetScore.getBeatmap().getTitle());
             document.getElementById("artist").setTextContent(targetScore.getBeatmap().getArtist());
             document.getElementById("mapper").setTextContent(targetScore.getBeatmap().getCreator());
@@ -275,36 +273,18 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc.getElementById("bid").setTextContent(String.valueOf(targetScore.getBeatmap().getBid()));
             doc.getElementById("starRating").setTextContent(CommonTool.toString(targetScore.getBeatmap().getDifficult_rating()));
 
-            if (targetScore.getBeatmap().getDifficult_rating() < 7.0)
-            {
-                if (targetScore.getBeatmap().getDifficult_rating() % 1.0 > 0.5)
-                {
-                    doc.getElementById("starRating").setAttribute("fill", "#fed867");
-                    doc.getElementById("starRatingStar").setAttribute("fill", "#fed867");
-                }
-                else
-                {
-                    doc.getElementById("starRating").setAttribute("fill", "#1c1719");
-                    doc.getElementById("starRatingStar").setAttribute("fill", "#1c1719");
-                }
-            }
-            else if (targetScore.getBeatmap().getDifficult_rating() > 10)
-            {
-                doc.getElementById("starRating").setAttribute("fill", "#fed867");
-                doc.getElementById("starRatingStar").setAttribute("fill", "#fed867");
+            String StarFontColor = CommonTool.getStarRatingFontColor(targetScore.getBeatmap().getDifficult_rating());
+
+            doc.getElementById("starRating").setAttribute("fill", StarFontColor);
+            doc.getElementById("starRatingStar").setAttribute("fill", StarFontColor);
+
+            if (targetScore.getBeatmap().getDifficult_rating() > 10) {
                 doc.getElementById("starRatingBG").setAttribute("width", "150");
                 doc.getElementById("starRating").setAttribute("text-anchor", "middle");
                 doc.getElementById("starRating").setAttribute("transform", "translate(270, 568)");
             }
-            else
-            {
-                doc.getElementById("starRating").setAttribute("fill", "#fed867");
-                doc.getElementById("starRatingStar").setAttribute("fill", "#fed867");
-            }
 
-
-            doc.getElementById("roughTime").setTextContent(CommonTool.timestampSpilt(targetScore.getCreate_at())[0]);
-            doc.getElementById("preciseTime").setTextContent(CommonTool.timestampSpilt(targetScore.getCreate_at())[1]);
+            doc.getElementById("achievedTime").setTextContent(CommonTool.formattingDate(targetScore.getCreate_at(),"yyyy/MM/dd HH:mm:ss"));
             if (targetScore.getPp() != null)
             {
                 doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat(" PP"));

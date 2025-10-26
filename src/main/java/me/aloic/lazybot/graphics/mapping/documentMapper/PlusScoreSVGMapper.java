@@ -142,12 +142,9 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
     {
         Document document = SVGTemplateLoader.loadSVGTemplate("PlusScoreQuadraGrid");
         HSL plusRectColor = new HSL(hue, 28, 93);
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX");
-        OffsetDateTime odt = OffsetDateTime.parse(score.getCreate_at(), inputFormatter);
 
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss");
         document.getElementById("playername").setTextContent(score.getUser_name());
-        document.getElementById("time").setTextContent(odt.toLocalDateTime().format(outputFormatter));
+        document.getElementById("time").setTextContent(CommonTool.formattingDate(score.getCreate_at(),"yyyy-MM-dd / HH:mm:ss"));
 
         if (score.getModJSON() != null && !score.getModJSON().isEmpty()) {
             if (!PPPlusIncompatibleMods.checkModsCompatibility(score.getModJSON()))

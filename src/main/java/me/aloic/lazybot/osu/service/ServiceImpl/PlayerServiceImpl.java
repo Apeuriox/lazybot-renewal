@@ -3,12 +3,8 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 import com.alibaba.fastjson.JSON;
 import desu.life.RosuFFI;
 import jakarta.annotation.Resource;
-import me.aloic.lazybot.entity.po.BadgeDefinitionPO;
-import me.aloic.lazybot.entity.po.BadgeUserOwnedPO;
 import me.aloic.lazybot.entity.po.BadgeUserShowcasePO;
-import me.aloic.lazybot.entity.vo.BadgeUserVO;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
-import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.documentMapper.*;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
@@ -34,7 +30,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.osu.extended.rosu.JniBeatmap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +37,6 @@ import java.nio.file.Files;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +53,7 @@ public class PlayerServiceImpl implements PlayerService
     private CustomizationMapper customizationMapper;
     @Resource
     private BadgeShowcaseMapper badgeMapper;
-    @Autowired
+    @Resource
     private TokenMapper tokenMapper;
 
 
@@ -711,7 +705,6 @@ public class PlayerServiceImpl implements PlayerService
         List<CompletableFuture<MapScore>> futures = users.stream()
                 .map(player -> CompletableFuture.supplyAsync(() -> {
                     try {
-
                         RateLimiterHolder.acquire();
 
                         ScoreLazerDTO score = dataExtractor.extractBeatmapUserScore(
@@ -764,7 +757,7 @@ public class PlayerServiceImpl implements PlayerService
                 throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
             }
         }
-        mapScores=mapScores.stream().sorted(Comparator.comparing(MapScore::getScore).reversed()).limit(30).toList();
+        mapScores=mapScores.stream().sorted(Comparator.comparing(MapScore::getScore).reversed()).toList();
         verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapPerformance.getChecksum());
         return SVGRenderer.renderSVGDocumentToByteArray(
                 MapScoreSVGMapper.mapMapScoreListToAllScorePanel(mapScores,beatmapPerformance, true),

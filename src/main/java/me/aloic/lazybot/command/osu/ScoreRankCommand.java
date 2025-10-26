@@ -14,6 +14,7 @@ import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
+import me.aloic.lazybot.util.RateLimiterHolder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @LazybotCommandMapping({"rank","sr","scorerank"})
-@LazybotRateLimit(capacity = 4, refillTokens = 1, refillPeriod = 20, unit = TimeUnit.SECONDS, scope = LazybotRateLimit.Scope.CHANNEL)
+@LazybotRateLimit(capacity = 3, refillTokens = 1, refillPeriod = 50, unit = TimeUnit.SECONDS, scope = LazybotRateLimit.Scope.CHANNEL)
 @Component
 public class ScoreRankCommand implements LazybotSlashCommand
 {
@@ -50,7 +51,7 @@ public class ScoreRankCommand implements LazybotSlashCommand
         }
         ScoreParameter scoreParameter = ScoreCommand.setupParameter(event, proxy.getAccessToken(event));
         scoreParameter.setGroupUserIds(members.stream().map(GroupMemberInfoResp::getUserId).collect(Collectors.toList()));
-        CommandResultHandler.sendMessageToGroupOnebot(bot,event, "[Lazybot] 正在渲染，请稍后...");
+        CommandResultHandler.sendMessageToGroupOnebot(bot,event, "[Lazybot] 正在渲染，请稍后...请求线程数: " + RateLimiterHolder.REQUESTS_PER_SECOND + "，最大显示数量: 30");
         CommandResultHandler.uploadImageToOnebot(bot,event, playerService.scoreRank(scoreParameter));
     }
 
