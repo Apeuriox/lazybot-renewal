@@ -15,7 +15,6 @@ public class PPPlusScore extends ScoreVO
     {
         this.setUser_name(scoreVO.getUser_name());
         this.setAccuracy(scoreVO.getAccuracy());
-        this.setMods(scoreVO.getMods());
         this.setModJSON(scoreVO.getModJSON());
         this.setScore(scoreVO.getScore());
         this.setMaxCombo(scoreVO.getMaxCombo());

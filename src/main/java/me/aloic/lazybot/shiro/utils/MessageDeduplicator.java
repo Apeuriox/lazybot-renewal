@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
+/*
+*   这玩意用来去重消息
+*   因为一个群可能会有多个Bot连接本项目
+*   不搞去重就会重复执行
+*/
+
 @Component
 public class MessageDeduplicator
 {

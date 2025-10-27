@@ -6,12 +6,15 @@ import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.parameter.WhatIfParameter;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public interface FunService
 {
     String tips(TipsParameter parameter);
 
     Path modInfo(GeneralParameter parameter);
+
+    String nameGuessGroupRandomName(List<Long> userIds);
 
     String whatIfIGotSomePP(WhatIfParameter whatIfParameter);
 

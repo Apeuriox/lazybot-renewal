@@ -84,7 +84,7 @@ public class OsuToolsUtil
         catch (Exception e) {
             throw new LazybotRuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
         }
-        if (CommonTool.modsContainsAnyOfStarChanging(scoreVO.getMods()))
+        if (CommonTool.modsContainsAnyOfStarChanging(scoreVO.getModJSON()))
             scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
         if (scoreVO.getPp() == null)
             scoreVO.setPp(scoreVO.getPpDetailsLocal().getCurrentPP());

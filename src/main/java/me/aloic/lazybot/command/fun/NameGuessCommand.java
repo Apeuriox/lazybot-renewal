@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@LazybotCommandMapping({"name"})
+@LazybotCommandMapping({"namelegacy","nl"})
 @Component
 public class NameGuessCommand implements LazybotSlashCommand
 {
@@ -64,7 +64,7 @@ public class NameGuessCommand implements LazybotSlashCommand
             else {
                 if (event.getCommandParameters()!=null && !event.getCommandParameters().isEmpty()) {
                     String username =String.join(" ", event.getCommandParameters());
-                    bot.sendGroupMsg(groupId, checkUsernameGuess(username, original.getOriginal(), String.valueOf(groupId)),false);
+                    bot.sendGroupMsg(groupId, checkUsernameGuess(existingGameMap, username, original.getOriginal(), String.valueOf(groupId)),false);
                 }
                 else {
                     bot.sendGroupMsg(groupId, "[Lazybot] 请输入参数",false);
@@ -95,7 +95,7 @@ public class NameGuessCommand implements LazybotSlashCommand
             else {
                 if (event.getCommandParameters()!=null && !event.getCommandParameters().isEmpty()) {
                     String username = String.join(" ", event.getCommandParameters());
-                    testOutputTool.writeStringToFile(checkUsernameGuess(username, original.getOriginal(), identity));
+                    testOutputTool.writeStringToFile(checkUsernameGuess(existingGameMap,username, original.getOriginal(), identity));
                 }
                 else {
                     testOutputTool.writeStringToFile("[Lazybot] 请输入参数");
@@ -104,7 +104,7 @@ public class NameGuessCommand implements LazybotSlashCommand
         }
     }
 
-    private String checkUsernameGuess(String username, String original, String identity)
+    protected String checkUsernameGuess(ConcurrentHashMap<String, GameWithTime> existingGameMap,String username, String original, String identity)
     {
         if (username == null) throw new LazybotRuntimeException("参数输入为空");
         if (original == null) throw new LazybotRuntimeException("还没有正在进行的游戏呢，请输入/name新建游戏");
@@ -160,7 +160,7 @@ public class NameGuessCommand implements LazybotSlashCommand
 //        }
 //        return result.toString();
 //    }
-    private static String obfuscateString(String input) {
+  protected static String obfuscateString(String input) {
         int length = input.length();
         if (length == 0) return "";
 
@@ -208,7 +208,7 @@ public class NameGuessCommand implements LazybotSlashCommand
         return result.toString();
     }
 
-    public static String revealOneChar(String original, String masked) {
+    protected static String revealOneChar(String original, String masked) {
         if (original == null || masked == null || original.length() != masked.length()) {
             throw new IllegalArgumentException("内部错误,原始字符串和混淆字符串长度不一致或为空");
         }
@@ -229,7 +229,7 @@ public class NameGuessCommand implements LazybotSlashCommand
         result.setCharAt(revealIndex, original.charAt(revealIndex));
         return result.toString();
     }
-    private String createNewGame(String identity)
+    protected String createNewGame(String identity)
     {
         AccessTokenPO token = tokenMapper.selectRandom();
         if (token==null) throw new LazybotRuntimeException("数据库数据不足或获取失败");
@@ -242,11 +242,11 @@ public class NameGuessCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Player Name Guess","name",
+                new CommandHelp("Player Name Guess旧版","nl",
                 "从绑定Lazybot的用户中随机查询一位玩家的名字用于游戏，仅限初次绑定时缓存，输入/name &以提前结束，一个群同时只能存在一场游戏",
                 "Aloic", null, "2025-07-30")
-                .addExample("/name")
-                .addExample("/name &")
+                .addExample("/nl")
+                .addExample("/nl &")
                 .addOption(new CommandParameter("输入内容","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL)));
     }
 }
