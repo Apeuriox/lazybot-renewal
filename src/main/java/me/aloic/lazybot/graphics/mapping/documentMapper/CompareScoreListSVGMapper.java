@@ -60,10 +60,8 @@ public class CompareScoreListSVGMapper extends LazybotSVGMapper
         Element svgRoot = document.getDocumentElement();
         String xlinkns = "http://www.w3.org/1999/xlink";
         String nameSpace = "http://www.w3.org/2000/svg";
-        Node sectionFullNode = document.createElementNS(nameSpace, "g");
-        Element sectionFull = (Element) sectionFullNode;
-        Node listSubSectionNode = document.createElementNS(nameSpace, "rect");
-        Element listSubSection = (Element) listSubSectionNode;
+        Element sectionFull = document.createElementNS(nameSpace, "g");
+        Element listSubSection = document.createElementNS(nameSpace, "rect");
         listSubSection.setAttribute("class", "cls-1");
         listSubSection.setAttribute("x", "20");
         listSubSection.setAttribute("y", "100");
@@ -72,9 +70,7 @@ public class CompareScoreListSVGMapper extends LazybotSVGMapper
         listSubSection.setAttribute("rx", "10");
         listSubSection.setAttribute("ry", "10");
 
-
-        Node songTitleNode = document.createElementNS(nameSpace, "text");
-        Element songTitle = (Element) songTitleNode;
+        Element songTitle = document.createElementNS(nameSpace, "text");
         String title = scoreVO.getBeatmap().getTitle();
         if (title.length() > 20)
         {
@@ -89,14 +85,12 @@ public class CompareScoreListSVGMapper extends LazybotSVGMapper
         {
             diff = diff.substring(0, 16) + "...";
         }
-        Node difficultyNode = document.createElementNS(nameSpace, "text");
-        Element difficulty = (Element) difficultyNode;
+        Element difficulty = document.createElementNS(nameSpace, "text");
         difficulty.setAttribute("class", "cls-126");
         difficulty.setAttribute("transform", "translate(216 160)");
         difficulty.setTextContent(diff);
 
-        Node starBGNode = document.createElementNS(nameSpace, "rect");
-        Element starBG = (Element) starBGNode;
+        Element starBG = document.createElementNS(nameSpace, "rect");
         starBG.setAttribute("fill", "#".concat(CommonTool.calcDiffColor(scoreVO.getBeatmap().getDifficult_rating())));
         starBG.setAttribute("x", "120");
         starBG.setAttribute("y", "146");
@@ -114,47 +108,41 @@ public class CompareScoreListSVGMapper extends LazybotSVGMapper
                 accColor = "#1c1719";
             }
         }
-        Node starNode = document.createElementNS(nameSpace, "text");
-        Element star = (Element) starNode;
+
+        Element star = document.createElementNS(nameSpace, "text");
         star.setAttribute("class", "cls-155");
         star.setAttribute("transform", "translate(160 162.5)");
         star.setAttribute("text-anchor", "middle");
         star.setAttribute("fill", accColor);
         star.setTextContent(CommonTool.toString(scoreVO.getBeatmap().getDifficult_rating()));
 
-        Node starPolyNode = document.createElementNS(nameSpace, "polygon");
-        Element starPoly = (Element) starPolyNode;
+        Element starPoly = document.createElementNS(nameSpace, "polygon");
         starPoly.setAttribute("transform", "translate(45 -3) scale(0.43)");
         starPoly.setAttribute("points", "200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86");
         starPoly.setAttribute("fill", accColor);
 
 
-        Node accNode = document.createElementNS(nameSpace, "text");
-        Element acc = (Element) accNode;
+        Element acc = document.createElementNS(nameSpace, "text");
         acc.setAttribute("class", "cls-121");
         acc.setAttribute("transform", "translate(690 130)");
         acc.setTextContent(CommonTool.toString(scoreVO.getAccuracy() * 100).concat("%"));
 
-        Node ppValueNode = document.createElementNS(nameSpace, "text");
-        Element ppValue = (Element) ppValueNode;
+        Element ppValue = document.createElementNS(nameSpace, "text");
         ppValue.setAttribute("class", "cls-123");
         ppValue.setAttribute("transform", "translate(810 152)");
         ppValue.setTextContent(String.valueOf(Math.round(scoreVO.getPp())));
 
-        Node ppLabelNode = document.createElementNS(nameSpace, "text");
-        Element ppLabel = (Element) ppLabelNode;
+        Element ppLabel = document.createElementNS(nameSpace, "text");
         ppLabel.setAttribute("class", "cls-125");
         ppLabel.setAttribute("transform", "translate(890 120)");
         ppLabel.setTextContent("PP");
 
-        Node comboNode = document.createElementNS(nameSpace, "text");
-        Element combo = (Element) comboNode;
+        Element combo = document.createElementNS(nameSpace, "text");
         combo.setAttribute("class", "cls-115");
         combo.setAttribute("transform", "translate(690 160)");
         combo.setTextContent(String.valueOf(scoreVO.getMaxCombo()).concat("x"));
 
-        Node gradeNode = document.createElementNS(nameSpace, "image");
-        Element grade = (Element) gradeNode;
+        Element grade = document.createElementNS(nameSpace, "image");
         grade.setAttributeNS(xlinkns, "xlink:href", "assets/osuResources/GradeSmall-".concat(scoreVO.getRank()).concat(".svg"));
         grade.setAttribute("x", "40");
         grade.setAttribute("y", "120");
@@ -174,16 +162,16 @@ public class CompareScoreListSVGMapper extends LazybotSVGMapper
         sectionFull.appendChild(combo);
         sectionFull.appendChild(grade);
 
-        if (scoreVO.getMods() != null) {
-            scoreVO.setMods(Arrays.stream(scoreVO.getMods())
-                    .filter(score -> !score.equals("CL"))
-                    .toArray(String[]::new));
-            for (int i = 0; i < scoreVO.getMods().length; i++) {
+        if (scoreVO.getModJSON() != null) {
+            scoreVO.setModJSON(scoreVO.getModJSON().stream()
+                    .filter(score -> !score.getAcronym().equals("CL"))
+                    .toList());
+            for (int i = 0; i < scoreVO.getModJSON().size(); i++) {
                 sectionFull.appendChild(
                         wireModIconForList(document,
                                 i,
-                                scoreVO.getMods()[i],
-                                ModColor.fromString(scoreVO.getMods()[i]).getDetailedSideColor().toString(),
+                                scoreVO.getModJSON().get(i).getAcronym(),
+                                ModColor.fromString(scoreVO.getModJSON().get(i).getAcronym()).getDetailedSideColor().toString(),
                                 1));
             }
         }
@@ -198,13 +186,10 @@ public class CompareScoreListSVGMapper extends LazybotSVGMapper
     }
     private static Element wireModIconForList(Document document, int index, String modName, String modColor, int type)
     {
-        Node modFullNode = document.createElementNS(namespaceSVG, "g");
-        Element modFull = (Element) modFullNode;
-        Node modBGNode = document.createElementNS(namespaceSVG, "rect");
-        Element modBG = (Element) modBGNode;
+        Element modFull = document.createElementNS(namespaceSVG, "g");
+        Element modBG = document.createElementNS(namespaceSVG, "rect");
 
-        Node modTextNode = document.createElementNS(namespaceSVG, "text");
-        Element modText = (Element) modTextNode;
+        Element modText = document.createElementNS(namespaceSVG, "text");
         modText.setAttribute("class", "cls-124");
         modText.setAttribute("fill", "#2a2933");
         modText.setAttribute("transform", "skewX(-5)");
@@ -238,8 +223,8 @@ public class CompareScoreListSVGMapper extends LazybotSVGMapper
             throw new LazybotRuntimeException("创建List样式的Mod图标时出错: 类型越界=" +type);
         }
         modText.setTextContent(modName);
-        modFull.appendChild(modBGNode);
-        modFull.appendChild(modTextNode);
+        modFull.appendChild(modBG);
+        modFull.appendChild(modText);
         modFull.setAttribute("transform", "translate(".concat(String.valueOf(-30 * (index))).concat(",0 )"));
         return modFull;
     }

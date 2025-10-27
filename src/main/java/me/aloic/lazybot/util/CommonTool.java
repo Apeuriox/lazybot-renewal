@@ -6,9 +6,6 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.theme.Color.HSL;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,14 +13,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -31,7 +22,6 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class CommonTool {
     public static boolean isEmpty(String s) {
@@ -158,6 +148,15 @@ public class CommonTool {
         else
             return null;
     }
+    public static String modArrayToString(List<Mod> modArray)
+    {
+        if(modArray!=null)
+        {
+            return modArray.stream().map(Mod::getAcronym).reduce((a,b)->a.concat(" ").concat(b)).get();
+        }
+        else
+            return "NoMod";
+    }
     public static String formatHitLength(int hitLength)
     {
         String result=String.valueOf(hitLength / 60);
@@ -173,22 +172,14 @@ public class CommonTool {
     {
         //black
         String targetColor= "#1c1719";
-        if (star > 6.0 && star <7.0)
-        {
-            if (star % 1.0 > 0.5)
-            {
-                targetColor="#fed867";
-            }
-        }
-        else if (star >= 7.0)
-        {
+        if (star >= 6.5) {
             targetColor="#fed867";
         }
         return targetColor;
     }
 
 
-    public static String formattingDate(String timeStampString, String outputFormat)
+    public static String formatJsonDateToString(String timeStampString, String outputFormat)
     {
         OffsetDateTime odt = OffsetDateTime.parse(timeStampString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputFormat);

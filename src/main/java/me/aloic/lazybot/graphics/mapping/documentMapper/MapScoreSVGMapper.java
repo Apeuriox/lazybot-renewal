@@ -169,8 +169,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
     {
         int listIndex=0;
         for (MapScore score : scorelist) {
-            Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
-            Element sectionFull = (Element) sectionFullNode;
+            Element sectionFull = doc.createElementNS(namespaceSVG, "g");
 
             Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
             Element totalBG = (Element) totalBGNode;
@@ -181,8 +180,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             totalBG.setAttribute("height", "60");
             totalBG.setAttribute("fill", RankColor.fromString(score.getRank()).getBackgroundColorPeppyHEX());
 
-            Node leftBGNode = doc.createElementNS(namespaceSVG, "rect");
-            Element leftBG = (Element) leftBGNode;
+            Element leftBG = doc.createElementNS(namespaceSVG, "rect");
             leftBG.setAttribute("rx", "10");
             leftBG.setAttribute("x", "30");
             leftBG.setAttribute("y", "398");
@@ -190,8 +188,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             leftBG.setAttribute("height", "60");
             leftBG.setAttribute("fill", "#414141");
 
-            Node borderNode = doc.createElementNS(namespaceSVG, "rect");
-            Element borderBG = (Element) borderNode;
+            Element borderBG = doc.createElementNS(namespaceSVG, "rect");
             borderBG.setAttribute("rx", "10");
             borderBG.setAttribute("x", "32");
             borderBG.setAttribute("y", "399");
@@ -201,8 +198,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             borderBG.setAttribute("stroke-width", "2");
             borderBG.setAttribute("fill", "none");
 
-            Node gradNode = doc.createElementNS(namespaceSVG, "rect");
-            Element gradBG = (Element) gradNode;
+            Element gradBG = doc.createElementNS(namespaceSVG, "rect");
             gradBG.setAttribute("rx", "10");
             gradBG.setAttribute("x", "30");
             gradBG.setAttribute("y", "398");
@@ -211,12 +207,10 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             gradBG.setAttribute("fill", "url(#rank-filler-"+score.getRank()+")");
             gradBG.setAttribute("fill-opacity", "0.5");
 
-            Node rankGroupNode = doc.createElementNS(namespaceSVG, "g");
-            Element rankGroup = (Element) rankGroupNode;
+            Element rankGroup = doc.createElementNS(namespaceSVG, "g");
             rankGroup.setAttribute("clip-path", "url(#rankClip)");
 
-            Node rankTextNode = doc.createElementNS(namespaceSVG, "text");
-            Element rankText = (Element) rankTextNode;
+            Element rankText = doc.createElementNS(namespaceSVG, "text");
             rankText.setAttribute("class", "cls-3");
             rankText.setAttribute("transform", "rotate(-30,753,450)");
             rankText.setAttribute("x", "753");
@@ -228,8 +222,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
 
             rankGroup.appendChild(rankText);
 
-            Node bgDimNode = doc.createElementNS(namespaceSVG, "rect");
-            Element bgDim = (Element) bgDimNode;
+            Element bgDim = doc.createElementNS(namespaceSVG, "rect");
             bgDim.setAttribute("rx", "8");
             bgDim.setAttribute("x", "54");
             bgDim.setAttribute("y", "400");
@@ -241,8 +234,8 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             HSL ppColor=new HSL(CommonTool.rgbToHue(CommonTool.hexToRgb(
                     RankColor.fromString(score.getRank()).getBackgroundColorPeppyHEX().substring(1))),
                     41,80);
-            Node ppNode = doc.createElementNS(namespaceSVG, "text");
-            Element pp = (Element) ppNode;
+
+            Element pp = doc.createElementNS(namespaceSVG, "text");
             pp.setAttribute("class", "cls-1");
             pp.setAttribute("x", "735");
             pp.setAttribute("y", "435");
@@ -252,8 +245,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             pp.setAttribute("fill",ppColor.toString());
             pp.setTextContent(String.valueOf(Math.round(Optional.ofNullable(score.getPp()).orElse(0.0))).concat("pp"));
 
-            Node iffcNode = doc.createElementNS(namespaceSVG, "text");
-            Element iffc = (Element) iffcNode;
+            Element iffc = doc.createElementNS(namespaceSVG, "text");
             iffc.setAttribute("class", "cls-1");
             iffc.setAttribute("x", "735");
             iffc.setAttribute("y", "448");
@@ -264,12 +256,10 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             if (score.getIsPerfectCombo())
                 iffc.setAttribute("opacity", "0.5");
 
-            Node iffcLabelNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element iffcLabel = (Element) iffcLabelNode;
+            Element iffcLabel = doc.createElementNS(namespaceSVG, "tspan");
             iffcLabel.setTextContent("if fc ");
 
-            Node iffcNumberNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element iffcNumber = (Element) iffcNumberNode;
+            Element iffcNumber = doc.createElementNS(namespaceSVG, "tspan");
             iffcNumber.setAttribute("font-weight", "600");
             iffcNumber.setTextContent(Math.round(Optional.ofNullable(score.getIffc()).orElse(0.0))+"pp");
 
@@ -277,8 +267,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             iffc.appendChild(iffcNumber);
 
 
-            Node divisorNode = doc.createElementNS(namespaceSVG, "rect");
-            Element divisor = (Element) divisorNode;
+            Element divisor = doc.createElementNS(namespaceSVG, "rect");
             divisor.setAttribute("rx", "10");
             divisor.setAttribute("x", "30");
             divisor.setAttribute("y", "398");
@@ -287,8 +276,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             divisor.setAttribute("fill", "#262626");
 
             if(!ignoreBanner) {
-                Node playerBGImageNode = doc.createElementNS(namespaceSVG, "image");
-                Element playerBGImage = (Element) playerBGImageNode;
+                Element playerBGImage = doc.createElementNS(namespaceSVG, "image");
                 playerBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBannerUrl());
                 playerBGImage.setAttribute("x", "74");
                 playerBGImage.setAttribute("y", "398");
@@ -300,8 +288,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                 sectionFull.appendChild(playerBGImage);
             }
 
-            Node totalBGMaskNode = doc.createElementNS(namespaceSVG, "rect");
-            Element totalBGMask = (Element) totalBGMaskNode;
+            Element totalBGMask = doc.createElementNS(namespaceSVG, "rect");
             totalBGMask.setAttribute("rx", "10");
             totalBGMask.setAttribute("x", "74");
             totalBGMask.setAttribute("y", "398");
@@ -309,8 +296,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             totalBGMask.setAttribute("height", "60");
             totalBGMask.setAttribute("fill-opacity", "0.25");
 
-            Node gradGrayNode = doc.createElementNS(namespaceSVG, "rect");
-            Element gradGray = (Element) gradGrayNode;
+            Element gradGray = doc.createElementNS(namespaceSVG, "rect");
             gradGray.setAttribute("rx", "10");
             gradGray.setAttribute("x", "54");
             gradGray.setAttribute("y", "398");
@@ -322,8 +308,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             else
                 gradGray.setAttribute("fill", "url(#gray-1)");
 
-            Node playerNameNode = doc.createElementNS(namespaceSVG, "text");
-            Element playerName = (Element) playerNameNode;
+            Element playerName = doc.createElementNS(namespaceSVG, "text");
             playerName.setAttribute("class", "cls-1");
             playerName.setAttribute("x", "104");
             playerName.setAttribute("y", "423");
@@ -332,8 +317,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             playerName.setAttribute("fill", "#ffffff");
             playerName.setTextContent(score.getPlayerName());
 
-            Node timeNode = doc.createElementNS(namespaceSVG, "text");
-            Element time = (Element) timeNode;
+            Element time = doc.createElementNS(namespaceSVG, "text");
             time.setAttribute("class", "cls-1");
             time.setAttribute("x", "104");
             time.setAttribute("y", "435");
@@ -341,8 +325,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             time.setAttribute("fill", "#ffffff");
             time.setTextContent(SVGElementHelper.convertDate(score.getAchievedTime()));
 
-            Node indexNode = doc.createElementNS(namespaceSVG, "text");
-            Element index = (Element) indexNode;
+            Element index = doc.createElementNS(namespaceSVG, "text");
             index.setAttribute("class", "cls-1");
             index.setAttribute("x", "104");
             index.setAttribute("y", "448");
@@ -352,8 +335,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             index.setAttribute("opacity", "1");
             index.setTextContent(CommonTool.toString(score.getStarRating())+"* | " + Math.round(score.getBpm()) + " bpm | " + "#" + (listIndex+1));
 
-            Node accuracyLabelNode = doc.createElementNS(namespaceSVG, "text");
-            Element accuracyLabel = (Element) accuracyLabelNode;
+            Element accuracyLabel = doc.createElementNS(namespaceSVG, "text");
             accuracyLabel.setAttribute("class", "cls-1");
             accuracyLabel.setAttribute("x", "505");
             accuracyLabel.setAttribute("y", "412");
@@ -361,8 +343,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             accuracyLabel.setAttribute("fill", "#B9C1C6");
             accuracyLabel.setTextContent("Accuracy");
 
-            Node ComboLabelNode = doc.createElementNS(namespaceSVG, "text");
-            Element ComboLabel = (Element) ComboLabelNode;
+            Element ComboLabel = doc.createElementNS(namespaceSVG, "text");
             ComboLabel.setAttribute("class", "cls-1");
             ComboLabel.setAttribute("x", "582");
             ComboLabel.setAttribute("y", "412");
@@ -370,8 +351,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             ComboLabel.setAttribute("fill", "#B9C1C6");
             ComboLabel.setTextContent("Combo");
 
-            Node scoreLabelNode = doc.createElementNS(namespaceSVG, "text");
-            Element scoreLabel = (Element) scoreLabelNode;
+            Element scoreLabel = doc.createElementNS(namespaceSVG, "text");
             scoreLabel.setAttribute("class", "cls-1");
             scoreLabel.setAttribute("x", "425");
             scoreLabel.setAttribute("y", "412");
@@ -379,8 +359,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             scoreLabel.setAttribute("fill", "#B9C1C6");
             scoreLabel.setTextContent("Score");
 
-            Node accuracyNode = doc.createElementNS(namespaceSVG, "text");
-            Element accuracy = (Element) accuracyNode;
+            Element accuracy = doc.createElementNS(namespaceSVG, "text");
             accuracy.setAttribute("class", "cls-1");
             accuracy.setAttribute("x", "505");
             accuracy.setAttribute("y", "427");
@@ -388,8 +367,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             accuracy.setAttribute("fill", accuracyColorMid(score.getAccuracy()));
             accuracy.setTextContent(CommonTool.toString(score.getAccuracy() * 100).concat("%"));
 
-            Node comboNode = doc.createElementNS(namespaceSVG, "text");
-            Element combo = (Element) comboNode;
+            Element combo = doc.createElementNS(namespaceSVG, "text");
             combo.setAttribute("class", "cls-1");
             combo.setAttribute("x", "582");
             combo.setAttribute("y", "427");
@@ -399,8 +377,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                 combo.setAttribute("fill", "#B9FD9B");
             combo.setTextContent(score.getMaxCombo()+"x");
 
-            Node scoreNode = doc.createElementNS(namespaceSVG, "text");
-            Element totalScore = (Element) scoreNode;
+            Element totalScore = doc.createElementNS(namespaceSVG, "text");
             totalScore.setAttribute("class", "cls-1");
             totalScore.setAttribute("x", "425");
             totalScore.setAttribute("y", "427");
@@ -410,8 +387,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                 totalScore.setAttribute("fill", "#B9FD9B");
             totalScore.setTextContent(NumberFormat.getNumberInstance(Locale.US).format(score.getScore()));
 
-            Node avatarNode = doc.createElementNS(namespaceSVG, "image");
-            Element avatar = (Element) avatarNode;
+            Element avatar =  doc.createElementNS(namespaceSVG, "image");
 
             if (score.getAvatarUrl()==null)
             {
@@ -462,64 +438,56 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
     }
     private static void setupAllScoreLabelsMode(Document doc, MapScore score, Element sectionFull, OsuMode mode)
     {
-        Node label300Node = doc.createElementNS(namespaceSVG, "text");
-        Element label300 = (Element) label300Node;
+        Element label300 = doc.createElementNS(namespaceSVG, "text");
         label300.setAttribute("class", "cls-1");
         label300.setAttribute("x", "485");
         label300.setAttribute("y", "437.8");
         label300.setAttribute("font-size", "6px");
         label300.setAttribute("fill", "#B9C1C6");
 
-        Node label100Node = doc.createElementNS(namespaceSVG, "text");
-        Element label100 = (Element) label100Node;
+        Element label100 = doc.createElementNS(namespaceSVG, "text");
         label100.setAttribute("class", "cls-1");
         label100.setAttribute("x", "521");
         label100.setAttribute("y", "437.8");
         label100.setAttribute("font-size", "6px");
         label100.setAttribute("fill", "#B9C1C6");
 
-        Node label50Node = doc.createElementNS(namespaceSVG, "text");
-        Element label50 = (Element) label50Node;
+        Element label50 = doc.createElementNS(namespaceSVG, "text");
         label50.setAttribute("class", "cls-1");
         label50.setAttribute("x", "551");
         label50.setAttribute("y", "437.8");
         label50.setAttribute("font-size", "6px");
         label50.setAttribute("fill", "#B9C1C6");
 
-        Node labelMissNode = doc.createElementNS(namespaceSVG, "text");
-        Element labelMiss = (Element) labelMissNode;
+        Element labelMiss = doc.createElementNS(namespaceSVG, "text");
         labelMiss.setAttribute("class", "cls-1");
         labelMiss.setAttribute("x", "579");
         labelMiss.setAttribute("y", "437.8");
         labelMiss.setAttribute("font-size", "6px");
         labelMiss.setAttribute("fill", "#B9C1C6");
 
-        Node countOf300Node = doc.createElementNS(namespaceSVG, "text");
-        Element countOf300 = (Element) countOf300Node;
+        Element countOf300 = doc.createElementNS(namespaceSVG, "text");
         countOf300.setAttribute("class", "cls-1");
         countOf300.setAttribute("x", "485");
         countOf300.setAttribute("y", "450");
         countOf300.setAttribute("font-size", "12px");
         countOf300.setAttribute("fill", "#ffffff");
 
-        Node countOf100Node = doc.createElementNS(namespaceSVG, "text");
-        Element countOf100 = (Element) countOf100Node;
+        Element countOf100 = doc.createElementNS(namespaceSVG, "text");
         countOf100.setAttribute("class", "cls-1");
         countOf100.setAttribute("x", "521");
         countOf100.setAttribute("y", "450");
         countOf100.setAttribute("font-size", "12px");
         countOf100.setAttribute("fill", "#ffffff");
 
-        Node countOf50Node = doc.createElementNS(namespaceSVG, "text");
-        Element countOf50 = (Element) countOf50Node;
+        Element countOf50 = doc.createElementNS(namespaceSVG, "text");
         countOf50.setAttribute("class", "cls-1");
         countOf50.setAttribute("x", "551");
         countOf50.setAttribute("y", "450");
         countOf50.setAttribute("font-size", "12px");
         countOf50.setAttribute("fill", "#ffffff");
 
-        Node countOfMissNode = doc.createElementNS(namespaceSVG, "text");
-        Element countOfMiss = (Element) countOfMissNode;
+        Element countOfMiss = doc.createElementNS(namespaceSVG, "text");
         countOfMiss.setAttribute("class", "cls-1");
         countOfMiss.setAttribute("x", "579");
         countOfMiss.setAttribute("y", "450");
@@ -537,8 +505,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             label300.setTextContent("300");
             if (score.getIsLazer())
             {
-                Node labelTickNode = doc.createElementNS(namespaceSVG, "text");
-                Element labelTick = (Element) labelTickNode;
+                Element labelTick = doc.createElementNS(namespaceSVG, "text");
                 labelTick.setAttribute("class", "cls-1");
                 labelTick.setAttribute("x", "410");
                 labelTick.setAttribute("y", "437.8");
@@ -547,8 +514,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                 labelTick.setAttribute("opacity", "0.6");
                 labelTick.setTextContent("Tick");
 
-                Node labelEndNode = doc.createElementNS(namespaceSVG, "text");
-                Element labelEnd = (Element) labelEndNode;
+                Element labelEnd = doc.createElementNS(namespaceSVG, "text");
                 labelEnd.setAttribute("class", "cls-1");
                 labelEnd.setAttribute("x", "446");
                 labelEnd.setAttribute("y", "437.8");
@@ -557,8 +523,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                 labelEnd.setAttribute("opacity", "0.6");
                 labelEnd.setTextContent("End");
 
-                Node countOfTickNode = doc.createElementNS(namespaceSVG, "text");
-                Element countOfTick = (Element) countOfTickNode;
+                Element countOfTick = doc.createElementNS(namespaceSVG, "text");
                 countOfTick.setAttribute("class", "cls-1");
                 countOfTick.setAttribute("x", "410");
                 countOfTick.setAttribute("y", "450");
@@ -567,8 +532,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                 countOfTick.setAttribute("opacity", "0.6");
                 countOfTick.setTextContent(String.valueOf(Optional.ofNullable(score.getStatistics().getLarge_tick_hit()).orElse(0)));
 
-                Node countOfEndNode = doc.createElementNS(namespaceSVG, "text");
-                Element countOfEnd = (Element) countOfEndNode;
+                Element countOfEnd = doc.createElementNS(namespaceSVG, "text");
                 countOfEnd.setAttribute("class", "cls-1");
                 countOfEnd.setAttribute("x", "446");
                 countOfEnd.setAttribute("y", "450");
@@ -609,32 +573,28 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             label300.setTextContent("Fruits");
         }
         else {
-            Node labelGreatNode = doc.createElementNS(namespaceSVG, "text");
-            Element labelGreat = (Element) labelGreatNode;
+            Element labelGreat = doc.createElementNS(namespaceSVG, "text");
             labelGreat.setAttribute("class", "cls-1");
             labelGreat.setAttribute("x", "400");
             labelGreat.setAttribute("y", "437.8");
             labelGreat.setAttribute("font-size", "6px");
             labelGreat.setAttribute("fill", "#B9C1C6");
 
-            Node labelPerfectNode = doc.createElementNS(namespaceSVG, "text");
-            Element labelPerfect = (Element) labelPerfectNode;
+            Element labelPerfect = doc.createElementNS(namespaceSVG, "text");
             labelPerfect.setAttribute("class", "cls-1");
             labelPerfect.setAttribute("x", "440");
             labelPerfect.setAttribute("y", "437.8");
             labelPerfect.setAttribute("font-size", "6px");
             labelPerfect.setAttribute("fill", "#B9C1C6");
 
-            Node countOfPerfectNode = doc.createElementNS(namespaceSVG, "text");
-            Element countOfPerfect = (Element) countOfPerfectNode;
+            Element countOfPerfect = doc.createElementNS(namespaceSVG, "text");
             countOfPerfect.setAttribute("class", "cls-1");
             countOfPerfect.setAttribute("x", "400");
             countOfPerfect.setAttribute("y", "450");
             countOfPerfect.setAttribute("font-size", "12px");
             countOfPerfect.setAttribute("fill", "#ffffff");
 
-            Node countOfGreatNode = doc.createElementNS(namespaceSVG, "text");
-            Element countOfGreat = (Element) countOfGreatNode;
+            Element countOfGreat = doc.createElementNS(namespaceSVG, "text");
             countOfGreat.setAttribute("class", "cls-1");
             countOfGreat.setAttribute("x", "440");
             countOfGreat.setAttribute("y", "450");
@@ -674,16 +634,14 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
         sectionFull.appendChild(countOf50);
 
     }
-    private static Document setupModIconForAllScores(List<Mod> modList, Document doc, Element sectionFull)
+    private static void setupModIconForAllScores(List<Mod> modList, Document doc, Element sectionFull)
     {
-        if (modList.isEmpty()) return doc;
+        if (modList.isEmpty()) return;
         modList=modList.stream().filter(mod -> !mod.getAcronym().equals("CL")).toList().reversed();
         for(int i=0;i<modList.size();i++)
         {
-            Node modSingleNode = doc.createElementNS(namespaceSVG, "g");
-            Element modSingle = (Element) modSingleNode;
-            Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
-            Element rectBG = (Element) rectBGNode;
+            Element modSingle = doc.createElementNS(namespaceSVG, "g");
+            Element rectBG = doc.createElementNS(namespaceSVG, "rect");
             rectBG.setAttribute("rx", "5");
             rectBG.setAttribute("x", "717");
             rectBG.setAttribute("y", "408");
@@ -691,8 +649,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
             rectBG.setAttribute("height", "10");
             rectBG.setAttribute("fill", ModColor.fromString(modList.get(i).getAcronym()).getDetailedPrimaryColor().toString());
 
-            Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
-            Element modAcronym = (Element) modAcronymNode;
+            Element modAcronym = doc.createElementNS(namespaceSVG, "text");
             modAcronym.setAttribute("class", "cls-4");
             modAcronym.setAttribute("x", "726.5");
             modAcronym.setAttribute("y", "416");
@@ -711,15 +668,14 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                 modSingle.appendChild(rectBG);
                 modSingle.appendChild(modAcronym);
                 modSingle.setAttribute("transform", "translate(-66 0)");
-                sectionFull.appendChild(modSingleNode);
+                sectionFull.appendChild(modSingle);
                 break;
             }
             modSingle.appendChild(rectBG);
             modSingle.appendChild(modAcronym);
             modSingle.setAttribute("transform", "translate(" + (-22*i)  + " 0)");
-            sectionFull.appendChild(modSingleNode);
+            sectionFull.appendChild(modSingle);
         }
-        return doc;
     }
 
     private static String accuracyColorMid(double accuracy) {

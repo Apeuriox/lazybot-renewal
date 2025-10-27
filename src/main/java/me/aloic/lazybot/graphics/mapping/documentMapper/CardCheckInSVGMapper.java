@@ -65,11 +65,9 @@ public class CardCheckInSVGMapper extends LazybotSVGMapper
     }
     private static void singleDayCard(Document document, Element svgRoot ,int dayOfMonth, int type, int index)
     {
-        Node sectionFullNode = document.createElementNS(namespaceSVG, "g");
-        Element sectionFull = (Element) sectionFullNode;
+        Element sectionFull = document.createElementNS(namespaceSVG, "g");
 
-        Node singleDayBGNode = document.createElementNS(namespaceSVG, "rect");
-        Element singleDayBG = (Element) singleDayBGNode;
+        Element singleDayBG = document.createElementNS(namespaceSVG, "rect");
         singleDayBG.setAttribute("x", "21");
         singleDayBG.setAttribute("y", "161");
         singleDayBG.setAttribute("width", "170");

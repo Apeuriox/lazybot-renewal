@@ -8,7 +8,6 @@ import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.PPPlusIncompatibleMods;
 import me.aloic.lazybot.osu.enums.RankColor;
-import me.aloic.lazybot.osu.enums.RankedMods;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
@@ -17,8 +16,6 @@ import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -144,7 +141,7 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
         HSL plusRectColor = new HSL(hue, 28, 93);
 
         document.getElementById("playername").setTextContent(score.getUser_name());
-        document.getElementById("time").setTextContent(CommonTool.formattingDate(score.getCreate_at(),"yyyy-MM-dd / HH:mm:ss"));
+        document.getElementById("time").setTextContent(CommonTool.formatJsonDateToString(score.getCreate_at(),"yyyy-MM-dd / HH:mm:ss"));
 
         if (score.getModJSON() != null && !score.getModJSON().isEmpty()) {
             if (!PPPlusIncompatibleMods.checkModsCompatibility(score.getModJSON()))

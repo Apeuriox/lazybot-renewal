@@ -29,6 +29,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             //此图片元素对应替换玩家的头像以及Beatmap的背景图
             NodeList imageElements = doc.getElementsByTagName("image");
 
+
             for (int i = 0; i < imageElements.getLength(); i++)
             {
                 Element imageElement = (Element) imageElements.item(i);
@@ -62,7 +63,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc.getElementById("mapperName").setTextContent(targetScore.getBeatmap().getCreator());
             doc.getElementById("beatmapId").setTextContent(String.valueOf(targetScore.getBeatmap().getBid()));
             doc.getElementById("starRating").setTextContent(CommonTool.toString(targetScore.getBeatmap().getDifficult_rating()));
-            doc.getElementById("achievedTime").setTextContent(CommonTool.formattingDate(targetScore.getCreate_at(),"yyyy-MM-dd   HH:mm:ss"));
+            doc.getElementById("achievedTime").setTextContent(CommonTool.formatJsonDateToString(targetScore.getCreate_at(),"yyyy-MM-dd   HH:mm:ss"));
             if (targetScore.getPp() != null)
             {
                 doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat(" PP"));
@@ -131,7 +132,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc.getElementById("OD").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getOd()));
             doc.getElementById("HP").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getHp()));
             doc.getElementById("CS").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getCs()));
-            doc.getElementById("mods").setTextContent(CommonTool.modArrayToString(targetScore.getMods()));
+            doc.getElementById("mods").setTextContent(CommonTool.modArrayToString(targetScore.getModJSON()));
             if (targetScore.getBeatmap().getTitle().length() < 24) {
                 doc.getElementById("songTitle1").setTextContent(targetScore.getBeatmap().getTitle());
             }
@@ -177,7 +178,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             document.getElementById("mapBg-mask").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
 //            document.getElementById("mapBg-mask").setAttribute("opacity", "0.6");
             document.getElementById("playername").setTextContent(targetScore.getUser_name());
-            document.getElementById("achievedTime").setTextContent(CommonTool.formattingDate(targetScore.getCreate_at(),"yyyy-MM-dd"));
+            document.getElementById("achievedTime").setTextContent(CommonTool.formatJsonDateToString(targetScore.getCreate_at(),"yyyy-MM-dd"));
             document.getElementById("title").setTextContent(targetScore.getBeatmap().getTitle());
             document.getElementById("artist").setTextContent(targetScore.getBeatmap().getArtist());
             document.getElementById("mapper").setTextContent(targetScore.getBeatmap().getCreator());
@@ -284,7 +285,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                 doc.getElementById("starRating").setAttribute("transform", "translate(270, 568)");
             }
 
-            doc.getElementById("achievedTime").setTextContent(CommonTool.formattingDate(targetScore.getCreate_at(),"yyyy/MM/dd HH:mm:ss"));
+            doc.getElementById("achievedTime").setTextContent(CommonTool.formatJsonDateToString(targetScore.getCreate_at(),"yyyy/MM/dd HH:mm:ss"));
             if (targetScore.getPp() != null)
             {
                 doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat(" PP"));

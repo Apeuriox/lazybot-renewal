@@ -222,19 +222,16 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
             if(startHue>=233 && startHue<=292) {
                 textColor=new HSL(startHue,0,90);
             }
-            Node tagSingleNode = doc.createElementNS(namespaceSVG, "g");
-            Element tagSingle = (Element) tagSingleNode;
+            Element tagSingle = doc.createElementNS(namespaceSVG, "g");
 
-            Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
-            Element rectBG = (Element) rectBGNode;
+            Element rectBG =  doc.createElementNS(namespaceSVG, "rect");
             rectBG.setAttribute("x", "15");
             rectBG.setAttribute("y", "70");
             rectBG.setAttribute("width", String.valueOf(tag.getElementSize()));
             rectBG.setAttribute("height", "20");
             rectBG.setAttribute("fill", new HSL(startHue, 87, 53).toString());
 
-            Node tagNamemNode = doc.createElementNS(namespaceSVG, "text");
-            Element tagName = (Element) tagNamemNode;
+            Element tagName = doc.createElementNS(namespaceSVG, "text");
             tagName.setAttribute("class", "cls-2");
             tagName.setAttribute("x", String.valueOf(tag.getAnchor()));
             tagName.setAttribute("y", "100");
@@ -248,7 +245,7 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
             tagSingle.appendChild(rectBG);
             tagSingle.appendChild(tagName);
             tagSingle.setAttribute("transform", "translate(" + offset+lastElementSize  + " 0)");
-            sectionFull.appendChild(tagSingleNode);
+            sectionFull.appendChild(tagSingle);
             startHue+=35;
             lastElementSize+=tag.getElementSize()+10;
         }
@@ -333,8 +330,7 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
     private static void setLinearGradientForCC2024(Document doc,String elementId, int pp, double scaled, int primaryColor)
     {
         Element svgRoot = doc.getDocumentElement();
-        Node linearGradientNode = doc.createElementNS(namespaceSVG, "linearGradient");
-        Element linearGradient = (Element) linearGradientNode;
+        Element linearGradient = doc.createElementNS(namespaceSVG, "linearGradient");
         linearGradient.setAttributeNS(null, "id", "gradient-".concat(elementId));
         linearGradient.setAttributeNS(null, "x1", "106");
         linearGradient.setAttributeNS(null, "y1", "1272");
