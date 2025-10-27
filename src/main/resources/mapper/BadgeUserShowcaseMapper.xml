@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.BadgeShowcaseMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.BadgeUserShowcasePO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="lazybot_id" jdbcType="INTEGER" property="lazybot_id"/>
+        <result column="badge_id" jdbcType="INTEGER" property="badge_id"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, lazybot_id, badge_id
+    </sql>
+
+    <select id="selectByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_user_showcase
+        WHERE lazybot_id =#{id}
+    </select>
+
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT
+        INTO badge_user_showcase (lazybot_id, badge_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.lazybot_id}, #{item.badge_id})
+        </foreach>
+        ON DUPLICATE KEY UPDATE id=id;
+    </insert>
+
+
+    <delete id="deleteByBadgeIdAndUserId" parameterType="java.lang.Integer">
+        DELETE
+        FROM badge_user_showcase
+        WHERE badge_id =#{badge_id}
+        AND lazybot_id =#{lazybot_id}
+    </delete>
+
+    <delete id="deleteAllUser" parameterType="java.lang.Integer">
+        DELETE
+        FROM badge_user_showcase
+        WHERE lazybot_id =#{lazybot_id}
+    </delete>
+
+
+</mapper>

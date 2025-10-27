@@ -13,7 +13,7 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ThumbnailParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -42,13 +42,13 @@ public class ThumbnailCommand implements LazybotSlashCommand
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
         if (event.getCommandType().equalsIgnoreCase("tns") || event.getCommandType().equalsIgnoreCase("thumbnail"))
-            ImageUploadUtil.uploadImageToOnebot(bot,event,
+            CommandResultHandler.uploadImageToOnebot(bot,event,
                     playerService.thumbnailClassicalScore(
                             setupParameter(event,tokenPO, 0))
             );
         else if (event.getCommandType().equalsIgnoreCase("tnp"))
         {
-            ImageUploadUtil.uploadImageToOnebot(bot,event,
+            CommandResultHandler.uploadImageToOnebot(bot,event,
                     playerService.thumbnailClassicalRecent(
                             setupParameter(event,tokenPO, 1))
             );

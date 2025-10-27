@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.BadgeUserOwnedMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.BadgeUserOwnedPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="user_id"/>
+        <result column="badge_id" jdbcType="INTEGER" property="badge_id"/>
+        <result column="source_challenge_id" jdbcType="INTEGER" property="source_challenge_id"/>
+        <result column="source_text" jdbcType="VARCHAR" property="source_text"/>
+        <result column="obtain_time" jdbcType="DATE" property="obtain_time"/>
+
+    </resultMap>
+
+    <resultMap id="UserBadgeVOMap" type="me.aloic.lazybot.entity.vo.BadgeUserVO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="type" column="type"/>
+        <result property="alternative_name" column="alternative_name"/>
+        <result property="create_time" column="create_time"/>
+        <result property="source_challenge_id" column="source_challenge_id"/>
+        <result property="obtain_time" column="obtain_time"/>
+    </resultMap>
+
+    <sql id = "Base_Column_List">
+        id, user_id, badge_id, source_challenge_id, source_text, obtain_time
+    </sql>
+
+    <select id="selectUserBadges" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_user_owned
+        WHERE user_id =#{user_id}
+        ORDER BY
+        obtain_time
+    </select>
+    <select id="selectByUserIdAndBadgeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_user_owned
+        WHERE user_id =#{user_id}
+        AND badge_id =#{badge_id}
+    </select>
+
+    <select id="selectUserSingleBadge" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_user_owned
+        WHERE user_id =#{user_id}
+        AND badge_id = #{badge_id}
+    </select>
+
+    <select id="selectBadgesByUserId" resultMap="UserBadgeVOMap">
+        SELECT
+            b.id,
+            b.name,
+            b.description,
+            b.type,
+            b.alternative_name,
+            b.create_time,
+            ub.obtain_time,
+            ub.source_challenge_id
+        FROM
+            badge_definition b
+                INNER JOIN
+            badge_user_owned ub ON b.id = ub.badge_id
+        WHERE
+            ub.user_id = #{user_id}
+        ORDER BY
+            ub.obtain_time
+    </select>
+
+
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE
+        FROM badge_user_owned
+        WHERE user_id = #{user_id}
+        AND badge_id = #{badge_id}
+    </delete>
+
+    <delete id="deleteByBadgeId" parameterType="java.lang.Integer">
+        DELETE
+        FROM badge_user_owned
+        WHERE  badge_id = #{badge_id}
+    </delete>
+
+
+</mapper>

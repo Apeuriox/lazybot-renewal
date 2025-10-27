@@ -17,4 +17,10 @@ public class ModSetting implements Serializable
     private Boolean extended_limits;
     private Double overall_difficulty;
     private Long seed;
+
+    public ModSetting(Double speed_change)
+    {
+        this.speed_change=speed_change;
+    }
+
 }

@@ -2,10 +2,6 @@ package me.aloic.lazybot.osu.dao.entity.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
-
-import java.util.List;
 
 
 @EqualsAndHashCode(callSuper = true)
@@ -19,7 +15,6 @@ public class PPPlusScore extends ScoreVO
     {
         this.setUser_name(scoreVO.getUser_name());
         this.setAccuracy(scoreVO.getAccuracy());
-        this.setMods(scoreVO.getMods());
         this.setModJSON(scoreVO.getModJSON());
         this.setScore(scoreVO.getScore());
         this.setMaxCombo(scoreVO.getMaxCombo());

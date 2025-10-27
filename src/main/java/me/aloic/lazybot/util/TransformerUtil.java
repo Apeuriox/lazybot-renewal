@@ -69,9 +69,9 @@ public class TransformerUtil
             scoreVO[i]=new ScoreVO();
             scoreVO[i].setScore(scoreDTO.get(i).getClassic_total_score());
             scoreVO[i].setAccuracy(scoreDTO.get(i).getAccuracy());
-            scoreVO[i].setMods(scoreDTO.get(i).getMods().stream()
-                    .map(Mod::getAcronym)
-                    .toArray(String[]::new));
+//            scoreVO[i].setMods(scoreDTO.get(i).getMods().stream()
+//                    .map(Mod::getAcronym)
+//                    .toArray(String[]::new));
             scoreVO[i].setModJSON(scoreDTO.get(i).getMods());
             scoreVO[i].setCreate_at(scoreDTO.get(i).getEnded_at());
             scoreVO[i].setMaxCombo(scoreDTO.get(i).getMax_combo());
@@ -98,9 +98,9 @@ public class TransformerUtil
             ScoreVO temp = new ScoreVO();
             temp.setScore(scoreLazerDTO.getClassic_total_score());
             temp.setAccuracy(scoreLazerDTO.getAccuracy());
-            temp.setMods(scoreLazerDTO.getMods().stream()
-                    .map(Mod::getAcronym)
-                    .toArray(String[]::new));
+//            temp.setMods(scoreLazerDTO.getMods().stream()
+//                    .map(Mod::getAcronym)
+//                    .toArray(String[]::new));
             temp.setModJSON(scoreLazerDTO.getMods());
             temp.setCreate_at(scoreLazerDTO.getEnded_at());
             temp.setMaxCombo(scoreLazerDTO.getMax_combo());
@@ -132,9 +132,9 @@ public class TransformerUtil
             ScoreVO temp = new ScoreVO();
             temp.setScore(scoreLazerDTO.getClassic_total_score());
             temp.setAccuracy(scoreLazerDTO.getAccuracy());
-            temp.setMods(scoreLazerDTO.getMods().stream()
-                    .map(Mod::getAcronym)
-                    .toArray(String[]::new));
+//            temp.setMods(scoreLazerDTO.getMods().stream()
+//                    .map(Mod::getAcronym)
+//                    .toArray(String[]::new));
             temp.setModJSON(scoreLazerDTO.getMods());
             temp.setCreate_at(scoreLazerDTO.getEnded_at());
             temp.setMaxCombo(scoreLazerDTO.getMax_combo());
@@ -213,6 +213,29 @@ public class TransformerUtil
             mapScoreList.add(temp);
         }
         return mapScoreList;
+    }
+
+    public static MapScore mapScoreTransform(ScoreLazerDTO scoreLazerDTOS)
+    {
+        MapScore score = new MapScore();
+        score.setAccuracy(scoreLazerDTOS.getAccuracy());
+        score.setModList(scoreLazerDTOS.getMods());
+        score.setAchievedTime(scoreLazerDTOS.getEnded_at());
+        score.setMaxCombo(scoreLazerDTOS.getMax_combo());
+        score.setPp(scoreLazerDTOS.getPp());
+        score.setIsLazer(scoreLazerDTOS.getLegacy_total_score() == 0);
+        score.setStatistics(scoreLazerDTOS.getStatistics());
+        score.setRulesetId(scoreLazerDTOS.getRuleset_id());
+        score.setIsPerfectCombo(scoreLazerDTOS.getIs_perfect_combo());
+        score.setModJSON(scoreLazerDTOS.getMods());
+        score.setScore(Long.valueOf(scoreLazerDTOS.getTotal_score()));
+        if(scoreLazerDTOS.getPassed()) {
+            score.setRank(scoreLazerDTOS.getRank());
+        }
+        else {
+            score.setRank("D");
+        }
+        return score;
     }
 
 
@@ -365,7 +388,7 @@ public class TransformerUtil
         ScoreVO score=new ScoreVO();
         score.setScore(scoreLazer.getClassic_total_score());
         score.setAccuracy(scoreLazer.getAccuracy());
-        score.setMods(scoreLazer.getModsArray());
+//        score.setMods(scoreLazer.getModsArray());
         score.setModJSON(scoreLazer.getMods());
         score.setCreate_at(scoreLazer.getEnded_at());
         score.setMaxCombo(scoreLazer.getMax_combo());

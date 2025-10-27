@@ -48,6 +48,15 @@
         where qq_code =#{qq_code,jdbcType=BIGINT}
     </select>
 
+    <select id="selectByCodes" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from token
+        where valid = 1 and qq_code in
+        <foreach collection="codes" index="index" item="item" separator="," open="(" close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+    </select>
+
     <update id="updateByToken" parameterType="me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO">
         update token
         <set>

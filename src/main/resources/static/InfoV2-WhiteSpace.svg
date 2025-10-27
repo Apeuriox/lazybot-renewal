@@ -283,6 +283,9 @@
       <rect class="cls-10" id="avatarBorder" x="60" y="110" width="90" height="90" rx="10" ry="10"/>
     </clipPath>
 
+    <clipPath id="badgeClip">
+      <rect class="cls-10" x="165" y="160" width="72" height="36" rx="5" ry="5"/>
+    </clipPath>
     <clipPath id="clippath">
       <rect class="cls-8" x="1620" width="240" height="60"/>
     </clipPath>

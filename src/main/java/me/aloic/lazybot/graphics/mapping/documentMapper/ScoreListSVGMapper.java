@@ -14,7 +14,6 @@ import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,11 +22,11 @@ import java.util.List;
 
 public class ScoreListSVGMapper extends LazybotSVGMapper
 {
-    public static Document mapScoreListToBpCard(PlayerInfoVO player, List<ScoreVO> scoreArray, Integer offset, Integer type) throws IOException
+    public static Document mapScoreListToBpCard(PlayerInfoVO player, List<ScoreVO> scoreArray, Integer offset, Integer type)
     {
         return mapScoreListToBpCard(player,scoreArray,offset,type,null);
     }
-    public static Document mapScoreListToBpCard(PlayerInfoVO player, List<ScoreVO> scoreArray, Integer offset, Integer type, String infoMsg) throws IOException{
+    public static Document mapScoreListToBpCard(PlayerInfoVO player, List<ScoreVO> scoreArray, Integer offset, Integer type, String infoMsg){
         Document document;
         int targetHeight=0;
         if(type==0)
@@ -54,7 +53,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         Element svgRoot = document.getDocumentElement();
 
         svgRoot.setAttribute("height", String.valueOf(targetHeight));
-        document.getElementById(OsuMode.getMode(scoreArray.get(0).getMode()).getDescribe()).setAttribute("class", "cls-24");
+        document.getElementById(OsuMode.getMode(scoreArray.getFirst().getMode()).getDescribe()).setAttribute("class", "cls-24");
         document.getElementById("background").setAttribute("height", String.valueOf(targetHeight));
         document.getElementById("playername").setTextContent(player.getPlayerName());
         if(type==2) {
@@ -91,12 +90,10 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
     private static void wireBpListCard(Document document, ScoreVO scoreVO, int index, int total, int offset, int type)
     {
         Element svgRoot = document.getDocumentElement();
-        Node sectionFullNode = document.createElementNS(namespaceSVG, "g");
-        Element sectionFull = (Element) sectionFullNode;
+        Element sectionFull = document.createElementNS(namespaceSVG, "g");
         Element defs = document.createElementNS(namespaceSVG, "defs");
 
-        Node listSubSectionNode = document.createElementNS(namespaceSVG, "rect");
-        Element listSubSection = (Element) listSubSectionNode;
+        Element listSubSection = document.createElementNS(namespaceSVG, "rect");
         listSubSection.setAttribute("class", "cls-31");
         if(type==0)
         {
@@ -112,8 +109,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             listSubSection.setAttribute("height", "240");
         }
 
-        Node mapBGNode = document.createElementNS(namespaceSVG, "image");
-        Element mapBG = (Element) mapBGNode;
+        Element mapBG = document.createElementNS(namespaceSVG, "image");
         mapBG.setAttributeNS(xlinkns, "xlink:href", scoreVO.getBeatmap().getBgUrl());
         mapBG.setAttribute("preserveAspectRatio", "xMidYMid slice");
         mapBG.setAttribute("opacity", "0.5");
@@ -131,8 +127,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         }
 
 
-        Node listSubSectionNodeOpacity = document.createElementNS(namespaceSVG, "rect");
-        Element listSubSectionOpacity  = (Element) listSubSectionNodeOpacity ;
+        Element listSubSectionOpacity  = document.createElementNS(namespaceSVG, "rect");
         listSubSectionOpacity .setAttribute("class", "cls-31");
         listSubSectionOpacity.setAttribute("opacity", "0.7");
         if(type==0) {
@@ -148,8 +143,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             listSubSectionOpacity.setAttribute("height", "240");
         }
 
-        Node songTitleNode = document.createElementNS(namespaceSVG, "text");
-        Element songTitle = (Element) songTitleNode;
+        Element songTitle = document.createElementNS(namespaceSVG, "text");
         String title = scoreVO.getBeatmap().getTitle();
         if (title.length() >= 20) {
             title = title.substring(0, 19) + "...";
@@ -169,8 +163,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         {
             version = version.substring(0, 34) + "...";
         }
-        Node difficultyNode = document.createElementNS(namespaceSVG, "text");
-        Element difficulty = (Element) difficultyNode;
+        Element difficulty = document.createElementNS(namespaceSVG, "text");
         difficulty.setAttribute("class", "cls-1");
         if(type==0)
         {
@@ -183,16 +176,12 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
 
 
         String diffColor="#".concat(CommonTool.calcDiffColor(scoreVO.getBeatmap().getDifficult_rating()));
-        String diffTextColor = "#fed867";
+        String diffTextColor = CommonTool.getStarRatingFontColor(scoreVO.getBeatmap().getDifficult_rating());
         String starType = "assets/osuResources/star-golden.svg";
-        if (scoreVO.getBeatmap().getDifficult_rating() < 7.0) {
-            if (scoreVO.getBeatmap().getDifficult_rating() % 1.0 < 0.5) {
-                diffTextColor = "#1c1719";
-                starType = "assets/osuResources/star-dark.svg";
-            }
+        if (diffTextColor.equalsIgnoreCase("#1c1719")) {
+            starType = "assets/osuResources/star-dark.svg";
         }
-        Node starNode = document.createElementNS(namespaceSVG, "text");
-        Element star = (Element) starNode;
+        Element star = document.createElementNS(namespaceSVG, "text");;
         star.setAttribute("class", "cls-46");
         if(type==0) {
             star.setAttribute("transform", "translate(398 408)");
@@ -204,8 +193,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         star.setAttribute("fill", diffTextColor);
         star.setTextContent(CommonTool.toString(scoreVO.getBeatmap().getDifficult_rating()));
 
-        Node starImageNode = document.createElementNS(namespaceSVG, "image");
-        Element starImage = (Element) starImageNode;
+        Element starImage = document.createElementNS(namespaceSVG, "image");
         starImage.setAttributeNS(xlinkns, "xlink:href", starType);
         if(type==0) {
             starImage.setAttribute("transform", "translate(380 401)");
@@ -218,8 +206,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         starImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
 
 
-        Node accNode = document.createElementNS(namespaceSVG, "text");
-        Element acc = (Element) accNode;
+        Element acc = document.createElementNS(namespaceSVG, "text");
         acc.setAttribute("class", "cls-44");
         if(type==0){
             acc.setAttribute("transform", "translate(115 306)");
@@ -230,8 +217,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         acc.setTextContent(CommonTool.toString(scoreVO.getAccuracy() * 100).concat("%").concat(" // ").concat(String.valueOf(scoreVO.getMaxCombo())).concat("x"));
 
 
-        Node ppValueNode = document.createElementNS(namespaceSVG, "text");
-        Element ppValue = (Element) ppValueNode;
+        Element ppValue = document.createElementNS(namespaceSVG, "text");
         if(type==0) {
             ppValue.setAttribute("transform", "translate(115 180)");
             ppValue.setAttribute("class", "cls-6");
@@ -249,31 +235,26 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
 
         if(type==2||type==3)
         {
-            Node originalPpValueNode = document.createElementNS(namespaceSVG, "tspan");
-            Element originalPpValue = (Element) originalPpValueNode;
+            Element originalPpValue =document.createElementNS(namespaceSVG, "tspan");
             originalPpValue.setAttribute("class", "cls-6");
             originalPpValue.setTextContent(String.valueOf(Math.round(scoreVO.getPpDetailsLocal().getCurrentPP())).concat("pp"));
-            ppValue.appendChild(originalPpValueNode);
+            ppValue.appendChild(originalPpValue);
             if(Math.abs(scoreVO.getPpDetailsLocal().getCurrentPP()-scoreVO.getPp())>1.5)
             {
-                Node arrowNode = document.createElementNS(namespaceSVG, "tspan");
-                Element arrow = (Element) arrowNode;
+                Element arrow = document.createElementNS(namespaceSVG, "tspan");
                 arrow.setAttribute("class", "cls-205");
                 arrow.setTextContent("->");
 
-                Node fixedPpValueNode = document.createElementNS(namespaceSVG, "tspan");
-                Element fixedPpValue = (Element) fixedPpValueNode;
+                Element fixedPpValue =  document.createElementNS(namespaceSVG, "tspan");
                 fixedPpValue.setAttribute("class", "cls-206");
                 fixedPpValue.setTextContent(String.valueOf(Math.round(scoreVO.getPp())).concat("pp"));
-                ppValue.appendChild(arrowNode);
-                ppValue.appendChild(fixedPpValueNode);
+                ppValue.appendChild(arrow);
+                ppValue.appendChild(fixedPpValue);
             }
 
         }
 
-
-        Node indexNode = document.createElementNS(namespaceSVG, "text");
-        Element indexElement = (Element) indexNode;
+        Element indexElement = document.createElementNS(namespaceSVG, "text");
         indexElement.setAttribute("class", "cls-122");
         if(type==0) {
             indexElement.setAttribute("x", "365");
@@ -293,8 +274,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             indexElement.setTextContent("#".concat(String.valueOf(index+offset)));
         }
 
-        Node bidNode = document.createElementNS(namespaceSVG, "text");
-        Element bid = (Element) bidNode;
+        Element bid = document.createElementNS(namespaceSVG, "text");
         bid.setAttribute("class", "cls-4");
         if(type==0) {
             bid.setAttribute("transform", "translate(140 385)");
@@ -307,8 +287,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         bid.setTextContent(String.valueOf(scoreVO.getBeatmap().getBid()));
 
 
-        Node acheveTimeNode = document.createElementNS(namespaceSVG, "text");
-        Element acheveTime = (Element) acheveTimeNode;
+        Element acheveTime = document.createElementNS(namespaceSVG, "text");
         acheveTime.setAttribute("class", "cls-1");
         if(type==0) {
             acheveTime.setAttribute("transform", "translate(115 130)");
@@ -323,8 +302,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         if (artistAndMapper.length() >= 35) {
             artistAndMapper = artistAndMapper.substring(0, 34) + "...";
         }
-        Node artistNode = document.createElementNS(namespaceSVG, "text");
-        Element artist = (Element) artistNode;
+        Element artist = document.createElementNS(namespaceSVG, "text");
         artist.setAttribute("class", "cls-4");
         if(type==0) {
             artist.setAttribute("transform", "translate(115 258)");
@@ -334,9 +312,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         }
         artist.setTextContent(artistAndMapper);
 
-
-        Node linearGradientNode = document.createElementNS(namespaceSVG, "linearGradient");
-        Element linearGradient = (Element) linearGradientNode;
+        Element linearGradient = document.createElementNS(namespaceSVG, "linearGradient");
         linearGradient.setAttributeNS(null, "id", "gradient-".concat(String.valueOf(index)));
         if(type==0)
         {
@@ -375,9 +351,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         stop3.setAttributeNS(null, "stop-color", diffColor);
         linearGradient.appendChild(stop3);
 
-
-        Node lineNode = document.createElementNS(namespaceSVG, "rect");
-        Element line = (Element) lineNode;
+        Element line = document.createElementNS(namespaceSVG, "rect");
         line.setAttribute("fill","url(#gradient-".concat(String.valueOf(index)).concat(")"));
         if(type==0)
         {
@@ -465,11 +439,9 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         svgRoot.appendChild(sectionFull);
     }
     private static void appendBpCardModIcon(Document document, Mod mod, Element sectionFull, int index, int panelVersion) {
-        Node modSingleNode = document.createElementNS(namespaceSVG, "g");
-        Element modSingle = (Element) modSingleNode;
+        Element modSingle = document.createElementNS(namespaceSVG, "g");
 
-        Node rectBGNode = document.createElementNS(namespaceSVG, "rect");
-        Element rectBG  = (Element) rectBGNode ;
+        Element rectBG  = document.createElementNS(namespaceSVG, "rect");
         if(panelVersion==0)
         {
             rectBG.setAttribute("transform", "translate(115 320)");
@@ -487,8 +459,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         }
         rectBG .setAttribute("fill", ModColor.getModTypeColorHEX(mod));
 
-        Node modAcronymNode = document.createElementNS(namespaceSVG, "text");
-        Element modAcronym = (Element) modAcronymNode;
+        Element modAcronym = document.createElementNS(namespaceSVG, "text");
         modAcronym.setAttribute("class", "cls-120");
         if(panelVersion==0) {
             modAcronym.setAttribute("transform", "translate(130 332)");
@@ -505,7 +476,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         else
             modSingle.setAttribute("transform", "translate("+ 27*index +" 0)");
 
-        sectionFull.appendChild(modSingleNode);
+        sectionFull.appendChild(modSingle);
     }
 
 
@@ -565,10 +536,8 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         int listIndex=0;
         for (ScoreSequence score : scorelist)
         {
-            Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
-            Element sectionFull = (Element) sectionFullNode;
-            Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
-            Element totalBG = (Element) totalBGNode;
+            Element sectionFull = doc.createElementNS(namespaceSVG, "g");
+            Element totalBG = doc.createElementNS(namespaceSVG, "rect");
             totalBG.setAttribute("rx", "10");
             totalBG.setAttribute("ry", "10");
             totalBG.setAttribute("width", "950");
@@ -576,8 +545,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             totalBG.setAttribute("fill", "#2a2933");
             totalBG.setAttribute("transform", "translate(30,80)");
 
-            Node mapBGImageNode = doc.createElementNS(namespaceSVG, "image");
-            Element mapBGImage = (Element) mapBGImageNode;
+            Element mapBGImage = doc.createElementNS(namespaceSVG, "image");
             mapBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBeatmap().getBgUrl());
             mapBGImage.setAttribute("x", "30");
             mapBGImage.setAttribute("y", "80");
@@ -587,8 +555,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             mapBGImage.setAttribute("clip-path", "url(#singleClip)");
             mapBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
 
-            Node totalBGMaskNode = doc.createElementNS(namespaceSVG, "rect");
-            Element totalBGMask = (Element) totalBGMaskNode;
+            Element totalBGMask = doc.createElementNS(namespaceSVG, "rect");
             totalBGMask.setAttribute("rx", "10");
             totalBGMask.setAttribute("ry", "10");
             totalBGMask.setAttribute("width", "950");
@@ -597,28 +564,23 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             totalBGMask.setAttribute("opacity", "0.5");
             totalBGMask.setAttribute("transform", "translate(30,80)");
 
-            Node playerNameNode = doc.createElementNS(namespaceSVG, "text");
-            Element playerName = (Element) playerNameNode;
+            Element playerName = doc.createElementNS(namespaceSVG, "text");
             playerName.setAttribute("class", "cls-122");
             playerName.setAttribute("transform", "translate(70 170)");
             playerName.setTextContent(score.getPlayerName());
 
-            Node starAndSongTitleNode = doc.createElementNS(namespaceSVG, "text");
-            Element starAndSongTitle = (Element) starAndSongTitleNode;
+            Element starAndSongTitle = doc.createElementNS(namespaceSVG, "text");
             starAndSongTitle.setAttribute("class", "cls-110");
             starAndSongTitle.setAttribute("transform", "translate(60 125)");
 
-            Node starNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element star = (Element) starNode;
+            Element star = doc.createElementNS(namespaceSVG, "tspan");
             star.setAttribute("fill", primaryColor);
             star.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat(" *"));
 
-            Node divisorNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element divisor = (Element) divisorNode;
+            Element divisor = doc.createElementNS(namespaceSVG, "tspan");
             divisor.setTextContent(" | ");
 
-            Node titleNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element title = (Element) titleNode;
+            Element title = doc.createElementNS(namespaceSVG, "tspan");
             if (score.getBeatmap().getArtist().length()+score.getBeatmap().getTitle().length()>60)
                 score.getBeatmap().setTitle(score.getBeatmap().getTitle().substring(0,60-score.getBeatmap().getArtist().length()-2).concat("..."));
             title.setTextContent(score.getBeatmap().getArtist().concat(" - ").concat(score.getBeatmap().getTitle()));
@@ -634,30 +596,25 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             starAndSongTitle.appendChild(divisor);
             starAndSongTitle.appendChild(title);
 
-            Node bpmAndMapperNode = doc.createElementNS(namespaceSVG, "text");
-            Element bpmAndMapper = (Element) bpmAndMapperNode;
+            Element bpmAndMapper = doc.createElementNS(namespaceSVG, "text");
             bpmAndMapper.setAttribute("class", "cls-113");
             bpmAndMapper.setAttribute("transform", "translate(60 150)");
 
-            Node bpmNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element bpm = (Element) bpmNode;
+            Element bpm = doc.createElementNS(namespaceSVG, "tspan");
             bpm.setAttribute("fill", primaryColor);
             bpm.setTextContent(String.valueOf(Math.round(score.getBeatmap().getBpm())).concat(" bpm"));
 
-            Node divisorNode2 = doc.createElementNS(namespaceSVG, "tspan");
-            Element divisor2 = (Element) divisorNode2;
+            Element divisor2 = doc.createElementNS(namespaceSVG, "tspan");
             divisor2.setTextContent(" | ");
 
-            Node mapperNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element mapper = (Element) mapperNode;
+            Element mapper = doc.createElementNS(namespaceSVG, "tspan");
             mapper.setTextContent(score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]"));
 
             bpmAndMapper.appendChild(bpm);
             bpmAndMapper.appendChild(divisor2);
             bpmAndMapper.appendChild(mapper);
 
-            Node underlineOfDateNode = doc.createElementNS(namespaceSVG, "rect");
-            Element underlineOfDate = (Element) underlineOfDateNode;
+            Element underlineOfDate =  doc.createElementNS(namespaceSVG, "rect");
             underlineOfDate.setAttribute("rx", "1.5");
             underlineOfDate.setAttribute("ry", "1.5");
             underlineOfDate.setAttribute("width", "105");
@@ -665,8 +622,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             underlineOfDate.setAttribute("fill", primaryColor);
             underlineOfDate.setAttribute("transform", "translate(377.5,177)");
 
-            Node underlineOfComboNode = doc.createElementNS(namespaceSVG, "rect");
-            Element underlineOfCombo = (Element) underlineOfComboNode;
+            Element underlineOfCombo =  doc.createElementNS(namespaceSVG, "rect");
             underlineOfCombo.setAttribute("rx", "1.5");
             underlineOfCombo.setAttribute("ry", "1.5");
             underlineOfCombo.setAttribute("width", "55");
@@ -674,8 +630,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             underlineOfCombo.setAttribute("fill", primaryColor);
             underlineOfCombo.setAttribute("transform", "translate(518,177)");
 
-            Node underlineOfAccuracyNode = doc.createElementNS(namespaceSVG, "rect");
-            Element underlineOfAccuracy = (Element) underlineOfAccuracyNode;
+            Element underlineOfAccuracy = doc.createElementNS(namespaceSVG, "rect");
             underlineOfAccuracy.setAttribute("rx", "1.5");
             underlineOfAccuracy.setAttribute("ry", "1.5");
             underlineOfAccuracy.setAttribute("width", "70");
@@ -683,8 +638,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             underlineOfAccuracy.setAttribute("fill", primaryColor);
             underlineOfAccuracy.setAttribute("transform", "translate(605,177)");
 
-            Node underlineOfIndexNode = doc.createElementNS(namespaceSVG, "rect");
-            Element underlineOfIndex = (Element) underlineOfIndexNode;
+            Element underlineOfIndex = doc.createElementNS(namespaceSVG, "rect");
             underlineOfIndex.setAttribute("rx", "1.5");
             underlineOfIndex.setAttribute("ry", "1.5");
             underlineOfIndex.setAttribute("width", "40");
@@ -692,8 +646,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             underlineOfIndex.setAttribute("fill", primaryColor);
             underlineOfIndex.setAttribute("transform", "translate(707,177)");
 
-            Node underlineOfRankNode = doc.createElementNS(namespaceSVG, "rect");
-            Element underlineOfRank = (Element) underlineOfRankNode;
+            Element underlineOfRank =  doc.createElementNS(namespaceSVG, "rect");
             underlineOfRank.setAttribute("rx", "1.5");
             underlineOfRank.setAttribute("ry", "1.5");
             underlineOfRank.setAttribute("width", "30");
@@ -701,8 +654,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             underlineOfRank.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
             underlineOfRank.setAttribute("transform", "translate(60,80)");
 
-            Node dateNode = doc.createElementNS(namespaceSVG, "text");
-            Element date = (Element) dateNode;
+            Element date = doc.createElementNS(namespaceSVG, "text");
             date.setAttribute("class", "cls-111");
             date.setAttribute("font-size", "18px");
             date.setAttribute("text-anchor", "middle");
@@ -710,8 +662,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             date.setAttribute("transform", "translate(430 170)");
             date.setTextContent(score.getAchievedTime());
 
-            Node comboNode = doc.createElementNS(namespaceSVG, "text");
-            Element combo = (Element) comboNode;
+            Element combo =  doc.createElementNS(namespaceSVG, "text");
             combo.setAttribute("class", "cls-111");
             combo.setAttribute("font-size", "18px");
             combo.setAttribute("text-anchor", "middle");
@@ -719,8 +670,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             combo.setAttribute("transform", "translate(545 170)");
             combo.setTextContent(score.getMaxCombo().toString().concat("x"));
 
-            Node accuracyNode = doc.createElementNS(namespaceSVG, "text");
-            Element accuracy = (Element) accuracyNode;
+            Element accuracy = doc.createElementNS(namespaceSVG, "text");
             accuracy.setAttribute("class", "cls-111");
             accuracy.setAttribute("font-size", "18px");
             accuracy.setAttribute("text-anchor", "middle");
@@ -728,8 +678,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             accuracy.setAttribute("transform", "translate(640 170)");
             accuracy.setTextContent(CommonTool.toString(score.getAccuracy() * 100).concat("%"));
 
-            Node indexNode = doc.createElementNS(namespaceSVG, "text");
-            Element index = (Element) indexNode;
+            Element index = doc.createElementNS(namespaceSVG, "text");
             index.setAttribute("class", "cls-111");
             index.setAttribute("font-size", "18px");
             index.setAttribute("text-anchor", "middle");
@@ -737,16 +686,14 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             index.setAttribute("transform", "translate(725 170)");
             index.setTextContent("#".concat(String.valueOf((score.getPositionInList()+offset))));
 
-            Node ppNode = doc.createElementNS(namespaceSVG, "text");
-            Element pp = (Element) ppNode;
+            Element pp = doc.createElementNS(namespaceSVG, "text");
             pp.setAttribute("class", "cls-114");
             pp.setAttribute("text-anchor", "end");
             pp.setAttribute("transform", "translate(960 142)");
             if (score.getPp()==null) score.setPp(score.getPpDetails().getCurrentPP());
             pp.setTextContent(String.valueOf(Math.round(score.getPp())).concat("pp"));
 
-            Node differenceNode = doc.createElementNS(namespaceSVG, "text");
-            Element difference = (Element) differenceNode;
+            Element difference = doc.createElementNS(namespaceSVG, "text");
 
             difference.setAttribute("transform", "translate(910 162)");
             difference.setAttribute("text-anchor", "middle");
@@ -790,16 +737,14 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         }
         return doc;
     }
-    private static Document setupModIconForScoreListDetailed(List<Mod> modList,Document doc,Element sectionFull)
+    private static void setupModIconForScoreListDetailed(List<Mod> modList, Document doc, Element sectionFull)
     {
-        if (modList.isEmpty()) return doc;
+        if (modList.isEmpty()) return;
         modList=modList.reversed();
         for(int i=0;i<modList.size();i++)
         {
-            Node modSingleNode = doc.createElementNS(namespaceSVG, "g");
-            Element modSingle = (Element) modSingleNode;
-            Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
-            Element rectBG = (Element) rectBGNode;
+            Element modSingle = doc.createElementNS(namespaceSVG, "g");
+            Element rectBG = doc.createElementNS(namespaceSVG, "rect");
             rectBG.setAttribute("transform", "translate(925 95)");
             rectBG.setAttribute("rx", "7.5");
             rectBG.setAttribute("ry", "7.5");
@@ -807,8 +752,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             rectBG.setAttribute("height", "15");
             rectBG.setAttribute("fill", ModColor.getModTypeColorHEX(modList.get(i)));
 
-            Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
-            Element modAcronym = (Element) modAcronymNode;
+            Element modAcronym = doc.createElementNS(namespaceSVG, "text");
             modAcronym.setAttribute("class", "cls-112");
             modAcronym.setAttribute("transform", "translate(940 107)");
             modAcronym.setAttribute("text-anchor", "middle");
@@ -817,9 +761,8 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             modSingle.appendChild(rectBG);
             modSingle.appendChild(modAcronym);
             modSingle.setAttribute("transform", "translate(" + -35*i  + " 0)");
-            sectionFull.appendChild(modSingleNode);
+            sectionFull.appendChild(modSingle);
         }
-        return doc;
     }
 
 }

@@ -1,14 +1,12 @@
 package me.aloic.lazybot.util;
 
 import com.alibaba.fastjson2.TypeReference;
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.enums.HTTPTypeEnum;
 import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
-import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScore;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebPlayerPerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebResult;
@@ -25,8 +23,10 @@ import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -333,6 +333,31 @@ public class DataExtractor
                 null,
                 null);
         return Integer.parseInt(rankStr);
+    }
+
+    /**
+     * 根据用户ID获取玩家信息
+     * @param userId 用户ID
+     * @return 玩家信息DTO对象
+     */
+    public PlayerInfoDTO extractPlayerInfoByUserId(Long userId) {
+        AccessTokenPO accessTokenPO = tokenMapper.selectByQq_code(userId);
+        if(accessTokenPO == null) {
+            return null;
+        }
+        return extractPlayerInfoDTO(accessTokenPO.getPlayer_id(), accessTokenPO.getDefault_mode());
+    }
+
+    /**
+     * 批量获取用户信息(无序)
+     * @param userIds 用户ID列表
+     * @return 对应用户的玩家信息列表
+     */
+    public List<AccessTokenPO> extractPlayerInfoByUserIdBatch(List<Long> userIds) {
+        if(CollectionUtils.isEmpty(userIds)) {
+            return new ArrayList<>();
+        }
+        return tokenMapper.selectByCodes(userIds);
     }
 
 }

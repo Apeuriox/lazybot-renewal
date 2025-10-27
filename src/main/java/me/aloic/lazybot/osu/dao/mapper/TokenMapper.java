@@ -5,6 +5,8 @@ import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface TokenMapper extends BaseMapper<AccessTokenPO> {
     AccessTokenPO selectByQq_code(@Param("qq_code")Long qq_code);
@@ -17,4 +19,10 @@ public interface TokenMapper extends BaseMapper<AccessTokenPO> {
     void updateDefaultMode(@Param("default_mode")String default_mode, @Param("qq_code")Long qq_code);
     void deleteByQQ(@Param("qq_code")Long qq_code);
     void updateAvatar(@Param("avatar_url")String avatar_url, @Param("player_id")Integer player_id);
+    /**
+     * 根据给定的qqid列表返回对应的token信息。
+     * @param codes 要查询的qq账号id列表。
+     * @return 对应的token信息。
+     */
+    List<AccessTokenPO> selectByCodes(@Param("codes") List<Long> codes);
 }

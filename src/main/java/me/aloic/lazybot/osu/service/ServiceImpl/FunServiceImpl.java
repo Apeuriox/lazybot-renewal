@@ -7,6 +7,7 @@ import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotSongGuessData;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.TipsPO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreIf;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
@@ -17,6 +18,7 @@ import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.parameter.WhatIfParameter;
 import me.aloic.lazybot.util.DataExtractor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -47,6 +50,8 @@ public class FunServiceImpl implements FunService
     private Integer MAX_CALC;
     @Resource
     private DataExtractor dataExtractor;
+
+    private static final Integer MAX_RETRIES = 3;
 
 
 
@@ -77,6 +82,35 @@ public class FunServiceImpl implements FunService
                 throw new LazybotRuntimeException("路径处理时出错");
             }
         }
+    }
+
+
+    @Override
+    public String nameGuessGroupRandomName(List<Long> userIds)
+    {
+        List<AccessTokenPO> users = dataExtractor.extractPlayerInfoByUserIdBatch(userIds);
+        if(CollectionUtils.isEmpty(users)) {
+            throw new LazybotRuntimeException("当前群聊还没有人绑定Lazybot呢....");
+        }
+        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                return dataExtractor.extractPlayerInfoDTO(users.get(new Random().nextInt(users.size())).getPlayer_id(),"osu").getUsername();
+            }
+            catch (Exception e) {
+                logger.error("NameGuess获取用户名请求在尝试 {} 次后失败: {}", attempt, e.getMessage());
+                if (attempt == MAX_RETRIES) {
+                    throw new LazybotRuntimeException("NameGuess获取用户名请求在尝试 " + MAX_RETRIES + " 次后失败: " + e.getMessage(), e);
+                }
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException interrupted) {
+                    Thread.currentThread().interrupt();
+                    throw new LazybotRuntimeException("NameGuess请求线程中断", interrupted);
+                }
+            }
+        }
+        throw new LazybotRuntimeException("NameGuess获取用户名请求在尝试 " + MAX_RETRIES + " 次后失败，请稍后重试");
+
     }
 
     @Override

@@ -15,7 +15,7 @@ public class ScoreVO implements Comparable<ScoreVO>
 {
     private String user_name;
     private Double accuracy;
-    private String[] mods;
+//    private String[] mods;
     private List<Mod> modJSON;
     private Long score;
     private Integer maxCombo;

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.BadgeDefinitionMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.BadgeDefinitionPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="alternative_name" jdbcType="VARCHAR" property="alternative_name"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="create_time" jdbcType="DATE" property="create_time"/>
+        <result column="remote_url" jdbcType="VARCHAR" property="remote_url"/>
+    </resultMap>
+    <sql id = "Base_Column_List">
+        id, name, description, type, alternative_name, create_time
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_definition
+        WHERE id =#{id}
+    </select>
+
+
+    <update id="updateImage" parameterType="me.aloic.lazybot.entity.po.BadgeDefinitionPO">
+        update badge_definition
+        <set>
+            remote_url=#{remote_url}
+        </set>
+        where id =#{id}
+    </update>
+
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE
+        FROM badge_definition
+        WHERE id =#{id}
+    </delete>
+
+
+</mapper>

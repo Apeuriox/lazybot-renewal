@@ -6,9 +6,6 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.theme.Color.HSL;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,20 +13,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class CommonTool {
     public static boolean isEmpty(String s) {
@@ -117,24 +109,13 @@ public class CommonTool {
         return String.format("%" + "." + pointAft + "f", num);
     }
 
-    public static Boolean isLowerCase(char c){
-        return c >= 'a' && c <= 'z';
-    }
-
-    public static Boolean isUpperCase(char c){
-        return c >= 'A' && c <= 'Z';
-    }
-
-    public static Boolean isDigit(char c){
-        return c >= '0' && c <= '9';
-    }
-
 
     public static String formatSecondsToHours(long seconds)
     {
         double hours = seconds / 3600.0;
         return String.format("%.2f", hours);
     }
+
     public static int textWidthRough(String text)
     {
         text=text.toLowerCase();
@@ -157,28 +138,7 @@ public class CommonTool {
         }
         return result;
     }
-    public static String[] modCombinationToArray(String modCombination)
-    {
-        if(modCombination!=null)
-        {
-            try
-            {
-                String[] result = new String[modCombination.length() / 2];
-                for (int i = 0; i < modCombination.length(); i += 2)
-                {
-                    result[i/2] = modCombination.substring(i, i + 2).toUpperCase();
-                }
-                return result;
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                throw new LazybotRuntimeException("Invalid mod combination: "+ modCombination);
-            }
-        }
-        else
-            return null;
-    }
+
     public static String modArrayToString(String[] modArray)
     {
         if(modArray!=null)
@@ -188,20 +148,14 @@ public class CommonTool {
         else
             return null;
     }
-    public static String[] timestampSpilt(String timestamp)
+    public static String modArrayToString(List<Mod> modArray)
     {
-        try
+        if(modArray!=null)
         {
-            String[] result = timestamp.split("T");
-            result[0] = result[0].replace("-", "/");
-            result[1] = result[1].substring(0, result[1].length() - 1);
-            return result;
+            return modArray.stream().map(Mod::getAcronym).reduce((a,b)->a.concat(" ").concat(b)).get();
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            throw new LazybotRuntimeException("Incorrect timestamp format: "+ timestamp);
-        }
+        else
+            return "NoMod";
     }
     public static String formatHitLength(int hitLength)
     {
@@ -213,37 +167,26 @@ public class CommonTool {
         }
         return result.concat(":").concat(second);
     }
-    public static String[] checkOnlineResources(Document svgDocument) throws IOException {
-        ArrayList<String> result=new ArrayList<>();
-        String xlinkns="http://www.w3.org/1999/xlink";
-        NodeList imageElements = svgDocument.getElementsByTagName("image");
-        for (int i = 0; i < imageElements.getLength(); i++)
-        {
-            Element imageElement = (Element) imageElements.item(i);
-            String imageURL = imageElement.getAttributeNS(xlinkns, "href");
-            String id = imageElement.getAttribute("id");
-            if (imageURL.startsWith("http://") || imageURL.startsWith("https://"))
-            {
-                URL imageResource = new URL(imageURL);
-                HttpURLConnection connection = (HttpURLConnection) imageResource.openConnection();
-                connection.setRequestMethod("HEAD");
-                int responseCode = connection.getResponseCode();
-                if (responseCode != HttpURLConnection.HTTP_OK)
-                {
-                    result.add(id);
-                }
-            }
-        }
-        return result.toArray(new String[0]);
-    }
-    public static boolean isCorruptedLink(String link) throws IOException
+
+    public static String getStarRatingFontColor(double star)
     {
-        URL url = new URL(link);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("HEAD");
-        int responseCode = connection.getResponseCode();
-        return responseCode != HttpURLConnection.HTTP_OK;
+        //black
+        String targetColor= "#1c1719";
+        if (star >= 6.5) {
+            targetColor="#fed867";
+        }
+        return targetColor;
     }
+
+
+    public static String formatJsonDateToString(String timeStampString, String outputFormat)
+    {
+        OffsetDateTime odt = OffsetDateTime.parse(timeStampString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputFormat);
+        return odt.toLocalDateTime().plusHours(8).format(outputFormatter);
+    }
+
+
     public static String calcDiffColor(double star)
     {
         double bottom,top;

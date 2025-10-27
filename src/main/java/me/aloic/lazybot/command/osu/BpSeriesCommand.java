@@ -19,7 +19,7 @@ import me.aloic.lazybot.parameter.BplistParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +51,7 @@ public class BpSeriesCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 1,21);
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.bplistCardView(params));
+        CommandResultHandler.uploadImageToDiscord(event,playerService.bplistCardView(params));
     }
 
     @Override
@@ -64,9 +64,9 @@ public class BpSeriesCommand implements LazybotSlashCommand
                 1,21);
         if (parameter.getPlayerName()!=null) params.setPlayerName(parameter.getPlayerName());
         if (event.getScorePanelVersion()==0)
-            ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bplistCardView(params));
+            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bplistCardView(params));
         else
-            ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bplistListView(params));
+            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bplistListView(params));
     }
 
     @Override

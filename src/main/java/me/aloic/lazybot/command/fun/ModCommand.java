@@ -13,7 +13,7 @@ import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ public class ModCommand implements LazybotSlashCommand
         event.deferReply().queue();
         GeneralParameter params=new GeneralParameter(OptionMappingTool.getOptionOrDefault(event.getOption("id"),"null"),null);
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event, Files.readAllBytes(Paths.get(funService.modInfo(params).toUri())));
+        CommandResultHandler.uploadImageToDiscord(event, Files.readAllBytes(Paths.get(funService.modInfo(params).toUri())));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ModCommand implements LazybotSlashCommand
         GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
         params.validateParams();
         try{
-            ImageUploadUtil.uploadImageToOnebot(bot,event, Files.readAllBytes(Paths.get(funService.modInfo(params).toUri())));
+            CommandResultHandler.uploadImageToOnebot(bot,event, Files.readAllBytes(Paths.get(funService.modInfo(params).toUri())));
         }
         catch (Exception e){
             throw new LazybotRuntimeException("要么你输入的Mod名有问题，要么此Mod的页面还未创建");

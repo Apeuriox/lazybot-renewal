@@ -30,7 +30,7 @@ public class MessageEventFactory
                 ":2",OsuMode.Catch,
                 ":3",OsuMode.Mania);
 
-        IGNORE_PREPROCESS_COMMANDS = List.of("help", "customize","addtips","tips","tns","tnp","thumbnail");
+        IGNORE_PREPROCESS_COMMANDS = List.of("help", "customize","addtips","tips","tns","tnp","thumbnail","bum","bm" ,"redeem");
     }
 
 

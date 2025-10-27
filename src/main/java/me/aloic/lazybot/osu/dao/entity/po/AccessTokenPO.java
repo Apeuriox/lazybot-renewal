@@ -37,4 +37,11 @@ public class AccessTokenPO implements Serializable {
         this.access_token = access_token;
         this.default_mode="osu";
     }
+
+    public String toSimpleString()
+    {
+        return "Lazybot ID="+id
+                +"\nPlayer Name=:" +player_name
+                +"\nPlayer Id:"+player_id;
+    }
 }

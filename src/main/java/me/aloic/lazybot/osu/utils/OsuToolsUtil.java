@@ -14,6 +14,7 @@ import me.aloic.lazybot.parameter.LazybotCommandParameter;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.TransformerUtil;
 import me.aloic.lazybot.util.VirtualThreadExecutorHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,10 +36,14 @@ public class OsuToolsUtil
     }
     public static MapScore setupPlayerStatics(MapScore mapScore, PlayerInfoDTO player)
     {
-        String bannerUrl = AssertDownloadUtil.bannerAbsolutePath(player,false);
-        String avatarUrl = AssertDownloadUtil.avatarAbsolutePath(player,false);
-        mapScore.setAvatarUrl(avatarUrl);
-        mapScore.setBannerUrl(bannerUrl);
+        if(StringUtils.isNotEmpty(player.getCover_url())) {
+            String bannerUrl = AssertDownloadUtil.bannerAbsolutePath(player,false);
+            mapScore.setBannerUrl(bannerUrl);
+        }
+        if(StringUtils.isNotEmpty(player.getAvatar_url())) {
+            String avatarUrl = AssertDownloadUtil.avatarAbsolutePath(player,false);
+            mapScore.setAvatarUrl(avatarUrl);
+        }
         return mapScore;
     }
     public static List<MapScore> setupPlayerStatics(List<MapScore> mapScore, PlayerInfoDTO player)
@@ -79,7 +84,7 @@ public class OsuToolsUtil
         catch (Exception e) {
             throw new LazybotRuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
         }
-        if (CommonTool.modsContainsAnyOfStarChanging(scoreVO.getMods()))
+        if (CommonTool.modsContainsAnyOfStarChanging(scoreVO.getModJSON()))
             scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
         if (scoreVO.getPp() == null)
             scoreVO.setPp(scoreVO.getPpDetailsLocal().getCurrentPP());

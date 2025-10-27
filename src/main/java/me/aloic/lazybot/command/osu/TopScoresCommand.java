@@ -16,7 +16,7 @@ import me.aloic.lazybot.osu.service.TrackService;
 import me.aloic.lazybot.parameter.TopScoresParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,13 +44,13 @@ public class TopScoresCommand implements LazybotSlashCommand
         TopScoresParameter params=new TopScoresParameter(OptionMappingTool.getOptionOrDefault(event.getOption("mode"),"osu"),
                 OptionMappingTool.getOptionOrDefault(event.getOption("limit"), 10));
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,trackService.bestPlaysInGamemode(params));
+        CommandResultHandler.uploadImageToDiscord(event,trackService.bestPlaysInGamemode(params));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
-        ImageUploadUtil.uploadImageToOnebot(bot,event,
+        CommandResultHandler.uploadImageToOnebot(bot,event,
                 trackService.bestPlaysInGamemode(
                         setupParameter(event,
                                 proxy.getAccessToken(event))

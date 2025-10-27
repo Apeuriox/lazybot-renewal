@@ -2,6 +2,7 @@ package me.aloic.lazybot.chain.handler;
 
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.service.PermissionService;
 import me.aloic.lazybot.chain.model.CommandHandlerChain;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -14,6 +15,7 @@ import java.util.List;
 
 
 @Component
+@Slf4j
 @Order(0)
 public class PermissionChainHandler implements CommandHandlerInterface {
 
@@ -63,6 +65,7 @@ public class PermissionChainHandler implements CommandHandlerInterface {
         }
         catch (Exception e)
         {
+            log.error("权限检查失败，type:{}, id:{}, command:{}, version:{}", type, id, command.getClass().getSimpleName(), version, e);
             throw new LazybotRuntimeException("权限检查失败，已跳过执行");
         }
 

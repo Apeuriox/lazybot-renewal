@@ -3,6 +3,8 @@ package me.aloic.lazybot;
 import me.aloic.lazybot.enums.FilterOperatorEnum;
 import me.aloic.lazybot.graphics.util.ImageFilterUtil;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
+import me.aloic.lazybot.osu.enums.RankedMods;
 import me.aloic.lazybot.osu.filter.ScoreFilter;
 import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
 import me.aloic.lazybot.osu.utils.SvgUtil;
@@ -118,29 +120,40 @@ public class StaticFunctionTest
 //
 //}
 
-    private static byte[] toByteArray(BufferedImage image, String format) throws IOException
-    {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, format, baos);
-        return baos.toByteArray();
-    }
-    public void saveImageToLocal(byte[] imageByteArray,String filePath, String fileName) {
-        try {
-            Path path = Paths.get(filePath, fileName);
-            Files.write(path, imageByteArray);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-    }
-    @Test
-    public void test()
-    {
-        String player = "wux1n".replace("-", "")
-                .replaceAll("\\d", "");
-       System.out.println( player.toLowerCase()
-               .substring(0, 1).toUpperCase()
-               + player.substring(1));
-    }
+//    private static byte[] toByteArray(BufferedImage image, String format) throws IOException
+//    {
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        ImageIO.write(image, format, baos);
+//        return baos.toByteArray();
+//    }
+//    public void saveImageToLocal(byte[] imageByteArray,String filePath, String fileName) {
+//        try {
+//            Path path = Paths.get(filePath, fileName);
+//            Files.write(path, imageByteArray);
+//        } catch (IOException e) {
+//          e.printStackTrace();
+//        }
+//    }
+//    @Test
+//    public void test()
+//    {
+//        String player = "wux1n".replace("-", "")
+//                .replaceAll("\\d", "");
+//       System.out.println( player.toLowerCase()
+//               .substring(0, 1).toUpperCase()
+//               + player.substring(1));
+//    }
+//    @Test
+//    public void modRankabilityTest()
+//    {
+//        List<Mod> mods = List.of(new Mod("DT",null),new Mod("HD",null));
+//        List<Mod> mods2 = List.of(new Mod("DT",new ModSetting(1.01)),new Mod("HD",null));
+//
+//        System.out.println(RankedMods.checkModsRankability(mods));
+//        System.out.println(RankedMods.checkModsRankability(mods2));
+//
+//    }
+
 
 
 }

@@ -18,7 +18,7 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
@@ -53,14 +53,14 @@ public class ScoreCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event, playerService.score(params));
+        CommandResultHandler.uploadImageToDiscord(event, playerService.score(params));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         if (event.getCommandType().equalsIgnoreCase("pscore")) {
-            ImageUploadUtil.uploadImageToOnebot(bot,event,
+            CommandResultHandler.uploadImageToOnebot(bot,event,
                     playerService.scorePlus(
                             setupParameter(event,
                                     proxy.getAccessToken(event))
@@ -68,7 +68,7 @@ public class ScoreCommand implements LazybotSlashCommand
             );
         }
         else
-            ImageUploadUtil.uploadImageToOnebot(bot,event,
+            CommandResultHandler.uploadImageToOnebot(bot,event,
                     playerService.score(
                             setupParameter(event,
                                     proxy.getAccessToken(event))

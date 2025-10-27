@@ -17,7 +17,7 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -50,19 +50,19 @@ public class NoChokeCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.validateParams();
         if (event.getFullCommandName().equalsIgnoreCase("no1miss"))
-            ImageUploadUtil.uploadImageToDiscord(event,playerService.noChoke(params,1));
-        else ImageUploadUtil.uploadImageToDiscord(event,playerService.noChoke(params,0));
+            CommandResultHandler.uploadImageToDiscord(event,playerService.noChoke(params,1));
+        else CommandResultHandler.uploadImageToDiscord(event,playerService.noChoke(params,0));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         if (event.getCommandType().equalsIgnoreCase("no1miss"))
-            ImageUploadUtil.uploadImageToOnebot(bot,event,
+            CommandResultHandler.uploadImageToOnebot(bot,event,
                     playerService.noChoke(
                             GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 1)
             );
-        else  ImageUploadUtil.uploadImageToOnebot(bot,event,
+        else  CommandResultHandler.uploadImageToOnebot(bot,event,
                 playerService.noChoke(
                         GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 0)
         );

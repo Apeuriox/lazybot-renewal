@@ -18,7 +18,7 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BplistParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import org.springframework.stereotype.Component;
@@ -52,14 +52,14 @@ public class BpCardCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("from"), 0),
                 OptionMappingTool.getOptionOrDefault(event.getOption("to"), 1));
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,playerService.bplistCardView(params));
+        CommandResultHandler.uploadImageToDiscord(event,playerService.bplistCardView(params));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        ImageUploadUtil.uploadImageToOnebot(bot,event,playerService.bplistCardView(setupParameter(event,tokenPO)));
+        CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bplistCardView(setupParameter(event,tokenPO)));
     }
 
     @Override

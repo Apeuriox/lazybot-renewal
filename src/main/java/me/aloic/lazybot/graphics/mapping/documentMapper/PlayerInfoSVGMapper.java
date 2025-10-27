@@ -1,6 +1,7 @@
 package me.aloic.lazybot.graphics.mapping.documentMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import me.aloic.lazybot.entity.po.BadgeUserShowcasePO;
 import me.aloic.lazybot.enums.MoelleuxTypeEnum;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
@@ -16,13 +17,13 @@ import me.aloic.lazybot.osu.enums.PerformanceDimensionLimit;
 import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
+import me.aloic.lazybot.util.BadgeLoader;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -276,8 +277,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("banner").setAttributeNS(xlinkns, "xlink:href", player.getInfo().getBannerUrl());
         doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getInfo().getAvatarUrl());
 
-        Node linearGradientNode = doc.createElementNS(namespaceSVG, "linearGradient");
-        Element linearGradient = (Element) linearGradientNode;
+        Element linearGradient = doc.createElementNS(namespaceSVG, "linearGradient");
         linearGradient.setAttributeNS(null, "id", "gradient-1");
         linearGradient.setAttributeNS(null, "x1", "917");
         linearGradient.setAttributeNS(null, "y1", "190");
@@ -308,8 +308,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         stop3.setAttributeNS(null, "stop-color", stopColor3);
         linearGradient.appendChild(stop3);
 
-        Node linearGradientNode2 = doc.createElementNS(namespaceSVG, "linearGradient");
-        Element linearGradient2 = (Element) linearGradientNode2;
+        Element linearGradient2 = doc.createElementNS(namespaceSVG, "linearGradient");
         linearGradient2.setAttributeNS(null, "id", "gradient-2");
         linearGradient2.setAttributeNS(null, "x1", "919");
         linearGradient2.setAttributeNS(null, "y1", "191");
@@ -432,7 +431,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
 
 
 
-    public static Document mapPlayerInfoToProfilePanel(PlayerInfoVO playerInfo, ProfileTheme theme) throws IOException
+    public static Document mapPlayerInfoToProfilePanel(PlayerInfoVO playerInfo, ProfileTheme theme, List<BadgeUserShowcasePO> playerBadges)
     {
         Document document = SVGTemplateLoader.loadSVGTemplate("InfoV2-WhiteSpace");
         NumberFormat formatter = NumberFormat.getInstance(Locale.US);
@@ -467,8 +466,41 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         setupProfileBps(document,playerInfo,theme);
         profileColorTheme(document,theme);
         setupProfileBackground(document,playerInfo.getProfileBackgroundUrl(),true);
+        setupPlayerBadges(document,playerBadges);
         return document;
     }
+    private static void setupPlayerBadges(Document document, List<BadgeUserShowcasePO> playerBadges)
+    {
+        if (playerBadges==null || playerBadges.isEmpty())
+        {
+            log.info("用户无Badge，跳过执行");
+            return;
+        }
+        Element svgRoot = document.getDocumentElement();
+        int validBadgeCount=0;
+        for (BadgeUserShowcasePO playerBadge : playerBadges)
+        {
+            String badgePath = BadgeLoader.loadBadgeImagePath(playerBadge.getBadge_id());
+            if (badgePath == null) continue;
+            Element badgeImage = document.createElementNS(namespaceSVG, "image");
+            badgeImage.setAttributeNS(xlinkns, "xlink:href", badgePath);
+            badgeImage.setAttribute("x", "165");
+            badgeImage.setAttribute("y", "160");
+            badgeImage.setAttribute("width", "72");
+            badgeImage.setAttribute("opacity", "0.9");
+            badgeImage.setAttribute("height", "36");
+            badgeImage.setAttribute("clip-path", "url(#badgeClip)");
+            badgeImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+            badgeImage.setAttribute("transform", "translate(" + (validBadgeCount * 80) + " 0)");
+            svgRoot.appendChild(badgeImage);
+            validBadgeCount++;
+        }
+        if (validBadgeCount>0) {
+            document.getElementById("playername").setAttribute("transform","translate(165 145)");
+        }
+    }
+
+
     private static void setupProfileRankGraph(Document document,PlayerInfoVO playerInfo,ProfileTheme theme)
     {
         Element rankGraphGroup=document.getElementById("rankGraphGroup");
@@ -506,8 +538,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             else y = (int) ((data[i] - dataMin) / (double) (dataMax - dataMin) * (yMax - yMin) + yMin);
             polylinePoints.append(x).append(",").append(y).append(" ");
 
-            Node circleNode = document.createElementNS(namespaceSVG, "circle");
-            Element circle = (Element) circleNode;
+            Element circle = document.createElementNS(namespaceSVG, "circle");
             circle.setAttribute("cx", String.valueOf(x));
             circle.setAttribute("cy", String.valueOf(y));
             circle.setAttribute("r", "3.5");
@@ -515,8 +546,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             rankGraphGroup.appendChild(circle);
         }
 
-        Node polylineNode = document.createElementNS(namespaceSVG, "polyline");
-        Element polyline = (Element) polylineNode;
+        Element polyline = document.createElementNS(namespaceSVG, "polyline");
         polyline.setAttribute("points", polylinePoints.toString());
         polyline.setAttribute("fill", "none");
         polyline.setAttribute("stroke", theme.getMainColor().toString());
@@ -534,11 +564,9 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         List<ScoreVO> scoreList = playerInfo.getBps();
         for (ScoreVO score : scoreList)
         {
-            Node sectionFullNode = doc.createElementNS(namespaceSVG, "g");
-            Element sectionFull = (Element) sectionFullNode;
+            Element sectionFull = doc.createElementNS(namespaceSVG, "g");
 
-            Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
-            Element totalBG = (Element) totalBGNode;
+            Element totalBG = doc.createElementNS(namespaceSVG, "rect");
             totalBG.setAttribute("rx", "15");
             totalBG.setAttribute("ry", "15");
             totalBG.setAttribute("width", "415");
@@ -550,8 +578,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             totalBG.setAttribute("x", "25");
             totalBG.setAttribute("y", "580");
 
-            Node mapBGImageNode = doc.createElementNS(namespaceSVG, "image");
-            Element mapBGImage = (Element) mapBGImageNode;
+            Element mapBGImage = doc.createElementNS(namespaceSVG, "image");
             mapBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBeatmap().getBgUrl());
             mapBGImage.setAttribute("x", "25");
             mapBGImage.setAttribute("y", "580");
@@ -565,8 +592,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             mapBGImage.setAttribute("clip-path", "url(#bpclip)");
             mapBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
 
-            Node totalBGMaskNode = doc.createElementNS(namespaceSVG, "rect");
-            Element totalBGMask = (Element) totalBGMaskNode;
+            Element totalBGMask = doc.createElementNS(namespaceSVG, "rect");
             totalBGMask.setAttribute("width", "415");
             totalBGMask.setAttribute("height", "100");
             if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
@@ -579,17 +605,14 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             totalBGMask.setAttribute("x", "25");
             totalBGMask.setAttribute("y", "580");
 
-
-            Node starAndSongTitleNode = doc.createElementNS(namespaceSVG, "text");
-            Element starAndSongTitle = (Element) starAndSongTitleNode;
+            Element starAndSongTitle = doc.createElementNS(namespaceSVG, "text");
             starAndSongTitle.setAttribute("class", "cls-130");
             starAndSongTitle.setAttribute("fill", "#f1f4f3");
             starAndSongTitle.setAttribute("font-size", "15px");
             starAndSongTitle.setAttribute("font-weight", "600");
             starAndSongTitle.setAttribute("transform", "translate(40 623)");
 
-            Node starNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element star = (Element) starNode;
+            Element star = doc.createElementNS(namespaceSVG, "tspan");
             if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
                 star.setAttribute("fill", new HSL(theme.getHue(), 80, 85).toString());
             }
@@ -598,12 +621,10 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             }
             star.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat("*"));
 
-            Node divisorNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element divisor = (Element) divisorNode;
+            Element divisor = doc.createElementNS(namespaceSVG, "tspan");
             divisor.setTextContent(" | ");
 
-            Node titleNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element title = (Element) titleNode;
+            Element title = doc.createElementNS(namespaceSVG, "tspan");
             String titleStr=score.getBeatmap().getTitle();
             if (titleStr.length() > 30) titleStr=titleStr.substring(0, 29).concat("...");
             title.setTextContent(titleStr);
@@ -612,8 +633,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             starAndSongTitle.appendChild(divisor);
             starAndSongTitle.appendChild(title);
 
-            Node starAndSongTitleShadowNode = doc.createElementNS(namespaceSVG, "text");
-            Element starAndSongShadowTitle = (Element) starAndSongTitleShadowNode;
+            Element starAndSongShadowTitle = doc.createElementNS(namespaceSVG, "text");
             starAndSongShadowTitle.setAttribute("class", "cls-130");
             starAndSongShadowTitle.setAttribute("fill", "#000000");
             starAndSongShadowTitle.setAttribute("font-size", "15px");
@@ -621,16 +641,13 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             starAndSongShadowTitle.setAttribute("opacity", "0.4");
             starAndSongShadowTitle.setAttribute("transform", "translate(41.5 624.5)");
 
-            Node starShadowNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element starShadow = (Element) starShadowNode;
+            Element starShadow = doc.createElementNS(namespaceSVG, "tspan");
             starShadow.setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()).concat("*"));
 
-            Node divisorShadowNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element divisorShadow = (Element) divisorShadowNode;
+            Element divisorShadow = doc.createElementNS(namespaceSVG, "tspan");
             divisorShadow.setTextContent(" | ");
 
-            Node titleShadowNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element titleShadow = (Element) titleShadowNode;
+            Element titleShadow = doc.createElementNS(namespaceSVG, "tspan");
             titleShadow.setTextContent(titleStr);
 
             starAndSongShadowTitle.appendChild(starShadow);
@@ -638,16 +655,14 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             starAndSongShadowTitle.appendChild(titleShadow);
 
 
-            Node bpmAndMapperNode = doc.createElementNS(namespaceSVG, "text");
-            Element bpmAndMapper = (Element) bpmAndMapperNode;
+            Element bpmAndMapper = doc.createElementNS(namespaceSVG, "text");
             bpmAndMapper.setAttribute("class", "cls-130");
             bpmAndMapper.setAttribute("fill", "#f1f4f3");
             bpmAndMapper.setAttribute("font-size", "15px");
             bpmAndMapper.setAttribute("font-weight", "600");
             bpmAndMapper.setAttribute("transform", "translate(40 650)");
 
-            Node bpmNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element bpm = (Element) bpmNode;
+            Element bpm = doc.createElementNS(namespaceSVG, "tspan");
             if(theme.getThemeType()== ProfileTheme.ThemeType.DARK) {
                 bpm.setAttribute("fill", new HSL(theme.getHue(), 80, 85).toString());
             }
@@ -656,12 +671,10 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             }
             bpm.setTextContent(String.valueOf(Math.round(score.getBeatmap().getBpm())).concat(" BPM"));
 
-            Node divisorNode2 = doc.createElementNS(namespaceSVG, "tspan");
-            Element divisor2 = (Element) divisorNode2;
+            Element divisor2 = doc.createElementNS(namespaceSVG, "tspan");
             divisor2.setTextContent(" | ");
 
-            Node mapperNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element mapper = (Element) mapperNode;
+            Element mapper = doc.createElementNS(namespaceSVG, "tspan");
             String mapperDiffStr=score.getBeatmap().getCreator().concat(" // [").concat(score.getBeatmap().getVersion()).concat("]");
             if (mapperDiffStr.length() > 29) mapperDiffStr=mapperDiffStr.substring(0, 28).concat("...");
             mapper.setTextContent(mapperDiffStr);
@@ -671,8 +684,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             bpmAndMapper.appendChild(mapper);
 
 
-            Node bpmAndMapperShadowNode = doc.createElementNS(namespaceSVG, "text");
-            Element bpmAndMapperShadow = (Element) bpmAndMapperShadowNode;
+            Element bpmAndMapperShadow = doc.createElementNS(namespaceSVG, "text");
             bpmAndMapperShadow.setAttribute("class", "cls-130");
             bpmAndMapperShadow.setAttribute("fill", "#000000");
             bpmAndMapperShadow.setAttribute("opacity", "0.4");
@@ -680,16 +692,13 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             bpmAndMapperShadow.setAttribute("font-weight", "600");
             bpmAndMapperShadow.setAttribute("transform", "translate(41.5 651.5)");
 
-            Node bpmShadowNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element bpmShadow= (Element) bpmShadowNode;
+            Element bpmShadow= doc.createElementNS(namespaceSVG, "tspan");
             bpmShadow.setTextContent(String.valueOf(Math.round(score.getBeatmap().getBpm())).concat(" BPM"));
 
-            Node divisorShadowNode2 = doc.createElementNS(namespaceSVG, "tspan");
-            Element divisor2Shadow = (Element) divisorShadowNode2;
+            Element divisor2Shadow = doc.createElementNS(namespaceSVG, "tspan");
             divisor2Shadow.setTextContent(" | ");
 
-            Node mapperShadowNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element mapperShadow = (Element) mapperShadowNode;
+            Element mapperShadow = doc.createElementNS(namespaceSVG, "tspan");
             mapperShadow.setTextContent(mapperDiffStr);
 
             bpmAndMapperShadow.appendChild(bpmShadow);
@@ -697,9 +706,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             bpmAndMapperShadow.appendChild(mapperShadow);
 
 
-
-            Node ppNode = doc.createElementNS(namespaceSVG, "text");
-            Element pp = (Element) ppNode;
+            Element pp = doc.createElementNS(namespaceSVG, "text");
             pp.setAttribute("class", "cls-130");
             pp.setAttribute("font-size", "28px");
             pp.setAttribute("fill", "#f269a1");
@@ -709,8 +716,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             pp.setAttribute("y", "640");
             pp.setTextContent(String.valueOf(Math.round(score.getPp())).concat("pp"));
 
-            Node iffcNode = doc.createElementNS(namespaceSVG, "text");
-            Element iffc = (Element) iffcNode;
+            Element iffc = doc.createElementNS(namespaceSVG, "text");
             iffc.setAttribute("class", "cls-130");
             iffc.setAttribute("font-size", "12px");
             iffc.setAttribute("font-weight", "600");
@@ -718,16 +724,14 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             iffc.setAttribute("y", "658");
             iffc.setAttribute("text-anchor", "end");
 
-            Node iffcLabelNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element iffcLabel = (Element) iffcLabelNode;
+            Element iffcLabel = doc.createElementNS(namespaceSVG, "tspan");
             if(theme.getThemeType()== ProfileTheme.ThemeType.LIGHT)
                 iffcLabel.setAttribute("fill", "#333333");
             else
                 iffcLabel.setAttribute("fill", "#f3f3f3");
             iffcLabel.setTextContent("if fc ");
 
-            Node iffcNumberNode = doc.createElementNS(namespaceSVG, "tspan");
-            Element iffcNumber = (Element) iffcNumberNode;
+            Element iffcNumber = doc.createElementNS(namespaceSVG, "tspan");
             iffcNumber.setTextContent(String.valueOf(Math.round(score.getPpDetailsLocal().getIfFc())).concat("pp"));
             iffcNumber.setAttribute("fill", "#f269a1");
             iffc.appendChild(iffcLabel);
@@ -739,8 +743,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
 
             if(theme.getThemeType()== ProfileTheme.ThemeType.LIGHT)
             {
-                Node rankNode = doc.createElementNS(namespaceSVG, "text");
-                Element rank = (Element) rankNode;
+                Element rank = doc.createElementNS(namespaceSVG, "text");
                 rank.setAttribute("class", "cls-130");
                 rank.setAttribute("font-size", "100px");
                 rank.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
@@ -753,8 +756,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
                 sectionFull.appendChild(rank);
             }
             else {
-                Node rankNode = doc.createElementNS(namespaceSVG, "rect");
-                Element rank = (Element) rankNode;
+                Element rank = doc.createElementNS(namespaceSVG, "rect");
                 rank.setAttribute("width", "35");
                 rank.setAttribute("height", "3");
                 rank.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
@@ -783,10 +785,8 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         modList=modList.reversed();
         for(int i=0;i<modList.size();i++)
         {
-            Node modSingleNode = doc.createElementNS(namespaceSVG, "g");
-            Element modSingle = (Element) modSingleNode;
-            Node rectBGNode = doc.createElementNS(namespaceSVG, "rect");
-            Element rectBG = (Element) rectBGNode;
+            Element modSingle = doc.createElementNS(namespaceSVG, "g");
+            Element rectBG = doc.createElementNS(namespaceSVG, "rect");
             rectBG.setAttribute("transform", "translate(408.5 595.5)");
             rectBG.setAttribute("rx", "6");
             rectBG.setAttribute("ry", "6");
@@ -794,8 +794,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             rectBG.setAttribute("height", "12");
             rectBG.setAttribute("fill", ModColor.getModTypeColorHEX(modList.get(i)));
 
-            Node modAcronymNode = doc.createElementNS(namespaceSVG, "text");
-            Element modAcronym = (Element) modAcronymNode;
+            Element modAcronym = doc.createElementNS(namespaceSVG, "text");
             modAcronym.setAttribute("class", "cls-112");
             modAcronym.setAttribute("transform", "translate(420 605)");
             modAcronym.setAttribute("text-anchor", "middle");
@@ -804,7 +803,7 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
             modSingle.appendChild(rectBG);
             modSingle.appendChild(modAcronym);
             modSingle.setAttribute("transform", "translate(" + -25*i  + " 0)");
-            sectionFull.appendChild(modSingleNode);
+            sectionFull.appendChild(modSingle);
         }
     }
 

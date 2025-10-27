@@ -1,5 +1,6 @@
 package me.aloic.lazybot.component;
 
+import me.aloic.lazybot.entity.message.LazybotMessageWithImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +43,14 @@ public class TestOutputTool
     public void saveImageAndTextToLocal(byte[] imageByteArray, String content) {
         saveImageToLocal(imageByteArray, testPath, "lazybot-test-image.png");
         writeStringToFile(content, testPath, "lazybot-test-text.txt");
+    }
+    public void saveImageAndTextToLocal(LazybotMessageWithImage result) {
+        if (result.getImage()==null)
+        {
+            writeStringToFile(result.getMessage());
+            return;
+        }
+        saveImageAndTextToLocal(result.getImage(),result.getMessage());
     }
 
     public void writeStringToFile(String content, String filePath, String fileName) {

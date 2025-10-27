@@ -175,6 +175,7 @@ public class ResourceMonitor
         Path playerCustomizationDir = osuFilesDir.resolve("playerCustomization");
         Path profileDir = playerCustomizationDir.resolve("profile");
         Path staticDir = workingDir.resolve("static");
+        Path badgeDir = staticDir.resolve("badge");
         Path assetsDir = staticDir.resolve("assets");
         Path osuResDir = assetsDir.resolve("osuResources");
         Path fonts = staticDir.resolve("fonts");
@@ -184,6 +185,7 @@ public class ResourceMonitor
         createDirectoryIfNotExists(playerBannerDir);
         createDirectoryIfNotExists(mapBGDir);
         createDirectoryIfNotExists(staticDir);
+        createDirectoryIfNotExists(badgeDir);
         createDirectoryIfNotExists(playerCustomizationDir);
         createDirectoryIfNotExists(profileDir);
         createDirectoryIfNotExists(assetsDir);

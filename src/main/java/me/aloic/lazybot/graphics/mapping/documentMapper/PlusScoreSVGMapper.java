@@ -6,6 +6,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.enums.PPPlusIncompatibleMods;
 import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.util.CommonTool;
@@ -15,10 +16,6 @@ import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -142,13 +139,13 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
     {
         Document document = SVGTemplateLoader.loadSVGTemplate("PlusScoreQuadraGrid");
         HSL plusRectColor = new HSL(hue, 28, 93);
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX");
-        OffsetDateTime odt = OffsetDateTime.parse(score.getCreate_at(), inputFormatter);
 
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss");
         document.getElementById("playername").setTextContent(score.getUser_name());
-        document.getElementById("time").setTextContent(odt.toLocalDateTime().format(outputFormatter));
+        document.getElementById("time").setTextContent(CommonTool.formatJsonDateToString(score.getCreate_at(),"yyyy-MM-dd / HH:mm:ss"));
+
         if (score.getModJSON() != null && !score.getModJSON().isEmpty()) {
+            if (!PPPlusIncompatibleMods.checkModsCompatibility(score.getModJSON()))
+                document.getElementById("InCompatible Notice").setAttribute("opacity","1");
             if (!score.getIsLazer())
                 score.setModJSON(
                         score.getModJSON().stream()
@@ -162,9 +159,9 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
                     .map(Mod::getAcronym)
                     .collect(Collectors.joining());
 
-        if (modStr ==null)
+        if (modStr == null || modStr.isEmpty())
             document.getElementById("mod").setTextContent("Nomod Play");
-        else  document.getElementById("mod").setTextContent("+" + modStr);
+        else document.getElementById("mod").setTextContent("+" + modStr);
 
         if (score.getIsLazer())
              document.getElementById("client").setTextContent("Lazer");
@@ -208,8 +205,8 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
         document.getElementById("pp-pp").setTextContent(Math.round(score.getPp())+"pp");
         document.getElementById("fc-pp").setTextContent(Math.round(score.getPpDetailsLocal().getIfFc())+"pp");
 
-        String titleAndArtist=score.getBeatmap().getTitle().concat(" - ").concat(score.getBeatmap().getArtist());
-        if (titleAndArtist.length()>32) titleAndArtist=titleAndArtist.substring(0,31)+"...";
+        String titleAndArtist=score.getBeatmap().getArtist().concat(" - ").concat(score.getBeatmap().getTitle());
+        if (titleAndArtist.length()>46) titleAndArtist=titleAndArtist.substring(0,44)+"...";
         document.getElementById("titleAndArtist").setTextContent(titleAndArtist);
         document.getElementById("version").setTextContent(score.getBeatmap().getVersion());
         document.getElementById("mapper").setTextContent(score.getBeatmap().getCreator());

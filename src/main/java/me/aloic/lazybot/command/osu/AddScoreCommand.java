@@ -13,7 +13,7 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +36,7 @@ public class AddScoreCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        ImageUploadUtil.uploadImageToOnebot(bot,event,
+        CommandResultHandler.uploadImageToOnebot(bot,event,
                 playerService.addScoreForPerformancePlus(
                         setupParameter(event,
                                 proxy.getAccessToken(event))

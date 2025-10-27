@@ -35,7 +35,7 @@ import java.util.*;
 public class ManageServiceImpl implements ManageService
 {
 //    private static final Map<String, Function<UpdateParameter,String>> updateMap;
-    private static final Map<Long,Boolean> adminMap;  //Long ass numbers are discord ids
+
     @Resource
     private CommandMonitor commandMonitor;
 
@@ -44,9 +44,6 @@ public class ManageServiceImpl implements ManageService
 //                "track",ManageServiceImpl::updateOsuTrack,
 //                "banner",ManageServiceImpl::updateBanner);
 
-        adminMap = Map.of( 1524185356L,true,
-                412246007024451585L,true,
-                1204694006L,true);
     }
 
     @Resource
@@ -106,13 +103,13 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
         dataExtractor.extractPerformancePlusPlayerUpdate(playerInfoDTO.getId());
-        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的PP+数据";
+        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的PP+数据，请注意此更新仅更新最近游玩，若想添加指定成绩请使用/add";
     }
 
     @Override
     public String verifyBeatmap(BeatmapParameter params)
     {
-        if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("你没有权限");
+        AuthorityVerifier.isAdmin(params.getUserIdentity());
         File beatmapFile;
         try{
             beatmapFile = new File(AssertDownloadUtil.beatmapPath(params.getBid(),false).toUri());
@@ -141,7 +138,7 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String verify(VerifyParameter params)
     {
-        if(!adminMap.containsKey(params.getQqCode())) throw new LazybotRuntimeException("你没有权限");
+        AuthorityVerifier.isAdmin(params.getQqCode());
         if(Objects.equals(params.getType(), "view")) {
             return showUnverifiedCustomization();
         }
@@ -154,7 +151,7 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String addTips(ContentParameter params)
     {
-            if(!adminMap.containsKey(params.getUserIdentity())) throw new LazybotRuntimeException("你没有权限");
+            AuthorityVerifier.isAdmin(params.getUserIdentity());
             try{
                 TipsPO tipsPO=new TipsPO();
                 tipsPO.setContent(params.getContent());
@@ -178,7 +175,7 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String ppTest(ScoreParameter params, Long userIdentity)
     {
-        if(!adminMap.containsKey(userIdentity)) throw new LazybotRuntimeException("你没有权限");
+        AuthorityVerifier.isAdmin(userIdentity);
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
         ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(

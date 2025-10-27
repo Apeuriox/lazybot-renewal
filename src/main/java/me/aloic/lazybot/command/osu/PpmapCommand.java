@@ -18,7 +18,7 @@ import me.aloic.lazybot.osu.service.TrackService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -51,13 +51,13 @@ public class PpmapCommand implements LazybotSlashCommand
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event, trackService.ppTimeMap(params));
+        CommandResultHandler.uploadImageToDiscord(event, trackService.ppTimeMap(params));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        ImageUploadUtil.uploadImageToOnebot(bot,event,
+        CommandResultHandler.uploadImageToOnebot(bot,event,
                 trackService.ppTimeMap(
                         setupParameter(event,
                                 proxy.getAccessToken(event))

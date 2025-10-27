@@ -18,7 +18,7 @@ import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import me.aloic.lazybot.util.ImageUploadUtil;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -55,14 +55,14 @@ public class BpIfCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("mods"), ""),
                 OptionMappingTool.getOptionOrDefault(event.getOption("rendersize"), 30));
         params.validateParams();
-        ImageUploadUtil.uploadImageToDiscord(event,analysisService.bpIf(params));
+        CommandResultHandler.uploadImageToDiscord(event,analysisService.bpIf(params));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        ImageUploadUtil.uploadImageToOnebot(bot,event,analysisService.bpIf(setupParameter(event,tokenPO)));
+        CommandResultHandler.uploadImageToOnebot(bot,event,analysisService.bpIf(setupParameter(event,tokenPO)));
     }
 
     @Override
