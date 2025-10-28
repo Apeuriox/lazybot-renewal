@@ -293,6 +293,8 @@ public class OsuToolsUtil
         }
         return modList;
     }
+
+
     public static List<ScoreVO> processScoreListConcurrently(List<ScoreVO> scoreList, List<Mod> modEntities, BpifParameter params) {
         List<CompletableFuture<ScoreVO>> futures = scoreList.stream()
                 .map(scoreVO -> CompletableFuture.supplyAsync(() -> {

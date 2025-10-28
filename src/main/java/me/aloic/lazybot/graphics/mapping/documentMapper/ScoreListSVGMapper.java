@@ -146,7 +146,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         Element songTitle = document.createElementNS(namespaceSVG, "text");
         String title = scoreVO.getBeatmap().getTitle();
         if (title.length() >= 20) {
-            title = title.substring(0, 19) + "...";
+            title = title.substring(0, 18) + "...";
         }
         songTitle.setAttribute("class", "cls-5");
         if(type==0) {
@@ -581,9 +581,10 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             divisor.setTextContent(" | ");
 
             Element title = doc.createElementNS(namespaceSVG, "tspan");
-            if (score.getBeatmap().getArtist().length()+score.getBeatmap().getTitle().length()>60)
-                score.getBeatmap().setTitle(score.getBeatmap().getTitle().substring(0,60-score.getBeatmap().getArtist().length()-2).concat("..."));
-            title.setTextContent(score.getBeatmap().getArtist().concat(" - ").concat(score.getBeatmap().getTitle()));
+            String titleAndArtist = score.getBeatmap().getTitle() + " by " + score.getBeatmap().getArtist();
+            if (titleAndArtist.length()>60)
+                titleAndArtist = titleAndArtist.substring(0, 58).concat("...");
+            title.setTextContent(titleAndArtist);
 
 
             //pending

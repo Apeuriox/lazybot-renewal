@@ -10,6 +10,9 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
+import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
@@ -20,6 +23,8 @@ import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import javax.swing.*;
 
 @LazybotCommandMapping({"nochoke","nc","no1miss"})
 @Component
@@ -33,6 +38,8 @@ public class NoChokeCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final String NOCHOKE_LABEL = "All scores are recalculated with FC. Plz keep in mind that this may not reflect your skill correctly.";
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -50,8 +57,13 @@ public class NoChokeCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.validateParams();
         if (event.getFullCommandName().equalsIgnoreCase("no1miss"))
-            CommandResultHandler.uploadImageToDiscord(event,playerService.noChoke(params,1));
-        else CommandResultHandler.uploadImageToDiscord(event,playerService.noChoke(params,0));
+            CommandResultHandler.uploadImageToDiscord(event,
+                    RendererDistributor.renderPlayerScoreListToCard(
+                    playerService.noChoke(params,1),0,2));
+        else CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderPlayerScoreListToCard(
+                        playerService.noChoke(params,0),0,3,
+                        NOCHOKE_LABEL));
     }
 
     @Override
@@ -59,12 +71,13 @@ public class NoChokeCommand implements LazybotSlashCommand
     {
         if (event.getCommandType().equalsIgnoreCase("no1miss"))
             CommandResultHandler.uploadImageToOnebot(bot,event,
-                    playerService.noChoke(
-                            GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 1)
+                    RendererDistributor.renderPlayerScoreListToCard(
+                    playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),1),0,2)
             );
         else  CommandResultHandler.uploadImageToOnebot(bot,event,
-                playerService.noChoke(
-                        GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 0)
+                RendererDistributor.renderPlayerScoreListToCard(
+                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),0),0,3,
+                        NOCHOKE_LABEL)
         );
     }
 
@@ -73,12 +86,13 @@ public class NoChokeCommand implements LazybotSlashCommand
     {
         if (event.getCommandType().equalsIgnoreCase("no1miss"))
             testOutputTool.saveImageToLocal(
-                    playerService.noChoke(
-                            GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 1)
+                    RendererDistributor.renderPlayerScoreListToCard(
+                            playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),1),0,2)
             );
         else testOutputTool.saveImageToLocal(
-                playerService.noChoke(
-                        GeneralParameter.setupParameter(event, proxy.getAccessToken(event)), 0)
+                RendererDistributor.renderPlayerScoreListToCard(
+                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),0),0,3,
+                        NOCHOKE_LABEL)
         );
     }
     @Override

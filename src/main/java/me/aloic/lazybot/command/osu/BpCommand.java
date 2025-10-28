@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -53,29 +54,44 @@ public class BpCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1));
         params.validateParams();
         params.setPlayerId(tokenPO.getPlayer_id());
-        CommandResultHandler.uploadImageToDiscord(event,playerService.bp(params));
+        CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderScoreVOToImage(
+                        playerService.getUserBestPerformanceSingle(params),params.getVersion())
+        );
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equalsIgnoreCase("pbp") || event.getCommandType().equalsIgnoreCase("pb")) {
-            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bpPlus(setupParameter(event,tokenPO)));
+        String commandType = event.getCommandType().toLowerCase();
+        BpParameter params = setupParameter(event,tokenPO);
+        if (commandType.equals("pbp") || commandType.equals("pb")) {
+            CommandResultHandler.uploadImageToOnebot(bot,event,
+                    RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                            playerService.getUserBestPerformanceSinglePlus(params))
+            );
         }
         else
-            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bp(setupParameter(event,tokenPO)));
+            CommandResultHandler.uploadImageToOnebot(bot,event,
+                    RendererDistributor.renderScoreVOToImage(
+                            playerService.getUserBestPerformanceSingle(params), params.getVersion())
+            );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equalsIgnoreCase("pbp") || event.getCommandType().equalsIgnoreCase("pb")) {
-            testOutputTool.saveImageToLocal(playerService.bpPlus(setupParameter(event,tokenPO)));
+        String commandType = event.getCommandType().toLowerCase();
+        BpParameter params = setupParameter(event,tokenPO);
+        if (commandType.equals("pbp") || commandType.equals("pb")) {
+            testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                    playerService.getUserBestPerformanceSinglePlus(params)));
         }
         else
-            testOutputTool.saveImageToLocal(playerService.bp(setupParameter(event,tokenPO)));
+            testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
+                    playerService.getUserBestPerformanceSingle(params), params.getVersion()));
     }
 
     private BpParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)

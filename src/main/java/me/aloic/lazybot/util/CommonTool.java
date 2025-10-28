@@ -157,6 +157,9 @@ public class CommonTool {
         else
             return "NoMod";
     }
+    public static int[] getDominantColorArray(ScoreVO scoreVO) throws IOException {
+        return CommonTool.getDominantColorColorThief(new File(scoreVO.getBeatmap().getBgUrl()));
+    }
     public static String formatHitLength(int hitLength)
     {
         String result=String.valueOf(hitLength / 60);

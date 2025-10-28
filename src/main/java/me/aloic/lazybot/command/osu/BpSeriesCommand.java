@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -51,7 +52,7 @@ public class BpSeriesCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 1,21);
         params.validateParams();
-        CommandResultHandler.uploadImageToDiscord(event,playerService.bplistCardView(params));
+        CommandResultHandler.uploadImageToDiscord(event, RendererDistributor.renderPlayerScoreListToCard(playerService.bplistCardView(params),params.getFrom(),1));
     }
 
     @Override
@@ -64,9 +65,12 @@ public class BpSeriesCommand implements LazybotSlashCommand
                 1,21);
         if (parameter.getPlayerName()!=null) params.setPlayerName(parameter.getPlayerName());
         if (event.getScorePanelVersion()==0)
-            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bplistCardView(params));
+            CommandResultHandler.uploadImageToOnebot(bot,event,
+                    RendererDistributor.renderPlayerScoreListToCard(playerService.bplistCardView(params),params.getFrom(),1));
         else
-            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bplistListView(params));
+            CommandResultHandler.uploadImageToOnebot(bot,event,
+                    RendererDistributor.renderPlayerScoreListToList(playerService.bplistListView(params), params.getFrom())
+            );
     }
 
     @Override
@@ -79,9 +83,10 @@ public class BpSeriesCommand implements LazybotSlashCommand
                 1,21);
         if (parameter.getPlayerName()!=null) params.setPlayerName(parameter.getPlayerName());
         if (event.getScorePanelVersion()==0)
-            testOutputTool.saveImageToLocal(playerService.bplistCardView(params));
+            testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToCard(playerService.bplistCardView(params),params.getFrom(),1));
         else
-            testOutputTool.saveImageToLocal(playerService.bplistListView(params));
+            testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToList(playerService.bplistListView(params), params.getFrom())
+            );
     }
 
     @Override

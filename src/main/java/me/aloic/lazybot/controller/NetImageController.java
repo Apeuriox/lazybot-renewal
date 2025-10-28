@@ -1,6 +1,7 @@
 package me.aloic.lazybot.controller;
 
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.CardMoelleuxParameter;
 import org.springframework.http.*;
@@ -32,7 +33,7 @@ public class NetImageController
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         if (version==null)
             version = 0;
-        byte[] image = playerService.cardMoelleux(new CardMoelleuxParameter(playerId,hue,version));
+        byte[] image = RendererDistributor.renderMMoelleuxCardTrimmed(playerService.cardMoelleux(new CardMoelleuxParameter(playerId,hue,version)));
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.maxAge(24, TimeUnit.HOURS).cachePublic());
 
@@ -48,7 +49,7 @@ public class NetImageController
     {
 //        if (!BETA_USER.contains(playerId))
 //            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        byte[] image = playerService.cardMoelleuxTrimmed(new CardMoelleuxParameter(playerId,hue,0));
+        byte[] image = RendererDistributor.renderMMoelleuxCardTrimmed(playerService.cardMoelleuxTrimmed(new CardMoelleuxParameter(playerId,hue,0)));
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.maxAge(24, TimeUnit.HOURS).cachePublic());
 

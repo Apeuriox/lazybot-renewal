@@ -144,12 +144,10 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
         return document;
     }
 
-    public static Document mapPlusInfoToCardCC2024(PPPlusPerformance performance, PlayerInfoVO player) throws IOException
+    public static Document mapPlusInfoToCardCC2024(PPPlusPerformance performance, PlayerInfoVO player)
     {
         Document document = SVGTemplateLoader.loadSVGTemplate("PpPlusCard-CC2024");
-        Element svgRoot = document.getDocumentElement();
-        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
-        Element defs = document.createElementNS(namespaceSVG, "defs");
+
         HSL mainColor = new HSL(player.getPrimaryColor(), 80, 35);
 
         String name=player.getPlayerName();

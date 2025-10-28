@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
@@ -37,9 +38,8 @@ public class AddScoreCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                playerService.addScoreForPerformancePlus(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
+                RendererDistributor.renderAddScorePanel(
+                playerService.addScoreForPerformancePlus(setupParameter(event, proxy.getAccessToken(event)))
                 )
         );
     }
@@ -47,9 +47,9 @@ public class AddScoreCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(playerService.addScoreForPerformancePlus(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
+        testOutputTool.saveImageToLocal(
+                RendererDistributor.renderAddScorePanel(
+                        playerService.addScoreForPerformancePlus(setupParameter(event, proxy.getAccessToken(event)))
                 )
         );
     }

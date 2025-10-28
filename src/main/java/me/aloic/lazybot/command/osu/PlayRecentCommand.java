@@ -11,6 +11,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -55,18 +56,29 @@ public class PlayRecentCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
         params.validateParams();
-        if (event.getFullCommandName().equals("rp")||event.getFullCommandName().equals("pr")||event.getFullCommandName().equals("playrecent")||event.getFullCommandName().equals("p"))
-            CommandResultHandler.uploadImageToDiscord(event,playerService.recent(params,1));
-        else if(event.getFullCommandName().equals("ppr"))
-        {
-            CommandResultHandler.uploadImageToDiscord(event,playerService.recentPlus(params,1));
+        String commandType = event.getFullCommandName().toLowerCase();
+
+        switch (commandType){
+            case "rp" ,"pr" ,"playrecent" ->
+                    CommandResultHandler.uploadImageToDiscord(event,
+                            RendererDistributor.renderScoreVOToImage(
+                                    playerService.getUserRecentScoreList(params,1),params.getVersion())
+                    );
+            case "ppr" ->
+                    CommandResultHandler.uploadImageToDiscord(event,
+                            RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                                    playerService.getUserRecentScoreListPlus(params,1)));
+            case "pre" ->
+                    CommandResultHandler.uploadImageToDiscord(event,
+                            RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                                    playerService.getUserRecentScoreListPlus(params,0)));
+            default ->
+                    CommandResultHandler.uploadImageToDiscord(event,
+                            RendererDistributor.renderScoreVOToImage(
+                                    playerService.getUserRecentScoreList(params,0),params.getVersion())
+                    );
+
         }
-        else if (event.getFullCommandName().equals("pre"))
-        {
-            CommandResultHandler.uploadImageToDiscord(event,playerService.recentPlus(params,0));
-        }
-        else
-            CommandResultHandler.uploadImageToDiscord(event,playerService.recent(params,0));
     }
 
     @Override
@@ -74,20 +86,24 @@ public class PlayRecentCommand implements LazybotSlashCommand
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
         String commandType = event.getCommandType().toLowerCase();
+        RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
             case "rp" ,"pr" ,"playrecent" ->
-                    CommandResultHandler.uploadImageToOnebot(bot, event,
-                        playerService.recent(setupParameter(event, tokenPO), 1));
+                CommandResultHandler.uploadImageToOnebot(bot, event,
+                        RendererDistributor.renderScoreVOToImage(
+                                playerService.getUserRecentScoreList(params, 1), params.getVersion()));
             case "ppr" ->
                 CommandResultHandler.uploadImageToOnebot(bot, event,
-                        playerService.recentPlus(setupParameter(event, tokenPO), 1));
-
+                        RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                                playerService.getUserRecentScoreListPlus(params, 1)));
             case "pre" ->
                 CommandResultHandler.uploadImageToOnebot(bot, event,
-                        playerService.recentPlus(setupParameter(event, tokenPO), 0));
+                        RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                                playerService.getUserRecentScoreListPlus(params, 0)));
             default ->
                 CommandResultHandler.uploadImageToOnebot(bot, event,
-                        playerService.recent(setupParameter(event, tokenPO), 0));
+                        RendererDistributor.renderScoreVOToImage(
+                                playerService.getUserRecentScoreList(params, 0), params.getVersion()));
 
         }
 
@@ -98,28 +114,25 @@ public class PlayRecentCommand implements LazybotSlashCommand
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
         String commandType = event.getCommandType().toLowerCase();
+        RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
             case "rp" ,"pr" ,"playrecent" ->
-                    testOutputTool.saveImageToLocal(playerService.recent(
-                            setupParameter(event,tokenPO),
-                            1)
-                    );
+                    testOutputTool.saveImageToLocal(
+                            RendererDistributor.renderScoreVOToImage(
+                                    playerService.getUserRecentScoreList(params, 1), params.getVersion()));
             case "ppr" ->
-                    testOutputTool.saveImageToLocal(playerService.recentPlus(
-                            setupParameter(event,tokenPO),
-                            1)
-                    );
+                    testOutputTool.saveImageToLocal(
+                            RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                                    playerService.getUserRecentScoreListPlus(params, 1)));
 
             case "pre" ->
-                    testOutputTool.saveImageToLocal(playerService.recentPlus(
-                            setupParameter(event,tokenPO),
-                            0)
-                    );
+                    testOutputTool.saveImageToLocal(
+                            RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                                    playerService.getUserRecentScoreListPlus(params, 0)));
             default ->
-                    testOutputTool.saveImageToLocal(playerService.recent(
-                            setupParameter(event,tokenPO),
-                            0)
-                    );
+                    testOutputTool.saveImageToLocal(
+                            RendererDistributor.renderScoreVOToImage(
+                                    playerService.getUserRecentScoreList(params, 0), params.getVersion()));
 
         }
 
@@ -150,5 +163,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("Index","指定查询的索引，范围 1-50，默认为1", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
     }
+
+
 
 }

@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -36,21 +37,20 @@ public class PerformancePlusCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
+        GeneralParameter params =  GeneralParameter.setupParameter(event, proxy.getAccessToken(event));
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                playerService.performancePlus(
-                        GeneralParameter.setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
+                RendererDistributor.renderPerformancePlusCard(
+                        playerService.getPerformancePlusPlayerInfo(params),params.getVersion())
         );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(playerService.performancePlus(
-                        GeneralParameter.setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
+        GeneralParameter params =  GeneralParameter.setupParameter(event, proxy.getAccessToken(event));
+        testOutputTool.saveImageToLocal(
+                RendererDistributor.renderPerformancePlusCard(
+                        playerService.getPerformancePlusPlayerInfo(params),params.getVersion())
         );
     }
     @Override

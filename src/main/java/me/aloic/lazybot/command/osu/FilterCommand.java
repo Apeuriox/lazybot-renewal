@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
@@ -41,14 +42,17 @@ public class FilterCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bpScoreFilter(setupParameter(event,tokenPO)));
+        CommandResultHandler.uploadImageToOnebot(bot,event,
+                RendererDistributor.renderPlayerScoreListToCard(
+                playerService.bpScoreFilter(setupParameter(event,tokenPO)),1,4,"Current Command: /Filter, get desired best performances with given statements."));
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        testOutputTool.saveImageToLocal(playerService.bpScoreFilter(setupParameter(event,tokenPO)));
+        testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToCard(
+                playerService.bpScoreFilter(setupParameter(event,tokenPO)),1,4,"Current Command: /Filter, get desired best performances with given statements."));
     }
 
     private ScoreFilterParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)

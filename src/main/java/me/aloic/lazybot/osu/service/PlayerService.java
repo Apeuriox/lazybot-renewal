@@ -1,6 +1,12 @@
 package me.aloic.lazybot.osu.service;
 
 import desu.life.RosuFFI;
+import me.aloic.lazybot.entity.command.*;
+import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
+import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
+import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.parameter.*;
 
 import java.io.IOException;
@@ -8,53 +14,51 @@ import java.io.IOException;
 public interface PlayerService
 {
 
-    byte[] score(ScoreParameter params) throws Exception;
+    ScoreVO getUserHighestScoreOnMap(ScoreParameter params) throws Exception;
 
-    byte[] scorePlus(ScoreParameter params) throws Exception;
+    PPPlusScore getUserHighestScoreOnMapPlus(ScoreParameter params) throws Exception;
 
-    byte[] allScore(ScoreParameter params) throws Exception;
+    UserAllScore getUserAllScoresOnMap(ScoreParameter params) throws Exception;
 
-    byte[] thumbnailClassicalScore(ThumbnailParameter params);
+    ThumbnailClassicalVO thumbnailClassicalScore(ThumbnailParameter params);
 
-    byte[] thumbnailClassicalRecent(ThumbnailParameter params);
+    ThumbnailClassicalVO thumbnailClassicalRecent(ThumbnailParameter params);
 
-    byte[] recent(RecentParameter params, int type) throws IOException;
+    ScoreVO getUserRecentScoreList(RecentParameter params, int type) throws IOException;
 
-    byte[] recentPlus(RecentParameter params, int type) throws IOException, RosuFFI.FFIException;
+    PPPlusScore getUserRecentScoreListPlus(RecentParameter params, int type) throws IOException, RosuFFI.FFIException;
 
-    byte[] bp(BpParameter params) throws Exception;
+    ScoreVO getUserBestPerformanceSingle(BpParameter params) throws Exception;
 
-    byte[] bpPlus(BpParameter params) throws IOException, RosuFFI.FFIException;
+    PPPlusScore getUserBestPerformanceSinglePlus(BpParameter params) throws IOException, RosuFFI.FFIException;
 
-    byte[] bplistCardView(BplistParameter params) throws Exception;
+    PlayerScoreList bplistCardView(BplistParameter params) throws Exception;
 
-    byte[] bplistListView(BplistParameter params) throws Exception;
+    PlayerScoreList bplistListView(BplistParameter params) throws Exception;
 
-    byte[] bpScoreFilter(ScoreFilterParameter params) throws Exception;
+    PlayerScoreList bpScoreFilter(ScoreFilterParameter params) throws Exception;
 
-    byte[] playRecentSeries(GeneralParameter params, int type, int style) throws Exception;
+    PlayerScoreList playRecentSeries(GeneralParameter params, int type, int style) throws Exception;
 
-    byte[] todayBp(TodaybpParameter params) throws Exception;
+    PlayerScoreList getPlayerTodayNewBps(TodaybpParameter params) throws Exception;
 
-    byte[] bpvs(BpvsParameter params)throws Exception;
+    ComparePlayerBpList bpvs(BpvsParameter params)throws Exception;
 
-    byte[] noChoke(GeneralParameter params, int type) throws Exception;
+    NoChokeListVO noChoke(GeneralParameter params, int type) throws Exception;
 
-    byte[] card(GeneralParameter params) throws Exception;
+    PlayerInfoVO getPlayerInfoVO(GeneralParameter params) throws Exception;
 
-    byte[] cardMoelleux(CardMoelleuxParameter params) throws Exception;
+    MoelleuxCard cardMoelleux(CardMoelleuxParameter params) throws Exception;
 
-    byte[] cardMoelleuxTrimmed(CardMoelleuxParameter params) throws Exception;
+    MoelleuxCard cardMoelleuxTrimmed(CardMoelleuxParameter params) throws Exception;
 
-    byte[] performancePlus(GeneralParameter params) throws Exception;
+    PerformancePlusProfile getPerformancePlusPlayerInfo(GeneralParameter params) throws Exception;
 
-    byte[] addScoreForPerformancePlus(ScoreParameter params);
+    AddScorePlus addScoreForPerformancePlus(ScoreParameter params);
 
-    byte[] profile(ProfileParameter params) throws Exception;
+    ProfileInfo profile(ProfileParameter params) throws Exception;
 
     String nameToId(NameToIdParameter params) throws Exception;
 
-    byte[] avatar(GeneralParameter params, int type) throws Exception;
-
-    byte[] scoreRank(ScoreParameter params) throws Exception;
+    UserAllScore scoreRank(ScoreParameter params) throws Exception;
 }

@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -51,28 +52,25 @@ public class TodaybpCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("days"), 1));
         params.validateParams();
-        CommandResultHandler.uploadImageToDiscord(event,playerService.todayBp(params));
+        CommandResultHandler.uploadImageToDiscord(event,RendererDistributor.renderPlayerScoreListToCard(
+                playerService.getPlayerTodayNewBps(params),0,4,"Current command: /todayBp. Showing new Bps within " + params.getMaxDays() +" day(s)"));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
+        TodaybpParameter params = setupParameter(event,proxy.getAccessToken(event));
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                playerService.todayBp(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
-        );
+                RendererDistributor.renderPlayerScoreListToCard(
+                playerService.getPlayerTodayNewBps(params),0,4,"Current command: /todayBp. Showing new Bps within " + params.getMaxDays() +" day(s)"));
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(playerService.todayBp(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
-        );
+        TodaybpParameter params = setupParameter(event,proxy.getAccessToken(event));
+        testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToCard(
+                playerService.getPlayerTodayNewBps(params),0,4,"Current command: /todayBp. Showing new Bps within " + params.getMaxDays() +" day(s)"));
     }
     private TodaybpParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
     {
