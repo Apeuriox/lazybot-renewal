@@ -15,6 +15,8 @@ import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayoData;
+import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayobotBeatmapSet;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
@@ -22,7 +24,7 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -82,7 +84,7 @@ public class DataExtractor
         if (tokenPO == null)
             return playerInfoDTO;
         if (tokenPO.getAvatar_url()==null || !playerInfoDTO.getAvatar_url().equals(tokenPO.getAvatar_url())) {
-            AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true);
+            AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,true);
             tokenMapper.updateAvatar(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId());
         }
         return playerInfoDTO;
@@ -184,11 +186,11 @@ public class DataExtractor
                         BeatmapUserScoreLazer.class);
             }
             if(beatmapUserScoreLazer==null||beatmapUserScoreLazer.getScore()==null)
-                throw new LazybotRuntimeException("没这成绩: Bid=" +beatmapId + " PlayerID=" + playerId +" Mode="+mode);
+                throw new LazybotRuntimeException("没找到" + playerId + "在" + beatmapId +"上的成绩，" + " 模式为" + mode);
             return beatmapUserScoreLazer;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("没这成绩: Bid=" +beatmapId + " PlayerID=" + playerId +" Mode="+mode);
+            throw new LazybotRuntimeException("没找到" + playerId + "在" + beatmapId +"上的成绩，" + " 模式为" + mode);
         }
     }
 
@@ -323,6 +325,20 @@ public class DataExtractor
             throw new LazybotRuntimeException("OsuTrack BestPlay暂无数据");
         }
         return bestPlayList;
+    }
+
+    public SayoData extractSayobotBeatmapSet(Integer sid)
+    {
+        SayobotBeatmapSet sayobotBeatmapSet= apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfSayobotBeatmap(sid),
+                HTTPTypeEnum.GET,
+                null,
+                null,
+                SayobotBeatmapSet.class);
+        if(sayobotBeatmapSet==null || sayobotBeatmapSet.getData()==null) {
+            throw new LazybotRuntimeException("Sayobot暂无数据");
+        }
+        return sayobotBeatmapSet.getData();
     }
     public Integer extractRankByPP(String mode, Double pp)
     {

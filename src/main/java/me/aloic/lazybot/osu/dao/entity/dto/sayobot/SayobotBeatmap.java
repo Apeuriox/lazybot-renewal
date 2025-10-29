@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class Bid_data implements Serializable
+public class SayobotBeatmap implements Serializable
 {
     private Integer bid;
     private Integer mode;

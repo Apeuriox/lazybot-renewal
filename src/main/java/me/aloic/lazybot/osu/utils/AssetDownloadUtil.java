@@ -19,9 +19,9 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.concurrent.*;
 
-public class AssertDownloadUtil
+public class AssetDownloadUtil
 {
-    private static final Logger logger = LoggerFactory.getLogger(AssertDownloadUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(AssetDownloadUtil.class);
     private static final int MAX_DOWNLOADS_PER_MINUTE;
     private static final long ONE_MINUTE_IN_MS;
     private static final DelayQueue<DownloadTask> delayQueue;
@@ -35,11 +35,11 @@ public class AssertDownloadUtil
         delayQueue=new DelayQueue<>();
         executor=Executors.newScheduledThreadPool(6);
         httpClient = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.ALWAYS)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
         MAX_RETRIES=3;
         initDownloadControl();
-
     }
     private static void initDownloadControl() {
         for (int i = 0; i < MAX_DOWNLOADS_PER_MINUTE; i++) {
@@ -69,20 +69,20 @@ public class AssertDownloadUtil
                 fileDownloadJavaHttpClient(targetUrl, desiredLocalPath);
                 delayQueue.offer(new DownloadTask(ONE_MINUTE_IN_MS));
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             return null;
         });
         downloadFuture.get();
         logger.info("Download completed for: {}", targetUrl);
     }
-    public static boolean beatmapDownload(Integer bid,Boolean override)
+    public static void beatmapDownload(Integer bid,Boolean override)
     {
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/" + bid +".osu";
         File saveFilePath = new File(desiredLocalPath);
         if (saveFilePath.exists() && !override) {
             logger.trace("地图.osu文件已存在: {}", saveFilePath.getAbsolutePath());
-            return false;
+            return;
         }
         String targetUrl= ContentUtil.BEATMAP_DOWNLOAD_URL+ "/" +bid;
         try{
@@ -92,18 +92,22 @@ public class AssertDownloadUtil
         {
             logger.error("地图下载失败: {}", e.getMessage());
         }
-
-        return true;
     }
-    public static Path backgroundDownload(Integer sid)
+
+    public static void backgroundDownload(Integer sid)
     {
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/mapBG/" + sid +".jpg";
+        String targetUrl = ContentUtil.BEATMAP_BG_BASE_URL+sid+"/covers/fullsize.jpg";
+        backgroundDownload(desiredLocalPath,targetUrl);
+
+    }
+    protected static void backgroundDownload(String desiredLocalPath, String targetUrl)
+    {
         File saveFilePath = new File(desiredLocalPath);
         if (saveFilePath.exists()) {
             logger.trace("地图背景文件已存在: {}", saveFilePath.getAbsolutePath());
-            return Paths.get(desiredLocalPath);
+            return;
         }
-        String targetUrl = ContentUtil.BEATMAP_BG_BASE_URL+sid+"/covers/raw.jpg";
         try{
             downloadResourceQueue(targetUrl,desiredLocalPath);
         }
@@ -111,24 +115,24 @@ public class AssertDownloadUtil
         {
             logger.error("地图背景下载失败: {}", e.getMessage());
         }
-        return Paths.get(desiredLocalPath);
     }
 
-    public static Path avatarDownload(String url,int playerId, boolean override)
+
+    public static void avatarDownload(String url,int playerId, boolean override)
     {
-        return assertDownload(url,"playerAvatar", String.valueOf(playerId),"jpg",override);
+        assertDownload(url,"playerAvatar", String.valueOf(playerId),"jpg",override);
     }
-    public static Path bannerDownload(String url,int playerId, boolean override)
+    public static void bannerDownload(String url,int playerId, boolean override)
     {
-        return assertDownload(url,"playerBanner", String.valueOf(playerId),"jpg",override);
+        assertDownload(url,"playerBanner", String.valueOf(playerId),"jpg",override);
     }
-    public static Path assertDownload(String url,String subPath,String fileName,String fileExtension, boolean override)
+    public static void assertDownload(String url,String subPath,String fileName,String fileExtension, boolean override)
     {
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/"+ subPath + "/" + fileName + "." + fileExtension;
         File saveFilePath = new File(desiredLocalPath);
         if (saveFilePath.exists()&&!override) {
             logger.trace("该文件已存在: {}", saveFilePath.getAbsolutePath());
-            return Paths.get(desiredLocalPath);
+            return;
         }
         try{
             downloadResourceQueue(url,desiredLocalPath);
@@ -138,7 +142,6 @@ public class AssertDownloadUtil
             logger.error("下载失败: {}", e.getMessage());
             throw new LazybotRuntimeException("下载线程出错: "+ e.getMessage());
         }
-        return Paths.get(desiredLocalPath);
     }
 
 
@@ -190,7 +193,8 @@ public class AssertDownloadUtil
                         .GET()
                         .build();
 
-                HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
+                HttpResponse<byte[]> response = httpClient
+                        .send(request, HttpResponse.BodyHandlers.ofByteArray());
                 int status = response.statusCode();
 
                 if (status == 200) {

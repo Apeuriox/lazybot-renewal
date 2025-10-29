@@ -1,28 +1,5 @@
 package me.aloic.lazybot;
 
-import me.aloic.lazybot.enums.FilterOperatorEnum;
-import me.aloic.lazybot.graphics.util.ImageFilterUtil;
-import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
-import me.aloic.lazybot.osu.enums.RankedMods;
-import me.aloic.lazybot.osu.filter.ScoreFilter;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
-import me.aloic.lazybot.osu.utils.SvgUtil;
-import me.aloic.lazybot.shiro.utils.MessageEventFactory;
-import me.aloic.lazybot.util.CommonTool;
-import org.junit.jupiter.api.Test;
-
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
-import org.apache.commons.text.similarity.JaroWinklerSimilarity;
-
-import javax.imageio.ImageIO;
-
 public class StaticFunctionTest
 {
 //    @Test

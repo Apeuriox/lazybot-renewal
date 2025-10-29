@@ -251,4 +251,23 @@ public class URLBuildUtil
         return builder.build();
     }
 
+    public static String buildURLOfSayobotBeatmap(Integer beatmapId)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp("https://api.sayobot.cn", CharsetUtil.CHARSET_UTF_8)
+                .addPath("v2")
+                .addPath("beatmapinfo")
+                .addQuery("K", beatmapId);
+        return builder.build();
+    }
+
+    public static String buildURLOfSayobotMapBG(Integer beatmapSetId, String fileName)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp("https://dl.sayobot.cn", CharsetUtil.CHARSET_UTF_8)
+                .addPath("beatmaps")
+                .addPath("files")
+                .addPath(String.valueOf(beatmapSetId))
+                .addPath(fileName);
+        return builder.build();
+    }
+
 }

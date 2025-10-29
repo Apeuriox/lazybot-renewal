@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 
 import java.io.Serializable;
 
@@ -19,7 +19,7 @@ public class RetroGamerCardStats implements Serializable
 
     public RetroGamerCardStats(AccessTokenPO token)
     {
-        this.avatarUrl = AssertDownloadUtil.avatarAbsolutePath(token.getPlayer_id());
+        this.avatarUrl = AssetDownloadUtil.avatarAbsolutePath(token.getPlayer_id());
         this.name = token.getPlayer_name();
         this.id = token.getPlayer_id();
     }

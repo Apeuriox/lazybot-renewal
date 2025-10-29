@@ -24,6 +24,8 @@ public class AnalysisServiceImpl implements AnalysisService
 {
     @Resource
     private DataExtractor dataExtractor;
+    @Resource
+    private OsuToolsUtil osuToolsUtil;
 
     @Override
     public PlayerScoreList bpIf(BpifParameter params) throws IOException
@@ -33,7 +35,7 @@ public class AnalysisServiceImpl implements AnalysisService
         else playerInfoDTO=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         PlayerInfoVO info= OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
         List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestScoreList(String.valueOf(info.getId()),100,0,params.getMode());
-        List<ScoreVO> scoreList=OsuToolsUtil.setupBpifScoreList(params,originalScoreArray,info);
+        List<ScoreVO> scoreList=osuToolsUtil.setupBpifScoreList(params,originalScoreArray,info);
         return new PlayerScoreList(
                 scoreList.stream().limit(36).collect(Collectors.toList()),
                 info);

@@ -3,26 +3,23 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.CommandStat;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.graphics.mapping.documentMapper.UsageSVGMapper;
-import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.monitor.CommandMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
-import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebPlayerPerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.*;
-import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
 import me.aloic.lazybot.osu.service.ManageService;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -38,6 +35,8 @@ public class ManageServiceImpl implements ManageService
 
     @Resource
     private CommandMonitor commandMonitor;
+    @Resource
+    private OsuToolsUtil osuToolsUtil;
 
     static{
 //        updateMap = Map.of("avatar",ManageServiceImpl::updateAvatar,
@@ -76,7 +75,7 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
 
-        playerInfoDTO.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true));
+        playerInfoDTO.setAvatar_url(AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,true));
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的头像缓存";
     }
     private String updateBanner(UpdateParameter params)
@@ -85,7 +84,7 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
 
-        playerInfoDTO.setCover_url((AssertDownloadUtil.bannerAbsolutePath(playerInfoDTO,true)));
+        playerInfoDTO.setCover_url((AssetDownloadUtil.bannerAbsolutePath(playerInfoDTO,true)));
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的横幅缓存";
     }
     private String updateOsuTrack(UpdateParameter params)
@@ -112,7 +111,7 @@ public class ManageServiceImpl implements ManageService
         AuthorityVerifier.isAdmin(params.getUserIdentity());
         File beatmapFile;
         try{
-            beatmapFile = new File(AssertDownloadUtil.beatmapPath(params.getBid(),false).toUri());
+            beatmapFile = new File(AssetDownloadUtil.beatmapPath(params.getBid(),false).toUri());
         }
         catch (Exception e) {
             return "[Lazybot] 未检索到本地缓存";
@@ -120,7 +119,7 @@ public class ManageServiceImpl implements ManageService
         String checksum= CommonTool.calculateMD5(beatmapFile);
         BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBid()),params.getMode());
         if (!checksum.equals(beatmapDTO.getChecksum())) {
-            AssertDownloadUtil.beatmapPath(params.getBid(), true);
+            AssetDownloadUtil.beatmapPath(params.getBid(), true);
             return "[Lazybot] 校验和不匹配: " + beatmapDTO.getChecksum() + " != " + checksum;
         }
         return "[Lazybot] 校验和正常: "+checksum;
@@ -178,7 +177,7 @@ public class ManageServiceImpl implements ManageService
         AuthorityVerifier.isAdmin(userIdentity);
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
                 beatmapUserScoreLazer.getScore(),
                 false);

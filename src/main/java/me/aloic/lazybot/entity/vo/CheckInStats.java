@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.entity.po.CardUserPointsPO;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 
 import java.io.Serializable;
 @AllArgsConstructor
@@ -29,7 +29,7 @@ public class CheckInStats implements Serializable
         this.lazyCoinsDiff = coin;
         this.totalLazyCoins = player.getTotal_history_points()+coin;
         this.playerName = token.getPlayer_name();
-        this.avatar_url = AssertDownloadUtil.avatarAbsolutePath(token.getPlayer_id());
+        this.avatar_url = AssetDownloadUtil.avatarAbsolutePath(token.getPlayer_id());
 
     }
 }

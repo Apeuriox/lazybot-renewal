@@ -1,18 +1,14 @@
 package me.aloic.lazybot.util;
-import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapsetDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
-import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.enums.OsuMode;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
-import me.aloic.lazybot.osu.utils.RosuUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import org.w3c.dom.Document;
 
-import javax.swing.text.html.Option;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -400,7 +396,7 @@ public class TransformerUtil
         else {
             score.setRank("F");
         }
-        score.setAvatarUrl(AssertDownloadUtil.avatarAbsolutePath(scoreLazer.getUser(),false));
+        score.setAvatarUrl(AssetDownloadUtil.avatarAbsolutePath(scoreLazer.getUser(),false));
         score.setIsLazer(scoreLazer.getLegacy_total_score() == 0);
         score.setUser_name(scoreLazer.getUser().getUsername());
         score.setMode(String.valueOf(scoreLazer.getRuleset_id()));

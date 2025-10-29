@@ -1,55 +1,59 @@
 package me.aloic.lazybot.osu.utils;
 
-import jakarta.annotation.Nonnull;
+import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.parameter.BpifParameter;
-import me.aloic.lazybot.parameter.LazybotCommandParameter;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.TransformerUtil;
 import me.aloic.lazybot.util.VirtualThreadExecutorHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Component
 public class OsuToolsUtil
 {
+    @Resource
+    private AssetDownloader assetDownloader;
 
-    public static BeatmapVO setupBeatmapVO(BeatmapDTO beatmapDTO)
+    public BeatmapVO setupBeatmapVO(BeatmapDTO beatmapDTO)
     {
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransform(beatmapDTO);
-        beatmapVO.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapVO.getBeatmapset_id()));
+        beatmapVO.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapVO.getBeatmapset_id()));
         return beatmapVO;
     }
+
+
     public static MapScore setupPlayerStatics(MapScore mapScore, PlayerInfoDTO player)
     {
         if(StringUtils.isNotEmpty(player.getCover_url())) {
-            String bannerUrl = AssertDownloadUtil.bannerAbsolutePath(player,false);
+            String bannerUrl = AssetDownloadUtil.bannerAbsolutePath(player,false);
             mapScore.setBannerUrl(bannerUrl);
         }
         if(StringUtils.isNotEmpty(player.getAvatar_url())) {
-            String avatarUrl = AssertDownloadUtil.avatarAbsolutePath(player,false);
+            String avatarUrl = AssetDownloadUtil.avatarAbsolutePath(player,false);
             mapScore.setAvatarUrl(avatarUrl);
         }
         return mapScore;
     }
+
     public static List<MapScore> setupPlayerStatics(List<MapScore> mapScore, PlayerInfoDTO player)
     {
-        String bannerUrl = AssertDownloadUtil.bannerAbsolutePath(player,false);
-        String avatarUrl = AssertDownloadUtil.avatarAbsolutePath(player,false);
+        String bannerUrl = AssetDownloadUtil.bannerAbsolutePath(player,false);
+        String avatarUrl = AssetDownloadUtil.avatarAbsolutePath(player,false);
         for (MapScore score : mapScore)
         {
             score.setPlayerName(player.getUsername());
@@ -59,18 +63,18 @@ public class OsuToolsUtil
         return mapScore;
     }
 
-    public static ScoreVO setupScoreVO(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override)
+    public ScoreVO setupScoreVO(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override)
     {
         ScoreVO scoreVO = TransformerUtil.transformScoreLazerToScoreVO(scoreLazerDTO);
-        scoreVO.setBeatmap(OsuToolsUtil.setupBeatmapVO(beatmapDTO));
+        scoreVO.setBeatmap(setupBeatmapVO(beatmapDTO));
         return setupScoreVOLocalCache(override, scoreVO);
     }
 
-    public static ScoreVO setupScoreVOCompact(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override)
+    public ScoreVO setupScoreVOCompact(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override)
     {
         ScoreVO scoreVO = TransformerUtil.transformScoreLazerToScoreVO(scoreLazerDTO);
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransformCompact(beatmapDTO);
-        beatmapVO.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapVO.getBeatmapset_id()));
+        beatmapVO.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapVO.getBeatmapset_id()));
         scoreVO.setBeatmap(beatmapVO);
         return setupScoreVOLocalCache(override, scoreVO);
     }
@@ -79,7 +83,7 @@ public class OsuToolsUtil
     private static ScoreVO setupScoreVOLocalCache(Boolean override, ScoreVO scoreVO)
     {
         try {
-            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,override), scoreVO));
+            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO));
         }
         catch (Exception e) {
             throw new LazybotRuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
@@ -93,14 +97,14 @@ public class OsuToolsUtil
     }
 
 
-    public static List<ScoreVO> setUpImageStatic(List<ScoreVO> scoreVOList)
+    public List<ScoreVO> setUpImageStatic(List<ScoreVO> scoreVOList)
     {
         List<CompletableFuture<ScoreVO>> futureList = scoreVOList.stream()
                 .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
-                    scoreVO.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
+                    scoreVO.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
                     try {
                         scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(
-                                AssertDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+                                AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
                         if (scoreVO.getPpDetailsLocal().getStar() != null) {
                             scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
                         }
@@ -116,11 +120,11 @@ public class OsuToolsUtil
                 .collect(Collectors.toList());
     }
 
-    public static List<ScoreSequence> setUpImageStaticSequence(List<ScoreSequence> scoreSequences)
+    public List<ScoreSequence> setUpImageStaticSequence(List<ScoreSequence> scoreSequences)
     {
         List<CompletableFuture<ScoreSequence>> futureList = scoreSequences.stream()
                 .map(scoreSequence -> CompletableFuture.supplyAsync(() -> {
-                    scoreSequence.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreSequence.getBeatmap().getBeatmapset_id()));
+                    scoreSequence.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreSequence.getBeatmap().getBeatmapset_id()));
                     return calcPerformanceForSequence(scoreSequence);
                 }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
                 .toList();
@@ -137,7 +141,7 @@ public class OsuToolsUtil
                     if (CommonTool.modsContainsAnyOfStarChanging(score.getMods()))
                     {
                         try {
-                           PerformanceVO performance = RosuUtil.getCurrentPP(AssertDownloadUtil.beatmapPath(score.getBeatmap().getId(), false), score);
+                           PerformanceVO performance = RosuUtil.getCurrentPP(AssetDownloadUtil.beatmapPath(score.getBeatmap().getId(), false), score);
                            score.getBeatmap().setDifficulty_rating(performance.getStar());
                         } catch (Exception e) {
                             throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
@@ -170,7 +174,7 @@ public class OsuToolsUtil
         ModCalculatorUtil.setupBpmChange(scoreSequence);
         try
         {
-            scoreSequence.setPpDetails(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(), false), scoreSequence));
+            scoreSequence.setPpDetails(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(), false), scoreSequence));
             if (scoreSequence.getPpDetails().getStar() != null)
             {
                 scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
@@ -183,14 +187,14 @@ public class OsuToolsUtil
     }
 
 
-    public static void setupFixedPPStats(ScoreVO scoreVO, boolean conditions)
+    public void setupFixedPPStats(ScoreVO scoreVO, boolean conditions)
     {
         if(conditions)
         {
-            scoreVO.getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
+            scoreVO.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
             try
             {
-                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO,false), scoreVO));
+                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO,false), scoreVO));
                 if (scoreVO.getPpDetailsLocal().getStar() != null)
                 {
                     scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
@@ -205,11 +209,11 @@ public class OsuToolsUtil
 
     public static PlayerInfoVO setupPlayerInfoVO(PlayerInfoDTO playerInfoDTO)
     {
-        playerInfoDTO.setAvatar_url((AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,false)));
+        playerInfoDTO.setAvatar_url((AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,false)));
         return TransformerUtil.userTransform(playerInfoDTO);
     }
 
-    public static NoChokeListVO setupNoChokeList(PlayerInfoVO info, List<ScoreVO> scoreList, int type)
+    public NoChokeListVO setupNoChokeList(PlayerInfoVO info, List<ScoreVO> scoreList, int type)
     {
         NoChokeListVO noChokeListVO=new NoChokeListVO();
         double originalRawPp= CommonTool.totalPpCalculator(scoreList);
@@ -256,7 +260,7 @@ public class OsuToolsUtil
         return noChokeListVO;
     }
 
-    public static List<ScoreVO> setupBpifScoreList(BpifParameter params, List<ScoreLazerDTO> scoreLazerDTOS, PlayerInfoVO info) throws IOException
+    public List<ScoreVO> setupBpifScoreList(BpifParameter params, List<ScoreLazerDTO> scoreLazerDTOS, PlayerInfoVO info) throws IOException
     {
         List<ScoreVO> scoreList=TransformerUtil.scoreTransformForList(scoreLazerDTOS);
         double originalRawPp=CommonTool.totalPpCalculator(scoreList);
@@ -264,7 +268,7 @@ public class OsuToolsUtil
         processScoreListConcurrently(scoreList,modEntities,params);
         scoreList=scoreList.stream().sorted(Comparator.comparing(ScoreVO::getPp).reversed()).toList();
         for(int i=0;i<params.getRenderSize();i++) {
-            scoreList.get(i).getBeatmap().setBgUrl(AssertDownloadUtil.svgAbsolutePath(scoreList.get(i).getBeatmap().getBeatmapset_id()));
+            scoreList.get(i).getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreList.get(i).getBeatmap().getBeatmapset_id()));
         }
         double fixedRawPp=CommonTool.totalPpCalculator(scoreList);
         double bonusPp=Math.abs(info.getPerformancePoint()-originalRawPp);
@@ -307,7 +311,7 @@ public class OsuToolsUtil
                         default -> throw new LazybotRuntimeException("Operator invalid: " + params.getOperator());
                     }
                     try {
-                        scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssertDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+                        scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
                     }
                     catch (IOException e) {
                         throw new LazybotRuntimeException("重算成绩时出错");

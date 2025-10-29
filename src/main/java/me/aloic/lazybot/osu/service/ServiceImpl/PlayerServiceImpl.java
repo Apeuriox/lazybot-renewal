@@ -55,6 +55,10 @@ public class PlayerServiceImpl implements PlayerService
     private BadgeShowcaseMapper badgeMapper;
     @Resource
     private TokenMapper tokenMapper;
+    @Resource
+    private OsuToolsUtil osuToolsUtil;
+    @Resource
+    private AssetDownloader assetDownloader;
 
 
     @Override
@@ -68,7 +72,7 @@ public class PlayerServiceImpl implements PlayerService
                 params.getMode(),
                 params.getModCombination()
         );
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
                 beatmapUserScoreLazer.getScore(),
                 false);
@@ -112,7 +116,7 @@ public class PlayerServiceImpl implements PlayerService
         List<ScoreLazerDTO> scoreList = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), playerInfoDTO.getId(), params.getMode());
         if (scoreList==null || scoreList.isEmpty()) throw new LazybotRuntimeException("没有找到" + playerInfoDTO.getUsername() +"在" + params.getBeatmapId()+ "上的成绩");
         scoreList.get(params.getIndex()-1).setUser(playerInfoDTO);
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
                 scoreList.get(params.getIndex()-1),
                 false);
@@ -132,7 +136,7 @@ public class PlayerServiceImpl implements PlayerService
             throw new LazybotRuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " + scoreList.size());
         }
         scoreList.get(params.getIndex()-1).setUser(playerInfoDTO);
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
                 scoreList.get(params.getIndex()-1),
                 false);
@@ -166,7 +170,7 @@ public class PlayerServiceImpl implements PlayerService
         if(params.getIndex()>scoreList.size()) {
             throw new LazybotRuntimeException("当前超出能索引的最大距离，当前为: "+params.getIndex());
         }
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
                 scoreList.get(params.getIndex() - 1),
                 false);
@@ -195,7 +199,7 @@ public class PlayerServiceImpl implements PlayerService
                 params.getIndex()-1,
                 params.getMode());
 
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
                 scoreDTO.getFirst(),
                 false);
@@ -223,7 +227,7 @@ public class PlayerServiceImpl implements PlayerService
                 params.getTo()-params.getFrom()+1,
                 params.getFrom()-1,
                 params.getMode());
-        List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+        List<ScoreVO> scoreVOArray= osuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         return new PlayerScoreList(scoreVOArray, info);
     }
 
@@ -257,7 +261,7 @@ public class PlayerServiceImpl implements PlayerService
         if(filteredScores.isEmpty()) throw new LazybotRuntimeException("没有找到符合条件的bp");
 
         List<ScoreVO> scoreVOList=TransformerUtil.scoreTransformForListWithIndex(filteredScores);
-        OsuToolsUtil.setUpImageStatic(scoreVOList);
+        osuToolsUtil.setUpImageStatic(scoreVOList);
         return new PlayerScoreList(scoreVOList,info);
     }
 
@@ -273,12 +277,12 @@ public class PlayerServiceImpl implements PlayerService
                 params.getMode());
         if (style==0)
         {
-            List<ScoreVO> scoreVOArray = OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+            List<ScoreVO> scoreVOArray = osuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
             return new PlayerScoreList(scoreVOArray,info);
         }
         else {
             List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS,true);
-            OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
+            osuToolsUtil.setUpImageStaticSequence(scoreSequences);
             return new PlayerScoreList(info, scoreSequences);
         }
     }
@@ -307,7 +311,7 @@ public class PlayerServiceImpl implements PlayerService
                 }).collect(Collectors.toList());
         if(scoreVOList.isEmpty()) throw new LazybotRuntimeException("没有找到符合条件的bp");
 
-        OsuToolsUtil.setUpImageStatic(scoreVOList);
+        osuToolsUtil.setUpImageStatic(scoreVOList);
         return new PlayerScoreList(scoreVOList,info);
     }
 
@@ -320,7 +324,7 @@ public class PlayerServiceImpl implements PlayerService
                 PlayerInfoDTO dto;
                 if (params.getPlayerName()!=null) dto= dataExtractor.extractPlayerInfoDTO(params.getPlayerName(), params.getMode());
                 else dto= dataExtractor.extractPlayerInfoDTO(params.getPlayerId(), params.getMode());
-                dto.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(dto, false));
+                dto.setAvatar_url(AssetDownloadUtil.avatarAbsolutePath(dto, false));
                 return dto;
             } catch (Exception e) {
                 throw new LazybotRuntimeException("异步获取玩家" + params.getPlayerName() + "数据失败"+ e.getMessage());
@@ -330,7 +334,7 @@ public class PlayerServiceImpl implements PlayerService
         CompletableFuture<PlayerInfoDTO> comparePlayerInfoFuture = CompletableFuture.supplyAsync(() -> {
             try {
                 PlayerInfoDTO dto = dataExtractor.extractPlayerInfoDTO(params.getComparePlayerName(), params.getMode());
-                dto.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(dto, false));
+                dto.setAvatar_url(AssetDownloadUtil.avatarAbsolutePath(dto, false));
                 return dto;
             } catch (Exception e) {
                 throw new LazybotRuntimeException("异步获取玩家" + params.getComparePlayerName() + "数据失败"+ e.getMessage());
@@ -370,7 +374,7 @@ public class PlayerServiceImpl implements PlayerService
         List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestAll(
                 String.valueOf(playerInfoDTO.getId()), params.getMode());
 
-        NoChokeListVO noChokeListVO=OsuToolsUtil.setupNoChokeList(
+        NoChokeListVO noChokeListVO=osuToolsUtil.setupNoChokeList(
                 OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO),
                 TransformerUtil.scoreTransformForList(originalScoreArray),
                 type);
@@ -401,7 +405,7 @@ public class PlayerServiceImpl implements PlayerService
                 4,
                 0,
                 params.getMode());
-        List<ScoreVO> scoreVOArray = OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+        List<ScoreVO> scoreVOArray = osuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
                 scoreVOArray,
                 performance);
@@ -442,7 +446,7 @@ public class PlayerServiceImpl implements PlayerService
         catch (LazybotRuntimeException e) {
             throw new LazybotRuntimeException("Pp+数据获取失败，请稍后再试");
         }
-        playerInfoVO.setBannerUrl(AssertDownloadUtil.bannerAbsolutePath(player,false));
+        playerInfoVO.setBannerUrl(AssetDownloadUtil.bannerAbsolutePath(player,false));
         PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
                 null,
                 performance);
@@ -501,7 +505,7 @@ public class PlayerServiceImpl implements PlayerService
                     params.getMode(),
                     params.getModCombination()
             );
-            ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+            ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                     dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
                     beatmapUserScoreLazer.getScore(),
                     false);
@@ -524,7 +528,7 @@ public class PlayerServiceImpl implements PlayerService
         ProfileCustomizationPO customizationPO=customizationMapper.selectById(playerInfoVO.getId());
         playerInfoVO.setMode(params.getMode());
         List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(String.valueOf(playerInfoVO.getId()), 6, 0, params.getMode());
-        List<ScoreVO> scoreVOArray= OsuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+        List<ScoreVO> scoreVOArray= osuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         playerInfoVO.setBps(scoreVOArray);
         ProfileTheme theme;
         String defaultBackground=ResourceMonitor.getResourcePath().toAbsolutePath()+ "/static/assets/whitespace_" +CommonTool.randomNumberGenerator(3) +".png";
@@ -580,7 +584,7 @@ public class PlayerServiceImpl implements PlayerService
                 params.getFrom()-1,
                 params.getMode());
         List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS,false);
-        OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
+        osuToolsUtil.setUpImageStaticSequence(scoreSequences);
         return new PlayerScoreList(info,scoreSequences);
     }
 
@@ -638,9 +642,9 @@ public class PlayerServiceImpl implements PlayerService
     @NotNull
     private List<MapScore> setupMapScores(List<MapScore> mapScores, BeatmapPerformance beatmapPerformance, Comparator<MapScore> comparing, String checksum) throws IOException
     {
-        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
+        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssetDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
         beatmapPerformance.setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, beatmapPerformance.getMode().getDescribe()));
-        beatmapPerformance.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapPerformance.getSid()));
+        beatmapPerformance.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapPerformance.getSid()));
         beatmapPerformance.setLengthBonus(CommonTool.lengthBonusCalc(beatmapPerformance.getCountCircles()+beatmapPerformance.getCountSliders()+beatmapPerformance.getCountSpinners()));
         for (MapScore mapScore:mapScores) {
             try {
@@ -662,10 +666,10 @@ public class PlayerServiceImpl implements PlayerService
        return verifyBeatmapsCache(scoreVO.getBeatmap().getBid(),scoreVO.getBeatmap().getChecksum());
     }
     private boolean verifyBeatmapsCache(Integer bid, String checksum) {
-        String checksum2=CommonTool.calculateMD5(new File(AssertDownloadUtil.beatmapPath(bid,false).toUri()));
+        String checksum2=CommonTool.calculateMD5(new File(AssetDownloadUtil.beatmapPath(bid,false).toUri()));
         if (!checksum2.equals(checksum)) {
             logger.warn("Checksum mismatch, downloading beatmap: {} != {}", checksum2, checksum);
-            AssertDownloadUtil.beatmapPath(bid, true);
+            AssetDownloadUtil.beatmapPath(bid, true);
             return false;
         }
         logger.info("地图哈希值匹配正常: {}", checksum);
@@ -684,8 +688,8 @@ public class PlayerServiceImpl implements PlayerService
     private PPPlusScore setupPlusScore(ScoreVO scoreVO) throws RosuFFI.FFIException
     {
         PPPlusScore scorePlus = new PPPlusScore(scoreVO);
-        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
-        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssetDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssetDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
         return scorePlus;
     }
 

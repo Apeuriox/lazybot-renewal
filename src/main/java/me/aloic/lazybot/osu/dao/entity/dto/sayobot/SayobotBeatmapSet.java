@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class BeatmapInfoDTO implements Serializable
+public class SayobotBeatmapSet implements Serializable
 {
     private Integer status;
     private SayoData data;

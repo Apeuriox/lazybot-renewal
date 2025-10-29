@@ -51,6 +51,8 @@ public class TrackServiceImpl implements TrackService
     private static final Map<String,Shape> rankShapeMap;
     @Resource
     private DataExtractor dataExtractor;
+    @Resource
+    private OsuToolsUtil osuToolsUtil;
 
 
     static{
@@ -238,7 +240,7 @@ public class TrackServiceImpl implements TrackService
 //                filter(scoreSequence -> scoreSequence.getDifferenceBetweenNextScore()>=0)
 //                .toList();
         logger.info("最终过滤长度为: {}",scoreSequences.size());
-        OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
+        osuToolsUtil.setUpImageStaticSequence(scoreSequences);
         return scoreSequences;
     }
     private PlayerInfoDTO getTargetPlayerInfoDTO(LazybotCommandParameter params)
