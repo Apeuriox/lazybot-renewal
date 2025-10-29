@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.service;
 
+import me.aloic.lazybot.osu.dao.entity.po.CommandUsage;
 import me.aloic.lazybot.parameter.*;
 import org.apache.batik.dom.GenericNotation;
 
@@ -17,5 +18,5 @@ public interface ManageService
 
     String ppTest(ScoreParameter params, Long userIdentity);
 
-    byte[] commandUsage();
+    CommandUsage commandUsage();
 }

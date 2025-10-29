@@ -207,12 +207,11 @@ public class ManageServiceImpl implements ManageService
         return sb.toString();
     }
     @Override
-    public byte[] commandUsage()
+    public CommandUsage commandUsage()
     {
         Map<String, CommandStat> commandStatMap = commandMonitor.getAllStats();
         LocalDateTime startTime = commandMonitor.getStartTime();
-        return SVGRenderer.renderSVGDocumentToByteArray(
-                UsageSVGMapper.mapCommandUsageToPanel(CommandMonitor.setupCommandUsage(commandStatMap,startTime)));
+        return CommandMonitor.setupCommandUsage(commandStatMap,startTime);
     }
 
 }

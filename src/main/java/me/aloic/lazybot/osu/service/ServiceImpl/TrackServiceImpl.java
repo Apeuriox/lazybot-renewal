@@ -185,7 +185,7 @@ public class TrackServiceImpl implements TrackService
     }
 
     @Override
-    public byte[] bestPlaysInGamemode(TopScoresParameter params) throws IOException
+    public List<ScoreSequence> bestPlaysInGamemode(TopScoresParameter params)
     {
         List<BestPlay> bestPlayListDistinct = new ArrayList<>(
                 dataExtractor.extractOsuTrackBestPlay(params.getLimit(),params.getRuleset().getValue()).stream()
@@ -239,8 +239,7 @@ public class TrackServiceImpl implements TrackService
 //                .toList();
         logger.info("最终过滤长度为: {}",scoreSequences.size());
         OsuToolsUtil.setUpImageStaticSequence(scoreSequences);
-        return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreListSVGMapper.mapScoreListToBpList(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned",1));
+        return scoreSequences;
     }
     private PlayerInfoDTO getTargetPlayerInfoDTO(LazybotCommandParameter params)
     {

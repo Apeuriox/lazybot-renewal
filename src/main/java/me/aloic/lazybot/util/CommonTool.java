@@ -468,8 +468,14 @@ public class CommonTool {
     }
 
     public static int[] getDominantColorColorThief(File imageFile) throws IOException {
-        BufferedImage image = ImageIO.read(imageFile);
-        return ColorThief.getColor(image);
+        try{
+            BufferedImage image = ImageIO.read(imageFile);
+            return ColorThief.getColor(image);
+        }
+        catch (Exception e)
+        {
+            return new int[]{0,0,0};
+        }
     }
     public static Integer getDominantHueColorThief(File imageFile) throws IOException {
         return rgbToHue(getDominantColorColorThief(imageFile));

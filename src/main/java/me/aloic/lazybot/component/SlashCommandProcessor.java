@@ -96,6 +96,7 @@ public class SlashCommandProcessor
                     commandChainProcessor.process(event, command);
                 }
             } catch (LazybotRuntimeException | IllegalArgumentException e)  {
+                e.printStackTrace();
                 logger.error("捕获到预期内exception: {}", e.getMessage());
             }
             catch (ExecutionException e) {

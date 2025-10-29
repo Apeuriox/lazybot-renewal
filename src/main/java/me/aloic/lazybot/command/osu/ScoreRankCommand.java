@@ -9,6 +9,7 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.command.UserAllScore;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
@@ -53,8 +54,13 @@ public class ScoreRankCommand implements LazybotSlashCommand
         ScoreParameter scoreParameter = ScoreCommand.setupParameter(event, proxy.getAccessToken(event));
         scoreParameter.setGroupUserIds(members.stream().map(GroupMemberInfoResp::getUserId).collect(Collectors.toList()));
         CommandResultHandler.sendMessageToGroupOnebot(bot,event, "[Lazybot] 正在渲染，请稍后...请求线程数: " + RateLimiterHolder.REQUESTS_PER_SECOND + "，最大显示数量: 30");
+        UserAllScore uas = playerService.scoreRank(scoreParameter);
+        if (uas.getMapScoreList().isEmpty()) {
+            CommandResultHandler.sendMessageToGroupOnebot(bot,event, "[Lazybot] 无成绩，请尝试指定模式");
+            return;
+        }
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                RendererDistributor.renderMapScore(playerService.scoreRank(scoreParameter),true));
+                RendererDistributor.renderMapScore(uas,true));
     }
 
     @Override

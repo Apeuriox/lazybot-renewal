@@ -10,7 +10,9 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.command.PlayerScoreList;
 import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
@@ -58,21 +60,41 @@ public class BpIfCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("mods"), ""),
                 OptionMappingTool.getOptionOrDefault(event.getOption("rendersize"), 30));
         params.validateParams();
-        CommandResultHandler.uploadImageToDiscord(event,analysisService.bpIf(params));
+        CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderPlayerScoreListToCard(
+                        analysisService.bpIf(params),
+                        0,
+                        3,
+                        "/BpIf: Recalculate your Bps with desired mods. +mod to insert, -mod to remove, !mod to replace.")
+        );
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        CommandResultHandler.uploadImageToOnebot(bot,event,analysisService.bpIf(setupParameter(event,tokenPO)));
+        BpifParameter params = setupParameter(event,tokenPO);
+        CommandResultHandler.uploadImageToOnebot(bot,event,
+                RendererDistributor.renderPlayerScoreListToCard(
+                        analysisService.bpIf(params),
+                        0,
+                        3,
+                        "/BpIf: Recalculate your Bps with desired mods. +mod to insert, -mod to remove, !mod to replace.")
+        );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        testOutputTool.saveImageToLocal(analysisService.bpIf(setupParameter(event,tokenPO)));
+        BpifParameter params = setupParameter(event,tokenPO);
+        testOutputTool.saveImageToLocal(
+                RendererDistributor.renderPlayerScoreListToCard(
+                        analysisService.bpIf(params),
+                        0,
+                        3,
+                        "/BpIf: Recalculate your Bps with desired mods. +mod to insert, -mod to remove, !mod to replace.")
+        );
     }
 
     private BpifParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)

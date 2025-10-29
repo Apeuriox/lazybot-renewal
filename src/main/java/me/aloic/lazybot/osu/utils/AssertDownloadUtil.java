@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -176,6 +177,7 @@ public class AssertDownloadUtil
         bannerDownload(playerInfoDTO.getCover_url(), playerInfoDTO.getId(),override);
         return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerBanner/" + playerInfoDTO.getId() +".jpg";
     }
+
     private static void fileDownloadJavaHttpClient(String targetUrl, String desiredLocalPath) throws Exception {
         int attempt = 0;
         while (attempt < MAX_RETRIES) {
@@ -187,14 +189,21 @@ public class AssertDownloadUtil
                         .timeout(Duration.ofSeconds(30))
                         .GET()
                         .build();
-                Path path = Path.of(desiredLocalPath);
-                HttpResponse<Path> response = httpClient.send(request, HttpResponse.BodyHandlers.ofFile(path));
-                if (response.statusCode() == 200) {
+
+                HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
+                int status = response.statusCode();
+
+                if (status == 200) {
+                    Files.write(Path.of(desiredLocalPath), response.body());
                     logger.info("文件下载成功，保存路径：{}", desiredLocalPath);
                     return;
+                } else if (status == 404) {
+                    logger.warn("请求文件不存在 (404)：{}", targetUrl);
+                    return;
                 } else {
-                    throw new LazybotRuntimeException("HTTP 状态码：" + response.statusCode());
+                    throw new LazybotRuntimeException("HTTP 状态码：" + status);
                 }
+
             } catch (Exception e) {
                 logger.warn("下载失败 (第 {} 次): {}", attempt, e.getMessage());
                 if (attempt >= MAX_RETRIES) {

@@ -3,15 +3,14 @@ package me.aloic.lazybot.graphics.render;
 import me.aloic.lazybot.entity.command.*;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
 import me.aloic.lazybot.graphics.mapping.documentMapper.*;
-import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
-import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.dao.entity.po.CommandUsage;
+import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.TransformerUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class RendererDistributor
 {
@@ -64,6 +63,11 @@ public class RendererDistributor
         return SVGRenderer.renderSVGDocumentToByteArray(
                 ScoreListSVGMapper.mapScoreListToBpList(player.getScoreSequences(),player.getInfo(), offset)
         );
+    }
+    public static byte[] renderPlayerScoreListToList(List<ScoreSequence> scoreSequences) throws IOException
+    {
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreListSVGMapper.mapScoreListToBpList(scoreSequences,"#f8bad4","Current Best Plays of osu! by PP Earned",1));
     }
     public static byte[] renderPlayerScoreListToCard(PlayerScoreList player, int offset, int type, String msg)
     {
@@ -152,6 +156,11 @@ public class RendererDistributor
                     AvatarSVGMapper.mapPlayerInfoToAvatar(info,
                             215,
                             type));
+    }
+    public static byte[] renderCommandUsage(CommandUsage usage)
+    {
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                UsageSVGMapper.mapCommandUsageToPanel(usage));
     }
 
 }

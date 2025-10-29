@@ -3,13 +3,10 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 import com.alibaba.fastjson.JSON;
 import desu.life.RosuFFI;
 import jakarta.annotation.Resource;
-import lombok.NonNull;
 import me.aloic.lazybot.entity.command.*;
 import me.aloic.lazybot.entity.po.BadgeUserShowcasePO;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.graphics.mapping.documentMapper.*;
-import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.monitor.CompareMonitor;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
@@ -29,6 +26,7 @@ import me.aloic.lazybot.osu.utils.*;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
 import org.apache.commons.collections4.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.osu.extended.rosu.JniBeatmap;
@@ -62,41 +60,31 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public ScoreVO getUserHighestScoreOnMap(ScoreParameter params)
     {
-       return processScoreScore(params);
+        int playerId = params.getPlayerId();
+        if (params.getPlayerName()!=null) playerId = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(), params.getMode()).getId();
+        BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
+                String.valueOf(params.getBeatmapId()),
+                playerId,
+                params.getMode(),
+                params.getModCombination()
+        );
+        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+                dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
+                beatmapUserScoreLazer.getScore(),
+                false);
+        verifyBeatmapsCache(scoreVO);
+        if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+       return scoreVO;
     }
     @Override
     public PPPlusScore getUserHighestScoreOnMapPlus(ScoreParameter params) throws Exception
     {
         if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("QuadraGrid样式仅支持Std模式，因为其他模式没有PP+数据");
-        ScoreVO scoreVO = processScoreScore(params);
-        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
-        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
-        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
-        return scorePlus;
+        ScoreVO scoreVO = getUserHighestScoreOnMap(params);
+        return setupPlusScore(scoreVO);
     }
 
-    private ScoreVO processScoreScore(ScoreParameter params)
-    {
-        return processScoreScore(params.getPlayerName(),params.getMode(), params.getBeatmapId(), params.getPlayerId(), params.getModCombination(), params.getChannelId());
-    }
-    private ScoreVO processScoreScore(String playerName, @NonNull String mode, @NonNull Integer beatmapId, @NonNull Integer playerId, String modCombination, Long channelId)
-    {
-        if (playerName!=null) playerId = dataExtractor.extractPlayerInfoDTO(playerName, mode).getId();
-        BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
-                String.valueOf(beatmapId),
-                playerId,
-                mode,
-                modCombination
-        );
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
-                dataExtractor.extractBeatmap(String.valueOf(beatmapId), mode),
-                beatmapUserScoreLazer.getScore(),
-                false);
-        verifyBeatmapsCache(scoreVO);
-        if (channelId!=null && channelId!=1919810L)
-            CompareMonitor.saveRecentBeatmap(channelId, scoreVO.getBeatmap().getBid());
-        return scoreVO;
-    }
 
 
     @Override
@@ -110,22 +98,7 @@ public class PlayerServiceImpl implements PlayerService
         OsuToolsUtil.setupPlayerStatics(mapScoreList,playerInfoDTO);
         BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()),params.getMode());
         BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
-        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
-        beatmapPerformance.setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, beatmapPerformance.getMode().getDescribe()));
-        beatmapPerformance.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapPerformance.getSid()));
-        beatmapPerformance.setLengthBonus(CommonTool.lengthBonusCalc(beatmapPerformance.getCountCircles()+beatmapPerformance.getCountSliders()+beatmapPerformance.getCountSpinners()));
-        for (MapScore mapScore:mapScoreList) {
-                try {
-                    RosuUtil.setupMapScorePerformance(beatmap, mapScore);
-                    mapScore.setupBpm(mapScore,beatmapPerformance);
-                }
-                catch (Exception e) {
-                    logger.error(e.getMessage());
-                    throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
-                }
-        }
-        mapScoreList=mapScoreList.stream().sorted(Comparator.comparing(MapScore::getPp).reversed()).toList();
-        verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapDTO.getChecksum());
+        mapScoreList = setupMapScores(mapScoreList, beatmapPerformance, Comparator.comparing(MapScore::getPp), beatmapDTO.getChecksum());
         if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), params.getBeatmapId());
         return new UserAllScore(mapScoreList,beatmapPerformance);
@@ -146,15 +119,10 @@ public class PlayerServiceImpl implements PlayerService
         if (!scoreVO.getIsLazer()) {
             scoreVO.setModJSON(scoreVO.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
         }
-        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
-        ThumbnailClassicalVO tbc = new ThumbnailClassicalVO(info,scoreVO,params.getComment(),
-                params.getPosition()==null ? null:String.valueOf(params.getPosition())
-        );
-        if (params.getAttributes()!=null && !params.getAttributes().isEmpty()) {
-            tbc.setAttributes(params.getAttributes());
-        }
-        return tbc;
+        return setupThumbnailClassicalVO(params, playerInfoDTO, scoreVO);
     }
+
+
     @Override
     public ThumbnailClassicalVO thumbnailClassicalRecent(ThumbnailParameter params)
     {
@@ -173,6 +141,12 @@ public class PlayerServiceImpl implements PlayerService
             scoreVO.setModJSON(scoreVO.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
         }
         verifyBeatmapsCache(scoreVO);
+        return setupThumbnailClassicalVO(params, playerInfoDTO, scoreVO);
+    }
+
+    @NotNull
+    public ThumbnailClassicalVO setupThumbnailClassicalVO(ThumbnailParameter params, PlayerInfoDTO playerInfoDTO, ScoreVO scoreVO)
+    {
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
         ThumbnailClassicalVO tbc = new ThumbnailClassicalVO(info,scoreVO,params.getComment(),
                 params.getPosition()==null ? null:String.valueOf(params.getPosition())
@@ -186,10 +160,6 @@ public class PlayerServiceImpl implements PlayerService
 
     @Override
     public ScoreVO getUserRecentScoreList(RecentParameter params, int type)
-    {
-       return processRecentScore(params, type);
-    }
-    private ScoreVO processRecentScore(RecentParameter params, int type)
     {
         if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
         List<ScoreLazerDTO> scoreList = dataExtractor.extractRecentScoreList(params.getPlayerId(), type, params.getIndex(), params.getMode());
@@ -206,23 +176,18 @@ public class PlayerServiceImpl implements PlayerService
         return scoreVO;
     }
 
+
+
     @Override
     public PPPlusScore getUserRecentScoreListPlus(RecentParameter params, int type) throws RosuFFI.FFIException
     {
         if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("QuadraGrid样式仅支持Std模式，因为其他模式没有PP+数据");
-        ScoreVO scoreVO = processRecentScore(params, type);
-        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
-        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
-        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
-        return scorePlus;
+        ScoreVO scoreVO = getUserRecentScoreList(params, type);
+        return setupPlusScore(scoreVO);
     }
 
     @Override
-    public ScoreVO getUserBestPerformanceSingle(BpParameter params) throws IOException
-    {
-        return processBpScore(params);
-    }
-    private ScoreVO processBpScore(BpParameter params)
+    public ScoreVO getUserBestPerformanceSingle(BpParameter params)
     {
         if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
         List<ScoreLazerDTO> scoreDTO = dataExtractor.extractUserBestScoreList(
@@ -238,15 +203,13 @@ public class PlayerServiceImpl implements PlayerService
         CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return scoreVO;
     }
+
     @Override
     public PPPlusScore getUserBestPerformanceSinglePlus(BpParameter params) throws RosuFFI.FFIException
     {
         if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("QuadraGrid样式仅支持Std模式，因为其他模式没有PP+数据");
-        ScoreVO scoreVO = processBpScore(params);
-        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
-        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
-        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
-        return scorePlus;
+        ScoreVO scoreVO = getUserBestPerformanceSingle(params);
+        return setupPlusScore(scoreVO);
     }
 
 
@@ -299,7 +262,7 @@ public class PlayerServiceImpl implements PlayerService
     }
 
     @Override
-    public PlayerScoreList playRecentSeries(GeneralParameter params, int type, int style) throws IOException
+    public PlayerScoreList playRecentSeries(GeneralParameter params, int type, int style)
     {
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
@@ -608,7 +571,7 @@ public class PlayerServiceImpl implements PlayerService
         return "[Lazybot] " + builder;
     }
     @Override
-    public PlayerScoreList bplistListView(BplistParameter params) throws Exception
+    public PlayerScoreList bplistListView(BplistParameter params)
     {
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
         List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(
@@ -668,6 +631,13 @@ public class PlayerServiceImpl implements PlayerService
 
         BeatmapPerformance beatmapPerformance = TransformerUtil.beatmapPerformanceTransform(dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()),params.getMode()));
         // 调用svg渲染
+        mapScores = setupMapScores(mapScores, beatmapPerformance, Comparator.comparing(MapScore::getScore), beatmapPerformance.getChecksum());
+        return new UserAllScore(mapScores, beatmapPerformance);
+    }
+
+    @NotNull
+    private List<MapScore> setupMapScores(List<MapScore> mapScores, BeatmapPerformance beatmapPerformance, Comparator<MapScore> comparing, String checksum) throws IOException
+    {
         JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssertDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
         beatmapPerformance.setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, beatmapPerformance.getMode().getDescribe()));
         beatmapPerformance.setBgUrl(AssertDownloadUtil.svgAbsolutePath(beatmapPerformance.getSid()));
@@ -682,9 +652,9 @@ public class PlayerServiceImpl implements PlayerService
                 throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
             }
         }
-        mapScores=mapScores.stream().sorted(Comparator.comparing(MapScore::getScore).reversed()).toList();
-        verifyBeatmapsCache(beatmapPerformance.getBid(), beatmapPerformance.getChecksum());
-        return new UserAllScore(mapScores, beatmapPerformance);
+        mapScores=mapScores.stream().sorted(comparing.reversed()).toList();
+        verifyBeatmapsCache(beatmapPerformance.getBid(), checksum);
+        return mapScores;
     }
 
 
@@ -710,6 +680,15 @@ public class PlayerServiceImpl implements PlayerService
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName().trim(),params.getMode());
         return playerInfoDTO;
     }
+
+    private PPPlusScore setupPlusScore(ScoreVO scoreVO) throws RosuFFI.FFIException
+    {
+        PPPlusScore scorePlus = new PPPlusScore(scoreVO);
+        scorePlus.setPlusPerformance(PlusPPUtil.calcPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssertDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
+        return scorePlus;
+    }
+
 
 
 }

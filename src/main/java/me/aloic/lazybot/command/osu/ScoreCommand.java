@@ -73,7 +73,7 @@ public class ScoreCommand implements LazybotSlashCommand
         }
         else
         {
-            ScoreVO score=playerService.getUserHighestScoreOnMap(setupParameter(event, proxy.getAccessToken(event)));
+            ScoreVO score=playerService.getUserHighestScoreOnMap(params);
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderScoreVOToImage(score, params.getVersion())
             );
@@ -90,7 +90,7 @@ public class ScoreCommand implements LazybotSlashCommand
         }
         else
         {
-            ScoreVO score=playerService.getUserHighestScoreOnMap(setupParameter(event, proxy.getAccessToken(event)));
+            ScoreVO score=playerService.getUserHighestScoreOnMap(params);
             testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(score, params.getVersion()));
         }
 

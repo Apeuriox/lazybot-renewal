@@ -74,7 +74,7 @@ public class ScoreParameter extends LazybotCommandParameter
             }
         }
         if (result.beatmapId == null && !params.isEmpty()) {
-            String maybeId = params.getLast();
+            String maybeId = params.getLast().trim();
             if (maybeId.matches("\\d+")) {
                 result.beatmapId = Integer.parseInt(maybeId);
                 params.removeLast();
