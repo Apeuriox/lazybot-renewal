@@ -10,8 +10,10 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class ModCalculatorUtil
 {
@@ -134,5 +136,24 @@ public class ModCalculatorUtil
         if (mod.getSettings() == null) {
             mod.setSettings(new ModSetting());
         }
+    }
+
+    public static boolean compareMods(List<Mod> modJSON, String modStr) {
+        if (modJSON==null || modJSON.isEmpty()) {
+            return modStr == null || modStr.equalsIgnoreCase("nomod") || modStr.equalsIgnoreCase("nm");
+        }
+        Set<String> mods = new HashSet<>();
+        for (Mod m : modJSON) {
+            mods.add(m.getAcronym());
+        }
+
+        Set<String> found = new HashSet<>();
+        for (String acronym : mods) {
+            if (modStr.contains(acronym)) {
+                found.add(acronym);
+            }
+        }
+
+        return found.equals(mods);
     }
 }

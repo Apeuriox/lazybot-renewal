@@ -1,5 +1,12 @@
 package me.aloic.lazybot;
 
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.utils.ModCalculatorUtil;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
 public class StaticFunctionTest
 {
 //    @Test
@@ -130,6 +137,17 @@ public class StaticFunctionTest
 //        System.out.println(RankedMods.checkModsRankability(mods2));
 //
 //    }
+
+//    @Test
+//    public void testModStrCompare(){
+//        List<Mod> mods = Arrays.asList(new Mod("HD",null), new Mod("HR",null));
+//
+//        System.out.println(ModCalculatorUtil.compareMods(mods, "HRHD"));   // true
+//        System.out.println(ModCalculatorUtil.compareMods(mods, "HD"));     // false
+//        System.out.println(ModCalculatorUtil.compareMods(mods, "HDSO"));   // false
+//        System.out.println(ModCalculatorUtil.compareMods(mods, "HRHDHD")); // tru
+//    }
+
 
 
 

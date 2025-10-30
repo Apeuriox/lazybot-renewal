@@ -39,6 +39,12 @@ public class DataExtractor
     @Resource
     private TokenMapper tokenMapper;
 
+    /**
+     * 根据用户名和模式获取用户信息
+     * @param playerName 用户名
+     * @param mode 模式字符
+     * @return 玩家信息DTO对象
+     */
 
     public PlayerInfoDTO extractPlayerInfoDTO(String playerName, String mode)
     {
@@ -59,6 +65,12 @@ public class DataExtractor
             throw new LazybotRuntimeException("没这B人: " + playerName);
         }
     }
+    /**
+     * 根据用户ID和模式获取用户信息
+     * @param playerId 用户名
+     * @param mode 模式字符
+     * @return 玩家信息DTO对象
+     */
 
     public PlayerInfoDTO extractPlayerInfoDTO(Integer playerId, String mode) {
        try{
@@ -90,6 +102,12 @@ public class DataExtractor
         return playerInfoDTO;
     }
 
+
+    /**
+     * 根据用户ID获取PP+信息
+     * @param playerId 用户ID
+     * @return PP+玩家信息
+     */
     public PPPlusPerformance extractPerformancePlusPlayerTotal(Integer playerId)
     {
         try{
@@ -108,6 +126,12 @@ public class DataExtractor
             throw new LazybotRuntimeException("获取" + playerId + "用户pp+失败");
         }
     }
+
+    /**
+     * 根据用户ID更新用户PP+数据
+     * @param playerId 用户ID
+     * @return 更新后PP+玩家信息
+     */
     public PPPlusPerformance extractPerformancePlusPlayerUpdate(Integer playerId)
     {
         try{
@@ -126,6 +150,13 @@ public class DataExtractor
             throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败");
         }
     }
+
+    /**
+     * 根据用户ID和地图ID添加成绩到PP+服务器
+     * @param playerId 用户ID
+     * @param beatmapId 地图ID
+     * @return 该地图ID的PP+详情
+     */
     public LazybotScorePerformance extractPerformancePlusAddScore(Integer playerId, Integer beatmapId)
     {
         try{
@@ -145,7 +176,14 @@ public class DataExtractor
         }
     }
 
-
+    /**
+     * 获取用户的最近游玩成绩列表
+     * @param playerId 用户ID
+     * @param type 请求类型, 0会包含失败成绩
+     * @param limit 请求最大返回数量
+     * @param mode osu模式
+     * @return Lazer成绩列表
+     */
     public List<ScoreLazerDTO> extractRecentScoreList(Integer playerId, Integer type, Integer limit ,String mode)
     {
         try{
@@ -220,12 +258,12 @@ public class DataExtractor
                     null,
                     BeatmapDTO.class);
             if(beatmapDTO.getId()==null) {
-                throw new LazybotRuntimeException("没这地图: BID=" + beatmapId + " Mode=" +mode);
+                throw new LazybotRuntimeException("找不到" + beatmapId + "在" +mode + "模式的地图");
             }
             return beatmapDTO;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("没这地图: BID=" + beatmapId + " Mode=" +mode);
+            throw new LazybotRuntimeException("找不到" + beatmapId + "在" +mode + "模式的地图");
         }
     }
     public List<ScoreLazerDTO> extractUserBestScoreList(String playerId, Integer offset , String mode)

@@ -624,7 +624,7 @@ public class PlayerServiceImpl implements PlayerService
                 }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
                 .toList();
 
-// 等待全部任务完成并收集结果
+        // 等待全部任务完成并收集结果
         List<MapScore> mapScores = futures.stream()
                 .map(CompletableFuture::join)
                 .filter(Objects::nonNull)

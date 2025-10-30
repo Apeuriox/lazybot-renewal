@@ -13,7 +13,6 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreIf;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.service.FunService;
-import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import me.aloic.lazybot.osu.utils.AssetDownloader;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TipsParameter;

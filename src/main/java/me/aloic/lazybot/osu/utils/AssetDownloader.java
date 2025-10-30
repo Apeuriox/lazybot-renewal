@@ -9,11 +9,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 
+
+//component version of AssetDownloadUtil for dependency injection
 @Component
 public class AssetDownloader
 {
     @Resource
-    private DataExtractor dataExtractor;;
+    private DataExtractor dataExtractor;
 
     public void downloadBeatmapBackgroundFromSayobot(int sid)
     {

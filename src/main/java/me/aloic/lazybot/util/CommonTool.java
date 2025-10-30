@@ -150,7 +150,7 @@ public class CommonTool {
     }
     public static String modArrayToString(List<Mod> modArray)
     {
-        if(modArray!=null)
+        if(modArray!=null && !modArray.isEmpty())
         {
             return modArray.stream().map(Mod::getAcronym).reduce((a,b)->a.concat(" ").concat(b)).get();
         }
