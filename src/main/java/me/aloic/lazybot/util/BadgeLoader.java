@@ -52,7 +52,7 @@ public class BadgeLoader
     {
         if (url == null) return;
         try{
-            String desiredSavePath = ResourceMonitor.getResourcePath().toAbsolutePath()+ BADGE_RELATIVE_PATH + badgeId  +".png";
+            String desiredSavePath = ResourceMonitor.getResourcePath().toAbsolutePath()+ "/" + BADGE_RELATIVE_PATH + badgeId  +".png";
             AssetDownloadUtil.downloadResourceQueue(url, desiredSavePath);
             CommonTool.cropAndResize(desiredSavePath,800,400);
         }

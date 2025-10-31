@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.ChallengeSubmissionLogMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.entity.po.BadgeChallengeSubmissionDetailsPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="challenge_id" jdbcType="INTEGER" property="challenge_id"/>
+        <result column="beatmap_id" jdbcType="INTEGER" property="beatmap_id"/>
+        <result column="achieved_acc" jdbcType="DOUBLE" property="achieved_acc"/>
+        <result column="achieved_combo" jdbcType="INTEGER" property="achieved_combo"/>
+        <result column="miss_count" jdbcType="INTEGER" property="miss_count"/>
+        <result column="mod_used" jdbcType="VARCHAR" property="mod_used"/>
+        <result column="player_id" jdbcType="INTEGER" property="player_id"/>
+        <result column="score_id" jdbcType="INTEGER" property="score_id"/>
+        <result column="create_time" jdbcType="INTEGER" property="create_time"/>
+    </resultMap>
+
+    <sql id = "Base_Column_List">
+        id, challenge_id, beatmap_id, achieved_acc, achieved_combo, miss_count, mod_used, player_id, score_id, create_time
+    </sql>
+
+    <select id="selectByScoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_challenge_submission_details
+        WHERE score_id =#{scoreId}
+    </select>
+
+    <select id="selectByPlayerIdAndStats" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_challenge_submission_details
+        WHERE challenge_id =#{challengeId}
+        AND beatmap_id =#{beatmapId}
+        AND player_id =#{playerId}
+    </select>
+
+    <select id="selectByPlayerIdAndChallengeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_challenge_submission_details
+        WHERE challenge_id =#{challengeId}
+        AND player_id =#{playerId}
+    </select>
+
+
+
+</mapper>

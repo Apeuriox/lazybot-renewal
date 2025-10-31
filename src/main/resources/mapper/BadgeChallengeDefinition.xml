@@ -21,6 +21,12 @@
         AND is_active = 1
     </select>
 
+    <select id="selectAllActive" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_challenge_definition
+        WHERE is_active = 1
+    </select>
+
     <select id="selectByName" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
         FROM badge_user_owned

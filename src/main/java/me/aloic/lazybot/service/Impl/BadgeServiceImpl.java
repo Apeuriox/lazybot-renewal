@@ -240,7 +240,7 @@ public class BadgeServiceImpl implements BadgeService
         if (tokenMapper.selectById(lazybotId)==null) throw new LazybotRuntimeException("操作失败:用户不存在或未绑定，LazybotID: " + lazybotId);
     }
 
-    private String inlineBadgeDescription(BadgeDefinitionPO badge, BadgeUserOwnedPO userOwned)
+    public static String inlineBadgeDescription(BadgeDefinitionPO badge, BadgeUserOwnedPO userOwned)
     {
         StringBuilder sb = new StringBuilder("[Lazybot] 名称: ");
                 sb.append(badge.getName()).append("\n");

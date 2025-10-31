@@ -26,8 +26,14 @@
     <select id="selectByBeatmapIdAndChallengeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
         FROM badge_challenge_map
-        WHERE challenge_id =#{challenge_id}
-        AND beatmap_id =#{beatmap_id}
+        WHERE challenge_id =#{challengeId}
+        AND beatmap_id =#{beatmapId}
+    </select>
+
+    <select id="selectByChallengeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM badge_challenge_map
+        WHERE challenge_id =#{challengeId}
     </select>
 
 

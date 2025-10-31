@@ -17,6 +17,7 @@ public class ChallengeSubmitParameter extends LazybotCommandParameter
     private Integer version;
     private Integer beatmapId;
     private Integer challengeId;
+    private Integer lazybotId;
     @Override
     public void validateParams() {
 

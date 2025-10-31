@@ -1,21 +1,30 @@
 package me.aloic.lazybot.service.Impl;
 
 import jakarta.annotation.Resource;
-import me.aloic.lazybot.entity.po.BadgeChallengeMapPO;
-import me.aloic.lazybot.entity.po.BadgeChallengeSubmissionDetailsPO;
+import lombok.extern.slf4j.Slf4j;
+import me.aloic.lazybot.entity.message.LazybotMessageWithImage;
+import me.aloic.lazybot.entity.po.*;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
-import me.aloic.lazybot.osu.dao.mapper.ChallengeMapMapper;
+import me.aloic.lazybot.osu.dao.mapper.*;
 import me.aloic.lazybot.osu.utils.ModCalculatorUtil;
 import me.aloic.lazybot.parameter.ChallengeSubmitParameter;
 import me.aloic.lazybot.service.BadgeChallengeService;
+import me.aloic.lazybot.util.BadgeLoader;
+import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataExtractor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 //todo
+@Slf4j
 @Service
 public class BadgeChallengeServiceImpl implements BadgeChallengeService
 {
@@ -23,12 +32,24 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
     private DataExtractor dataExtractor;
     @Resource
     private ChallengeMapMapper challengeMapMapper;
+    @Resource
+    private ChallengeSubmissionLogMapper challengeSubmissionLogMapper;
+    @Resource
+    private BadgeUserOwnedMapper badgeUserOwnedMapper;
+    @Resource
+    private BadgeChallengeMapper challengeMapper;
+    @Resource
+    private BadgeDefinitionMapper badgeDefinitionMapper;
+    @Resource
+    private TokenMapper tokenMapper;
 
+    @Transactional
+    @Override
     public String checkUserSubmit(ChallengeSubmitParameter params)
     {
         BadgeChallengeMapPO challengeMap = challengeMapMapper.selectByBeatmapIdAndChallengeId(params.getBeatmapId(), params.getChallengeId());
         if(challengeMap == null) {
-            throw new LazybotRuntimeException("没有找到指定Challenge在" + params.getBeatmapId()+"的需求");
+            throw new LazybotRuntimeException("没有找到指定Challenge在" + params.getBeatmapId()+"的需求，请检查输入");
         }
         List<ScoreLazerDTO> userScores = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), params.getPlayerId(),params.getMode());
         for (ScoreLazerDTO score : userScores)
@@ -37,7 +58,7 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
             if (Optional.ofNullable(score.getStatistics().getMiss()).orElse(0) <= challengeMap.getMax_accepted_miss()) {
                 i++;
             }
-            if (score.getAccuracy()*100.0 >= challengeMap.getRequired_acc()) {
+            if (score.getAccuracy() >= challengeMap.getRequired_acc()) {
                 i++;
             }
             if (score.getMax_combo() >= challengeMap.getRequired_combo()) {
@@ -47,15 +68,43 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
                 i++;
             }
             if (i == 4) {
+                BadgeChallengeSubmissionDetailsPO existingSubmission = challengeSubmissionLogMapper.selectByPlayerIdAndStats(params.getPlayerId(),
+                        params.getBeatmapId(),
+                        params.getChallengeId());
+                if (existingSubmission != null) {
+                    return "[Lazybot] 您已满足该成绩需求";
+                }
                 BadgeChallengeSubmissionDetailsPO submissionDetails = new BadgeChallengeSubmissionDetailsPO(score, params.getChallengeId());
-                return "[Lazybot] 提交成功";
+                challengeSubmissionLogMapper.insert(submissionDetails);
+                try{
+                    return checkUserChallengeCompletion(params.getChallengeId(), params.getPlayerId(), params.getLazybotId());
+                }
+                catch (Exception e)
+                {
+                    log.info(e.getMessage());
+                }
+                return "[Lazybot] 接受成绩 " + score.getUser_id() +"，提交成功";
             }
         }
         return "[Lazybot] 很抱歉，未找到没有满足条件的成绩";
     }
-    public String showAllActiveChallenges()
+
+    @Override
+    public List<LazybotMessageWithImage> showAllActiveChallenges() throws IOException
     {
-        return null;
+        List<BadgeChallengeDefinitionPO> challengeMap = challengeMapper.selectAllActive();
+        List<LazybotMessageWithImage> messageList =new ArrayList<>();
+        if (CommonTool.isEmpty(challengeMap)) {
+            messageList.add(new LazybotMessageWithImage("[Lazybot] 当前没有活跃的Challenge"));
+            return messageList;
+        }
+        messageList.add(new LazybotMessageWithImage("[Lazybot] 当前的活跃Challenge有: "));
+        for (int i=0;i<challengeMap.size();i++) {
+            LazybotMessageWithImage message = new LazybotMessageWithImage((i+1) +". " + challengeMap.get(i).toLazybotString());
+            message.setImage(BadgeLoader.loadBadgeImage(challengeMap.get(i).getBadge_id()));
+            messageList.add(message);
+        }
+        return messageList;
     }
     public String showUserParticipation()
     {
@@ -64,5 +113,48 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
     public String searchChallenge()
     {
         return null;
+    }
+
+    @Transactional
+    public String checkUserChallengeCompletion(Integer challengeId, Integer playerId, Integer lazybotId)
+    {
+        List<BadgeChallengeMapPO> challengeMap = challengeMapMapper.selectByChallengeId(challengeId);
+        List<BadgeChallengeSubmissionDetailsPO> submissions = challengeSubmissionLogMapper.selectByPlayerIdAndChallengeId(playerId, challengeId);
+        if (CommonTool.isEmpty(challengeMap) || CommonTool.isEmpty(submissions)) {
+            throw new LazybotRuntimeException("没有找到指定Challenge");
+        }
+        if (challengeMap.size()!= submissions.size()) {
+            throw new LazybotRuntimeException("不满足条件");
+        }
+        int i=0;
+        for (BadgeChallengeMapPO map : challengeMap)
+        {
+            for (BadgeChallengeSubmissionDetailsPO submission : submissions)
+            {
+                if (Objects.equals(map.getBeatmap_id(), submission.getBeatmap_id())) {
+                    i++;
+                }
+            }
+        }
+        if (i == challengeMap.size()) {
+            BadgeChallengeDefinitionPO challenge = challengeMapper.selectById(challengeId);
+            BadgeUserOwnedPO badgeUserOwnedPO = new BadgeUserOwnedPO();
+            checkBadgeAndUserExistence(challenge.getBadge_id(), lazybotId);
+            badgeUserOwnedPO.setBadge_id(challenge.getBadge_id());
+            badgeUserOwnedPO.setUser_id(lazybotId);
+            badgeUserOwnedPO.setObtain_time(LocalDateTime.now());
+            badgeUserOwnedPO.setSource_challenge_id(challengeId);
+            badgeUserOwnedPO.setSource_text("完成" + challenge.getName() +"挑战获得");
+            badgeUserOwnedMapper.insert(badgeUserOwnedPO);
+            return "[Lazybot] 恭喜你获得" + challenge.getName() + "徽章";
+        }
+        throw new LazybotRuntimeException("不满足条件");
+    }
+
+    private void checkBadgeAndUserExistence(Integer badgeId,Integer lazybotId)
+    {
+        BadgeDefinitionPO badgeDefinitionPO = badgeDefinitionMapper.selectById(badgeId);
+        if (badgeDefinitionPO==null) throw new LazybotRuntimeException("此Badge ID不存在: " + badgeId);
+        if (tokenMapper.selectById(lazybotId)==null) throw new LazybotRuntimeException("操作失败:用户不存在或未绑定，LazybotID: " + lazybotId);
     }
 }

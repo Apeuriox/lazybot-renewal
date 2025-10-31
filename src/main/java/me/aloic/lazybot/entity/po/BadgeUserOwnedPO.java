@@ -28,4 +28,5 @@ public class BadgeUserOwnedPO implements Serializable
     private Integer source_challenge_id;
     private String source_text;
 
+
 }
