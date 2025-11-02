@@ -12,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,7 +41,7 @@ public class BadgeChallengeSubmissionDetailsPO implements Serializable
         this.score_id = score.getId();
         this.achieved_acc = score.getAccuracy();
         this.achieved_combo = score.getMax_combo();
-        this.miss_count = score.getStatistics().getMiss();
+        this.miss_count = Optional.ofNullable(score.getStatistics().getMiss()).orElse(0);
         this.mod_used = CommonTool.modArrayToString(score.getMods());
         this.create_time=LocalDateTime.now();
     }

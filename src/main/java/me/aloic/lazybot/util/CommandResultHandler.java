@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Base64;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class CommandResultHandler
@@ -53,6 +54,8 @@ public class CommandResultHandler
                 logger.error(e.getMessage());
         }
     }
+
+
     public static void sendMessageWithImageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray, String text) {
         try  {
             String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
@@ -62,6 +65,7 @@ public class CommandResultHandler
             logger.error(e.getMessage());
         }
     }
+
     public static void sendMessageWithImageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, LazybotMessageWithImage result) {
         if (result.getImage()==null)
         {
@@ -69,6 +73,25 @@ public class CommandResultHandler
             return;
         }
         sendMessageWithImageToGroupOnebot(bot,event, result.getImage(),result.getMessage());
+    }
+
+    public static void sendMessageWithImageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, List<LazybotMessageWithImage> result) {
+
+
+        if (!CommonTool.isEmpty(result))
+        {
+            MsgUtils builder = MsgUtils.builder();
+
+            for(LazybotMessageWithImage message:result)
+            {
+                builder.text(message.getMessage());
+                if (message.getImage()!=null)
+                {
+                    builder.img("base64://"+Base64.getEncoder().encodeToString(message.getImage()));
+                }
+            }
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), builder.build(), false);
+        }
     }
 
 //    public static File saveBytesToFile(byte[] imageBytes, String fileName) throws IOException {

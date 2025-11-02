@@ -142,10 +142,8 @@ public class StaticFunctionTest
 //    public void testModStrCompare(){
 //        List<Mod> mods = Arrays.asList(new Mod("HD",null), new Mod("HR",null));
 //
-//        System.out.println(ModCalculatorUtil.compareMods(mods, "HRHD"));   // true
-//        System.out.println(ModCalculatorUtil.compareMods(mods, "HD"));     // false
-//        System.out.println(ModCalculatorUtil.compareMods(mods, "HDSO"));   // false
-//        System.out.println(ModCalculatorUtil.compareMods(mods, "HRHDHD")); // tru
+//        System.out.println(ModCalculatorUtil.compareMods(mods, "^HRHD"));   // true
+//        System.out.println(ModCalculatorUtil.compareMods(mods, "^DT"));     // false
 //    }
 
 

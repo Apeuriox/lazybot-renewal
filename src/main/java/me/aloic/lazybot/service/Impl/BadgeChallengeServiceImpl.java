@@ -54,6 +54,9 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
         List<ScoreLazerDTO> userScores = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), params.getPlayerId(),params.getMode());
         for (ScoreLazerDTO score : userScores)
         {
+            if (!CommonTool.isEmpty(score.getMods())) {
+                score.setMods(score.getMods().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
+            }
             int i=0;
             if (Optional.ofNullable(score.getStatistics().getMiss()).orElse(0) <= challengeMap.getMax_accepted_miss()) {
                 i++;
@@ -83,10 +86,19 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
                 {
                     log.info(e.getMessage());
                 }
-                return "[Lazybot] 接受成绩 " + score.getUser_id() +"，提交成功";
+                return "[Lazybot] 接受成绩 " + score.getId() +"，提交成功";
             }
         }
         return "[Lazybot] 很抱歉，未找到没有满足条件的成绩";
+    }
+
+
+
+    @Override
+    public String createChallengeRequirement(ChallengeSubmitParameter params)
+    {
+
+        return null;
     }
 
     @Override
@@ -98,14 +110,33 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
             messageList.add(new LazybotMessageWithImage("[Lazybot] 当前没有活跃的Challenge"));
             return messageList;
         }
-        messageList.add(new LazybotMessageWithImage("[Lazybot] 当前的活跃Challenge有: "));
+        messageList.add(new LazybotMessageWithImage("[Lazybot] 当前的活跃Challenge有: \n"));
         for (int i=0;i<challengeMap.size();i++) {
             LazybotMessageWithImage message = new LazybotMessageWithImage((i+1) +". " + challengeMap.get(i).toLazybotString());
             message.setImage(BadgeLoader.loadBadgeImage(challengeMap.get(i).getBadge_id()));
             messageList.add(message);
         }
-        return messageList;
+       return messageList;
     }
+
+    @Override
+    public LazybotMessageWithImage showRequirementsInChallenge(int challengeId) throws IOException
+    {
+        BadgeChallengeDefinitionPO challenge = challengeMapper.selectById(challengeId);
+        if (challenge == null) {
+            return new LazybotMessageWithImage("[Lazybot] 没有找到指定Challenge");
+        }
+        List<BadgeChallengeMapPO> challengeMap = challengeMapMapper.selectByChallengeId(challengeId);
+        if (CommonTool.isEmpty(challengeMap)) {
+            return new LazybotMessageWithImage("[Lazybot] 指定Challenge存在但没有需求");
+        }
+        StringBuilder sb=new StringBuilder(challenge.getName()).append("\n").append("需求如下: \n");
+        for (int i=0;i<challengeMap.size();i++) {
+           sb.append(i+1).append(". ").append(challengeMap.get(i).toLazybotString());
+        }
+        return new LazybotMessageWithImage(BadgeLoader.loadBadgeImage(challenge.getBadge_id()), sb.toString());
+    }
+
     public String showUserParticipation()
     {
         return null;
@@ -124,7 +155,7 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
             throw new LazybotRuntimeException("没有找到指定Challenge");
         }
         if (challengeMap.size()!= submissions.size()) {
-            throw new LazybotRuntimeException("不满足条件");
+            throw new LazybotRuntimeException("Challenge未完成，跳过颁发徽章");
         }
         int i=0;
         for (BadgeChallengeMapPO map : challengeMap)

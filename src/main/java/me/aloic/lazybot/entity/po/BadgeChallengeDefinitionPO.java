@@ -32,10 +32,10 @@ public class BadgeChallengeDefinitionPO implements Serializable
     // Idk why Strung template got deleted in Java 24 so no STR there
     public String toLazybotString()
     {
-        return "( ID: " + id + ")/n" + "名称: " + name + "/n" +
-                "描述: " + description + "/n" +
-                "开始时间: " + create_time + "/n" +
-                "过期时间: " + expire_time + "/n";
+        return "( ID: " + id + ")\n" + "名称: " + name + "\n" +
+                "描述: " + description + "\n" +
+                "开始时间: " + create_time.toLocalDate() + "\n" +
+                "过期时间: " + expire_time.toLocalDate() + "\n";
     }
 
 

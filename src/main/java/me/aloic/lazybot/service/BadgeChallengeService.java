@@ -10,5 +10,9 @@ public interface BadgeChallengeService
 {
     String checkUserSubmit(ChallengeSubmitParameter params);
 
+    String createChallengeRequirement(ChallengeSubmitParameter params);
+
     List<LazybotMessageWithImage> showAllActiveChallenges() throws IOException;
+
+    LazybotMessageWithImage showRequirementsInChallenge(int challengeId) throws IOException;
 }

@@ -6,15 +6,16 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="challenge_id" jdbcType="INTEGER" property="challenge_id"/>
         <result column="beatmap_id" jdbcType="INTEGER" property="beatmap_id"/>
-        <result column="required_acc" jdbcType="DOUBLE" property="required_cacc"/>
+        <result column="required_acc" jdbcType="DOUBLE" property="required_acc"/>
         <result column="required_combo" jdbcType="INTEGER" property="required_combo"/>
         <result column="max_accepted_miss" jdbcType="INTEGER" property="max_accepted_miss"/>
         <result column="mods_allowed" jdbcType="VARCHAR" property="mods_allowed"/>
         <result column="mode" jdbcType="INTEGER" property="mode"/>
+        <result column="title_with_version" jdbcType="VARCHAR" property="title_with_version"/>
     </resultMap>
 
     <sql id = "Base_Column_List">
-        id, challenge_id, beatmap_id, required_acc, required_combo, max_accepted_miss, mods_allowed, mode
+        id, challenge_id, beatmap_id, required_acc, required_combo, max_accepted_miss, mods_allowed, mode, title_with_version
     </sql>
 
     <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">

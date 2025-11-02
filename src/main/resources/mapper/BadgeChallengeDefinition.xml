@@ -9,9 +9,10 @@
         <result column="badge_id" jdbcType="INTEGER" property="badge_id"/>
         <result column="is_active" jdbcType="INTEGER" property="is_active"/>
         <result column="create_time" jdbcType="DATE" property="create_time"/>
+        <result column="expire_time" jdbcType="DATE" property="expire_time"/>
     </resultMap>
     <sql id = "Base_Column_List">
-        id, badge_id, name, description, is_active,create_time
+        id, badge_id, name, description, is_active,create_time,expire_time
     </sql>
 
     <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
