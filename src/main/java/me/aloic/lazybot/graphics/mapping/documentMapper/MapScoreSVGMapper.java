@@ -1,4 +1,5 @@
 package me.aloic.lazybot.graphics.mapping.documentMapper;
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
 import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
@@ -26,6 +27,7 @@ import java.util.Optional;
 
 
 // used command: /AllScore
+@Slf4j
 public class MapScoreSVGMapper extends LazybotSVGMapper
 {
     public static Document mapMapScoreListToAllScorePanel(List<MapScore> scorelist, BeatmapPerformance beatmap, boolean ignoreBanner)
@@ -161,7 +163,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error("SVG 处理时出错", e);
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
@@ -171,8 +173,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
         for (MapScore score : scorelist) {
             Element sectionFull = doc.createElementNS(namespaceSVG, "g");
 
-            Node totalBGNode = doc.createElementNS(namespaceSVG, "rect");
-            Element totalBG = (Element) totalBGNode;
+            Element totalBG = doc.createElementNS(namespaceSVG, "rect");
             totalBG.setAttribute("rx", "10");
             totalBG.setAttribute("x", "30");
             totalBG.setAttribute("y", "398");

@@ -121,7 +121,7 @@ public class FunServiceImpl implements FunService
         DecimalFormat df = new DecimalFormat("#.00");
         List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestScoreList(
                 String.valueOf(params.getPlayerId()),
-                100,0,params.getMode());
+                100,0, params.getMode());
         if (scoreDTOList.size() < 110) {
             scoreDTOList.addAll(dataExtractor.extractUserBestScoreList(
                     String.valueOf(params.getPlayerId()),

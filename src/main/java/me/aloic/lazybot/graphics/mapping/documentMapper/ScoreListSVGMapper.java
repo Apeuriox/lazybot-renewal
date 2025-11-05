@@ -1,5 +1,6 @@
 package me.aloic.lazybot.graphics.mapping.documentMapper;
 
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
 import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
@@ -20,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 public class ScoreListSVGMapper extends LazybotSVGMapper
 {
     public static Document mapScoreListToBpCard(PlayerInfoVO player, List<ScoreVO> scoreArray, Integer offset, Integer type)
@@ -498,7 +500,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error("SVG 处理时出错", e);
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }

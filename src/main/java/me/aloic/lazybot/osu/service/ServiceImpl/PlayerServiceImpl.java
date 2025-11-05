@@ -517,7 +517,7 @@ public class PlayerServiceImpl implements PlayerService
             throw e;
         }
         catch (Exception e){
-            e.printStackTrace();
+            logger.error("成绩添加失败 ", e);
             throw new LazybotRuntimeException("成绩添加失败");
         }
     }

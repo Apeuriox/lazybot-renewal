@@ -1,6 +1,7 @@
 package me.aloic.lazybot.util;
 
 import de.androidpit.colorthief.ColorThief;
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 public class CommonTool {
     public static boolean isEmpty(String s) {
         if(s == null) {
@@ -715,7 +717,7 @@ public class CommonTool {
             BufferedImage croppedImage = scaledBufferedImage.getSubimage(cropX, cropY, targetWidth, targetHeight);
             ImageIO.write(croppedImage, "jpg", new File(pathToFile));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("图像裁剪和缩放时出错", e);
             throw new LazybotRuntimeException("图像缩放时出错: " + e);
         }
     }
