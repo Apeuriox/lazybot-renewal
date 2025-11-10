@@ -82,7 +82,8 @@ public class OsuToolsUtil
     {
         ScoreVO scoreVO = TransformerUtil.transformScoreStarMoonToScoreVO(scoreStarMoon, user, mode);
         scoreVO.setBeatmap(setupBeatmapVO(scoreStarMoon,mode));
-        return setupScoreVOLocalCache(override, scoreVO);
+        ModCalculatorUtil.afterModMapInfo(scoreVO);
+        return scoreVO;
     }
 
     public ScoreVO setupScoreVOCompact(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override)

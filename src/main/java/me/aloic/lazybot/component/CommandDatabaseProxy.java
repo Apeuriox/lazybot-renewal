@@ -53,11 +53,11 @@ public class CommandDatabaseProxy
         }
         catch (MybatisPlusException e) {
             logger.error("数据库查询出错: {}", e.getMessage());
-            throw new LazybotRuntimeException("数据库查询出错，详情请见log");
+            throw new LazybotRuntimeException("数据库查询出错，详情请见log: ", e);
         }
         catch (Exception e) {
             logger.error("未知错误: {}", e.getMessage());
-            throw new LazybotRuntimeException("出现未知错误 ，详情请见log");
+            throw new LazybotRuntimeException("出现未知错误 ，详情请见log: ", e);
         }
     }
 

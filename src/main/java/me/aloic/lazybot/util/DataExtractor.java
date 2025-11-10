@@ -19,7 +19,6 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayoData;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayobotBeatmapSet;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
-import me.aloic.lazybot.osu.dao.entity.dto.starmoon.StarMoonScoreWrapper;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.StarMoonUserWrapper;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
@@ -80,7 +79,7 @@ public class DataExtractor
                     HTTPTypeEnum.GET,
                     null,
                     null);
-            StarMoonUserWrapper user = apiRequestExecutor.parseResponse(TRPCParser.parseJSON(json), StarMoonUserWrapper.class, null);
+            StarMoonUserWrapper user = apiRequestExecutor.parseResponse(TRPCParser.parsetRPCJson(json), StarMoonUserWrapper.class, null);
             if (user == null) {
                 throw new LazybotRuntimeException("没这B人: " + playerName);
             }
@@ -103,11 +102,11 @@ public class DataExtractor
                     HTTPTypeEnum.GET,
                     null,
                     null);
-            StarMoonUserWrapper user = apiRequestExecutor.parseResponse(TRPCParser.parseJSON(json), StarMoonUserWrapper.class, null);
+            UserResponse user = apiRequestExecutor.parseResponse(TRPCParser.parsetRPCJson(json), UserResponse.class, null);
             if (user == null) {
                 throw new LazybotRuntimeException("没这B人: " + playerId);
             }
-            return user.getResult().getData();
+            return user;
         }
         catch (LazybotRuntimeException lre) {
             throw lre;
@@ -127,12 +126,11 @@ public class DataExtractor
                     HTTPTypeEnum.GET,
                     null,
                     null);
-            StarMoonScoreWrapper score = apiRequestExecutor.parseResponse(TRPCParser.parseJSON(json), StarMoonScoreWrapper.class, null);
-            if (score == null || score.getResult().getData() == null)
-            {
+            List<ScoreStarMoon> score = apiRequestExecutor.parseResponse(TRPCParser.parsetRPCJson(json), null,  new TypeReference<List<ScoreStarMoon>>() {});
+            if (CommonTool.isEmpty(score)) {
                 throw new LazybotRuntimeException("无法找到指定成绩");
             }
-            return score.getResult().getData();
+            return score;
         }
         catch (LazybotRuntimeException lre) {
             throw lre;

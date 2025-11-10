@@ -11,6 +11,7 @@ public abstract class LazybotCommandParameter
     private Integer playerId;
     private String mode;
     private List<Long> groupUserIds;
+    private Integer starMoonId;
 
     abstract void validateParams();
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
+import me.aloic.lazybot.osu.enums.SupportedSubServer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class ScoreVO implements Comparable<ScoreVO>
     private PerformanceVO ppDetailsLocal;
     private Boolean isLazer;
     private Boolean isPerfectCombo;
+    private SupportedSubServer osuSubServer;
 
     @Override
     public int compareTo(@NotNull ScoreVO o)

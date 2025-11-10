@@ -8,10 +8,10 @@ public enum OsuMode
     Taiko(1, "taiko"),
     Catch(2, "fruits"),
     Mania(3, "mania"),
-    StarMoonOsu(4, "osu"),
-    StarMoonOTaiko(5, "taiko"),
-    StarMoonCatch(6, "fruits"),
-    StarMoonMania(7, "mania"),
+    StarMoonOsu(4, "smo"),
+    StarMoonOTaiko(5, "smt"),
+    StarMoonCatch(6, "smf"),
+    StarMoonMania(7, "smm"),
     Default(-1, "");
 
     private final int value;

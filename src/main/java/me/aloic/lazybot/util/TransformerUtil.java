@@ -11,6 +11,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.RankStatus;
+import me.aloic.lazybot.osu.enums.SupportedSubServer;
 import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import org.w3c.dom.Document;
 
@@ -21,6 +22,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -426,6 +429,12 @@ public class TransformerUtil
             score.setRank("F");
         }
         score.setAvatarUrl(AssetDownloadUtil.avatarAbsolutePath(scoreLazer.getUser(),false));
+        if (scoreLazer.getLegacy_total_score() == 0) {
+            score.setOsuSubServer(SupportedSubServer.LAZER);
+        }
+        else {
+            score.setOsuSubServer(SupportedSubServer.STABLE);
+        }
         score.setIsLazer(scoreLazer.getLegacy_total_score() == 0);
         score.setUser_name(scoreLazer.getUser().getUsername());
         score.setMode(String.valueOf(scoreLazer.getRuleset_id()));
@@ -437,17 +446,18 @@ public class TransformerUtil
     {
         ScoreVO score=new ScoreVO();
         score.setScore(scoreStarMoon.getScore());
-        score.setAccuracy(scoreStarMoon.getAccuracy());
+        score.setAccuracy(scoreStarMoon.getAccuracy()/100.0);
         score.setModJSON(OsuMod.transformMods(scoreStarMoon.getMods()));
-        score.setCreate_at(scoreStarMoon.getPlayedAt().toString());
+        score.setCreate_at(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX").format(scoreStarMoon.getPlayedAt().toInstant().atZone(ZoneId.systemDefault())));
         score.setMaxCombo(scoreStarMoon.getMaxCombo());
         score.setPp(scoreStarMoon.getPp());
         score.setStatistics(new ScoreStatisticsLazer(scoreStarMoon.getHit()));
         score.setRank(scoreStarMoon.getGrade());
         score.setAvatarUrl(AssetDownloadUtil.avatarAbsolutePathStarNoon(user.getId(),false));
-
+        score.setOsuSubServer(SupportedSubServer.STAR_MOON);
         score.setUser_name(user.getName());
         score.setMode(mode);
+        score.setIsLazer(false);
         score.setIsPerfectCombo(Objects.equals(scoreStarMoon.getMaxCombo(), scoreStarMoon.getBeatmap().getProperties().getMaxCombo()));
         return score;
     }

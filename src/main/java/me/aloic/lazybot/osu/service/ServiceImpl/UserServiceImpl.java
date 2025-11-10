@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService
         Optional.ofNullable(tokenMapper.selectByStarMoonId(Integer.valueOf(player.getId()))).ifPresent(this::createAlreadyBindError);
         Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
                 .ifPresentOrElse(
-                        this::createBindError,
+                        token -> updateStarMoonLinks(event, bot, player),
                         () -> insertUserToTable(event, player, bot));
     }
 
@@ -165,6 +165,26 @@ public class UserServiceImpl implements UserService
                         () -> tokenMapper.insert(user)
                 );
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功绑定用户: " + player.getUsername()).build(),false);
+    }
+
+    private void insertUserToTable(LazybotSlashCommandEvent event, @Nonnull UserResponse player,Bot bot){
+        AccessTokenPO user = new AccessTokenPO();
+        user.setStar_moon_id(Integer.valueOf(player.getId()));
+        user.setDefault_mode("smo");
+        user.setStar_moon_ruleset("standard");
+        user.setQq_code(event.getMessageEvent().getSender().getUserId());
+        user.setValid(0);
+        Optional.ofNullable(tokenMapper.selectByStarMoonId(user.getStar_moon_id()))
+                .ifPresentOrElse(
+                        userToken -> tokenMapper.updateByToken(user),
+                        () -> tokenMapper.insert(user)
+                );
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功更新绑定StarMoon用户: " + player.getName()).build(),false);
+    }
+
+    private void updateStarMoonLinks(LazybotSlashCommandEvent event, Bot bot, @Nonnull UserResponse player){
+        tokenMapper.updateStarMoon(Integer.valueOf(player.getId()),"standard",event.getMessageEvent().getSender().getUserId());
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功绑定StarMoon用户: " + player.getName()).build(),false);
     }
 
 

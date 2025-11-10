@@ -306,7 +306,7 @@ public class URLBuildUtil
         Map<String, Object> inner = new HashMap<>();
         inner.put("handle", playerIdentity);
         if (mode!=null)inner.put("mode", OsuMode.getMode(mode).toString());
-        if (subRuleset!=null) inner.put("ruleset", OsuSubruleset.getRuleset(subRuleset));
+        if (subRuleset!=null) inner.put("ruleset", OsuSubruleset.getRuleset(subRuleset).getDescribe());
         inner.put("rankingSystem", "ppv2");
         inner.put("page", 0);
         params.put("0", Map.of("json", inner));

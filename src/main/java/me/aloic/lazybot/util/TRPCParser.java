@@ -5,17 +5,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TRPCParser
 {
-    public static String parseJSON(String unhandled) throws Exception {
+    public static String parsetRPCJson(String unhandled) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode outer = mapper.readTree(unhandled);
         String inner = outer.get(0).get("result").get("data").asText();
 
         String json = inner
-                .replaceAll("([a-zA-Z0-9_]+):", "\"$1\":")
-                .replaceAll("n([,}\\]])", "$1")
-                .replaceAll("new Date\\((\\d+)\\)", "$1")
+                .replaceAll("new Date\\((\\d+)\\)", "\"$1\"")
                 .replaceAll("void 0", "null")
-                .replaceAll("'", "\"");
+                .replaceAll("([0-9]+)n", "$1")
+                .replaceAll(":'([^']*)'", ":\"$1\"")
+                .replaceAll("(?<=\\{|,)(\\s*)([a-zA-Z0-9_]+)\\s*:", "$1\"$2\":")
+                .replaceAll("\\\\'", "'");
+
 
         JsonNode data = mapper.readTree(json);
 

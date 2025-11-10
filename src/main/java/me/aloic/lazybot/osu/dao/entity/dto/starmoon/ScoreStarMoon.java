@@ -1,5 +1,6 @@
 package me.aloic.lazybot.osu.dao.entity.dto.starmoon;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,8 +27,11 @@ public class ScoreStarMoon implements Serializable
     public Double pp;
     @Data
     public static class Hit {
+        @JsonProperty("50")
         public Integer _50;
+        @JsonProperty("100")
         public Integer _100;
+        @JsonProperty("300")
         public Integer _300;
         public Integer geki;
         public Integer katu;

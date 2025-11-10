@@ -76,6 +76,7 @@ public class BpParameter extends LazybotCommandParameter
             bpParameter.setVersion(0);
         if (bpParameter.getIndex()==null)
             bpParameter.setIndex(1);
+        bpParameter.setStarMoonId(accessTokenPO.getStar_moon_id());
 
     }
 }

@@ -9,6 +9,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.RankColor;
+import me.aloic.lazybot.osu.enums.SupportedSubServer;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
@@ -258,10 +259,11 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                         break;
                 }
             }
-
-            if(targetScore.getIsLazer()) {
-                doc.getElementById("lazer-label").setAttribute("opacity", "1");
+            switch(targetScore.getOsuSubServer()) {
+                case SupportedSubServer.LAZER -> doc.getElementById("lazer-label").setAttribute("opacity", "1");
+                case SupportedSubServer.STAR_MOON -> doc.getElementById("starmoon-label").setAttribute("opacity", "1");
             }
+
 
             doc.getElementById("playerName").setTextContent(targetScore.getUser_name());
             if (targetScore.getBeatmap().getArtist().length() < 20) {
@@ -310,8 +312,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                                 .concat("x")).concat(" (").
                         concat(CommonTool.toString(((double) targetScore.getMaxCombo() / (double) targetScore.getBeatmap().getMax_combo()) * 100.0).concat("%)")));
             }
-            else
-            {
+            else {
                 doc.getElementById("comboStatus").setTextContent(CommonTool.toString(targetScore.getMaxCombo()).concat("x"));
                 doc.getElementById("comboStatus-Shadow").setTextContent(CommonTool.toString(targetScore.getMaxCombo()).concat("x"));
             }
@@ -532,7 +533,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             return doc;
         } catch (Exception e)
         {
-            log.error(e.getMessage());
+            log.error("暗黑模式Score panel生成失败: ", e);
             throw new LazybotRuntimeException("暗黑模式Score panel生成失败");
         }
 

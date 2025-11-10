@@ -125,13 +125,11 @@ public enum OsuMod
     public static List<Mod> transformMods(List<Integer> values)
     {
         List<Mod> modsResult = new ArrayList<>();
-        for (Integer value : values) {
-            Mod mod = new Mod(getModEnum(value));
-            if (mod.getAcronym()!=null) {
-                modsResult.add(mod);
-            }
+        List<OsuMod> mods = getAllMod(values.stream().reduce(0, Integer::sum));
+        for (OsuMod mod : mods) {
+            modsResult.add(new Mod(mod.getAcronym()));
         }
-        return modsResult;
+        return modsResult.stream().filter(mod -> !mod.getAcronym().equals("NM")).collect(Collectors.toList());
     }
 
     public static OsuMod getModEnum(int value) {

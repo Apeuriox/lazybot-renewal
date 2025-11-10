@@ -23,7 +23,7 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bp","best","pbp","pb","b"})
+@LazybotCommandMapping({"bp","best","pbp","pb","b","bsm"})
 @Component
 public class BpCommand implements LazybotSlashCommand
 {
@@ -88,6 +88,11 @@ public class BpCommand implements LazybotSlashCommand
         if (commandType.equals("pbp") || commandType.equals("pb")) {
             testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(
                     playerService.getUserBestPerformanceSinglePlus(params)));
+        }
+        else if (commandType.equals("bsm"))
+        {
+            testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
+                    playerService.getUserBestPerformanceSingleStarMoon(params), params.getVersion()));
         }
         else
             testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
