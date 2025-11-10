@@ -2,6 +2,7 @@ package me.aloic.lazybot.util;
 
 import com.alibaba.fastjson2.TypeReference;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.enums.HTTPTypeEnum;
 import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
@@ -17,6 +18,10 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayoData;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayobotBeatmapSet;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.StarMoonScoreWrapper;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.StarMoonUserWrapper;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
@@ -31,6 +36,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 public class DataExtractor
 {
@@ -65,6 +71,79 @@ public class DataExtractor
             throw new LazybotRuntimeException("没这B人: " + playerName);
         }
     }
+
+    public UserResponse extractPlayerStarMoon(String playerName)
+    {
+        try{
+            String json = apiRequestExecutor.executeWithoutParse(
+                    URLBuildUtil.buildURLOfStarMoonUserPage(playerName),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null);
+            StarMoonUserWrapper user = apiRequestExecutor.parseResponse(TRPCParser.parseJSON(json), StarMoonUserWrapper.class, null);
+            if (user == null) {
+                throw new LazybotRuntimeException("没这B人: " + playerName);
+            }
+            return user.getResult().getData();
+        }
+        catch (LazybotRuntimeException lre) {
+            throw lre;
+        }
+        catch (Exception e)
+        {
+            log.error("获取Star Moon用户时出错: " ,e);
+            throw new LazybotRuntimeException("获取Star Moon用户时出错" + e.getMessage());
+        }
+    }
+    public UserResponse extractPlayerStarMoon(Integer playerId)
+    {
+        try{
+            String json = apiRequestExecutor.executeWithoutParse(
+                    URLBuildUtil.buildURLOfStarMoonUserPage(playerId),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null);
+            StarMoonUserWrapper user = apiRequestExecutor.parseResponse(TRPCParser.parseJSON(json), StarMoonUserWrapper.class, null);
+            if (user == null) {
+                throw new LazybotRuntimeException("没这B人: " + playerId);
+            }
+            return user.getResult().getData();
+        }
+        catch (LazybotRuntimeException lre) {
+            throw lre;
+        }
+        catch (Exception e)
+        {
+            log.error("获取Star Moon用户时出错: " ,e);
+            throw new LazybotRuntimeException("获取Star Moon用户时出错" + e.getMessage());
+        }
+    }
+
+    public List<ScoreStarMoon> extractPlayerPerformanceStarMoon(String playerId, String mode, String subRuleset)
+    {
+        try{
+            String json = apiRequestExecutor.executeWithoutParse(
+                    URLBuildUtil.buildURLOfStarMoonBestPerformance(playerId,mode,subRuleset),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null);
+            StarMoonScoreWrapper score = apiRequestExecutor.parseResponse(TRPCParser.parseJSON(json), StarMoonScoreWrapper.class, null);
+            if (score == null || score.getResult().getData() == null)
+            {
+                throw new LazybotRuntimeException("无法找到指定成绩");
+            }
+            return score.getResult().getData();
+        }
+        catch (LazybotRuntimeException lre) {
+            throw lre;
+        }
+        catch (Exception e)
+        {
+            log.error("处理Star Moon成绩时出错: " ,e);
+            throw new LazybotRuntimeException("处理Star Moon成绩时出错" + e.getMessage());
+        }
+    }
+
     /**
      * 根据用户ID和模式获取用户信息
      * @param playerId 用户名
@@ -284,6 +363,8 @@ public class DataExtractor
             throw new LazybotRuntimeException("没这成绩: " +"Index=" + offset+1 + " PlayerID=" + playerId);
         }
     }
+
+
     public List<ScoreLazerDTO> extractUserBestScoreList(String playerId, Integer limit , Integer offset, String mode)
     {
        try{
@@ -395,6 +476,7 @@ public class DataExtractor
      */
     public PlayerInfoDTO extractPlayerInfoByUserId(Long userId) {
         AccessTokenPO accessTokenPO = tokenMapper.selectByQq_code(userId);
+
         if(accessTokenPO == null) {
             return null;
         }

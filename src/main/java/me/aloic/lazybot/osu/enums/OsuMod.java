@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import org.spring.osu.model.LazerMod;
 
 import java.util.*;
@@ -120,6 +121,17 @@ public enum OsuMod
         return Arrays.stream(values())
                 .filter(mod -> (mod.getValue() & value) == mod.getValue())
                 .collect(Collectors.toList());
+    }
+    public static List<Mod> transformMods(List<Integer> values)
+    {
+        List<Mod> modsResult = new ArrayList<>();
+        for (Integer value : values) {
+            Mod mod = new Mod(getModEnum(value));
+            if (mod.getAcronym()!=null) {
+                modsResult.add(mod);
+            }
+        }
+        return modsResult;
     }
 
     public static OsuMod getModEnum(int value) {

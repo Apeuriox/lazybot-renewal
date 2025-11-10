@@ -7,6 +7,7 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.CardPointsLogMapper;
@@ -91,12 +92,28 @@ public class UserServiceImpl implements UserService
     public void linkUser(Bot bot, LazybotSlashCommandEvent event)
     {
         String username = String.join(" ", event.getCommandParameters());
+
+        processLinkBancho(bot,event,username);
+    }
+    private void processLinkBancho(Bot bot, LazybotSlashCommandEvent event, String username)
+    {
         isValidUsername(username);
-        Optional.ofNullable(tokenMapper.selectByPlayername(username)).ifPresent(this::createAlreadyBindError);
+        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
+        Optional.ofNullable(tokenMapper.selectByPlayerId(player.getId())).ifPresent(this::createAlreadyBindError);
         Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
                 .ifPresentOrElse(
                         this::createBindError,
-                        () -> insertUserToTable(event, username,bot));
+                        () -> insertUserToTable(event, player, bot));
+    }
+    private void processLinkStarMoon(Bot bot, LazybotSlashCommandEvent event, String username)
+    {
+        //there can have Chinese character in username so no need to check
+        UserResponse player = dataExtractor.extractPlayerStarMoon(username);
+        Optional.ofNullable(tokenMapper.selectByStarMoonId(Integer.valueOf(player.getId()))).ifPresent(this::createAlreadyBindError);
+        Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
+                .ifPresentOrElse(
+                        this::createBindError,
+                        () -> insertUserToTable(event, player, bot));
     }
 
     @Override
@@ -134,8 +151,7 @@ public class UserServiceImpl implements UserService
                 );
         event.getHook().sendMessage("[Lazybot] 成功绑定用户: " +username).queue();
     }
-    private void insertUserToTable(LazybotSlashCommandEvent event, @Nonnull String username,Bot bot){
-        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
+    private void insertUserToTable(LazybotSlashCommandEvent event, @Nonnull PlayerInfoDTO player,Bot bot){
         AccessTokenPO user = new AccessTokenPO();
         user.setPlayer_id(player.getId());
         user.setPlayer_name(player.getUsername());
@@ -143,12 +159,12 @@ public class UserServiceImpl implements UserService
         user.setQq_code(event.getMessageEvent().getSender().getUserId());
         user.setValid(1);
         user.setAvatar_url(player.getAvatar_url());
-        Optional.ofNullable(tokenMapper.selectByPlayername(player.getUsername()))
+        Optional.ofNullable(tokenMapper.selectByPlayerId(player.getId()))
                 .ifPresentOrElse(
                         userToken -> tokenMapper.updateByToken(user),
                         () -> tokenMapper.insert(user)
                 );
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功绑定用户: " +username).build(),false);
+        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功绑定用户: " + player.getUsername()).build(),false);
     }
 
 
@@ -164,10 +180,9 @@ public class UserServiceImpl implements UserService
             throw new LazybotRuntimeException("您并未绑定");
         }
     }
-    public static boolean isValidUsername(String input) {
+    public static void isValidUsername(String input) {
         if (input==null||input.trim().isEmpty()) throw new LazybotRuntimeException("输入用户名为空");
         if(input.trim().length()>15) throw new LazybotRuntimeException("输入用户名过长");
         if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) throw new LazybotRuntimeException("已输入的用户名含有非法字符");
-        return true;
     }
 }

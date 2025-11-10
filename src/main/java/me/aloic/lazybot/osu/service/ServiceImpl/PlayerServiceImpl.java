@@ -14,6 +14,8 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
@@ -202,6 +204,31 @@ public class PlayerServiceImpl implements PlayerService
         ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
                 scoreDTO.getFirst(),
+                false);
+        verifyBeatmapsCache(scoreVO);
+        CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        return scoreVO;
+    }
+
+    @Override
+    public ScoreVO getUserBestPerformanceSingleStarMoon(BpParameter params)
+    {
+        List<ScoreStarMoon> score = dataExtractor.extractPlayerPerformanceStarMoon(
+                String.valueOf(params.getPlayerId()),
+                params.getMode(),
+                "standard");
+        ScoreStarMoon targetScore;
+        try{
+            targetScore = score.get(params.getIndex()-1);
+        }
+        catch (Exception e) {
+            throw new LazybotRuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " + score.size());
+        }
+        UserResponse user = dataExtractor.extractPlayerStarMoon(params.getPlayerId());
+
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(targetScore,
+                user,
+                params.getMode(),
                 false);
         verifyBeatmapsCache(scoreVO);
         CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());

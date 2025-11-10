@@ -30,6 +30,8 @@ public interface PlayerService
 
     ScoreVO getUserBestPerformanceSingle(BpParameter params) throws Exception;
 
+    ScoreVO getUserBestPerformanceSingleStarMoon(BpParameter params);
+
     PPPlusScore getUserBestPerformanceSinglePlus(BpParameter params) throws IOException, RosuFFI.FFIException;
 
     PlayerScoreList bplistCardView(BplistParameter params) throws Exception;

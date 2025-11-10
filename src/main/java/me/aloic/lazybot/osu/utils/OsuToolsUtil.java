@@ -5,6 +5,8 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.parameter.BpifParameter;
@@ -32,6 +34,12 @@ public class OsuToolsUtil
     public BeatmapVO setupBeatmapVO(BeatmapDTO beatmapDTO)
     {
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransform(beatmapDTO);
+        beatmapVO.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapVO.getBeatmapset_id()));
+        return beatmapVO;
+    }
+    public BeatmapVO setupBeatmapVO(ScoreStarMoon scoreStarMoon, String mode)
+    {
+        BeatmapVO beatmapVO = TransformerUtil.beatmapTransform(scoreStarMoon, mode);
         beatmapVO.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapVO.getBeatmapset_id()));
         return beatmapVO;
     }
@@ -67,6 +75,13 @@ public class OsuToolsUtil
     {
         ScoreVO scoreVO = TransformerUtil.transformScoreLazerToScoreVO(scoreLazerDTO);
         scoreVO.setBeatmap(setupBeatmapVO(beatmapDTO));
+        return setupScoreVOLocalCache(override, scoreVO);
+    }
+
+    public ScoreVO setupScoreVO(ScoreStarMoon scoreStarMoon, UserResponse user, String mode,  Boolean override)
+    {
+        ScoreVO scoreVO = TransformerUtil.transformScoreStarMoonToScoreVO(scoreStarMoon, user, mode);
+        scoreVO.setBeatmap(setupBeatmapVO(scoreStarMoon,mode));
         return setupScoreVOLocalCache(override, scoreVO);
     }
 

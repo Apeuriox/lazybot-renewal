@@ -4,8 +4,13 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapsetDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
+import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.RankStatus;
 import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import org.w3c.dom.Document;
 
@@ -18,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -261,6 +267,29 @@ public class TransformerUtil
         beatmapVO.setLanguage(beatmapDTO.getBeatmapset().getLanguage());
         return beatmapVO;
     }
+    public static BeatmapVO beatmapTransform(ScoreStarMoon score, String mode){
+        BeatmapVO beatmapVO=new BeatmapVO();
+        beatmapVO.setAccuracy(score.getBeatmap().getProperties().getAccuracy()); //od
+        beatmapVO.setAr(score.getBeatmap().getProperties().getApproachRate()); //ar
+        beatmapVO.setCs(score.getBeatmap().getProperties().getCircleSize());  //cs
+        beatmapVO.setDrain(score.getBeatmap().getProperties().getHpDrain()); //hp
+        beatmapVO.setDifficult_rating(score.getBeatmap().getProperties().getStarRate());  //star rating
+        beatmapVO.setBpm(score.getBeatmap().getProperties().getBpm());
+        beatmapVO.setHit_length(score.getBeatmap().getProperties().getTotalLength());
+        beatmapVO.setTotal_length(score.getBeatmap().getProperties().getTotalLength());
+        beatmapVO.setVersion(score.getBeatmap().getVersion()); //diff name
+        beatmapVO.setStatus(RankStatus.fromValue(score.getBeatmap().getStatus()).getName());  //ranked or loved something
+        beatmapVO.setArtist(score.getBeatmap().getBeatmapset().getMeta().getIntl().getArtist());  //song creator
+        beatmapVO.setTitle(score.getBeatmap().getBeatmapset().getMeta().getIntl().getTitle());   //song title
+        beatmapVO.setCreator(score.getBeatmap().getCreator());  //map creator
+        beatmapVO.setMax_combo(score.getBeatmap().getProperties().getMaxCombo());
+        beatmapVO.setSid(Integer.valueOf(score.getBeatmap().getBeatmapset().getForeignId()));
+        beatmapVO.setBeatmapset_id(Integer.valueOf(score.getBeatmap().getBeatmapset().getForeignId()));
+        beatmapVO.setBid(Integer.valueOf(score.getBeatmap().getForeignId()));
+        beatmapVO.setMode_int(OsuMode.convertMode(mode).getValue());
+        beatmapVO.setChecksum(score.getBeatmap().getMd5());
+        return beatmapVO;
+    }
     public static BeatmapVO beatmapTransformCompact(BeatmapDTO beatmapDTO){
         BeatmapVO beatmapVO=new BeatmapVO();
         beatmapVO.setAccuracy(beatmapDTO.getAccuracy()); //od
@@ -401,6 +430,25 @@ public class TransformerUtil
         score.setUser_name(scoreLazer.getUser().getUsername());
         score.setMode(String.valueOf(scoreLazer.getRuleset_id()));
         score.setIsPerfectCombo(scoreLazer.getIs_perfect_combo());
+        return score;
+    }
+
+    public static ScoreVO transformScoreStarMoonToScoreVO(ScoreStarMoon scoreStarMoon, UserResponse user, String mode)
+    {
+        ScoreVO score=new ScoreVO();
+        score.setScore(scoreStarMoon.getScore());
+        score.setAccuracy(scoreStarMoon.getAccuracy());
+        score.setModJSON(OsuMod.transformMods(scoreStarMoon.getMods()));
+        score.setCreate_at(scoreStarMoon.getPlayedAt().toString());
+        score.setMaxCombo(scoreStarMoon.getMaxCombo());
+        score.setPp(scoreStarMoon.getPp());
+        score.setStatistics(new ScoreStatisticsLazer(scoreStarMoon.getHit()));
+        score.setRank(scoreStarMoon.getGrade());
+        score.setAvatarUrl(AssetDownloadUtil.avatarAbsolutePathStarNoon(user.getId(),false));
+
+        score.setUser_name(user.getName());
+        score.setMode(mode);
+        score.setIsPerfectCombo(Objects.equals(scoreStarMoon.getMaxCombo(), scoreStarMoon.getBeatmap().getProperties().getMaxCombo()));
         return score;
     }
 

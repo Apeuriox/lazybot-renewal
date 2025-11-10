@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.enums;
 
-import kotlin.Lazy;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 
 public enum OsuMode
@@ -9,6 +8,10 @@ public enum OsuMode
     Taiko(1, "taiko"),
     Catch(2, "fruits"),
     Mania(3, "mania"),
+    StarMoonOsu(4, "osu"),
+    StarMoonOTaiko(5, "taiko"),
+    StarMoonCatch(6, "fruits"),
+    StarMoonMania(7, "mania"),
     Default(-1, "");
 
     private final int value;
@@ -34,6 +37,10 @@ public enum OsuMode
             case 1 -> Taiko;
             case 2 -> Catch;
             case 3 -> Mania;
+            case 4 -> StarMoonOsu;
+            case 5 -> StarMoonOTaiko;
+            case 6 -> StarMoonCatch;
+            case 7 -> StarMoonMania;
             default -> Default;
         };
     }
@@ -46,6 +53,10 @@ public enum OsuMode
             case "taiko", "t", "1", "tk" -> Taiko;
             case "catch", "c", "ctb", "fruits", "fruit", "f", "2" -> Catch;
             case "mania", "m", "3", "mn" -> Mania;
+            case "star-moon-osu", "smo", "4" -> StarMoonOsu;
+            case "star-moon-taiko", "smt", "5" -> StarMoonOTaiko;
+            case "star-moon-catch", "smc", "6" -> StarMoonCatch;
+            case "star-moon-mania", "smm", "7" -> StarMoonMania;
             default -> throw new LazybotRuntimeException("无效的模式: " + name);
         };
     }

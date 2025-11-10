@@ -48,7 +48,8 @@ public class LinkInfoCommand implements LazybotSlashCommand
             throw new RuntimeException("输入不合法或为空");
         }
         AccessTokenPO token=proxy.getAccessToken(targetCode,true);
-        CommandResultHandler.sendMessageToGroupOnebot(bot,event,token.toSimpleString());
+        if (token==null) CommandResultHandler.sendMessageToGroupOnebot(bot,event,"该用户暂未绑定");
+        else CommandResultHandler.sendMessageToGroupOnebot(bot,event,token.toSimpleString());
     }
 
     @Override
@@ -63,6 +64,7 @@ public class LinkInfoCommand implements LazybotSlashCommand
             throw new RuntimeException("输入不合法或为空");
         }
         AccessTokenPO token=proxy.getAccessToken(targetCode,true);
-        testOutputTool.writeStringToFile(token.toSimpleString());
+        if (token==null)  testOutputTool.writeStringToFile("该用户暂未绑定");
+        else testOutputTool.writeStringToFile(token.toSimpleString());
     }
 }

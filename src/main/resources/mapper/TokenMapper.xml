@@ -12,9 +12,12 @@
         <result column="player_name" jdbcType="VARCHAR" property="player_name"/>
         <result column="default_mode" jdbcType="INTEGER" property="default_mode"/>
         <result column="avatar_url" jdbcType="VARCHAR" property="avatar_url"/>
+        <result column="star_moon_id" jdbcType="INTEGER" property="star_moon_id"/>
+        <result column="star_moon_ruleset" jdbcType="VARCHAR" property="star_moon_ruleset"/>
+        <result column="star_moon_mode" jdbcType="VARCHAR" property="star_moon_mode"/>
     </resultMap>
     <sql id = "Base_Column_List">
-        id, qq_code, player_id, access_token, refresh_token, expires_in, default_mode, player_name, valid, avatar_url
+        id, qq_code, player_id, access_token, refresh_token, expires_in, default_mode, player_name, valid, avatar_url, star_moon_mode, star_moon_ruleset, star_moon_id
     </sql>
 
     <select id="selectByQq_code" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -33,6 +36,12 @@
         select <include refid="Base_Column_List"/>
         from token
         where player_id =#{player_id}
+    </select>
+
+    <select id="selectByStarMoonId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from token
+        where star_moon_id =#{star_moon_id}
     </select>
 
     <select id="selectRandom" resultMap="BaseResultMap">
@@ -64,6 +73,7 @@
         </set>
         where qq_code =#{qq_code,jdbcType=BIGINT}
     </update>
+
     <update id="updateDefaultMode" parameterType="map">
         update token
         <set>
@@ -71,7 +81,20 @@
         </set>
         where qq_code =#{qq_code,jdbcType=BIGINT}
     </update>
-
+    <update id="updateStarMoonMode" parameterType="map">
+        update token
+        <set>
+            star_moon_mode=#{star_moon_mode},
+        </set>
+        where qq_code =#{qq_code,jdbcType=BIGINT}
+    </update>
+    <update id="updateStarMoonRuleset" parameterType="map">
+        update token
+        <set>
+            star_moon_ruleset=#{star_moon_ruleset},
+        </set>
+        where qq_code =#{qq_code,jdbcType=BIGINT}
+    </update>
     <update id="updateClientToken" parameterType="java.lang.String">
         update token
         <set>

@@ -5,6 +5,7 @@ import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.util.ContentUtil;
+import me.aloic.lazybot.util.URLBuildUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,6 +118,10 @@ public class AssetDownloadUtil
         }
     }
 
+    public static void avatarDownload(String url,String filename, boolean override)
+    {
+        assertDownload(url,"playerAvatar", filename,"jpg",override);
+    }
 
     public static void avatarDownload(String url,int playerId, boolean override)
     {
@@ -126,11 +131,11 @@ public class AssetDownloadUtil
     {
         assertDownload(url,"playerBanner", String.valueOf(playerId),"jpg",override);
     }
-    public static void assertDownload(String url,String subPath,String fileName,String fileExtension, boolean override)
+    public static void assertDownload(String url,String subPath, String fileName, String fileExtension, boolean override)
     {
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/"+ subPath + "/" + fileName + "." + fileExtension;
         File saveFilePath = new File(desiredLocalPath);
-        if (saveFilePath.exists()&&!override) {
+        if (saveFilePath.exists() && !override) {
             logger.trace("该文件已存在: {}", saveFilePath.getAbsolutePath());
             return;
         }
@@ -173,6 +178,16 @@ public class AssetDownloadUtil
     {
         avatarDownload(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId(),override);
         return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + playerInfoDTO.getId() +".jpg";
+    }
+    public static String avatarAbsolutePathStarNoon(String starMoonId, boolean override)
+    {
+        avatarDownload(URLBuildUtil.buildURLOfStarMoonAvatar(starMoonId), starMoonId+"sm" ,override);
+        return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + starMoonId +"sm.jpg";
+    }
+    public static String avatarAbsolutePathStarNoon(Integer starMoonId, boolean override)
+    {
+        avatarDownload(URLBuildUtil.buildURLOfStarMoonAvatar(String.valueOf(starMoonId)), starMoonId+"sm" ,override);
+        return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + starMoonId +"sm.jpg";
     }
 
     public static String bannerAbsolutePath(PlayerInfoDTO playerInfoDTO, boolean override)
