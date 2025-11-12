@@ -26,7 +26,7 @@ public class AssetDownloader
         }
         SayoData sayoData = dataExtractor.extractSayobotBeatmapSet(sid);
         String targetUrl = URLBuildUtil.buildURLOfSayobotMapBG(sid,sayoData.getBid_data().getFirst().getBg());
-        AssetDownloadUtil.backgroundDownload(desiredLocalPath,targetUrl);
+        AssetDownloadUtil.backgroundDownload(desiredLocalPath,targetUrl,false);
     }
 
     public String beatmapBackgroundAbsolutePath(Integer sid)

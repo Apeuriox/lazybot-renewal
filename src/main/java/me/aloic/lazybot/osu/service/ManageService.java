@@ -10,6 +10,8 @@ public interface ManageService
 
     String verifyBeatmap(BeatmapParameter params);
 
+    String updateBeatmapBackground(BeatmapParameter params);
+
     String unlinkUser(GeneralParameter params);
 
     String verify(VerifyParameter params);

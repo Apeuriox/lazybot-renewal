@@ -214,7 +214,7 @@ public class PlayerServiceImpl implements PlayerService
     public ScoreVO getUserBestPerformanceSingleStarMoon(BpParameter params)
     {
         List<ScoreStarMoon> score = dataExtractor.extractPlayerPerformanceStarMoon(
-                String.valueOf(params.getStarMoonId()),
+                String.valueOf(params.getPlayerId()),
                 params.getMode(),
                 "standard");
         ScoreStarMoon targetScore;
@@ -224,7 +224,7 @@ public class PlayerServiceImpl implements PlayerService
         catch (Exception e) {
             throw new LazybotRuntimeException("超出能索引的最大距离，当前为: "+params.getIndex()+", 最大为: " + score.size());
         }
-        UserResponse user = dataExtractor.extractPlayerStarMoon(params.getStarMoonId());
+        UserResponse user = dataExtractor.extractPlayerStarMoon(params.getPlayerId());
 
         ScoreVO scoreVO = osuToolsUtil.setupScoreVO(targetScore,
                 user,

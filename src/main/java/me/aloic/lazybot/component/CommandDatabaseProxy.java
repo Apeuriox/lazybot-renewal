@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.TokenStarMoonMapper;
+import me.aloic.lazybot.osu.enums.SupportedSubServer;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import org.slf4j.Logger;
@@ -14,12 +17,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Component
 public class CommandDatabaseProxy
 {
     @Resource
     private TokenMapper tokenMapper;
+
+    @Resource
+    private TokenStarMoonMapper tokenStarMoonMapper;
 
     @Value("${lazybot.test.identity}")
     private Long testIdentity;
@@ -32,21 +39,45 @@ public class CommandDatabaseProxy
 
     public AccessTokenPO getAccessToken(LazybotSlashCommandEvent event)
     {
+        return getAccessToken(determineIdentity(event),false);
+    }
+
+    public TokenStarMoon getStarMoonToken(LazybotSlashCommandEvent event)
+    {
+        return getStarMoonToken(determineIdentity(event),false);
+    }
+
+    public AccessTokenPO getAccessToken(Long qqCode, Boolean isExternalQuery) {
+        AccessTokenPO token = getToken(qqCode, isExternalQuery, tokenMapper::selectByQq_code);
+        if (token == null) {
+            throw new LazybotRuntimeException("请先使用/link 你的osu用户名 绑定osu账号，请注意不要绑定他人账户，取消绑定会删除相关组件的所有数据");
+        }
+        return token;
+    }
+
+    public TokenStarMoon getStarMoonToken(Long qqCode, Boolean isExternalQuery) {
+        TokenStarMoon token = getToken(qqCode, isExternalQuery, tokenStarMoonMapper::selectByQq_code);
+        if (token == null) {
+            throw new LazybotRuntimeException("请先使用/link 你的StarMoon用户名 & 绑定star moon账号，例/link HD1 &");
+        }
+        return token;
+    }
+    private Long determineIdentity(LazybotSlashCommandEvent event)
+    {
         Long identity;
         if (testEnabled) identity=testIdentity;
         else identity=event.getMessageEvent().getSender().getUserId();
-        return getAccessToken(identity,false);
+        return identity;
     }
-    public AccessTokenPO getAccessToken(Long qqCode, Boolean isExternalQuery)
-    {
-        AccessTokenPO tokenPO;
+
+    private  <T> T getToken(Long qqCode, Boolean isExternalQuery,
+                          Function<Long, T> tokenQuery) {
         try {
-            tokenPO = tokenMapper.selectByQq_code(qqCode);
-            if (isExternalQuery){
-                if (tokenPO == null) throw new LazybotRuntimeException("此用户并未绑定");
-            };
-            if (tokenPO == null) throw new LazybotRuntimeException("请先使用/link 你的osu用户名 绑定osu账号，请注意不要绑定他人账户，取消绑定会删除相关组件的所有数据");
-            return tokenPO;
+            T token = tokenQuery.apply(qqCode);
+            if (isExternalQuery && token == null) {
+                throw new LazybotRuntimeException("此用户并未绑定");
+            }
+            return token;
         }
         catch (LazybotRuntimeException e) {
             throw e;
@@ -56,9 +87,10 @@ public class CommandDatabaseProxy
             throw new LazybotRuntimeException("数据库查询出错，详情请见log: ", e);
         }
         catch (Exception e) {
-            logger.error("未知错误: {}", e.getMessage());
+            logger.error("未知错误: ", e);
             throw new LazybotRuntimeException("出现未知错误 ，详情请见log: ", e);
         }
     }
+
 
 }

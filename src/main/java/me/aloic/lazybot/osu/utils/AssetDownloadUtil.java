@@ -99,13 +99,20 @@ public class AssetDownloadUtil
     {
         String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/mapBG/" + sid +".jpg";
         String targetUrl = ContentUtil.BEATMAP_BG_BASE_URL+sid+"/covers/fullsize.jpg";
-        backgroundDownload(desiredLocalPath,targetUrl);
+        backgroundDownload(desiredLocalPath,targetUrl,false);
 
     }
-    protected static void backgroundDownload(String desiredLocalPath, String targetUrl)
+    public static void backgroundDownload(Integer sid, boolean override)
+    {
+        String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/mapBG/" + sid +".jpg";
+        String targetUrl = ContentUtil.BEATMAP_BG_BASE_URL+sid+"/covers/fullsize.jpg";
+        backgroundDownload(desiredLocalPath,targetUrl,override);
+
+    }
+    protected static void backgroundDownload(String desiredLocalPath, String targetUrl, boolean override)
     {
         File saveFilePath = new File(desiredLocalPath);
-        if (saveFilePath.exists()) {
+        if (saveFilePath.exists() && !override) {
             logger.trace("地图背景文件已存在: {}", saveFilePath.getAbsolutePath());
             return;
         }

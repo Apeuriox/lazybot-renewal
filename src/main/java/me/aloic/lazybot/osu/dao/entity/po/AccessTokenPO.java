@@ -35,7 +35,6 @@ public class AccessTokenPO implements Serializable {
 
     private String star_moon_ruleset;
 
-    private Integer star_moon_id;
 
     public AccessTokenPO(String refresh_token,String access_token) {
         this.refresh_token = refresh_token;
@@ -48,7 +47,6 @@ public class AccessTokenPO implements Serializable {
         return "[Lazybot] 该用户的绑定情况如下\nLazybot ID: "+id
                 +"\n缓存的用户名: " + player_name
                 +"\nBancho Osu ID: " + player_id
-                +"\n采用的模式: "+ default_mode
-                +"\nStarMoon私服ID: " + star_moon_id;
+                +"\n默认查询模式: "+ default_mode;
     }
 }

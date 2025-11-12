@@ -19,7 +19,6 @@ import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -123,6 +122,19 @@ public class ManageServiceImpl implements ManageService
             return "[Lazybot] 校验和不匹配: " + beatmapDTO.getChecksum() + " != " + checksum;
         }
         return "[Lazybot] 校验和正常: "+checksum;
+    }
+    @Override
+    public String updateBeatmapBackground(BeatmapParameter params)
+    {
+        AuthorityVerifier.isAdmin(params.getUserIdentity());
+        BeatmapDTO beatmap = dataExtractor.extractBeatmap(String.valueOf(params.getBid()), params.getMode());
+        try{
+           AssetDownloadUtil.backgroundDownload(beatmap.getBeatmapset_id(),true);
+        }
+        catch (Exception e) {
+            return "[Lazybot] 更新失败";
+        }
+        return "[Lazybot] 成功更新Set " + beatmap.getBeatmapset_id() + " 的背景";
     }
 
     @Override

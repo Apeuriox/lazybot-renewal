@@ -8,24 +8,22 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.parameter.BeatmapParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-@LazybotCommandMapping({"verifymap","vm"})
-public class VerifyMapCommand implements LazybotSlashCommand
+@LazybotCommandMapping({"um"})
+public class UpdateBackgroundCommand implements LazybotSlashCommand
 {
     @Resource
     private ManageService manageService;
-    @Resource
-    private DiscordTokenMapper discordTokenMapper;
     @Resource
     private TokenMapper tokenMapper;
     @Resource
@@ -39,29 +37,22 @@ public class VerifyMapCommand implements LazybotSlashCommand
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
-        event.deferReply().queue();
-        BeatmapParameter params=new BeatmapParameter(Integer.parseInt(OptionMappingTool.getOptionOrDefault(event.getOption("bid"),"" )));
-        params.setUserIdentity(event.getUser().getIdLong());
-        params.validateParams();
-        event.getHook().sendMessage(manageService.verifyBeatmap(params)).queue();
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
-                MsgUtils.builder().text(
-                        manageService.verifyBeatmap(
-                                setupParameter(event,
-                                        tokenMapper.selectByQq_code(0L))
-                        )
-                ).build(),false);
+        CommandResultHandler.sendMessageToGroupOnebot(bot,event,
+                manageService.updateBeatmapBackground(
+                        setupParameter(event, tokenMapper.selectByQq_code(0L))
+                )
+        );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.writeStringToFile(manageService.verifyBeatmap(
+        testOutputTool.writeStringToFile(manageService.updateBeatmapBackground(
                 setupParameter(event,
                         tokenMapper.selectByQq_code(0L))
         ));

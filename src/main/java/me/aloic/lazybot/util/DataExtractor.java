@@ -138,7 +138,7 @@ public class DataExtractor
         catch (Exception e)
         {
             log.error("处理Star Moon成绩时出错: " ,e);
-            throw new LazybotRuntimeException("处理Star Moon成绩时出错" + e.getMessage());
+            throw new LazybotRuntimeException("处理Star Moon成绩时出错：" + e.getMessage());
         }
     }
 
@@ -219,12 +219,12 @@ public class DataExtractor
                     null,
                     LazybotWebPlayerPerformance.class);
             if(performance.getData()==null) {
-                throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败");
+                throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败，可能由于你的最近游玩为空");
             }
             return performance.getData().getPerformances();
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败");
+            throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败，可能由于你的最近游玩为空");
         }
     }
 

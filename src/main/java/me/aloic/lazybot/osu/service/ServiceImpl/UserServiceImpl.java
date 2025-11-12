@@ -4,28 +4,30 @@ import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.CardPointsLogMapper;
-import me.aloic.lazybot.osu.dao.mapper.CardPointsMapper;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.*;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.shiro.utils.MessageEventFactory;
 import me.aloic.lazybot.util.DataExtractor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
 //im too lazy to refactor this
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService
 {
@@ -33,6 +35,8 @@ public class UserServiceImpl implements UserService
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private TokenMapper tokenMapper;
+    @Resource
+    private TokenStarMoonMapper tokenStarMoonMapper;
     @Resource
     private CardPointsMapper cardPointsMapper;
     @Resource
@@ -92,8 +96,17 @@ public class UserServiceImpl implements UserService
     public void linkUser(Bot bot, LazybotSlashCommandEvent event)
     {
         String username = String.join(" ", event.getCommandParameters());
+        int version = MessageEventFactory.countOccurrences(username, '&');
+        username = username.replace("&", "").trim();
+        if (version == 1) {
+            log.info("正在绑定Star Moon用户");
+            processLinkStarMoon(bot, event, username);
+        }
+        else {
+            log.info("正在绑定Bancho用户");
+            processLinkBancho(bot,event,username);
+        }
 
-        processLinkBancho(bot,event,username);
     }
     private void processLinkBancho(Bot bot, LazybotSlashCommandEvent event, String username)
     {
@@ -109,10 +122,10 @@ public class UserServiceImpl implements UserService
     {
         //there can have Chinese character in username so no need to check
         UserResponse player = dataExtractor.extractPlayerStarMoon(username);
-        Optional.ofNullable(tokenMapper.selectByStarMoonId(Integer.valueOf(player.getId()))).ifPresent(this::createAlreadyBindError);
-        Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
+        Optional.ofNullable(tokenStarMoonMapper.selectByPlayerId(Integer.valueOf(player.getId()))).ifPresent(this::createAlreadyBindError);
+        Optional.ofNullable(tokenStarMoonMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
                 .ifPresentOrElse(
-                        token -> updateStarMoonLinks(event, bot, player),
+                        this::createBindError,
                         () -> insertUserToTable(event, player, bot));
     }
 
@@ -168,22 +181,14 @@ public class UserServiceImpl implements UserService
     }
 
     private void insertUserToTable(LazybotSlashCommandEvent event, @Nonnull UserResponse player,Bot bot){
-        AccessTokenPO user = new AccessTokenPO();
+        TokenStarMoon user = new TokenStarMoon();
         user.setStar_moon_id(Integer.valueOf(player.getId()));
+        user.setStar_moon_name(player.getName());
         user.setDefault_mode("smo");
-        user.setStar_moon_ruleset("standard");
+        user.setDefault_ruleset("standard");
         user.setQq_code(event.getMessageEvent().getSender().getUserId());
-        user.setValid(0);
-        Optional.ofNullable(tokenMapper.selectByStarMoonId(user.getStar_moon_id()))
-                .ifPresentOrElse(
-                        userToken -> tokenMapper.updateByToken(user),
-                        () -> tokenMapper.insert(user)
-                );
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功更新绑定StarMoon用户: " + player.getName()).build(),false);
-    }
-
-    private void updateStarMoonLinks(LazybotSlashCommandEvent event, Bot bot, @Nonnull UserResponse player){
-        tokenMapper.updateStarMoon(Integer.valueOf(player.getId()),"standard",event.getMessageEvent().getSender().getUserId());
+        user.setCreate_time(LocalDateTime.now());
+        tokenStarMoonMapper.insert(user);
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功绑定StarMoon用户: " + player.getName()).build(),false);
     }
 
@@ -192,8 +197,14 @@ public class UserServiceImpl implements UserService
     private void createBindError(AccessTokenPO token){
         throw new LazybotRuntimeException("您已绑定用户: " +token.getPlayer_name());
     }
+    private void createBindError(TokenStarMoon token){
+        throw new LazybotRuntimeException("您已绑定StarMoon用户: " +token.getStar_moon_name());
+    }
     private void createAlreadyBindError(AccessTokenPO token){
         throw new LazybotRuntimeException("该用户已绑定账户: " +token.getQq_code());
+    }
+    private void createAlreadyBindError(TokenStarMoon token){
+        throw new LazybotRuntimeException("该用户已绑定StarMoon账户: " +token.getQq_code());
     }
     private void createNotBindError(){
         {
