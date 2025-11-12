@@ -16,7 +16,6 @@ import me.aloic.lazybot.osu.dao.mapper.*;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.shiro.utils.MessageEventFactory;
 import me.aloic.lazybot.util.DataExtractor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Service;
@@ -96,17 +95,15 @@ public class UserServiceImpl implements UserService
     public void linkUser(Bot bot, LazybotSlashCommandEvent event)
     {
         String username = String.join(" ", event.getCommandParameters());
-        int version = MessageEventFactory.countOccurrences(username, '&');
-        username = username.replace("&", "").trim();
-        if (version == 1) {
-            log.info("正在绑定Star Moon用户");
-            processLinkStarMoon(bot, event, username);
-        }
-        else {
-            log.info("正在绑定Bancho用户");
-            processLinkBancho(bot,event,username);
-        }
-
+        log.info("正在绑定Bancho用户");
+        processLinkBancho(bot,event,username);
+    }
+    @Override
+    public void linkStarMoon(Bot bot, LazybotSlashCommandEvent event)
+    {
+        String username = String.join(" ", event.getCommandParameters());
+        log.info("正在绑定Star Moon用户");
+        processLinkStarMoon(bot, event, username);
     }
     private void processLinkBancho(Bot bot, LazybotSlashCommandEvent event, String username)
     {
@@ -184,7 +181,7 @@ public class UserServiceImpl implements UserService
         TokenStarMoon user = new TokenStarMoon();
         user.setStar_moon_id(Integer.valueOf(player.getId()));
         user.setStar_moon_name(player.getName());
-        user.setDefault_mode("smo");
+        user.setDefault_mode("osu");
         user.setDefault_ruleset("standard");
         user.setQq_code(event.getMessageEvent().getSender().getUserId());
         user.setCreate_time(LocalDateTime.now());

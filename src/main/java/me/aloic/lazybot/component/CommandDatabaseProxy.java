@@ -8,8 +8,6 @@ import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.TokenStarMoonMapper;
-import me.aloic.lazybot.osu.enums.SupportedSubServer;
-import me.aloic.lazybot.osu.monitor.TokenMonitor;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +56,7 @@ public class CommandDatabaseProxy
     public TokenStarMoon getStarMoonToken(Long qqCode, Boolean isExternalQuery) {
         TokenStarMoon token = getToken(qqCode, isExternalQuery, tokenStarMoonMapper::selectByQq_code);
         if (token == null) {
-            throw new LazybotRuntimeException("请先使用/link 你的StarMoon用户名 & 绑定star moon账号，例/link HD1 &");
+            throw new LazybotRuntimeException("请先使用/linksm 你的StarMoon用户名 绑定star moon账号，例/link HD1");
         }
         return token;
     }

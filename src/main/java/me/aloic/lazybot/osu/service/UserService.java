@@ -16,6 +16,8 @@ public interface UserService
 
     void linkUser(Bot bot, LazybotSlashCommandEvent event);
 
+    void linkStarMoon(Bot bot, LazybotSlashCommandEvent event);
+
     void unlinkUser(SlashCommandInteractionEvent event);
 
     void unlinkUser(Bot bot, LazybotSlashCommandEvent event);

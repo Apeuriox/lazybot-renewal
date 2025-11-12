@@ -79,11 +79,11 @@ public class DataExtractor
                     HTTPTypeEnum.GET,
                     null,
                     null);
-            StarMoonUserWrapper user = apiRequestExecutor.parseResponse(TRPCParser.parsetRPCJson(json), StarMoonUserWrapper.class, null);
+            UserResponse user = apiRequestExecutor.parseResponse(TRPCParser.parsetRPCJson(json), UserResponse.class, null);
             if (user == null) {
                 throw new LazybotRuntimeException("没这B人: " + playerName);
             }
-            return user.getResult().getData();
+            return user;
         }
         catch (LazybotRuntimeException lre) {
             throw lre;
