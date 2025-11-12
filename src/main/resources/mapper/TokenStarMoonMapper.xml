@@ -56,6 +56,14 @@
         where qq_code =#{qq_code,jdbcType=BIGINT}
     </update>
 
+    <update id="updateSubRuleset" parameterType="map">
+        update token_star_moon
+        <set>
+            default_ruleset=#{ruleset},
+        </set>
+        where qq_code =#{qq_code,jdbcType=BIGINT}
+    </update>
+
     <delete id="deleteByQQ" parameterType="java.lang.Long">
         DELETE FROM token_star_moon WHERE qq_code = #{qq_code}
     </delete>

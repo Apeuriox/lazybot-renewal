@@ -16,5 +16,6 @@ public interface TokenStarMoonMapper extends BaseMapper<TokenStarMoon> {
     TokenStarMoon selectByPlayerId(Integer player_id);
 
     void deleteByQQ(@Param("qq_code")Long qq_code);
+    void updateSubRuleset(String ruleset, @Param("qq_code")Long qq_code);
 
 }

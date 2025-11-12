@@ -14,6 +14,7 @@ import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.*;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.DataExtractor;
@@ -74,6 +75,15 @@ public class UserServiceImpl implements UserService
                         this::createNotBindError);
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 已成功更改模式为: " +mode.getDescribe()).build(),false);
     }
+    @Override
+    public String updateDefaultMode(OsuSubruleset ruleset, Long qqCode)
+    {
+        Optional.ofNullable(tokenStarMoonMapper.selectByQq_code(qqCode))
+                .ifPresentOrElse(
+                        token -> tokenStarMoonMapper.updateSubRuleset(ruleset.getDescribe().toLowerCase(), qqCode),
+                        this::createNotBindError);
+        return "[Lazybot] 成功更新次级Ruleset至: " + ruleset.getDescribe();
+    }
 
 
 
@@ -101,7 +111,7 @@ public class UserServiceImpl implements UserService
     @Override
     public void linkStarMoon(Bot bot, LazybotSlashCommandEvent event)
     {
-        String username = String.join(" ", event.getCommandParameters());
+        String username = String.join(" ", event.getCommandParameters()).replaceAll(" ","_");
         log.info("正在绑定Star Moon用户");
         processLinkStarMoon(bot, event, username);
     }
