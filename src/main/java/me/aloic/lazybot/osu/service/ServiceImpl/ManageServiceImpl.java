@@ -74,7 +74,11 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
 
-        playerInfoDTO.setAvatar_url(AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,true));
+        AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,true);
+        if (params.getStarMoonId()!=null) {
+            AssetDownloadUtil.avatarAbsolutePathStarNoon(params.getStarMoonId(),true);
+        }
+
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的头像缓存";
     }
     private String updateBanner(UpdateParameter params)

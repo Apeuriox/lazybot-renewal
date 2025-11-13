@@ -44,6 +44,16 @@ public class CommandDatabaseProxy
     {
         return getStarMoonToken(determineIdentity(event),false);
     }
+    public TokenStarMoon getStarMoonTokenIgnoreException(LazybotSlashCommandEvent event)
+    {
+        try{
+            return getStarMoonToken(determineIdentity(event),false);
+        }
+        catch (Exception e)
+       {
+            return null;
+        }
+    }
 
     public AccessTokenPO getAccessToken(Long qqCode, Boolean isExternalQuery) {
         AccessTokenPO token = getToken(qqCode, isExternalQuery, tokenMapper::selectByQq_code);

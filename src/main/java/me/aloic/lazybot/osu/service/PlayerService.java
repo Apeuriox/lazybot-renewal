@@ -38,9 +38,11 @@ public interface PlayerService
 
     PlayerScoreList bplistListView(BplistParameter params) throws Exception;
 
+    PlayerScoreList bplistCardViewStarMoon(BplistParameter params);
+
     PlayerScoreList bpScoreFilter(ScoreFilterParameter params) throws Exception;
 
-    PlayerScoreList playRecentSeries(GeneralParameter params, int type, int style) throws Exception;
+    PlayerScoreList playRecentSeries(SeriesParameter params, int type, int style) throws Exception;
 
     PlayerScoreList getPlayerTodayNewBps(TodaybpParameter params) throws Exception;
 

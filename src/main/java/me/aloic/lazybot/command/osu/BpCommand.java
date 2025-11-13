@@ -18,6 +18,7 @@ import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BpParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -81,6 +82,7 @@ public class BpCommand implements LazybotSlashCommand
         {
             TokenStarMoon starMoonToken = proxy.getStarMoonToken(event);
             params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id());
+            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderScoreVOToImage(
                             playerService.getUserBestPerformanceSingleStarMoon(params), params.getVersion())
@@ -114,6 +116,7 @@ public class BpCommand implements LazybotSlashCommand
         {
             TokenStarMoon starMoonToken = proxy.getStarMoonToken(event);
             params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id());
+            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
             testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
                     playerService.getUserBestPerformanceSingleStarMoon(params), params.getVersion()));
         }

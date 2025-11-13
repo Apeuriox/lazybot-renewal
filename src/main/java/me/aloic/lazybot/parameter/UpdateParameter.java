@@ -1,9 +1,6 @@
 package me.aloic.lazybot.parameter;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 
@@ -16,6 +13,7 @@ import java.util.List;
 public class UpdateParameter extends LazybotCommandParameter
 {
     private String type;
+    private Integer starMoonId;
 
 
     @Override
@@ -43,12 +41,12 @@ public class UpdateParameter extends LazybotCommandParameter
         }
         return parameter;
     }
-    public static void setupDefaultValue(UpdateParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(UpdateParameter parameter, @NonNull Integer playerId, @NonNull String mode)
     {
         if (parameter.getPlayerName() == null)
-            parameter.setPlayerId(accessTokenPO.getPlayer_id());
+            parameter.setPlayerId(playerId);
         if (parameter.getMode() == null)
-            parameter.setMode(accessTokenPO.getDefault_mode());
+            parameter.setMode(mode);
     }
 
 }

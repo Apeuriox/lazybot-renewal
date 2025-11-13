@@ -504,7 +504,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
-    public static Document mapScoreListToBpList(List<ScoreSequence> scorelist,PlayerInfoVO info, Integer offset) throws IOException
+    public static Document mapScoreListToBpList(List<ScoreSequence> scorelist,PlayerInfoVO info, Integer offset)
     {
         try
         {
@@ -527,7 +527,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error("SVG 处理时出错", e);
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }

@@ -1,6 +1,10 @@
 package me.aloic.lazybot.osu.dao.entity.dto.starmoon;
 
 import lombok.Data;
+import me.aloic.lazybot.osu.enums.OsuMod;
+import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.OsuSubruleset;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -85,5 +89,26 @@ public class UserResponse {
                 }
             }
         }
+    }
+
+    public Statistics.ModeStatistics.RulesetStatistics getTargetRulesetStatistics(OsuMode mode, OsuSubruleset ruleset)
+    {
+        return switch (mode){
+            case Osu -> getTargetRulesetStatistics(this.getStatistics().getOsu(),ruleset);
+            case Taiko -> getTargetRulesetStatistics(this.getStatistics().getTaiko(),ruleset);
+            case Catch -> getTargetRulesetStatistics(this.getStatistics().getFruits(),ruleset);
+            case Mania -> getTargetRulesetStatistics(this.getStatistics().getMania(),ruleset);
+            case Default -> null;
+        };
+
+    }
+    public Statistics.ModeStatistics.RulesetStatistics getTargetRulesetStatistics(Statistics.ModeStatistics stats, OsuSubruleset ruleset)
+    {
+        return switch (ruleset){
+            case Standard -> stats.getStandard();
+            case Relax -> stats.getRelax();
+            case Autopilot -> stats.getAutopilot();
+            case Default -> null;
+        };
     }
 }

@@ -58,10 +58,10 @@ public class RendererDistributor
                 ScoreListSVGMapper.mapScoreListToBpCard(player.getInfo(),player.getScoreList(), offset,type)
         );
     }
-    public static byte[] renderPlayerScoreListToList(PlayerScoreList player, int offset) throws IOException
+    public static byte[] renderPlayerScoreListToList(PlayerScoreList player, int offset)
     {
         return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreListSVGMapper.mapScoreListToBpList(player.getScoreSequences(),player.getInfo(), offset)
+                ScoreListSVGMapper.mapScoreListToBpList(player.getScoreSequences(), player.getInfo(), offset)
         );
     }
     public static byte[] renderPlayerScoreListToList(List<ScoreSequence> scoreSequences) throws IOException

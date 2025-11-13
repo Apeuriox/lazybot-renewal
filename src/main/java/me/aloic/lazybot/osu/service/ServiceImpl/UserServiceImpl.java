@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService
         user.setStar_moon_id(Integer.valueOf(player.getId()));
         user.setStar_moon_name(player.getName());
         user.setDefault_mode("osu");
-        user.setDefault_ruleset("standard");
+        user.setDefault_ruleset("relax");
         user.setQq_code(event.getMessageEvent().getSender().getUserId());
         user.setCreate_time(LocalDateTime.now());
         tokenStarMoonMapper.insert(user);

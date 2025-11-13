@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.osu.extended.rosu.JniBeatmap;
 import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -216,7 +217,7 @@ public class PlayerServiceImpl implements PlayerService
         List<ScoreStarMoon> score = dataExtractor.extractPlayerPerformanceStarMoon(
                 String.valueOf(params.getPlayerId()),
                 params.getMode(),
-                "standard");
+                params.getSubRuleset().getDescribe());
         ScoreStarMoon targetScore;
         try{
             targetScore = score.get(params.getIndex()-1);
@@ -257,6 +258,18 @@ public class PlayerServiceImpl implements PlayerService
         List<ScoreVO> scoreVOArray= osuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
         return new PlayerScoreList(scoreVOArray, info);
     }
+    @Override
+    public PlayerScoreList bplistCardViewStarMoon(BplistParameter params)
+    {
+        List<ScoreStarMoon> score = dataExtractor.extractPlayerPerformanceStarMoon(
+                String.valueOf(params.getPlayerId()),
+                params.getMode(),
+                params.getSubRuleset().getDescribe());
+        List<ScoreStarMoon> scoreList = score.stream().limit(params.getTo()).toList();
+        UserResponse user = dataExtractor.extractPlayerStarMoon(params.getPlayerId());
+        List<ScoreVO> scoreVOArray= osuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreList,user,params.getMode()));
+        return new PlayerScoreList(scoreVOArray, TransformerUtil.userTransform(user, params.getSubRuleset(), params.getMode()));
+    }
 
 
     @Override
@@ -293,14 +306,15 @@ public class PlayerServiceImpl implements PlayerService
     }
 
     @Override
-    public PlayerScoreList playRecentSeries(GeneralParameter params, int type, int style)
+    public PlayerScoreList playRecentSeries(SeriesParameter params, int type, int style)
     {
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        int maxIndex = params.getMaxIndex()>50 ? 50 : params.getMaxIndex();
         List<ScoreLazerDTO> scoreDTOS= dataExtractor.extractRecentScoreList(
                 info.getId(),
                 type,
-                21,
+                maxIndex,
                 params.getMode());
         if (style==0)
         {
@@ -598,7 +612,6 @@ public class PlayerServiceImpl implements PlayerService
                 builder.append(playerInfoDTO.getUsername()).append(" --> ").append(playerInfoDTO.getId()).append("\n");
             }
         }
-
         return "[Lazybot] " + builder;
     }
     @Override
@@ -707,7 +720,7 @@ public class PlayerServiceImpl implements PlayerService
     private PlayerInfoDTO getTargetPlayerInfoDTO(LazybotCommandParameter params)
     {
         PlayerInfoDTO playerInfoDTO;
-        if (params.getPlayerName()==null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+        if (params.getPlayerName()==null || params.getPlayerName().isEmpty()) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName().trim(),params.getMode());
         return playerInfoDTO;
     }

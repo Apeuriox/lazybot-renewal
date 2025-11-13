@@ -82,6 +82,7 @@ public class OsuToolsUtil
     {
         ScoreVO scoreVO = TransformerUtil.transformScoreStarMoonToScoreVO(scoreStarMoon, user, mode);
         scoreVO.setBeatmap(setupBeatmapVO(scoreStarMoon,mode));
+        setBeatmapStarRating(override, scoreVO);
         ModCalculatorUtil.afterModMapInfo(scoreVO);
         return scoreVO;
     }
@@ -110,6 +111,21 @@ public class OsuToolsUtil
             scoreVO.setPp(scoreVO.getPpDetailsLocal().getCurrentPP());
         ModCalculatorUtil.afterModMapInfo(scoreVO);
         return scoreVO;
+    }
+
+    private static void setBeatmapStarRating(Boolean override, ScoreVO scoreVO)
+    {
+        PerformanceVO performanceVO;
+        try {
+            performanceVO= RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO);
+        }
+        catch (Exception e) {
+            throw new LazybotRuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
+        }
+        if (CommonTool.modsContainsAnyOfStarChanging(scoreVO.getModJSON()))
+            scoreVO.getBeatmap().setDifficult_rating(performanceVO.getStar());
+        if (scoreVO.getPp() == null)
+            scoreVO.setPp(scoreVO.getPpDetailsLocal().getCurrentPP());
     }
 
 

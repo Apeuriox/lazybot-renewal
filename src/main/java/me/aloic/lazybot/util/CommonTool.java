@@ -7,6 +7,11 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.theme.Color.HSL;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -26,6 +31,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class CommonTool {
+
+    private static final HanyuPinyinOutputFormat pinyinFormatter;
+
+
+    static{
+        pinyinFormatter = new HanyuPinyinOutputFormat();
+        pinyinFormatter.setCaseType(HanyuPinyinCaseType.LOWERCASE); // 小写
+        pinyinFormatter.setToneType(HanyuPinyinToneType.WITHOUT_TONE); // 不带声调
+    }
+
+
     public static boolean isEmpty(String s) {
         if(s == null) {
             return true;
@@ -739,6 +755,29 @@ public class CommonTool {
 
         return scaledValue / scaledMax;
     }
+    public static String inlineChineseCharacter(String str)
+    {
+        try{
+            StringBuilder result = new StringBuilder();
+            for (char c : str.toCharArray()) {
+                // 判断是否是中文字符
+                if (Character.toString(c).matches("[\\u4E00-\\u9FA5]")) {
+                    String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c, pinyinFormatter);
+                    if (pinyinArray != null) {
+                        result.append(pinyinArray[0]); // 取第一个发音
+                    }
+                } else {
+                    result.append(c);
+                }
+            }
+            return result.toString();
+        }
+        catch (Exception e) {
+            log.error("转换中文字符时出错: ", e);
+            return str;
+        }
+    }
+
     public static Integer circularHueSubtract(Integer hue, Integer subtract)
     {
         return (hue-subtract+360)%360;
