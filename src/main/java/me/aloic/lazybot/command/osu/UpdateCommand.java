@@ -61,7 +61,7 @@ public class UpdateCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO accessToken =  proxy.getAccessToken(event);
-        TokenStarMoon tokenStarMoon = proxy.getStarMoonToken(event);
+        TokenStarMoon tokenStarMoon = proxy.getStarMoonTokenIgnoreException(event);
         CommandResultHandler.sendMessageToGroupOnebot(bot,event,
                         manageService.update(
                                 setupParameter(event, accessToken.getPlayer_id(), accessToken.getDefault_mode(), tokenStarMoon == null ? null : tokenStarMoon.getStar_moon_id())
@@ -73,7 +73,7 @@ public class UpdateCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO accessToken =  proxy.getAccessToken(event);
-        TokenStarMoon tokenStarMoon = proxy.getStarMoonToken(event);
+        TokenStarMoon tokenStarMoon = proxy.getStarMoonTokenIgnoreException(event);
         testOutputTool.writeStringToFile(manageService.update(
                         setupParameter(event, accessToken.getPlayer_id(), accessToken.getDefault_mode(), tokenStarMoon == null ? null : tokenStarMoon.getStar_moon_id())
                 )

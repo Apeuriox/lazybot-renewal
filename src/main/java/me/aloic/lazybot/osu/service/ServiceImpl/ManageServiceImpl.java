@@ -96,7 +96,12 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
         ApiRequestStarter trackApiRequest = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackUpdate(playerInfoDTO.getId(),params.getMode()));
-        UserDifference userDifference = trackApiRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_POST, UserDifference.class);
+        try{
+            UserDifference userDifference = trackApiRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_POST, UserDifference.class);
+        }
+        catch (Exception e) {
+            throw new LazybotRuntimeException("更新Osu Track失败，是否是用户未初始化?");
+        }
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的Osu Track数据";
     }
     private String updatePlus(UpdateParameter params)
