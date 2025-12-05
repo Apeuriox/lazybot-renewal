@@ -35,7 +35,7 @@ public class WhatIfParameter extends LazybotCommandParameter
     public static void setupDefaultValue(WhatIfParameter parameter, AccessTokenPO accessTokenPO)
     {
         parameter.setPlayerName(accessTokenPO.getPlayer_name());
-        parameter.setMode(accessTokenPO.getDefault_mode());
+        if (parameter.getMode()==null) parameter.setMode(accessTokenPO.getDefault_mode());
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
     }
     public static Map<Double, Integer> parseToMap(String input) {
@@ -54,7 +54,7 @@ public class WhatIfParameter extends LazybotCommandParameter
                     count = 1;
                 }
                 if (key<=0.0) throw new LazybotRuntimeException("输入的pp值不能小于等于0");
-                if (key>=3000) throw new LazybotRuntimeException("本指令暂不支持外星人使用");
+                if (key>=5000) throw new LazybotRuntimeException("本指令暂不支持外星人使用");
                 if (count<=0) throw new LazybotRuntimeException("输入的次数不能小于等于0");
                 if (count>100) count=100;
             }

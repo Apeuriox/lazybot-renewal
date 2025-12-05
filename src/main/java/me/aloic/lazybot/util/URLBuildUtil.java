@@ -2,8 +2,16 @@ package me.aloic.lazybot.util;
 
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.CharsetUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.OsuSubruleset;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class URLBuildUtil
@@ -214,7 +222,7 @@ public class URLBuildUtil
     }
     public static String buildURLOfPlayerPerformancePlus(Integer id)
     {
-        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000", CharsetUtil.CHARSET_UTF_8)
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
                 .addPath("lazybot")
                 .addPath("player")
                 .addPath("info")
@@ -223,7 +231,7 @@ public class URLBuildUtil
     }
     public static String buildURLOfLazybotToken(Integer clientId, String clientSecret)
     {
-        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000", CharsetUtil.CHARSET_UTF_8)
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
                 .addPath("lazybot")
                 .addPath("auth")
                 .addPath("token")
@@ -233,7 +241,7 @@ public class URLBuildUtil
     }
     public static String buildURLOfAddScorePerformancePlus(Integer id,Integer beatmapId)
     {
-        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000", CharsetUtil.CHARSET_UTF_8)
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
                 .addPath("lazybot")
                 .addPath("player")
                 .addPath("add")
@@ -243,12 +251,69 @@ public class URLBuildUtil
     }
     public static String buildURLOfUpdatePerformancePlus(Integer id)
     {
-        UrlBuilder builder = UrlBuilder.ofHttp("https://kanon-apis.desu.life:41000", CharsetUtil.CHARSET_UTF_8)
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
                 .addPath("lazybot")
                 .addPath("player")
                 .addPath("update")
                 .addQuery("id", id);
         return builder.build();
+    }
+
+    public static String buildURLOfSayobotBeatmap(Integer beatmapId)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp("https://api.sayobot.cn", CharsetUtil.CHARSET_UTF_8)
+                .addPath("v2")
+                .addPath("beatmapinfo")
+                .addQuery("K", beatmapId);
+        return builder.build();
+    }
+
+    public static String buildURLOfSayobotMapBG(Integer beatmapSetId, String fileName)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp("https://dl.sayobot.cn", CharsetUtil.CHARSET_UTF_8)
+                .addPath("beatmaps")
+                .addPath("files")
+                .addPath(String.valueOf(beatmapSetId))
+                .addPath(fileName);
+        return builder.build();
+    }
+    public static String buildURLOfStarMoonBestPerformanceName(String playerName, String mode, String subRuleset) throws JsonProcessingException
+    {
+        return buildURLOfStarMoonBestPerformance("@".concat(playerName),mode,subRuleset);
+    }
+    public static String buildURLOfStarMoonBestPerformance(String playerIdentity, String mode, String subRuleset) throws JsonProcessingException
+    {
+        return "https://star-moon.link/api/trpc/user.best?batch=1&input=" + encodeJsonUrl(playerIdentity,mode,subRuleset);
+    }
+    public static String buildURLOfStarMoonUserPage(String playerName) throws JsonProcessingException
+    {
+        return "https://www.star-moon.link/api/trpc/user.userpage?batch=1&input=" + encodeJsonUrl("@".concat(playerName),null,null);
+    }
+    public static String buildURLOfStarMoonUserPage(Integer playerId) throws JsonProcessingException
+    {
+        return "https://www.star-moon.link/api/trpc/user.userpage?batch=1&input=" + encodeJsonUrl(String.valueOf(playerId),null,null);
+    }
+    public static String buildURLOfStarMoonAvatar(String playerId)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp("https://a.star-moon.link", CharsetUtil.CHARSET_UTF_8)
+                .addPath(playerId);
+        return builder.build();
+    }
+
+    private static String encodeJsonUrl(String playerIdentity, String mode, String subRuleset) throws JsonProcessingException
+    {
+        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> inner = new HashMap<>();
+        inner.put("handle", playerIdentity);
+        if (mode!=null)inner.put("mode", OsuMode.getMode(mode).toString());
+        if (subRuleset!=null) inner.put("ruleset", OsuSubruleset.getRuleset(subRuleset).getDescribe());
+        inner.put("rankingSystem", "ppv2");
+        inner.put("page", 0);
+        params.put("0", Map.of("json", inner));
+
+        ObjectMapper mapper = new ObjectMapper();
+        String inputJson = mapper.writeValueAsString(params);
+        return URLEncoder.encode(inputJson, StandardCharsets.UTF_8);
     }
 
 }

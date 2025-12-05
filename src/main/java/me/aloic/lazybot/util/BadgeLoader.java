@@ -3,7 +3,7 @@ package me.aloic.lazybot.util;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import me.aloic.lazybot.parameter.BadgeImageParameter;
 
 import java.io.File;
@@ -52,8 +52,8 @@ public class BadgeLoader
     {
         if (url == null) return;
         try{
-            String desiredSavePath = ResourceMonitor.getResourcePath().toAbsolutePath()+ BADGE_RELATIVE_PATH + badgeId  +".png";
-            AssertDownloadUtil.downloadResourceQueue(url, desiredSavePath);
+            String desiredSavePath = ResourceMonitor.getResourcePath().toAbsolutePath()+ "/" + BADGE_RELATIVE_PATH + badgeId  +".png";
+            AssetDownloadUtil.downloadResourceQueue(url, desiredSavePath);
             CommonTool.cropAndResize(desiredSavePath,800,400);
         }
         catch (Exception e) {

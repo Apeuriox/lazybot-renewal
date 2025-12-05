@@ -8,8 +8,13 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
+import me.aloic.lazybot.graphics.mapping.documentMapper.ThumbnailSVGMapper;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
+import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.parameter.ThumbnailParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -41,17 +46,19 @@ public class ThumbnailCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        ThumbnailParameter params;
         if (event.getCommandType().equalsIgnoreCase("tns") || event.getCommandType().equalsIgnoreCase("thumbnail"))
+        {
+            params = setupParameter(event,tokenPO, 0);
             CommandResultHandler.uploadImageToOnebot(bot,event,
-                    playerService.thumbnailClassicalScore(
-                            setupParameter(event,tokenPO, 0))
-            );
+                    RendererDistributor.renderThumbnailClassical(playerService.thumbnailClassicalScore(params)));
+        }
+
         else if (event.getCommandType().equalsIgnoreCase("tnp"))
         {
+            params = setupParameter(event,tokenPO, 1);
             CommandResultHandler.uploadImageToOnebot(bot,event,
-                    playerService.thumbnailClassicalRecent(
-                            setupParameter(event,tokenPO, 1))
-            );
+                    RendererDistributor.renderThumbnailClassical(playerService.thumbnailClassicalRecent(params)));
         }
 
     }
@@ -60,17 +67,16 @@ public class ThumbnailCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO = proxy.getAccessToken(event);
+        ThumbnailParameter params;
         if (event.getCommandType().equalsIgnoreCase("tns"))
         {
-            testOutputTool.saveImageToLocal(playerService.thumbnailClassicalScore(
-                    setupParameter(event, tokenPO, 0))
-            );
+            params = setupParameter(event,tokenPO, 0);
+            testOutputTool.saveImageToLocal(RendererDistributor.renderThumbnailClassical(playerService.thumbnailClassicalScore(params)));
          }
         else if (event.getCommandType().equalsIgnoreCase("tnp"))
         {
-            testOutputTool.saveImageToLocal(playerService.thumbnailClassicalRecent(
-                    setupParameter(event, tokenPO, 1))
-            );
+            params = setupParameter(event,tokenPO, 1);
+            testOutputTool.saveImageToLocal(RendererDistributor.renderThumbnailClassical(playerService.thumbnailClassicalScore(params)));
         }
 
     }

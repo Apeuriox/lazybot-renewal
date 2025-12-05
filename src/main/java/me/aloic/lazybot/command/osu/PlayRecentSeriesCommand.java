@@ -10,12 +10,14 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
+import me.aloic.lazybot.parameter.SeriesParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
@@ -49,48 +51,62 @@ public class PlayRecentSeriesCommand implements LazybotSlashCommand
         tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         Integer style = OptionMappingTool.getOptionOrDefault(event.getOption("style"), 0);
-        GeneralParameter params=new GeneralParameter(playerName,OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"),
-                String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
+        SeriesParameter params=new SeriesParameter(21,
+                OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
+                style,
+                playerName);
         params.validateParams();
         if (event.getFullCommandName().equals("prs")||event.getFullCommandName().equals("rps")||event.getFullCommandName().equals("ps"))
-            CommandResultHandler.uploadImageToDiscord(event,playerService.playRecentSeries(params,1, style));
+            CommandResultHandler.uploadImageToDiscord(event,
+                    RendererDistributor.renderPlayerScoreListToCard(
+                            playerService.playRecentSeries(params,1, style),1,1));
         else
-            CommandResultHandler.uploadImageToDiscord(event,playerService.playRecentSeries(params,0, style));
+            CommandResultHandler.uploadImageToDiscord(event,
+                    RendererDistributor.renderPlayerScoreListToList(
+                            playerService.playRecentSeries(params,0, style),1));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equalsIgnoreCase("rps")||
-                event.getCommandType().equalsIgnoreCase("prs")||
-                event.getCommandType().equalsIgnoreCase("ps"))
+        String commandType=event.getCommandType().toLowerCase();
+        SeriesParameter params=SeriesParameter.setupParameter(event,tokenPO.getPlayer_id(), tokenPO.getDefault_mode());
+        int requestType =0;
+        if (commandType.equals("rps")|| commandType.equals("prs")|| commandType.equals("ps")) {
+            requestType=1;
+        }
+        if (event.getScorePanelVersion()==0)
+        {
             CommandResultHandler.uploadImageToOnebot(bot,event,
-                    playerService.playRecentSeries(
-                            GeneralParameter.setupParameter(event,tokenPO),
-                            1, event.getScorePanelVersion())
-            );
-        else  CommandResultHandler.uploadImageToOnebot(bot,event,
-                playerService.playRecentSeries(
-                        GeneralParameter.setupParameter(event,tokenPO),
-                        0, event.getScorePanelVersion())
-        );
+                    RendererDistributor.renderPlayerScoreListToCard(
+                            playerService.playRecentSeries(params,requestType, 0),1,1));
+        }
+        else {
+            CommandResultHandler.uploadImageToOnebot(bot,event,
+                    RendererDistributor.renderPlayerScoreListToList(
+                            playerService.playRecentSeries(params,requestType, event.getScorePanelVersion()),1));
+        }
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equals("rps")||event.getCommandType().equals("prs")||event.getCommandType().equals("ps"))
-            testOutputTool.saveImageToLocal(playerService.playRecentSeries(
-                    GeneralParameter.setupParameter(event,tokenPO),
-                    1, event.getScorePanelVersion())
-            );
+        String commandType=event.getCommandType().toLowerCase();
+        SeriesParameter params=SeriesParameter.setupParameter(event,tokenPO.getPlayer_id(), tokenPO.getDefault_mode());
+        int requestType =0;
+        if (commandType.equals("rps")|| commandType.equals("prs")|| commandType.equals("ps")) {
+            requestType=1;
+        }
+        if (event.getScorePanelVersion()==0)
+            testOutputTool.saveImageToLocal(
+                    RendererDistributor.renderPlayerScoreListToCard(
+                            playerService.playRecentSeries(params,requestType, 0),1,1));
         else
-            testOutputTool.saveImageToLocal(playerService.playRecentSeries(
-                    GeneralParameter.setupParameter(event,tokenPO),
-                    0, event.getScorePanelVersion())
-        );
+            testOutputTool.saveImageToLocal(
+                    RendererDistributor.renderPlayerScoreListToList(
+                            playerService.playRecentSeries(params,requestType, event.getScorePanelVersion()),1));
 
     }
     @Override

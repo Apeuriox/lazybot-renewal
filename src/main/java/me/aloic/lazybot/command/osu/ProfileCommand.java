@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
@@ -53,27 +54,25 @@ public class ProfileCommand implements LazybotSlashCommand
         ProfileParameter params=new ProfileParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.validateParams();
-        CommandResultHandler.uploadImageToDiscord(event,playerService.profile(params));
+        CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderProfileInfo(
+                playerService.profile(params)));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                playerService.profile(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
+                RendererDistributor.renderProfileInfo(
+                playerService.profile(setupParameter(event, proxy.getAccessToken(event))))
         );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(playerService.profile(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
+        testOutputTool.saveImageToLocal(RendererDistributor.renderProfileInfo(
+                playerService.profile(setupParameter(event, proxy.getAccessToken(event))))
         );
     }
     private ProfileParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)

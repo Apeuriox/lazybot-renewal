@@ -3,21 +3,17 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.CommandStat;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.graphics.mapping.documentMapper.UsageSVGMapper;
-import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.monitor.CommandMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
-import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebPlayerPerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.*;
-import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
 import me.aloic.lazybot.osu.service.ManageService;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.util.*;
@@ -38,6 +34,8 @@ public class ManageServiceImpl implements ManageService
 
     @Resource
     private CommandMonitor commandMonitor;
+    @Resource
+    private OsuToolsUtil osuToolsUtil;
 
     static{
 //        updateMap = Map.of("avatar",ManageServiceImpl::updateAvatar,
@@ -76,7 +74,11 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
 
-        playerInfoDTO.setAvatar_url(AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true));
+        AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,true);
+        if (params.getStarMoonId()!=null) {
+            AssetDownloadUtil.avatarAbsolutePathStarNoon(params.getStarMoonId(),true);
+        }
+
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的头像缓存";
     }
     private String updateBanner(UpdateParameter params)
@@ -85,7 +87,7 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
 
-        playerInfoDTO.setCover_url((AssertDownloadUtil.bannerAbsolutePath(playerInfoDTO,true)));
+        playerInfoDTO.setCover_url((AssetDownloadUtil.bannerAbsolutePath(playerInfoDTO,true)));
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的横幅缓存";
     }
     private String updateOsuTrack(UpdateParameter params)
@@ -94,7 +96,12 @@ public class ManageServiceImpl implements ManageService
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
         ApiRequestStarter trackApiRequest = new ApiRequestStarter(URLBuildUtil.buildURLOfOsuTrackUpdate(playerInfoDTO.getId(),params.getMode()));
-        UserDifference userDifference = trackApiRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_POST, UserDifference.class);
+        try{
+            UserDifference userDifference = trackApiRequest.executeRequest(ContentUtil.HTTP_REQUEST_TYPE_POST, UserDifference.class);
+        }
+        catch (Exception e) {
+            throw new LazybotRuntimeException("更新Osu Track失败，是否是用户未初始化?");
+        }
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的Osu Track数据";
     }
     private String updatePlus(UpdateParameter params)
@@ -112,7 +119,7 @@ public class ManageServiceImpl implements ManageService
         AuthorityVerifier.isAdmin(params.getUserIdentity());
         File beatmapFile;
         try{
-            beatmapFile = new File(AssertDownloadUtil.beatmapPath(params.getBid(),false).toUri());
+            beatmapFile = new File(AssetDownloadUtil.beatmapPath(params.getBid(),false).toUri());
         }
         catch (Exception e) {
             return "[Lazybot] 未检索到本地缓存";
@@ -120,10 +127,23 @@ public class ManageServiceImpl implements ManageService
         String checksum= CommonTool.calculateMD5(beatmapFile);
         BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBid()),params.getMode());
         if (!checksum.equals(beatmapDTO.getChecksum())) {
-            AssertDownloadUtil.beatmapPath(params.getBid(), true);
+            AssetDownloadUtil.beatmapPath(params.getBid(), true);
             return "[Lazybot] 校验和不匹配: " + beatmapDTO.getChecksum() + " != " + checksum;
         }
         return "[Lazybot] 校验和正常: "+checksum;
+    }
+    @Override
+    public String updateBeatmapBackground(BeatmapParameter params)
+    {
+        AuthorityVerifier.isAdmin(params.getUserIdentity());
+        BeatmapDTO beatmap = dataExtractor.extractBeatmap(String.valueOf(params.getBid()), params.getMode());
+        try{
+           AssetDownloadUtil.backgroundDownload(beatmap.getBeatmapset_id(),true);
+        }
+        catch (Exception e) {
+            return "[Lazybot] 更新失败";
+        }
+        return "[Lazybot] 成功更新Set " + beatmap.getBeatmapset_id() + " 的背景";
     }
 
     @Override
@@ -178,7 +198,7 @@ public class ManageServiceImpl implements ManageService
         AuthorityVerifier.isAdmin(userIdentity);
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
-        ScoreVO scoreVO = OsuToolsUtil.setupScoreVO(
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
                 beatmapUserScoreLazer.getScore(),
                 false);
@@ -207,12 +227,11 @@ public class ManageServiceImpl implements ManageService
         return sb.toString();
     }
     @Override
-    public byte[] commandUsage()
+    public CommandUsage commandUsage()
     {
         Map<String, CommandStat> commandStatMap = commandMonitor.getAllStats();
         LocalDateTime startTime = commandMonitor.getStartTime();
-        return SVGRenderer.renderSVGDocumentToByteArray(
-                UsageSVGMapper.mapCommandUsageToPanel(CommandMonitor.setupCommandUsage(commandStatMap,startTime)));
+        return CommandMonitor.setupCommandUsage(commandStatMap,startTime);
     }
 
 }

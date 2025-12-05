@@ -4,11 +4,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 public class SayoData implements Serializable
 {
-    private Bid_data[] bid_data;
+    private List<SayobotBeatmap> bid_data;
     private Integer sid;
     private String title;
     private String artist;

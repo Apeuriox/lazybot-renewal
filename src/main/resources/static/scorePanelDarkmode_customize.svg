@@ -1051,4 +1051,13 @@
             height="110"
             id="lazer"/>
   </g>
+  <g id="starmoon-label" opacity="0">
+    <image
+            xlink:href="assets/sm-label.png"
+            x="20"
+            y="950"
+            width="110"
+            height="110"
+            id="star-moon"/>
+  </g>
 </svg>

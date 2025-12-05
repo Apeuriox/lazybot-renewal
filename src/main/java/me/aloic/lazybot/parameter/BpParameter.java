@@ -1,9 +1,6 @@
 package me.aloic.lazybot.parameter;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.CommonTool;
@@ -68,10 +65,10 @@ public class BpParameter extends LazybotCommandParameter
         }
         return bpParameter;
     }
-    public static void setupDefaultValue(BpParameter bpParameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(BpParameter bpParameter, @NonNull String mode)
     {
         if (bpParameter.getMode() == null)
-            bpParameter.setMode(accessTokenPO.getDefault_mode());
+            bpParameter.setMode(mode);
         if (bpParameter.getVersion() == null)
             bpParameter.setVersion(0);
         if (bpParameter.getIndex()==null)

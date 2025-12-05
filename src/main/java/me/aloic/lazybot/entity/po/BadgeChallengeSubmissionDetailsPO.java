@@ -6,10 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
+import me.aloic.lazybot.util.CommonTool;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,6 +32,19 @@ public class BadgeChallengeSubmissionDetailsPO implements Serializable
     private String mod_used;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime create_time;
+
+    public BadgeChallengeSubmissionDetailsPO(ScoreLazerDTO score, Integer challengeId)
+    {
+        this.challenge_id = challengeId;
+        this.beatmap_id = score.getBeatmap_id();
+        this.player_id = score.getUser_id();
+        this.score_id = score.getId();
+        this.achieved_acc = score.getAccuracy();
+        this.achieved_combo = score.getMax_combo();
+        this.miss_count = Optional.ofNullable(score.getStatistics().getMiss()).orElse(0);
+        this.mod_used = CommonTool.modArrayToString(score.getMods());
+        this.create_time=LocalDateTime.now();
+    }
 
 
 

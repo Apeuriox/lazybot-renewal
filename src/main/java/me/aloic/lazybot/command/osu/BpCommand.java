@@ -1,6 +1,7 @@
 package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -10,10 +11,14 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BpParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -22,7 +27,7 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bp","best","pbp","pb","b"})
+@LazybotCommandMapping({"bp","best","pbp","pb","b","bsm"})
 @Component
 public class BpCommand implements LazybotSlashCommand
 {
@@ -53,39 +58,86 @@ public class BpCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1));
         params.validateParams();
         params.setPlayerId(tokenPO.getPlayer_id());
-        CommandResultHandler.uploadImageToDiscord(event,playerService.bp(params));
+        CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderScoreVOToImage(
+                        playerService.getUserBestPerformanceSingle(params),params.getVersion())
+        );
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equalsIgnoreCase("pbp") || event.getCommandType().equalsIgnoreCase("pb")) {
-            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bpPlus(setupParameter(event,tokenPO)));
+        AccessTokenPO tokenPO;
+        String commandType = event.getCommandType().toLowerCase();
+        BpParameter params;
+        if (commandType.equals("pbp") || commandType.equals("pb")) {
+            tokenPO=proxy.getAccessToken(event);
+            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id());
+            CommandResultHandler.uploadImageToOnebot(bot,event,
+                    RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                            playerService.getUserBestPerformanceSinglePlus(params))
+            );
+        }
+        else if (commandType.equals("bsm"))
+        {
+            TokenStarMoon starMoonToken = proxy.getStarMoonToken(event);
+            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id());
+            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
+            CommandResultHandler.uploadImageToOnebot(bot,event,
+                    RendererDistributor.renderScoreVOToImage(
+                            playerService.getUserBestPerformanceSingleStarMoon(params), params.getVersion())
+            );
         }
         else
-            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bp(setupParameter(event,tokenPO)));
+        {
+            tokenPO=proxy.getAccessToken(event);
+            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id());
+            CommandResultHandler.uploadImageToOnebot(bot,event,
+                RendererDistributor.renderScoreVOToImage(
+                        playerService.getUserBestPerformanceSingle(params), params.getVersion())
+            );
+        }
+
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        if (event.getCommandType().equalsIgnoreCase("pbp") || event.getCommandType().equalsIgnoreCase("pb")) {
-            testOutputTool.saveImageToLocal(playerService.bpPlus(setupParameter(event,tokenPO)));
+        AccessTokenPO tokenPO;
+        String commandType = event.getCommandType().toLowerCase();
+        BpParameter params;
+        if (commandType.equals("pbp") || commandType.equals("pb")) {
+            tokenPO=proxy.getAccessToken(event);
+            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id());
+            testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                    playerService.getUserBestPerformanceSinglePlus(params)));
+        }
+        else if (commandType.equals("bsm"))
+        {
+            TokenStarMoon starMoonToken = proxy.getStarMoonToken(event);
+            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id());
+            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
+            testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
+                    playerService.getUserBestPerformanceSingleStarMoon(params), params.getVersion()));
         }
         else
-            testOutputTool.saveImageToLocal(playerService.bp(setupParameter(event,tokenPO)));
+        {
+            tokenPO=proxy.getAccessToken(event);
+            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id());
+            testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
+                playerService.getUserBestPerformanceSingle(params), params.getVersion()));
+        }
+
     }
 
-    private BpParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private BpParameter setupParameter(LazybotSlashCommandEvent event, @Nonnull String mode, @Nonnull Integer playerId)
     {
         BpParameter params=BpParameter.analyzeParameter(event.getCommandParameters());
-        BpParameter.setupDefaultValue(params,tokenPO);
+        BpParameter.setupDefaultValue(params,mode);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.setVersion(event.getScorePanelVersion());
-        params.setPlayerId(tokenPO.getPlayer_id());
+        params.setPlayerId(playerId);
         params.validateParams();
         if (event.getMessageEvent()!=null)
             params.setChannelId(event.getMessageEvent().getGroupId());
@@ -93,6 +145,7 @@ public class BpCommand implements LazybotSlashCommand
             params.setChannelId(114514L);
         return params;
     }
+
     @Override
     public String getHelp()
     {

@@ -96,17 +96,16 @@ public class SlashCommandProcessor
                     commandChainProcessor.process(event, command);
                 }
             } catch (LazybotRuntimeException | IllegalArgumentException e)  {
-                logger.error("捕获到预期内exception: {}", e.getMessage());
+                logger.error("捕获到预期内exception: {}", e.getMessage(),e);
             }
             catch (ExecutionException e) {
                 Throwable rootCause = e.getCause();
                 if (rootCause instanceof LazybotRuntimeException) {
-                    logger.error("捕获到多线程处理中的预期内exception: {}", e.getMessage());
+                    logger.error("捕获到多线程处理中的预期内exception: {}", e.getMessage(),e);
                 }
             }
             catch (Exception e) {
-                logger.error("预期外exception发生: {}",e.getMessage());
-                e.printStackTrace();
+                logger.error("预期外exception发生: {}",e.getMessage(),e);
             }
         return CompletableFuture.completedFuture(null);
     }

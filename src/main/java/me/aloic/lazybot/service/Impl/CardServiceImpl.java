@@ -12,7 +12,7 @@ import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.CardPointsLogMapper;
 import me.aloic.lazybot.osu.dao.mapper.CardPointsMapper;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +51,7 @@ public class CardServiceImpl implements CardService
             return UpdatePlayerCoin(playerId, playerStats, coinThisTime,1);
         }
     }
+
     @Transactional
     @Override
     public byte[] checkIn(AccessTokenPO token)
@@ -60,7 +61,7 @@ public class CardServiceImpl implements CardService
         if (playerStats == null) {
             cardPointsMapper.insert(new CardUserPointsPO(token.getPlayer_id(), coinThisTime, coinThisTime, 0, 1, 1, LocalDateTime.now()));
             cardPointsLogMapper.insert(new CardUserPointsLogPO(token.getPlayer_id(),coinThisTime,"CheckIn",LocalDateTime.now()));
-            String avatarUrl = AssertDownloadUtil.avatarAbsolutePath(token.getPlayer_id());
+            String avatarUrl = AssetDownloadUtil.avatarAbsolutePath(token.getPlayer_id());
             return SVGRenderer.renderSVGDocumentToByteArray(
                     CardCheckInSVGMapper.mapCheckinStatsToCard(
                             new CheckInStats(1,1, coinThisTime, coinThisTime, coinThisTime, token.getPlayer_name(),avatarUrl)

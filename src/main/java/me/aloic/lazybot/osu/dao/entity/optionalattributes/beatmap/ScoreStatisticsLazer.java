@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -52,6 +53,14 @@ public class ScoreStatisticsLazer implements Serializable
                 throw new LazybotRuntimeException("reInitialize failed in ScoreStatisticsLazer");
             }
         }
+    }
+    public ScoreStatisticsLazer(ScoreStarMoon.Hit hit)
+    {
+        this.great=hit.get_300();
+        this.ok=hit.get_100();
+        this.meh=hit.get_50();
+        this.miss=hit.getMiss();
+
     }
 
 }

@@ -3,6 +3,7 @@ package me.aloic.lazybot.command.osu;
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
+import lombok.NonNull;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -12,12 +13,14 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.parameter.UpdateParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.util.CommandResultHandler;
 import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +36,7 @@ public class UpdateCommand implements LazybotSlashCommand
     private DiscordTokenMapper discordTokenMapper;
     @Resource
     private CommandDatabaseProxy proxy;
-    @Autowired
+    @Resource
     private TestOutputTool testOutputTool;
 
     @Override
@@ -57,29 +60,33 @@ public class UpdateCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
-                MsgUtils.builder().text(
+        AccessTokenPO accessToken =  proxy.getAccessToken(event);
+        TokenStarMoon tokenStarMoon = proxy.getStarMoonTokenIgnoreException(event);
+        CommandResultHandler.sendMessageToGroupOnebot(bot,event,
                         manageService.update(
-                                setupParameter(event,
-                                        proxy.getAccessToken(event))
+                                setupParameter(event, accessToken.getPlayer_id(), accessToken.getDefault_mode(), tokenStarMoon == null ? null : tokenStarMoon.getStar_moon_id())
                         )
-                ).build(),false);
+                );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
+        AccessTokenPO accessToken =  proxy.getAccessToken(event);
+        TokenStarMoon tokenStarMoon = proxy.getStarMoonTokenIgnoreException(event);
         testOutputTool.writeStringToFile(manageService.update(
-                setupParameter(event,
-                        proxy.getAccessToken(event))
-        ));
+                        setupParameter(event, accessToken.getPlayer_id(), accessToken.getDefault_mode(), tokenStarMoon == null ? null : tokenStarMoon.getStar_moon_id())
+                )
+        );
     }
-    private UpdateParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private UpdateParameter setupParameter(LazybotSlashCommandEvent event, @NonNull Integer playerId, @NonNull String mode, Integer starMoonId)
     {
         UpdateParameter params=UpdateParameter.analyzeParameter(event.getCommandParameters());
-        UpdateParameter.setupDefaultValue(params,tokenPO);
+        UpdateParameter.setupDefaultValue(params,playerId,mode);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
+        if (starMoonId!=null)
+            params.setStarMoonId(starMoonId);
         params.validateParams();
         return params;
     }
@@ -93,6 +100,7 @@ public class UpdateCommand implements LazybotSlashCommand
                         .addExample("/Update Track Aloic")
                         .addExample("/Update Avatar Aloic")
                         .addExample("/Update Banner")
+                        .addExample("/Update Plus")
                         .addOption(new CommandParameter("Type","更新的类型", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("PlayerName","指定的用户名称", CommandParameter.ParameterType.OPTIONAL)));
     }

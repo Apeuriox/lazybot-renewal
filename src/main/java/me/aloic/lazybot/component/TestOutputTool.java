@@ -1,6 +1,8 @@
 package me.aloic.lazybot.component;
 
+import com.mikuac.shiro.common.utils.MsgUtils;
 import me.aloic.lazybot.entity.message.LazybotMessageWithImage;
+import me.aloic.lazybot.util.CommonTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.List;
 
 @Component
 public class TestOutputTool
@@ -51,6 +55,24 @@ public class TestOutputTool
             return;
         }
         saveImageAndTextToLocal(result.getImage(),result.getMessage());
+    }
+    public void saveImageAndTextToLocal(List<LazybotMessageWithImage> result) {
+        if (!CommonTool.isEmpty(result))
+        {
+            StringBuilder builder = new StringBuilder();
+            int i=0;
+            for(LazybotMessageWithImage message:result)
+            {
+                builder.append(message.getMessage());
+                if (message.getImage()!=null)
+                {
+                    saveImageToLocal(message.getImage(), testPath, "lazybot-test-image.png"+i);
+                }
+                i++;
+            }
+            writeStringToFile(builder.toString());
+        }
+
     }
 
     public void writeStringToFile(String content, String filePath, String fileName) {

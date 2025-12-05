@@ -536,23 +536,23 @@
     </g>
     <g class="cls-29">
         <text class="cls-9" transform="translate(1200 355.75)">
-            <tspan id="aimPPget">100</tspan>
+            <tspan id="aimPPget">000</tspan>
             <tspan>/</tspan>
-            <tspan class="cls-5" id="aimPPtotal">100</tspan>
+            <tspan class="cls-5" id="aimPPtotal">000</tspan>
         </text>
     </g>
     <g class="cls-29">
         <text class="cls-9" transform="translate(1465 355.75)">
-            <tspan id="spdPPget">100</tspan>
+            <tspan id="spdPPget">000</tspan>
             <tspan>/</tspan>
-            <tspan class="cls-5" id="spdPPtotal">100</tspan>
+            <tspan class="cls-5" id="spdPPtotal">000</tspan>
         </text>
     </g>
     <g class="cls-29">
         <text class="cls-9" transform="translate(1725 355.75)">
-            <tspan id="accPPget">100</tspan>
+            <tspan id="accPPget">000</tspan>
             <tspan>/</tspan>
-            <tspan class="cls-5" id="accPPtotal">100</tspan>
+            <tspan class="cls-5" id="accPPtotal">000</tspan>
         </text>
     </g>
     <g class="cls-29">

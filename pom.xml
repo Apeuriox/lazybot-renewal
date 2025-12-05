@@ -10,7 +10,7 @@
     </parent>
     <groupId>me.aloic</groupId>
     <artifactId>lazybot</artifactId>
-    <version>1.1.64</version>
+    <version>1.1.73</version>
     <name>lazybot-renewal</name>
     <description>lazybot-renewal</description>
     <url/>
@@ -148,6 +148,13 @@
             <groupId>me.zhjk</groupId>
             <artifactId>rosu-ppplus</artifactId>
             <version>0.2.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.belerweb/pinyin4j -->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.1</version>
         </dependency>
     </dependencies>
 

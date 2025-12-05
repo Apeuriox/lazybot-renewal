@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -52,21 +53,31 @@ public class BpCardCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("from"), 0),
                 OptionMappingTool.getOptionOrDefault(event.getOption("to"), 1));
         params.validateParams();
-        CommandResultHandler.uploadImageToDiscord(event,playerService.bplistCardView(params));
+        CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderPlayerScoreListToCard(
+                        playerService.bplistCardView(params), params.getFrom(), 1));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        CommandResultHandler.uploadImageToOnebot(bot,event,playerService.bplistCardView(setupParameter(event,tokenPO)));
+        BplistParameter params = setupParameter(event,tokenPO);
+        CommandResultHandler.uploadImageToOnebot(bot,event,
+                RendererDistributor.renderPlayerScoreListToCard(
+                playerService.bplistCardView(params),params.getFrom(),1)
+        );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO tokenPO=proxy.getAccessToken(event);
-        testOutputTool.saveImageToLocal(playerService.bplistCardView(setupParameter(event,tokenPO)));
+        BplistParameter params = setupParameter(event,tokenPO);
+        testOutputTool.saveImageToLocal(
+                RendererDistributor.renderPlayerScoreListToCard(
+                playerService.bplistCardView(params),params.getFrom(),1)
+        );
     }
 
     private BplistParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)

@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -51,27 +52,25 @@ public class OsuAvatarCommand implements LazybotSlashCommand
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.validateParams();
-        CommandResultHandler.uploadImageToDiscord(event,playerService.avatar(params,0));
+        CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderOsuAvatar(
+                        playerService.getPlayerInfoVO(params),0));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                    playerService.avatar(
-                            setupParameter(event, proxy.getAccessToken(event)), event.getScorePanelVersion()
-                    )
-            );
+                RendererDistributor.renderOsuAvatar(
+                        playerService.getPlayerInfoVO(setupParameter(event, proxy.getAccessToken(event))),event.getScorePanelVersion()));
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
             testOutputTool.saveImageToLocal(
-                    playerService.avatar(
-                            setupParameter(event, proxy.getAccessToken(event)), event.getScorePanelVersion()
-                    )
-            );
+                    RendererDistributor.renderOsuAvatar(
+                            playerService.getPlayerInfoVO(setupParameter(event, proxy.getAccessToken(event))),event.getScorePanelVersion()));
     }
     private GeneralParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {

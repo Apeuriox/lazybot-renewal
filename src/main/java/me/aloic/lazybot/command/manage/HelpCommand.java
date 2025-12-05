@@ -52,6 +52,6 @@ public class HelpCommand implements LazybotSlashCommand
     @Override
     public String getHelp()
     {
-        return "这是帮助的帮助文档";
+        return "[Lazybot] 这是帮助的帮助文档";
     }
 }

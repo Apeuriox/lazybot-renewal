@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.enums;
 
-import kotlin.Lazy;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 
 public enum OsuMode

@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -52,23 +53,21 @@ public class CardCommand implements LazybotSlashCommand
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
         params.validateParams();
-        CommandResultHandler.uploadImageToDiscord(event,playerService.card(params));
+        CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderPlayerInfoVOToCard(playerService.getPlayerInfoVO(params)));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         if (event.getScorePanelVersion()==1)
+
             CommandResultHandler.uploadImageToOnebot(bot,event,
-                    playerService.card(
-                            setupParameterGeneral(event, proxy.getAccessToken(event))
-                    )
-            );
+                    RendererDistributor.renderPlayerInfoVOToCard(playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getAccessToken(event)))));
         else
         {
-            CommandResultHandler.uploadImageToOnebot(bot,event,playerService.cardMoelleux(
-                            setupParameter(event, proxy.getAccessToken(event))
-                    ));
+            CommandResultHandler.uploadImageToOnebot(bot,event,
+                    RendererDistributor.renderMoelleuxCard(playerService.cardMoelleux(setupParameter(event, proxy.getAccessToken(event)))));
         }
     }
 
@@ -77,16 +76,10 @@ public class CardCommand implements LazybotSlashCommand
     {
         if (event.getScorePanelVersion()==1)
             testOutputTool.saveImageToLocal(
-                    playerService.card(
-                            setupParameterGeneral(event, proxy.getAccessToken(event))
-                    )
-            );
+                    RendererDistributor.renderPlayerInfoVOToCard(playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getAccessToken(event)))));
         else
             testOutputTool.saveImageToLocal(
-                    playerService.cardMoelleux(
-                            setupParameter(event, proxy.getAccessToken(event))
-                    )
-            );
+                    RendererDistributor.renderMoelleuxCard(playerService.cardMoelleux(setupParameter(event, proxy.getAccessToken(event)))));
     }
     private CardMoelleuxParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {

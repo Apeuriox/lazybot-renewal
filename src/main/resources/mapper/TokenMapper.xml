@@ -35,6 +35,7 @@
         where player_id =#{player_id}
     </select>
 
+
     <select id="selectRandom" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/>
         from token
@@ -64,6 +65,7 @@
         </set>
         where qq_code =#{qq_code,jdbcType=BIGINT}
     </update>
+
     <update id="updateDefaultMode" parameterType="map">
         update token
         <set>

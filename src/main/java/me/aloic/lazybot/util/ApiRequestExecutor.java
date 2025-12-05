@@ -35,13 +35,20 @@ public class ApiRequestExecutor
                          String token,
                          Object body,
                          Class<T> clazz) {
-        return doExecute(url, type, token, body, clazz, null);
+        return parseResponse(doExecute(url, type, token, body), clazz,null);
+    }
+
+    public String executeWithoutParse(String url,
+                         HTTPTypeEnum type,
+                         String token,
+                         Object body) {
+        return doExecute(url, type, token, body);
     }
     public String execute(String url,
                          HTTPTypeEnum type,
                          String token,
                          Object body) {
-        return doExecute(url, type, token, body, null, null);
+        return parseResponse(doExecute(url, type, token, body), null,null);
     }
 
 
@@ -50,15 +57,19 @@ public class ApiRequestExecutor
                          String token,
                          Object body,
                          TypeReference<T> typeRef) {
-        return doExecute(url, type, token, body, null, typeRef);
+        return parseResponse(doExecute(url, type, token, body), null,typeRef);
     }
 
-    private <T> T doExecute(String url,
+    public <T> T parseResponse(String respBody, Class<T> clazz, TypeReference<T> typeRef) {
+        if (clazz != null) return JSON.parseObject(respBody, clazz);
+        else if (typeRef != null) return JSON.parseObject(respBody, typeRef.getType());
+        else return (T) respBody;
+    }
+
+    private String doExecute(String url,
                          HTTPTypeEnum type,
                          String token,
-                         Object body,
-                         Class<T> clazz,
-                         TypeReference<T> typeRef)  {
+                         Object body)  {
 
         for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
@@ -79,9 +90,7 @@ public class ApiRequestExecutor
                 if (status >= 200 && status < 300) {
                     response.close();
                     logger.info("HTTP request successful: {}", url);
-                    if (clazz != null) return JSON.parseObject(respBody, clazz);
-                    else if (typeRef != null) return JSON.parseObject(respBody, typeRef.getType());
-                    else return (T) respBody;
+                    return respBody;
 
                 } else {
                     logger.warn("HTTP 请求失败: {}, 状态码: {}, 内容: {}", url, status, respBody);

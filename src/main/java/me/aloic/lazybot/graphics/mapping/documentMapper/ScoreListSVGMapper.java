@@ -1,5 +1,6 @@
 package me.aloic.lazybot.graphics.mapping.documentMapper;
 
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
 import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
@@ -20,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 public class ScoreListSVGMapper extends LazybotSVGMapper
 {
     public static Document mapScoreListToBpCard(PlayerInfoVO player, List<ScoreVO> scoreArray, Integer offset, Integer type)
@@ -146,7 +148,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         Element songTitle = document.createElementNS(namespaceSVG, "text");
         String title = scoreVO.getBeatmap().getTitle();
         if (title.length() >= 20) {
-            title = title.substring(0, 19) + "...";
+            title = title.substring(0, 18) + "...";
         }
         songTitle.setAttribute("class", "cls-5");
         if(type==0) {
@@ -498,11 +500,11 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error("SVG 处理时出错", e);
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
-    public static Document mapScoreListToBpList(List<ScoreSequence> scorelist,PlayerInfoVO info, Integer offset) throws IOException
+    public static Document mapScoreListToBpList(List<ScoreSequence> scorelist,PlayerInfoVO info, Integer offset)
     {
         try
         {
@@ -525,7 +527,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            log.error("SVG 处理时出错", e);
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
@@ -581,9 +583,10 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             divisor.setTextContent(" | ");
 
             Element title = doc.createElementNS(namespaceSVG, "tspan");
-            if (score.getBeatmap().getArtist().length()+score.getBeatmap().getTitle().length()>60)
-                score.getBeatmap().setTitle(score.getBeatmap().getTitle().substring(0,60-score.getBeatmap().getArtist().length()-2).concat("..."));
-            title.setTextContent(score.getBeatmap().getArtist().concat(" - ").concat(score.getBeatmap().getTitle()));
+            String titleAndArtist = score.getBeatmap().getTitle() + " by " + score.getBeatmap().getArtist();
+            if (titleAndArtist.length()>60)
+                titleAndArtist = titleAndArtist.substring(0, 58).concat("...");
+            title.setTextContent(titleAndArtist);
 
 
             //pending

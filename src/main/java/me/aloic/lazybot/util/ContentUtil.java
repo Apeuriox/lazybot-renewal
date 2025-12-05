@@ -29,4 +29,7 @@ public class ContentUtil
 
     public static String OSU_TRACK_BASE_URL ="https://osutrack-api.ameo.dev";
 
+    public static String SAYOBOT_BASE_URL = "https://api.sayobot.cn";
+    public static String DESU_LIFE_BASE_URL = "https://kanon-apis.desu.life:41000";
+
 }

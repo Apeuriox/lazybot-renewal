@@ -7,7 +7,7 @@ import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.service.CustomizeService;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import me.aloic.lazybot.parameter.CustomizationParameter;
 import me.aloic.lazybot.util.CommonTool;
 import org.slf4j.Logger;
@@ -67,7 +67,7 @@ public class CustomizeServiceImpl implements CustomizeService
     {
         try{
             String desiredSavePath = ResourceMonitor.getResourcePath().toAbsolutePath()+ PROFILE_RELATIVE_PATH + params.getPlayerId()  +".jpg";
-            AssertDownloadUtil.downloadResourceQueue(params.getTargetUrl(), desiredSavePath);
+            AssetDownloadUtil.downloadResourceQueue(params.getTargetUrl(), desiredSavePath);
             CommonTool.cropAndResize(desiredSavePath,1900,1000);
         }
         catch (Exception e) {
@@ -84,7 +84,7 @@ public class CustomizeServiceImpl implements CustomizeService
                 return;
             }
             logger.info("尝试重新获取图片缓存: {}", custom.getOriginal_url());
-            AssertDownloadUtil.downloadResourceQueue(custom.getOriginal_url(), desiredSavePath);
+            AssetDownloadUtil.downloadResourceQueue(custom.getOriginal_url(), desiredSavePath);
             CommonTool.cropAndResize(desiredSavePath,1900,1000);
         }
         catch (Exception e) {

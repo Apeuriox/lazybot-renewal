@@ -19,7 +19,7 @@ public class BadgeParameter extends LazybotCommandParameter
     private List<Integer> indexes;
 
     public enum BadgeActionType {
-        VIEW, LIST, SET, CLEAR
+        VIEW, LIST, SET, CLEAR, OWNED
     }
 
     @Override
@@ -37,7 +37,7 @@ public class BadgeParameter extends LazybotCommandParameter
         if (!params.isEmpty()) {
             parameter.setType(fromString(params.getFirst()));
             if (params.size() >= 2) {
-                if (parameter.getType().equals(BadgeActionType.VIEW))
+                if (parameter.getType().equals(BadgeActionType.VIEW) || parameter.getType().equals(BadgeActionType.OWNED))
                 {
                     try
                     {
@@ -59,7 +59,7 @@ public class BadgeParameter extends LazybotCommandParameter
                 }
             }
         }
-        else throw new LazybotRuntimeException("使用方法: /badge list\n或/badge view <id>\n或/badge set <id1,id2,...>");
+        else throw new LazybotRuntimeException("使用方法: /badge list\n或/badge view <id>\n或/badge set <id1,id2,...>\n或/badge owned <id>");
         return parameter;
     }
     public static void setupDefaultValue(BadgeParameter parameter, AccessTokenPO accessTokenPO)
@@ -73,7 +73,8 @@ public class BadgeParameter extends LazybotCommandParameter
         else if (input.equalsIgnoreCase("view")) return BadgeActionType.VIEW;
         else if (input.equalsIgnoreCase("set")) return BadgeActionType.SET;
         else if (input.equalsIgnoreCase("clear")) return BadgeActionType.CLEAR;
-        else throw new LazybotRuntimeException("使用方法: /badge list或/badge view <id>");
+        else if (input.equalsIgnoreCase("owned")) return BadgeActionType.OWNED;
+        else throw new LazybotRuntimeException("使用方法: /badge list\n或/badge view <id>\n或/badge set <id1,id2,...>\n或/badge owned <id>");
     }
     private static List<Integer> parseIndexes(String input)
     {

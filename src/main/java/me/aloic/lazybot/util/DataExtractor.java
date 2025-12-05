@@ -2,6 +2,7 @@ package me.aloic.lazybot.util;
 
 import com.alibaba.fastjson2.TypeReference;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.enums.HTTPTypeEnum;
 import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
@@ -15,6 +16,11 @@ import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayoData;
+import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayobotBeatmapSet;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.StarMoonUserWrapper;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
@@ -22,13 +28,14 @@ import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 public class DataExtractor
 {
@@ -37,6 +44,12 @@ public class DataExtractor
     @Resource
     private TokenMapper tokenMapper;
 
+    /**
+     * 根据用户名和模式获取用户信息
+     * @param playerName 用户名
+     * @param mode 模式字符
+     * @return 玩家信息DTO对象
+     */
 
     public PlayerInfoDTO extractPlayerInfoDTO(String playerName, String mode)
     {
@@ -57,6 +70,84 @@ public class DataExtractor
             throw new LazybotRuntimeException("没这B人: " + playerName);
         }
     }
+
+    public UserResponse extractPlayerStarMoon(String playerName)
+    {
+        try{
+            String json = apiRequestExecutor.executeWithoutParse(
+                    URLBuildUtil.buildURLOfStarMoonUserPage(playerName),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null);
+            UserResponse user = apiRequestExecutor.parseResponse(TRPCParser.parsetRPCJson(json), UserResponse.class, null);
+            if (user == null) {
+                throw new LazybotRuntimeException("没这B人: " + playerName);
+            }
+            return user;
+        }
+        catch (LazybotRuntimeException lre) {
+            throw lre;
+        }
+        catch (Exception e)
+        {
+            log.error("获取Star Moon用户时出错: " ,e);
+            throw new LazybotRuntimeException("获取Star Moon用户时出错" + e.getMessage());
+        }
+    }
+    public UserResponse extractPlayerStarMoon(Integer playerId)
+    {
+        try{
+            String json = apiRequestExecutor.executeWithoutParse(
+                    URLBuildUtil.buildURLOfStarMoonUserPage(playerId),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null);
+            UserResponse user = apiRequestExecutor.parseResponse(TRPCParser.parsetRPCJson(json), UserResponse.class, null);
+            if (user == null) {
+                throw new LazybotRuntimeException("没这B人: " + playerId);
+            }
+            return user;
+        }
+        catch (LazybotRuntimeException lre) {
+            throw lre;
+        }
+        catch (Exception e)
+        {
+            log.error("获取Star Moon用户时出错: " ,e);
+            throw new LazybotRuntimeException("获取Star Moon用户时出错" + e.getMessage());
+        }
+    }
+
+    public List<ScoreStarMoon> extractPlayerPerformanceStarMoon(String playerId, String mode, String subRuleset)
+    {
+        try{
+            String json = apiRequestExecutor.executeWithoutParse(
+                    URLBuildUtil.buildURLOfStarMoonBestPerformance(playerId,mode,subRuleset),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null);
+            List<ScoreStarMoon> score = apiRequestExecutor.parseResponse(TRPCParser.parsetRPCJson(json), null,  new TypeReference<List<ScoreStarMoon>>() {});
+            if (CommonTool.isEmpty(score)) {
+                throw new LazybotRuntimeException("无法找到指定成绩");
+            }
+            return score;
+        }
+        catch (LazybotRuntimeException lre) {
+            throw lre;
+        }
+        catch (Exception e)
+        {
+            log.error("处理Star Moon成绩时出错: " ,e);
+            throw new LazybotRuntimeException("处理Star Moon成绩时出错：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 根据用户ID和模式获取用户信息
+     * @param playerId 用户名
+     * @param mode 模式字符
+     * @return 玩家信息DTO对象
+     */
 
     public PlayerInfoDTO extractPlayerInfoDTO(Integer playerId, String mode) {
        try{
@@ -82,12 +173,18 @@ public class DataExtractor
         if (tokenPO == null)
             return playerInfoDTO;
         if (tokenPO.getAvatar_url()==null || !playerInfoDTO.getAvatar_url().equals(tokenPO.getAvatar_url())) {
-            AssertDownloadUtil.avatarAbsolutePath(playerInfoDTO,true);
+            AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,true);
             tokenMapper.updateAvatar(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId());
         }
         return playerInfoDTO;
     }
 
+
+    /**
+     * 根据用户ID获取PP+信息
+     * @param playerId 用户ID
+     * @return PP+玩家信息
+     */
     public PPPlusPerformance extractPerformancePlusPlayerTotal(Integer playerId)
     {
         try{
@@ -106,6 +203,12 @@ public class DataExtractor
             throw new LazybotRuntimeException("获取" + playerId + "用户pp+失败");
         }
     }
+
+    /**
+     * 根据用户ID更新用户PP+数据
+     * @param playerId 用户ID
+     * @return 更新后PP+玩家信息
+     */
     public PPPlusPerformance extractPerformancePlusPlayerUpdate(Integer playerId)
     {
         try{
@@ -116,14 +219,21 @@ public class DataExtractor
                     null,
                     LazybotWebPlayerPerformance.class);
             if(performance.getData()==null) {
-                throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败");
+                throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败，可能由于你的最近游玩为空");
             }
             return performance.getData().getPerformances();
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败");
+            throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败，可能由于你的最近游玩为空");
         }
     }
+
+    /**
+     * 根据用户ID和地图ID添加成绩到PP+服务器
+     * @param playerId 用户ID
+     * @param beatmapId 地图ID
+     * @return 该地图ID的PP+详情
+     */
     public LazybotScorePerformance extractPerformancePlusAddScore(Integer playerId, Integer beatmapId)
     {
         try{
@@ -143,7 +253,14 @@ public class DataExtractor
         }
     }
 
-
+    /**
+     * 获取用户的最近游玩成绩列表
+     * @param playerId 用户ID
+     * @param type 请求类型, 0会包含失败成绩
+     * @param limit 请求最大返回数量
+     * @param mode osu模式
+     * @return Lazer成绩列表
+     */
     public List<ScoreLazerDTO> extractRecentScoreList(Integer playerId, Integer type, Integer limit ,String mode)
     {
         try{
@@ -184,24 +301,23 @@ public class DataExtractor
                         BeatmapUserScoreLazer.class);
             }
             if(beatmapUserScoreLazer==null||beatmapUserScoreLazer.getScore()==null)
-                throw new LazybotRuntimeException("没这成绩: Bid=" +beatmapId + " PlayerID=" + playerId +" Mode="+mode);
+                throw new LazybotRuntimeException("没找到" + playerId + "在" + beatmapId +"上的成绩，" + " 模式为" + mode);
             return beatmapUserScoreLazer;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("没这成绩: Bid=" +beatmapId + " PlayerID=" + playerId +" Mode="+mode);
+            throw new LazybotRuntimeException("没找到" + playerId + "在" + beatmapId +"上的成绩，" + " 模式为" + mode);
         }
     }
 
     public List<ScoreLazerDTO> extractBeatmapUserScoreAll(Integer beatmapId, Integer playerId, String mode)
     {
         try{
-            List<ScoreLazerDTO> scoreAll = apiRequestExecutor.execute(
+            return apiRequestExecutor.execute(
                     URLBuildUtil.buildURLOfBeatmapScoreAll(String.valueOf(beatmapId), String.valueOf(playerId),mode),
                     HTTPTypeEnum.GET,
                     TokenMonitor.getToken(),
                     null,
                     BeatmapUserScores.class).getScores();
-            return scoreAll;
         }
         catch (LazybotNotFoundException e) {
             throw new LazybotRuntimeException("没有找到" + playerId +"在" + beatmapId+ "上的成绩");
@@ -219,12 +335,12 @@ public class DataExtractor
                     null,
                     BeatmapDTO.class);
             if(beatmapDTO.getId()==null) {
-                throw new LazybotRuntimeException("没这地图: BID=" + beatmapId + " Mode=" +mode);
+                throw new LazybotRuntimeException("找不到" + beatmapId + "在" +mode + "模式的地图");
             }
             return beatmapDTO;
         }
         catch (LazybotNotFoundException e) {
-            throw new LazybotRuntimeException("没这地图: BID=" + beatmapId + " Mode=" +mode);
+            throw new LazybotRuntimeException("找不到" + beatmapId + "在" +mode + "模式的地图");
         }
     }
     public List<ScoreLazerDTO> extractUserBestScoreList(String playerId, Integer offset , String mode)
@@ -245,6 +361,8 @@ public class DataExtractor
             throw new LazybotRuntimeException("没这成绩: " +"Index=" + offset+1 + " PlayerID=" + playerId);
         }
     }
+
+
     public List<ScoreLazerDTO> extractUserBestScoreList(String playerId, Integer limit , Integer offset, String mode)
     {
        try{
@@ -325,6 +443,20 @@ public class DataExtractor
         }
         return bestPlayList;
     }
+
+    public SayoData extractSayobotBeatmapSet(Integer sid)
+    {
+        SayobotBeatmapSet sayobotBeatmapSet= apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfSayobotBeatmap(sid),
+                HTTPTypeEnum.GET,
+                null,
+                null,
+                SayobotBeatmapSet.class);
+        if(sayobotBeatmapSet==null || sayobotBeatmapSet.getData()==null) {
+            throw new LazybotRuntimeException("Sayobot暂无数据");
+        }
+        return sayobotBeatmapSet.getData();
+    }
     public Integer extractRankByPP(String mode, Double pp)
     {
         String rankStr = apiRequestExecutor.execute(
@@ -342,6 +474,7 @@ public class DataExtractor
      */
     public PlayerInfoDTO extractPlayerInfoByUserId(Long userId) {
         AccessTokenPO accessTokenPO = tokenMapper.selectByQq_code(userId);
+
         if(accessTokenPO == null) {
             return null;
         }

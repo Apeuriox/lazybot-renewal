@@ -3,11 +3,13 @@ package me.aloic.lazybot.parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 
 import java.util.List;
 
+@Slf4j
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
@@ -39,7 +41,6 @@ public class BadgeImageParameter extends LazybotCommandParameter
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             throw new LazybotRuntimeException("参数解析失败");
         }
 

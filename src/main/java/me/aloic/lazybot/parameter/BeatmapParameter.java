@@ -64,6 +64,7 @@ public class BeatmapParameter extends LazybotCommandParameter
     }
     public static void setupDefaultValue(BeatmapParameter parameter, AccessTokenPO accessTokenPO)
     {
+
     }
 
 }

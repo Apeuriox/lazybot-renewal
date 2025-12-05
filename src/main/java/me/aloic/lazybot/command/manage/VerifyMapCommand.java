@@ -40,7 +40,6 @@ public class VerifyMapCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
         BeatmapParameter params=new BeatmapParameter(Integer.parseInt(OptionMappingTool.getOptionOrDefault(event.getOption("bid"),"" )));
         params.setUserIdentity(event.getUser().getIdLong());
         params.validateParams();

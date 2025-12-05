@@ -8,7 +8,12 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.command.UserAllScore;
+import me.aloic.lazybot.graphics.mapping.documentMapper.MapScoreSVGMapper;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
+import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
@@ -17,6 +22,8 @@ import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @LazybotCommandMapping({"allscore","as","allscores","ass"})
 @Component
@@ -37,21 +44,18 @@ public class AllScoreCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
+        ScoreParameter params = setupParameter(event, proxy.getAccessToken(event));
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                playerService.allScore(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
+                RendererDistributor.renderMapScore(playerService.getUserAllScoresOnMap(params),false)
         );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(playerService.allScore(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
-                )
+        ScoreParameter params = setupParameter(event, proxy.getAccessToken(event));
+        testOutputTool.saveImageToLocal(
+                RendererDistributor.renderMapScore(playerService.getUserAllScoresOnMap(params),false)
         );
     }
     protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)

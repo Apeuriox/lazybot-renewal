@@ -13,7 +13,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreIf;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.service.FunService;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
+import me.aloic.lazybot.osu.utils.AssetDownloader;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.parameter.WhatIfParameter;
@@ -50,6 +50,8 @@ public class FunServiceImpl implements FunService
     private Integer MAX_CALC;
     @Resource
     private DataExtractor dataExtractor;
+    @Resource
+    private AssetDownloader assetDownloader;
 
     private static final Integer MAX_RETRIES = 3;
 
@@ -119,7 +121,7 @@ public class FunServiceImpl implements FunService
         DecimalFormat df = new DecimalFormat("#.00");
         List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestScoreList(
                 String.valueOf(params.getPlayerId()),
-                100,0,params.getMode());
+                100,0, params.getMode());
         if (scoreDTOList.size() < 110) {
             scoreDTOList.addAll(dataExtractor.extractUserBestScoreList(
                     String.valueOf(params.getPlayerId()),
@@ -189,7 +191,7 @@ public class FunServiceImpl implements FunService
                 score.getBeatmap_id(),
                 score.getBeatmap().getBeatmapset_id()));
         try{
-            String urlOfBG =  AssertDownloadUtil.svgAbsolutePath(score.getBeatmap().getBeatmapset_id());
+            String urlOfBG =  assetDownloader.beatmapBackgroundAbsolutePath(score.getBeatmap().getBeatmapset_id());
             int resize = new Random().nextInt(5) + 1;
             BufferedImage original = cropImage(ImageIO.read(new File(urlOfBG)),resize);
             result.setResizeLevel(resize);

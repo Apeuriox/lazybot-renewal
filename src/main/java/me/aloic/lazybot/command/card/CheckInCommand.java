@@ -47,12 +47,10 @@ public class CheckInCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         AccessTokenPO token =  proxy.getAccessToken(event);
-        if (event.getScorePanelVersion() == 0)
-        {
+        if (event.getScorePanelVersion() == 0) {
             testOutputTool.saveImageToLocal(cardService.checkIn(token));
         }
         else testOutputTool.writeStringToFile(cardService.checkIn(token.getPlayer_id()));
-
     }
     @Override
     public String getHelp()

@@ -9,6 +9,7 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -21,6 +22,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
 import java.io.IOException;
 
 @LazybotCommandMapping({"topscores","ts"})
@@ -40,20 +42,21 @@ public class TopScoresCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
         TopScoresParameter params=new TopScoresParameter(OptionMappingTool.getOptionOrDefault(event.getOption("mode"),"osu"),
                 OptionMappingTool.getOptionOrDefault(event.getOption("limit"), 10));
         params.validateParams();
-        CommandResultHandler.uploadImageToDiscord(event,trackService.bestPlaysInGamemode(params));
+        CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderPlayerScoreListToList(trackService.bestPlaysInGamemode(params)));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                trackService.bestPlaysInGamemode(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
+                RendererDistributor.renderPlayerScoreListToList(
+                        trackService.bestPlaysInGamemode(
+                                setupParameter(event, proxy.getAccessToken(event))
+                        )
                 )
         );
     }
@@ -61,9 +64,10 @@ public class TopScoresCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(trackService.bestPlaysInGamemode(
-                        setupParameter(event,
-                                proxy.getAccessToken(event))
+        testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToList(
+                        trackService.bestPlaysInGamemode(
+                                setupParameter(event, proxy.getAccessToken(event))
+                        )
                 )
         );
     }

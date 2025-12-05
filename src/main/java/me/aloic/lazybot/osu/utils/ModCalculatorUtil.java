@@ -9,9 +9,9 @@ import me.aloic.lazybot.osu.dao.entity.vo.BeatmapVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.util.CommonTool;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ModCalculatorUtil
 {
@@ -134,5 +134,47 @@ public class ModCalculatorUtil
         if (mod.getSettings() == null) {
             mod.setSettings(new ModSetting());
         }
+    }
+
+    public static boolean compareMods(List<Mod> modJSON, String modRule) {
+
+        // 1. 提取运算符
+        char op = modRule.charAt(0);
+        String rulePattern = (op == '=' || op == '~' || op == '!' || op == '^')
+                ? modRule.substring(1)
+                : modRule;
+
+        // 2. 将 modJSON 转为集合
+        Set<String> userMods = new HashSet<>();
+        if (!CommonTool.isEmpty(modJSON)) {
+            for (Mod m : modJSON) {
+                userMods.add(m.getAcronym());
+            }
+        }
+
+
+        // 3. 从规则字符串中提取出所有出现的 mod（用来当作“参考集合”）
+        Set<String> ruleMods = extractKnownMods(rulePattern);
+
+        // 4. 根据运算符判断
+        return switch (op) {
+            case '=' -> userMods.equals(ruleMods); // 必须完全一致
+            case '~' -> userMods.containsAll(ruleMods); // 必须至少包含规则里的 mod
+            case '!' -> Collections.disjoint(userMods, ruleMods); // 不允许出现规则中的任意 mod
+            case '^' -> ruleMods.containsAll(userMods); // 用户的 mod 都必须在允许列表内
+            default -> userMods.containsAll(ruleMods); // 默认行为：包含匹配
+        };
+    }
+
+    /**
+     * 从字符串中按大写字母对提取mod，例如 HRHD → [HR, HD]
+     */
+    private static Set<String> extractKnownMods(String pattern) {
+        Set<String> mods = new HashSet<>();
+        for (int i = 0; i < pattern.length() - 1; i += 2) {
+            String mod = pattern.substring(i, Math.min(i + 2, pattern.length()));
+            mods.add(mod);
+        }
+        return mods;
     }
 }

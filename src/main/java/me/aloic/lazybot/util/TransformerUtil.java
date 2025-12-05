@@ -1,18 +1,17 @@
 package me.aloic.lazybot.util;
-import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapsetDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
-import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
+import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
-import me.aloic.lazybot.osu.enums.OsuMode;
-import me.aloic.lazybot.osu.utils.AssertDownloadUtil;
-import me.aloic.lazybot.osu.utils.RosuUtil;
+import me.aloic.lazybot.osu.enums.*;
+import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import org.w3c.dom.Document;
 
-import javax.swing.text.html.Option;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -20,8 +19,11 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -59,6 +61,18 @@ public class TransformerUtil
         playerInfoVO.setId(playerInfoDTO.getId());
         playerInfoVO.setPrimaryColor(Optional.ofNullable(playerInfoDTO.getProfile_hue()).orElse(333));
         playerInfoVO.setPlayStyles(playerInfoDTO.getPlaystyle());
+        return playerInfoVO;
+
+    }
+    public static PlayerInfoVO userTransform(UserResponse user, OsuSubruleset ruleset, String mode) {
+        PlayerInfoVO playerInfoVO = new PlayerInfoVO();
+        UserResponse.Statistics.ModeStatistics.RulesetStatistics statistics = user.getTargetRulesetStatistics(OsuMode.getMode(mode),ruleset);
+        playerInfoVO.setPerformancePoint(statistics.getPpv2().getPerformance());
+        playerInfoVO.setCountryRank(statistics.getPpv2().getCountryRank());
+        playerInfoVO.setPlayerName(user.getName());
+        playerInfoVO.setAvatarUrl(AssetDownloadUtil.avatarAbsolutePathStarNoon(user.getId(),false));
+        playerInfoVO.setId(Integer.valueOf(user.getId()));
+        playerInfoVO.setPrimaryColor(333);
         return playerInfoVO;
 
     }
@@ -120,6 +134,20 @@ public class TransformerUtil
             temp.setBeatmap(TransformerUtil.beatmapTransform(scoreLazerDTO.getBeatmap(), scoreLazerDTO.getBeatmapset()));
             temp.setMode(String.valueOf(scoreLazerDTO.getRuleset_id()));
             temp.setIsPerfectCombo(scoreLazerDTO.getIs_perfect_combo());
+            scoreVO.add(temp);
+            index++;
+        }
+        return scoreVO;
+    }
+    public static List<ScoreVO> scoreTransformForList(List<ScoreStarMoon> scorelist, UserResponse user, String mode)
+    {
+        List<ScoreVO> scoreVO=new ArrayList<>();
+        int index=0;
+        for (ScoreStarMoon score : scorelist) {
+            ScoreVO temp = transformScoreStarMoonToScoreVO(score, user, mode);
+            temp.setBeatmap(beatmapTransform(score,mode));
+            temp.setMode(mode);
+            temp.setPositionInList(index);
             scoreVO.add(temp);
             index++;
         }
@@ -265,6 +293,29 @@ public class TransformerUtil
         beatmapVO.setLanguage(beatmapDTO.getBeatmapset().getLanguage());
         return beatmapVO;
     }
+    public static BeatmapVO beatmapTransform(ScoreStarMoon score, String mode){
+        BeatmapVO beatmapVO=new BeatmapVO();
+        beatmapVO.setAccuracy(score.getBeatmap().getProperties().getAccuracy()); //od
+        beatmapVO.setAr(score.getBeatmap().getProperties().getApproachRate()); //ar
+        beatmapVO.setCs(score.getBeatmap().getProperties().getCircleSize());  //cs
+        beatmapVO.setDrain(score.getBeatmap().getProperties().getHpDrain()); //hp
+        beatmapVO.setDifficult_rating(score.getBeatmap().getProperties().getStarRate());  //star rating
+        beatmapVO.setBpm(score.getBeatmap().getProperties().getBpm());
+        beatmapVO.setHit_length(score.getBeatmap().getProperties().getTotalLength());
+        beatmapVO.setTotal_length(score.getBeatmap().getProperties().getTotalLength());
+        beatmapVO.setVersion(score.getBeatmap().getVersion()); //diff name
+        beatmapVO.setStatus(RankStatus.fromValue(score.getBeatmap().getStatus()).getName());  //ranked or loved something
+        beatmapVO.setArtist(score.getBeatmap().getBeatmapset().getMeta().getIntl().getArtist());  //song creator
+        beatmapVO.setTitle(score.getBeatmap().getBeatmapset().getMeta().getIntl().getTitle());   //song title
+        beatmapVO.setCreator(score.getBeatmap().getCreator());  //map creator
+        beatmapVO.setMax_combo(score.getBeatmap().getProperties().getMaxCombo());
+        beatmapVO.setSid(Integer.valueOf(score.getBeatmap().getBeatmapset().getForeignId()));
+        beatmapVO.setBeatmapset_id(Integer.valueOf(score.getBeatmap().getBeatmapset().getForeignId()));
+        beatmapVO.setBid(Integer.valueOf(score.getBeatmap().getForeignId()));
+        beatmapVO.setMode_int(OsuMode.convertMode(mode).getValue());
+        beatmapVO.setChecksum(score.getBeatmap().getMd5());
+        return beatmapVO;
+    }
     public static BeatmapVO beatmapTransformCompact(BeatmapDTO beatmapDTO){
         BeatmapVO beatmapVO=new BeatmapVO();
         beatmapVO.setAccuracy(beatmapDTO.getAccuracy()); //od
@@ -400,11 +451,37 @@ public class TransformerUtil
         else {
             score.setRank("F");
         }
-        score.setAvatarUrl(AssertDownloadUtil.avatarAbsolutePath(scoreLazer.getUser(),false));
+        score.setAvatarUrl(AssetDownloadUtil.avatarAbsolutePath(scoreLazer.getUser(),false));
+        if (scoreLazer.getLegacy_total_score() == 0) {
+            score.setOsuSubServer(SupportedSubServer.LAZER);
+        }
+        else {
+            score.setOsuSubServer(SupportedSubServer.STABLE);
+        }
         score.setIsLazer(scoreLazer.getLegacy_total_score() == 0);
         score.setUser_name(scoreLazer.getUser().getUsername());
         score.setMode(String.valueOf(scoreLazer.getRuleset_id()));
         score.setIsPerfectCombo(scoreLazer.getIs_perfect_combo());
+        return score;
+    }
+
+    public static ScoreVO transformScoreStarMoonToScoreVO(ScoreStarMoon scoreStarMoon, UserResponse user, String mode)
+    {
+        ScoreVO score=new ScoreVO();
+        score.setScore(scoreStarMoon.getScore());
+        score.setAccuracy(scoreStarMoon.getAccuracy()/100.0);
+        score.setModJSON(OsuMod.transformMods(scoreStarMoon.getMods()));
+        score.setCreate_at(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX").format(scoreStarMoon.getPlayedAt().toInstant().atZone(ZoneId.systemDefault())));
+        score.setMaxCombo(scoreStarMoon.getMaxCombo());
+        score.setPp(scoreStarMoon.getPp());
+        score.setStatistics(new ScoreStatisticsLazer(scoreStarMoon.getHit()));
+        score.setRank(scoreStarMoon.getGrade());
+        score.setAvatarUrl(AssetDownloadUtil.avatarAbsolutePathStarNoon(user.getId(),false));
+        score.setOsuSubServer(SupportedSubServer.STAR_MOON);
+        score.setUser_name(CommonTool.inlineChineseCharacter(user.getName()));
+        score.setMode(mode);
+        score.setIsLazer(false);
+        score.setIsPerfectCombo(Objects.equals(scoreStarMoon.getMaxCombo(), scoreStarMoon.getBeatmap().getProperties().getMaxCombo()));
         return score;
     }
 

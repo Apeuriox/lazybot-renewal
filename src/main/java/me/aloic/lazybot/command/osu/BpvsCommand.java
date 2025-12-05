@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
@@ -50,24 +51,27 @@ public class BpvsCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrException(event.getOption("target"), "请输入对比对象"));
         params.validateParams();
-        CommandResultHandler.uploadImageToDiscord(event,playerService.bpvs(params));
+        CommandResultHandler.uploadImageToDiscord(event,
+                RendererDistributor.renderComparePlayerBps(playerService.bpvs(params))
+        );
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
+        BpvsParameter params = setupParameter(event, proxy.getAccessToken(event));
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                playerService.bpvs(
-                        setupParameter(event, proxy.getAccessToken(event))
-                )
+                RendererDistributor.renderComparePlayerBps(playerService.bpvs(params))
         );
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(playerService.bpvs(
-                setupParameter(event, proxy.getAccessToken(event))));
+        BpvsParameter params = setupParameter(event, proxy.getAccessToken(event));
+        testOutputTool.saveImageToLocal(
+                RendererDistributor.renderComparePlayerBps(playerService.bpvs(params))
+        );
     }
     private BpvsParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
     {

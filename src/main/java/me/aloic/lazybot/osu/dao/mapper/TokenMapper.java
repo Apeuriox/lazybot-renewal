@@ -17,8 +17,11 @@ public interface TokenMapper extends BaseMapper<AccessTokenPO> {
     AccessTokenPO selectByPlayerId(Integer player_id);
     void updateClientToken(@Param("access_token")String access_token);
     void updateDefaultMode(@Param("default_mode")String default_mode, @Param("qq_code")Long qq_code);
+
     void deleteByQQ(@Param("qq_code")Long qq_code);
     void updateAvatar(@Param("avatar_url")String avatar_url, @Param("player_id")Integer player_id);
+
+
     /**
      * 根据给定的qqid列表返回对应的token信息。
      * @param codes 要查询的qq账号id列表。

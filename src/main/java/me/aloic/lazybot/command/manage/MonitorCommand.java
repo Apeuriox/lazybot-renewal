@@ -6,6 +6,7 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -27,14 +28,18 @@ public class MonitorCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        CommandResultHandler.uploadImageToDiscord(event,manageService.commandUsage());
+        CommandResultHandler.uploadImageToDiscord(event, RendererDistributor.renderCommandUsage(
+                manageService.commandUsage()
+        ));
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                manageService.commandUsage()
+                RendererDistributor.renderCommandUsage(
+                        manageService.commandUsage()
+                )
         );
     }
 
@@ -42,7 +47,9 @@ public class MonitorCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         testOutputTool.saveImageToLocal(
-                manageService.commandUsage()
+                RendererDistributor.renderCommandUsage(
+                        manageService.commandUsage()
+                )
         );
     }
     @Override
