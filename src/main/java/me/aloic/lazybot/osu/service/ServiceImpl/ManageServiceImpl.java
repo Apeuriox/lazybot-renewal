@@ -12,6 +12,7 @@ import me.aloic.lazybot.osu.dao.entity.po.*;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
+import me.aloic.lazybot.osu.dao.mapper.UsageMapper;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import me.aloic.lazybot.osu.utils.OsuToolsUtil;
@@ -22,8 +23,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 // onebot protocol can be forged so no sensitive functions here
@@ -46,6 +49,8 @@ public class ManageServiceImpl implements ManageService
 
     @Resource
     private CustomizationMapper customizationMapper;
+    @Resource
+    private UsageMapper usageMapper;
     @Resource
     private TipsMapper tipsMapper;
     private static final Logger logger = LoggerFactory.getLogger(ManageServiceImpl.class);
@@ -232,6 +237,88 @@ public class ManageServiceImpl implements ManageService
         Map<String, CommandStat> commandStatMap = commandMonitor.getAllStats();
         LocalDateTime startTime = commandMonitor.getStartTime();
         return CommandMonitor.setupCommandUsage(commandStatMap,startTime);
+    }
+
+    @Override
+    public String annualCommandUsage()
+    {
+        LocalDateTime now = LocalDateTime.now();
+        int businessYear = now.getYear();
+
+        if (now.getMonthValue() == 1 && now.getDayOfMonth() < 15) {
+            businessYear--;
+        }
+        LocalDateTime start = LocalDateTime.of(businessYear, 1, 1, 0, 0);
+        LocalDateTime end   = LocalDateTime.of(businessYear + 1, 1, 1, 0, 0);
+        List<CommandUsage> commandUsages = usageMapper.selectByDate(start, end);
+        List<LazybotUsageTimeDistribution> mergedDistribution =
+                commandUsages.stream()
+                        .flatMap(u -> u.getDistribution().stream())
+                        .collect(Collectors.groupingBy(
+                                LazybotUsageTimeDistribution::getTime,
+                                Collectors.summingInt(LazybotUsageTimeDistribution::getCount)
+                        ))
+                        .entrySet()
+                        .stream()
+                        .map(e -> new LazybotUsageTimeDistribution(e.getKey(),e.getValue()))
+                        .toList();
+
+        List<LazybotUsageSource> mergedSource =
+                commandUsages.stream()
+                        .flatMap(u -> u.getSource().stream())
+                        .collect(Collectors.groupingBy(
+                                LazybotUsageSource::getName
+                        ))
+                        .entrySet()
+                        .stream()
+                        .map(e -> {
+                            List<LazybotUsageSource> list = e.getValue();
+                            LazybotUsageSource first = list.getFirst();
+                            return new LazybotUsageSource(first.getIndex(),
+                                    e.getKey(),
+                                    list.stream().mapToInt(LazybotUsageSource::getCount).sum());
+                        })
+                        .sorted(Comparator.comparingInt(LazybotUsageSource::getCount).reversed())
+                        .toList();
+
+        List<LazybotUsageCommand> mergedCommand =
+                commandUsages.stream()
+                        .flatMap(u -> u.getCommand().stream())
+                        .collect(Collectors.groupingBy(
+                                LazybotUsageCommand::getCommand,
+                                Collectors.summingInt(LazybotUsageCommand::getCount)
+                        ))
+                        .entrySet()
+                        .stream()
+                        .map(e -> new LazybotUsageCommand(e.getValue(),e.getKey()))
+                        .sorted(Comparator.comparingInt(LazybotUsageCommand::getCount).reversed())
+                        .toList();
+
+        try{
+            StringBuilder sb = new StringBuilder(businessYear).append("年Lazybot的命令总结：\n");
+            sb.append("总记录天数: ").append(commandUsages.size()).append("(开始时间 ").append(commandUsages.getFirst().getCreated_at().toLocalDate()).append("）\n");
+            sb.append("总命令次数: ").append(commandUsages.stream().mapToInt(CommandUsage::getTotal).sum()).append("\n\n");
+
+            sb.append("最爱命令是：").append(mergedCommand.getFirst().getCommand()).append("指令  一共调用了 ").append(mergedCommand.getFirst().getCount()).append(" 次\n");
+            sb.append("后四位分别为：\n");
+            sb.append("2. ").append(mergedCommand.get(1).getCommand()).append("指令  调用了 ").append(mergedCommand.get(1).getCount()).append(" 次\n");
+            sb.append("3. ").append(mergedCommand.get(2).getCommand()).append("指令  调用了 ").append(mergedCommand.get(2).getCount()).append(" 次\n");
+            sb.append("4. ").append(mergedCommand.get(3).getCommand()).append("指令  调用了 ").append(mergedCommand.get(3).getCount()).append(" 次\n");
+            sb.append("5. ").append(mergedCommand.get(4).getCommand()).append("指令  调用了 ").append(mergedCommand.get(4).getCount()).append(" 次\n\n");
+
+            sb.append("最常使用的时间段是 ").append(mergedDistribution.getFirst().getTime()).append("点  达到了 ").append(mergedDistribution.getFirst().getCount()).append(" 次\n");
+            sb.append("其次为 ").append(mergedDistribution.get(1).getTime()).append("点  为 ").append(mergedDistribution.get(1).getCount()).append(" 次\n");
+            sb.append("以及 ").append(mergedDistribution.get(2).getTime()).append("点  为 ").append(mergedDistribution.get(2).getCount()).append(" 次\n\n");
+
+            sb.append("群 ").append(mergedSource.getFirst().getName()).append("用Lazybot最多，总计 ").append(mergedSource.getFirst().getCount()).append(" 次\n");
+            sb.append("其次为：").append(mergedSource.get(1).getName()).append("，使用了 ").append(mergedSource.get(1).getCount()).append(" 次\n");
+            sb.append("第三名为：").append(mergedSource.get(2).getName()).append("，使用了 ").append(mergedSource.get(2).getCount()).append(" 次\n");
+            return sb.toString();
+        }
+        catch (Exception e){
+            return "服务器内部生成错误，是否为数据不完整？";
+        }
+
     }
 
 }

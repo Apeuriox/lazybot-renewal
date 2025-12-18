@@ -13,7 +13,7 @@
 
     </resultMap>
     <sql id = "Base_Column_List">
-        id, total, source, distribution, command, is_complete, hue, created_at
+        id, total, source, distribution, command, is_complete, created_at
     </sql>
 
     <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -25,7 +25,8 @@
     <select id="selectByDate" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
         FROM command_usage
-        WHERE created_at BETWEEN #{startTime} AND #{endTime}
+        WHERE created_at <![CDATA[>=]]> #{start}
+        AND created_at <![CDATA[<]]>  #{end}
     </select>
 
     <delete id="deleteById" parameterType="java.lang.Integer">

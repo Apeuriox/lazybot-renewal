@@ -42,6 +42,9 @@ public class NetImageController
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(image);
     }
+
+
+
     @GetMapping(value = "/trim", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> renderMoelleuxCardTrimmed(
             @RequestParam(value = "id", required = true) Integer playerId,

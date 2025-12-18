@@ -52,7 +52,11 @@ public class ScoreRankCommand implements LazybotSlashCommand
             return;
         }
         ScoreParameter scoreParameter = ScoreCommand.setupParameter(event, proxy.getAccessToken(event));
-        scoreParameter.setGroupUserIds(members.stream().map(GroupMemberInfoResp::getUserId).collect(Collectors.toList()));
+        scoreParameter.setGroupUserIds(
+                members.stream()
+                        .map(GroupMemberInfoResp::getUserId)
+                        .collect(Collectors.toList())
+        );
         CommandResultHandler.sendMessageToGroupOnebot(bot,event, "[Lazybot] 正在渲染，请稍后...请求线程数: " + RateLimiterHolder.REQUESTS_PER_SECOND + "，最大显示数量: 30");
         UserAllScore uas = playerService.scoreRank(scoreParameter);
         if (uas.getMapScoreList().isEmpty()) {
