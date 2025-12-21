@@ -295,25 +295,22 @@ public class ManageServiceImpl implements ManageService
                         .toList();
 
         try{
-            StringBuilder sb = new StringBuilder(businessYear).append("年Lazybot的命令总结：\n");
-            sb.append("总记录天数: ").append(commandUsages.size()).append("(开始时间 ").append(commandUsages.getFirst().getCreated_at().toLocalDate()).append("）\n");
-            sb.append("总命令次数: ").append(commandUsages.stream().mapToInt(CommandUsage::getTotal).sum()).append("\n\n");
 
-            sb.append("最爱命令是：").append(mergedCommand.getFirst().getCommand()).append("指令  一共调用了 ").append(mergedCommand.getFirst().getCount()).append(" 次\n");
-            sb.append("后四位分别为：\n");
-            sb.append("2. ").append(mergedCommand.get(1).getCommand()).append("指令  调用了 ").append(mergedCommand.get(1).getCount()).append(" 次\n");
-            sb.append("3. ").append(mergedCommand.get(2).getCommand()).append("指令  调用了 ").append(mergedCommand.get(2).getCount()).append(" 次\n");
-            sb.append("4. ").append(mergedCommand.get(3).getCommand()).append("指令  调用了 ").append(mergedCommand.get(3).getCount()).append(" 次\n");
-            sb.append("5. ").append(mergedCommand.get(4).getCommand()).append("指令  调用了 ").append(mergedCommand.get(4).getCount()).append(" 次\n\n");
-
-            sb.append("最常使用的时间段是 ").append(mergedDistribution.getFirst().getTime()).append("点  达到了 ").append(mergedDistribution.getFirst().getCount()).append(" 次\n");
-            sb.append("其次为 ").append(mergedDistribution.get(1).getTime()).append("点  为 ").append(mergedDistribution.get(1).getCount()).append(" 次\n");
-            sb.append("以及 ").append(mergedDistribution.get(2).getTime()).append("点  为 ").append(mergedDistribution.get(2).getCount()).append(" 次\n\n");
-
-            sb.append("群 ").append(mergedSource.getFirst().getName()).append("用Lazybot最多，总计 ").append(mergedSource.getFirst().getCount()).append(" 次\n");
-            sb.append("其次为：").append(mergedSource.get(1).getName()).append("，使用了 ").append(mergedSource.get(1).getCount()).append(" 次\n");
-            sb.append("第三名为：").append(mergedSource.get(2).getName()).append("，使用了 ").append(mergedSource.get(2).getCount()).append(" 次\n");
-            return sb.toString();
+            return businessYear + "年Lazybot的命令总结：\n" +
+                    "总记录天数: " + commandUsages.size() + "(开始时间 " + commandUsages.getFirst().getCreated_at().toLocalDate() + "）\n" +
+                    "总命令次数: " + commandUsages.stream().mapToInt(CommandUsage::getTotal).sum() + "\n\n" +
+                    "最爱命令是：" + mergedCommand.getFirst().getCommand() + "指令  一共调用了 " + mergedCommand.getFirst().getCount() + " 次\n" +
+                    "后四位分别为：\n" +
+                    "2. " + mergedCommand.get(1).getCommand() + "指令  调用了 " + mergedCommand.get(1).getCount() + " 次\n" +
+                    "3. " + mergedCommand.get(2).getCommand() + "指令  调用了 " + mergedCommand.get(2).getCount() + " 次\n" +
+                    "4. " + mergedCommand.get(3).getCommand() + "指令  调用了 " + mergedCommand.get(3).getCount() + " 次\n" +
+                    "5. " + mergedCommand.get(4).getCommand() + "指令  调用了 " + mergedCommand.get(4).getCount() + " 次\n\n" +
+                    "最常使用的时间段是 " + mergedDistribution.getFirst().getTime() + "点  达到了 " + mergedDistribution.getFirst().getCount() + " 次\n" +
+                    "其次为 " + mergedDistribution.get(1).getTime() + "点  为 " + mergedDistribution.get(1).getCount() + " 次\n" +
+                    "以及 " + mergedDistribution.get(2).getTime() + "点  为 " + mergedDistribution.get(2).getCount() + " 次\n\n" +
+                    "群 " + mergedSource.getFirst().getName() + "用Lazybot最多，总计 " + mergedSource.getFirst().getCount() + " 次\n" +
+                    "其次为：" + mergedSource.get(1).getName() + "，使用了 " + mergedSource.get(1).getCount() + " 次\n" +
+                    "第三名为：" + mergedSource.get(2).getName() + "，使用了 " + mergedSource.get(2).getCount() + " 次\n";
         }
         catch (Exception e){
             return "服务器内部生成错误，是否为数据不完整？";

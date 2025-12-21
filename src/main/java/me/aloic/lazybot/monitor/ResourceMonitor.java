@@ -31,9 +31,11 @@ public class ResourceMonitor
         try{
             String workingDir = System.getenv("LAZYBOT_DIR");
             if (workingDir == null || workingDir.isEmpty()) {
+                logger.info("环境变量获取失败，使用临时文件夹");
                 workingDir = String.valueOf(Files.createTempDirectory("lazybot_working_dir"));
             }
             File targetDir = new File(workingDir);
+            logger.info("工作目录为: {}", workingDir);
             if (!targetDir.exists() && !targetDir.mkdirs()) {
                 throw new IOException("无法创建目标目录：" + workingDir);
             }
@@ -191,7 +193,7 @@ public class ResourceMonitor
         createDirectoryIfNotExists(assetsDir);
         createDirectoryIfNotExists(osuResDir);
         createDirectoryIfNotExists(fonts);
-        logger.info("工作目录结构成功初始化");
+        logger.info("工作目录结构成功初始化: {}", workingDir);
     }
 
     /**

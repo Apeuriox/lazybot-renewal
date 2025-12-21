@@ -88,7 +88,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
         String commandType = event.getCommandType().toLowerCase();
         RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
-            case "rp" ,"pr" ,"playrecent" ->
+            case "rp" ,"pr" ,"playrecent","p" ->
                 CommandResultHandler.uploadImageToOnebot(bot, event,
                         RendererDistributor.renderScoreVOToImage(
                                 playerService.getUserRecentScoreList(params, 1), params.getVersion()));
@@ -116,7 +116,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
         String commandType = event.getCommandType().toLowerCase();
         RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
-            case "rp" ,"pr" ,"playrecent" ->
+            case "rp" ,"pr" ,"playrecent","p" ->
                     testOutputTool.saveImageToLocal(
                             RendererDistributor.renderScoreVOToImage(
                                     playerService.getUserRecentScoreList(params, 1), params.getVersion()));
