@@ -12,6 +12,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.RankColor;
+import me.aloic.lazybot.osu.utils.ColorUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -177,8 +178,8 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         difficulty.setTextContent("["+version+"]");
 
 
-        String diffColor="#".concat(CommonTool.calcDiffColor(scoreVO.getBeatmap().getDifficult_rating()));
-        String diffTextColor = CommonTool.getStarRatingFontColor(scoreVO.getBeatmap().getDifficult_rating());
+        String diffColor="#".concat(ColorUtil.getDifficultyBackgroundColor(scoreVO.getBeatmap().getDifficult_rating()));
+        String diffTextColor = ColorUtil.getDifficultyColor(scoreVO.getBeatmap().getDifficult_rating());
         String starType = "assets/osuResources/star-golden.svg";
         if (diffTextColor.equalsIgnoreCase("#1c1719")) {
             starType = "assets/osuResources/star-dark.svg";

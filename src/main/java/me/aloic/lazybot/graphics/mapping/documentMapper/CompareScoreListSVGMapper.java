@@ -7,6 +7,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.utils.ColorUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -91,7 +92,7 @@ public class CompareScoreListSVGMapper extends LazybotSVGMapper
         difficulty.setTextContent(diff);
 
         Element starBG = document.createElementNS(nameSpace, "rect");
-        starBG.setAttribute("fill", "#".concat(CommonTool.calcDiffColor(scoreVO.getBeatmap().getDifficult_rating())));
+        starBG.setAttribute("fill", "#".concat(ColorUtil.getDifficultyBackgroundColor(scoreVO.getBeatmap().getDifficult_rating())));
         starBG.setAttribute("x", "120");
         starBG.setAttribute("y", "146");
         starBG.setAttribute("width", "68");

@@ -9,6 +9,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.PPPlusIncompatibleMods;
 import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.theme.Color.HSL;
+import me.aloic.lazybot.osu.utils.ColorUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -221,10 +222,8 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
 
         document.getElementById("star-1").setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()));
         document.getElementById("star-2").setTextContent(CommonTool.toString(score.getBeatmap().getDifficult_rating()));
-        String diffColor="#".concat(CommonTool.calcDiffColor(score.getBeatmap().getDifficult_rating()));
-        String starTextColor = "#fed867";
-        if (score.getBeatmap().getDifficult_rating() < 7.0 && score.getBeatmap().getDifficult_rating() % 1.0 < 0.5)
-            starTextColor = "#1c1719";
+        String diffColor="#".concat(ColorUtil.getDifficultyBackgroundColor(score.getBeatmap().getDifficult_rating()));
+        String starTextColor = ColorUtil.getDifficultyColor(score.getBeatmap().getDifficult_rating());
         document.getElementById("star-2").setAttribute("fill", starTextColor);
         document.getElementById("star-rect").setAttribute("fill", diffColor);
 

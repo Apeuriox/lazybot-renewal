@@ -12,6 +12,7 @@ import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.theme.Color.HSL;
+import me.aloic.lazybot.osu.utils.ColorUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.spring.osu.extended.rosu.CatchDifficultyAttributes;
 import org.spring.osu.extended.rosu.ManiaDifficultyAttributes;
@@ -60,7 +61,7 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
 
             int hue = CommonTool.rgbToHue(
                     CommonTool.hexToRgb(
-                            CommonTool.calcDiffColor(beatmap.getDifficult_rating()
+                            ColorUtil.getDifficultyBackgroundColor(beatmap.getDifficult_rating()
                             )
                     )
             );

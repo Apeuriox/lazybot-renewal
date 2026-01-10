@@ -11,6 +11,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.BeatmapVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.RankColor;
+import me.aloic.lazybot.osu.utils.ColorUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -64,7 +65,7 @@ public class ThumbnailSVGMapper extends LazybotSVGMapper
         distributeBeatmapAttributes(data.getAttributes(),doc,data.getScore().getBeatmap());
 
 
-        String diffColor = "#" + CommonTool.calcDiffColor(data.getScore().getBeatmap().getDifficult_rating());
+        String diffColor = "#" + ColorUtil.getDifficultyBackgroundColor(data.getScore().getBeatmap().getDifficult_rating());
         String versionColor = "#1c1719";
         if (data.getScore().getBeatmap().getDifficult_rating() < 7.0)
         {

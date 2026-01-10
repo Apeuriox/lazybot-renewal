@@ -11,6 +11,7 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.enums.SupportedSubServer;
 import me.aloic.lazybot.osu.theme.Color.HSL;
+import me.aloic.lazybot.osu.utils.ColorUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -276,10 +277,10 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc.getElementById("bid").setTextContent(String.valueOf(targetScore.getBeatmap().getBid()));
             doc.getElementById("starRating").setTextContent(CommonTool.toString(targetScore.getBeatmap().getDifficult_rating()));
 
-            String StarFontColor = CommonTool.getStarRatingFontColor(targetScore.getBeatmap().getDifficult_rating());
+            String starFontColor = ColorUtil.getDifficultyColor(targetScore.getBeatmap().getDifficult_rating());
 
-            doc.getElementById("starRating").setAttribute("fill", StarFontColor);
-            doc.getElementById("starRatingStar").setAttribute("fill", StarFontColor);
+            doc.getElementById("starRating").setAttribute("fill", starFontColor);
+            doc.getElementById("starRatingStar").setAttribute("fill", starFontColor);
 
             if (targetScore.getBeatmap().getDifficult_rating() > 10) {
                 doc.getElementById("starRatingBG").setAttribute("width", "150");
@@ -514,7 +515,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             grade.setTextContent(targetScore.getRank());
             grade.setAttribute("fill", RankColor.fromString(targetScore.getRank()).getDarkRankColorHEX());
 
-            doc.getElementById("starRatingBG").setAttribute("fill", "#".concat(CommonTool.calcDiffColor(targetScore.getBeatmap().getDifficult_rating())));
+            doc.getElementById("starRatingBG").setAttribute("fill", "#".concat(ColorUtil.getDifficultyBackgroundColor(targetScore.getBeatmap().getDifficult_rating())));
 
             if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0) {
                 if (!targetScore.getIsLazer()) targetScore.setModJSON(targetScore.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
