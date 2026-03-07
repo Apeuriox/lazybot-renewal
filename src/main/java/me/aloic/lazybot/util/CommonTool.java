@@ -785,5 +785,28 @@ public class CommonTool {
     public static boolean isWarmColor(int hue) {
         return ((hue >= 270 && hue <= 360) || (hue >= 0 && hue <= 60));
     }
+    /**
+     * 计算误差函数 erf(x)
+     * 参考 Abramowitz and Stegun 公式 7.1.26
+     */
+    public static double erf(double x) {
+        // erf(-x) = -erf(x)
+        double sign = (x < 0) ? -1 : 1;
+        x = Math.abs(x);
+
+        // 常数定义
+        double a1 =  0.254829592;
+        double a2 = -0.284496736;
+        double a3 =  1.421413741;
+        double a4 = -1.453152027;
+        double a5 =  1.061405429;
+        double p  =  0.3275911;
+
+        // A&S 公式近似计算
+        double t = 1.0 / (1.0 + p * x);
+        double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+
+        return sign * y;
+    }
 
 }

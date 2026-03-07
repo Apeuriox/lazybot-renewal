@@ -121,7 +121,7 @@ public class RendererDistributor
 
     public static byte[] renderPerformancePlusCard(PerformancePlusProfile player, int type) throws IOException
     {
-        if (type==1) return SVGRenderer.renderSVGDocumentToByteArray(
+        if (type==0) return SVGRenderer.renderSVGDocumentToByteArray(
                 PlusCardSVGMapper.mapPlusInfoToCardCC2024(player.getPerformance(),player.getPlayer()),
                 1);
         return SVGRenderer.renderSVGDocumentToByteArray(

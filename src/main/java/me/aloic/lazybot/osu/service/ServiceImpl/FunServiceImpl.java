@@ -14,9 +14,11 @@ import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.osu.utils.AssetDownloader;
+import me.aloic.lazybot.parameter.DeviationFittingParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.parameter.WhatIfParameter;
+import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.DataExtractor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -169,6 +171,48 @@ public class FunServiceImpl implements FunService
                 .append(" (").append(rankDifference).append(") ");
         return result.toString();
     }
+
+    @Override
+    public String accuracyUsingNormalDistribution(DeviationFittingParameter params)
+    {
+        StringBuilder result = new StringBuilder();
+        double accuracy = calculateEstimatedAccuracy(params.getOverallDifficulty(), params.getTargetUnstableRate());
+
+        double accuracyValue= Math.pow(1.52163, params.getOverallDifficulty()) * Math.pow(accuracy, 24) * 2.83;
+        double accuracyValueOf2000 = scaleAccuracyPerformanceWithNote(accuracyValue, 2000);
+        double accuracyValueOf1000 = scaleAccuracyPerformanceWithNote(accuracyValue, 1000);
+        double accuracyValueOf500 = scaleAccuracyPerformanceWithNote(accuracyValue, 500);
+        result.append("[Lazybot] 在OD ").append(CommonTool.toString(params.getOverallDifficulty()))
+                .append("下,\nUR ")
+                .append(CommonTool.toString(params.getTargetUnstableRate()))
+                .append("的准确率理论为:\n")
+                .append(CommonTool.toString(accuracy*100D)).append("%\n")
+                .append("\n在2000个note下的acc pp值为: ").append(CommonTool.toString(accuracyValueOf2000))
+                .append("\n在1000个note下的acc pp值为: ").append(CommonTool.toString(accuracyValueOf1000))
+                .append("\n在500个note下的acc pp值为: ").append(CommonTool.toString(accuracyValueOf500));
+
+        return result.toString();
+    }
+    public static double calculateEstimatedAccuracy(double od, double ur)
+    {
+        double hitwindowOf300 = 80D - 6D * od;
+        double hitwindowOf100 = 140D - 8D * od;
+        double hitwindowOf50 = 200D - 10D *od;
+
+        double d = ur / 10d;
+
+        double rateOf300 = CommonTool.erf(hitwindowOf300 / (d * Math.sqrt(2)));
+        double rateOf100 = CommonTool.erf(hitwindowOf100 / (d * Math.sqrt(2))) - rateOf300;
+        double rateOf50 = CommonTool.erf(hitwindowOf50 / (d * Math.sqrt(2))) - rateOf300 - rateOf100;
+
+        return rateOf300 + rateOf100 / 3 + rateOf50 / 6;
+    }
+
+    private static double scaleAccuracyPerformanceWithNote(double initialAccuracy, int noteCount)
+    {
+        return initialAccuracy * Math.min(1.15, Math.pow(noteCount / 1000.0, 0.3));
+    }
+
 
 
     @Override
