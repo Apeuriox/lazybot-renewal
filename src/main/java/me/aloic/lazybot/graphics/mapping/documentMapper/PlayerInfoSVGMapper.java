@@ -365,6 +365,9 @@ public class PlayerInfoSVGMapper extends LazybotSVGMapper
         doc.getElementById("level").setAttribute("fill",fontColor.toString());
         doc.getElementById("info-rect-bg").setAttribute("fill", "url(#gradient-2)");
         doc.getElementById("team").setTextContent("["+player.getInfo().getTeamShortName()+"]");
+        if (player.getInfo().getTeamShortName()==null){
+            doc.getElementById("team").setAttribute("opacity","0");
+        }
         doc.getElementById("level").setTextContent(String.valueOf(player.getInfo().getLevel()));
 
         doc.getElementById("pp").setTextContent(String.valueOf(Math.round(Optional.ofNullable(player.getInfo().getPerformancePoint()).orElse(0D))));

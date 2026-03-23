@@ -112,11 +112,11 @@ public class RendererDistributor
         );
     }
 
-    public static byte[] renderMMoelleuxCardTrimmed(MoelleuxCard card)
+    public static byte[] renderMMoelleuxCardTrimmed(MoelleuxCard card, int scale)
     {
         return SVGRenderer.renderSVGDocumentToByteArrayPNG(
                 PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCardTrimmed(card.getInfo(), card.getPrimaryHue())
-                ,1
+                ,scale
         );
     }
 
