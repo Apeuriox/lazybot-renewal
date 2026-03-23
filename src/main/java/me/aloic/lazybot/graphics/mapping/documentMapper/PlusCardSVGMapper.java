@@ -171,7 +171,6 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
         int stamina= (int) Math.round(performance.getPpStamina());
         int precision= (int) Math.round(performance.getPpPrecision());
         int accuracy= (int) Math.round(performance.getPpAcc());
-        int average= (int) Math.round((jumpAim+flowAim+speed+stamina+precision+accuracy)/6);
 
         double jumpScaled= CommonTool.getScaledRatio(jumpAim, PerformanceDimensionLimit.JUMP.getLimitExpertPlus(), PerformanceDimensionLimit.JUMP.getScaleFactor());
         double flowScaled= CommonTool.getScaledRatio(flowAim, PerformanceDimensionLimit.FLOW.getLimitExpertPlus(), PerformanceDimensionLimit.FLOW.getScaleFactor());
@@ -204,6 +203,103 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
         setLinearGradientForCC2024(document,"precision-bar",precision, precisionScaled,  getPrimaryHueForCC2024(precisionScaled,averageScaled,PerformanceDimensionLimit.PRECISION,player.getPrimaryColor()));
         setLinearGradientForCC2024(document,"accuracy-bar",accuracy, accuracyScaled,  getPrimaryHueForCC2024(accuracyScaled,averageScaled,PerformanceDimensionLimit.ACCURACY,player.getPrimaryColor()));
 
+
+        return document;
+    }
+    public static Document mapPlusInfoToEaster(PPPlusPerformance performance, PlayerInfoVO player)
+    {
+        Document document = SVGTemplateLoader.loadSVGTemplate("PlusCardEaster");
+        if (player.getPrimaryColor()>360 || player.getPrimaryColor()==333)
+        {
+            player.setPrimaryColor(270);
+        }
+
+        HSL headerColor = new HSL(player.getPrimaryColor(), 60, 82);
+        HSL mainColor = new HSL(player.getPrimaryColor(), 100, 89);
+        HSL mainColorAlternative = new HSL(CommonTool.circularHueSubtract(player.getPrimaryColor(),110), 98, 74);
+
+        HSL bottomColor = new HSL(CommonTool.circularHueSubtract(player.getPrimaryColor(),17), 97, 77);
+        HSL bottomColorAlternative = new HSL(CommonTool.circularHueSubtract(player.getPrimaryColor(),116), 80, 59);
+        HSL typeBlockColor = new HSL(CommonTool.circularHueSubtract(player.getPrimaryColor(),39), 54, 73);
+        HSL decoBlockColor = new HSL(CommonTool.circularHueSubtract(player.getPrimaryColor(),132), 17, 89);
+        HSL decoSquareColor = new HSL(CommonTool.circularHueSubtract(player.getPrimaryColor(),109), 100, 75);
+        HSL triangleColor = new HSL(CommonTool.circularHueSubtract(player.getPrimaryColor(),20), 54, 73);
+
+
+        if (player.getGlobalRank()!=null)
+            document.getElementById("global-rank").setTextContent("#" + CommonTool.formatNumber(player.getGlobalRank()));
+        else{
+            document.getElementById("global-rank").setTextContent("#0");
+            document.getElementById("global-rank").setAttribute("opacity","0.7");
+        }
+
+        document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getAvatarUrl());
+
+        int jumpAim= (int) Math.round(performance.getPpJumpAim());
+        int flowAim= (int) Math.round(performance.getPpFlowAim());
+        int speed= (int) Math.round(performance.getPpSpeed());
+        int stamina= (int) Math.round(performance.getPpStamina());
+        int precision= (int) Math.round(performance.getPpPrecision());
+        int accuracy= (int) Math.round(performance.getPpAcc());
+
+        double jumpScaled= CommonTool.getScaledRatio(jumpAim, PerformanceDimensionLimit.JUMP.getLimitExpertPlus(), PerformanceDimensionLimit.JUMP.getScaleFactor());
+        double flowScaled= CommonTool.getScaledRatio(flowAim, PerformanceDimensionLimit.FLOW.getLimitExpertPlus(), PerformanceDimensionLimit.FLOW.getScaleFactor());
+        double speedScaled= CommonTool.getScaledRatio(speed, PerformanceDimensionLimit.SPEED.getLimitExpertPlus(), PerformanceDimensionLimit.SPEED.getScaleFactor());
+        double staminaScaled= CommonTool.getScaledRatio(stamina, PerformanceDimensionLimit.STAMINA.getLimitExpertPlus(), PerformanceDimensionLimit.STAMINA.getScaleFactor());
+        double precisionScaled= CommonTool.getScaledRatio(precision, PerformanceDimensionLimit.PRECISION.getLimitExpertPlus(), PerformanceDimensionLimit.PRECISION.getScaleFactor());
+        double accuracyScaled= CommonTool.getScaledRatio(accuracy, PerformanceDimensionLimit.ACCURACY.getLimitExpertPlus(), PerformanceDimensionLimit.ACCURACY.getScaleFactor());
+        double averageScaled= (jumpScaled+flowScaled+speedScaled+staminaScaled+precisionScaled+accuracyScaled)/6.0;
+
+
+        document.getElementById("jump").setTextContent(CommonTool.transformNumber(jumpAim));
+        document.getElementById("flow").setTextContent(CommonTool.transformNumber(flowAim));
+        document.getElementById("speed").setTextContent(CommonTool.transformNumber(speed));
+        document.getElementById("stamina").setTextContent(CommonTool.transformNumber(stamina));
+        document.getElementById("precision").setTextContent(CommonTool.transformNumber(precision));
+        document.getElementById("accuracy").setTextContent(CommonTool.transformNumber(accuracy));
+        document.getElementById("plus-performance").setTextContent(CommonTool.transformNumber((int) Math.round(performance.getPp())));
+        document.getElementById("performance").setTextContent(CommonTool.transformNumber((int) Math.round(player.getPerformancePoint())));
+
+        setValueAndColorForEaster(document,"jump-rect", jumpScaled, averageScaled, player.getPrimaryColor());
+        setValueAndColorForEaster(document,"flow-rect", flowScaled, averageScaled, player.getPrimaryColor());
+        setValueAndColorForEaster(document,"speed-rect", speedScaled, averageScaled, player.getPrimaryColor());
+        setValueAndColorForEaster(document,"stamina-rect", staminaScaled, averageScaled, player.getPrimaryColor());
+        setValueAndColorForEaster(document,"precision-rect", precisionScaled, averageScaled, player.getPrimaryColor());
+        setValueAndColorForEaster(document,"accuracy-rect", accuracyScaled, averageScaled, player.getPrimaryColor());
+
+        document.getElementById("header-rect").setAttribute("fill",headerColor.toString());
+        document.getElementById("basic-stats-rect").setAttribute("fill",mainColor.toString());
+        document.getElementById("basic-stats-rect-2").setAttribute("fill",mainColorAlternative.toString());
+
+        document.getElementById("triangle-1").setAttribute("fill",triangleColor.toString());
+        document.getElementById("triangle-2").setAttribute("fill",triangleColor.toString());
+        document.getElementById("triangle-3").setAttribute("fill",triangleColor.toString());
+        document.getElementById("triangle-4").setAttribute("fill",triangleColor.toString());
+
+        document.getElementById("square-1").setAttribute("fill",decoSquareColor.toString());
+        document.getElementById("square-2").setAttribute("fill",triangleColor.toString());
+        document.getElementById("square-3").setAttribute("fill",decoSquareColor.toString());
+
+        document.getElementById("side-rect").setAttribute("fill",mainColorAlternative.toString());
+        document.getElementById("side-rect-2").setAttribute("fill",mainColorAlternative.toString());
+
+        document.getElementById("basic-1").setAttribute("fill",mainColor.toString());
+        document.getElementById("basic-2").setAttribute("fill",mainColor.toString());
+        document.getElementById("basic-3").setAttribute("fill",mainColor.toString());
+        document.getElementById("detail-header").setAttribute("fill",mainColor.toString());
+
+        document.getElementById("type-rect").setAttribute("fill",typeBlockColor.toString());
+        document.getElementById("bottom").setAttribute("fill",bottomColor.toString());
+        document.getElementById("bottom-2").setAttribute("fill",bottomColorAlternative.toString());
+
+        document.getElementById("deco-1").setAttribute("fill",decoBlockColor.toString());
+        document.getElementById("deco-2").setAttribute("fill",decoBlockColor.toString());
+        document.getElementById("deco-3").setAttribute("fill",decoBlockColor.toString());
+        document.getElementById("deco-4").setAttribute("fill",decoBlockColor.toString());
+        document.getElementById("deco-5").setAttribute("fill",decoBlockColor.toString());
+        document.getElementById("deco-6").setAttribute("fill",decoBlockColor.toString());
+        document.getElementById("deco-7").setAttribute("fill",decoBlockColor.toString());
+        document.getElementById("deco-8").setAttribute("fill",decoBlockColor.toString());
 
         return document;
     }
@@ -360,6 +456,16 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
         svgRoot.appendChild(linearGradient);
         doc.getElementById(elementId).setAttribute("fill", "url(#".concat("gradient-".concat(elementId))+")");
 
+    }
+    private static void setValueAndColorForEaster(Document document,String field ,double value, double average,int hue)
+    {
+        document.getElementById(field).setAttribute("width", String.valueOf(Math.max(275,value*950)));
+        if (value>=average) {
+            document.getElementById(field).setAttribute("fill", new HSL(hue, 100, 89).toString());
+        }
+        else {
+            document.getElementById(field).setAttribute("fill", new HSL(CommonTool.circularHueSubtract(hue,110), 98, 74).toString());
+        }
     }
 
     private static int getPrimaryHueForCC2024(double scaled, double avgScaled,PerformanceDimensionLimit dim, int primaryColor)

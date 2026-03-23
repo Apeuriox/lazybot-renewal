@@ -1,0 +1,137 @@
+<svg width="1800" height="1788" viewBox="0 0 1800 1788" fill="none"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <defs>
+        <clipPath id="avatarBorder">
+            <rect x="137" y="324" width="469" height="301" fill="white" />
+        </clipPath>
+    </defs>
+
+    <rect y="6" width="1800" height="1782" fill="#E2CAFD" />
+    <rect y="31" width="1800" height="1757" fill="#DDDADB" />
+
+    <path d="M0 943H193V1195H0V943Z" fill="#DDE7E0" id="deco-1"/>
+    <path d="M0 1300L279.5 1597.5V1788H0V1300Z" fill="#DDE7E0" id="deco-2"/>
+    <path d="M918 1788H622L462 1612.23V1433H913L918 1788Z" fill="#DDE7E0" id="deco-3"/>
+    <path d="M916 1230H620L460 1407.5V1588.5H911L916 1230Z" fill="#DDE7E0" id="deco-4"/>
+    <path d="M923 1788H1219L1379 1612.23V1433H928L923 1788Z" fill="#DDE7E0" id="deco-5"/>
+    <rect x="1560" y="1582" width="240" height="206" fill="#DDE7E0" id="deco-6"/>
+    <rect x="1560" y="946" width="240" height="245" fill="#DDE7E0" id="deco-7"/>
+    <rect x="1308" y="1166" width="266" height="245" fill="#DDE7E0" id="deco-8"/>
+
+    <rect width="1800" height="31" fill="#D0B4EC" id="header-rect"/>
+    <rect x="1546" width="254" height="31" fill="#555555" />
+    <text fill="black" font-family="KH Interference"
+          font-size="24" letter-spacing="0em"><tspan id="date" x="13" y="23.9">2026.02.20</tspan></text>
+    <text fill="black" font-family="KH Interference"
+          font-size="24" letter-spacing="0em"><tspan x="305" y="22.9">LAZYBOT_PLUS_CARD</tspan></text>
+    <text fill="black" font-family="KH Interference"
+          font-size="24" letter-spacing="0em"><tspan x="644" y="22.9">RESULT_IMAGE</tspan></text>
+    <text fill="#F8F8F8" font-family="KH Interference"
+          font-size="24" letter-spacing="0em"><tspan x="1656" y="24.9">TYPE 0011</tspan></text>
+    <rect x="100" y="133" width="1600" height="555" fill="#E4E4E4" />
+    <rect x="100" y="695" width="1600" height="556" fill="#E4E4E4" />
+    <path d="M96 129L63 161.043V96.9571L96 129Z" fill="#A194DF" id="triangle-1"/>
+    <path d="M95 692L62 724.043V659.957L95 692Z" fill="#A194DF" id="triangle-2"/>
+    <path d="M95 1272L62 1304.04V1239.96L95 1272Z" fill="#A194DF" id="triangle-3"/>
+    <path d="M1800 1682L1767 1714.04V1649.96L1800 1682Z" fill="#A194DF" id="triangle-4"/>
+    <rect x="137" y="161" width="542" height="50" fill="#E3C9FF" id="basic-stats-rect"/>
+    <rect x="137" y="211" width="1490" height="50" fill="#7DFED3" id="basic-stats-rect-2"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="70" font-weight="500"
+          letter-spacing="-0.1em"><tspan x="165" y="207.035">BASIC STATISTICS</tspan></text>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="70" font-weight="500"
+          letter-spacing="-0.1em" x="165" y="257.035"><tspan>TOTAL OF </tspan><tspan id="playtime">832</tspan><tspan> HOURS OF PLAYTIME AND STILL COUNTING</tspan></text>
+    <rect x="630" y="324" width="40" height="150" fill="#7DFED3" fill-opacity="0.827451" id="side-rect"/>
+    <rect x="689" y="327" width="223" height="28" fill="#DACAFA" id="basic-1"/>
+    <rect x="1187" y="327" width="192" height="28" fill="#DACAFA" id="basic-2"/>
+    <rect x="689" y="410" width="216" height="28" fill="#DACAFA" id="basic-3"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="34" font-weight="500" letter-spacing="0em"><tspan x="698" y="351.217">PERFORMANCE</tspan></text>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="34" font-weight="500" letter-spacing="0em"><tspan x="1194" y="351.217">PLUS STATS</tspan></text>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="34" font-weight="500" letter-spacing="0em"><tspan x="698" y="434.217">GLOBAL RANK</tspan></text>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="34" font-weight="500" letter-spacing="0em"><tspan x="698" y="380.217" id="performance">8,071</tspan></text>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="34" font-weight="500" letter-spacing="0em"><tspan x="1195" y="385.217" id="plus-performance">8,271</tspan></text>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="34" font-weight="500" letter-spacing="0em"><tspan x="698" y="463.217" id="global-rank">#15,758</tspan></text>
+    <rect x="1702" y="133" width="34" height="34" fill="#7EFFD6" id="square-1"/>
+    <rect x="1703" y="1272" width="34" height="34" fill="#7EFFD6" id="square-2"/>
+    <rect x="1703" y="695" width="34" height="34" fill="#9986F4" id="square-3"/>
+    <rect x="137" y="324" width="469" height="301" fill="white" />
+    <image
+            xlink:href="assets/guestAvatar.png"
+            x="137" y="324" width="469" height="301" preserveAspectRatio="xMidYMid slice" id="avatar" clip-path="url(#avatarBorder)"/>
+
+
+    <rect x="137" y="736" width="699" height="51" fill="#E1CAFF" id="detail-header"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="70" font-weight="500"
+          letter-spacing="-0.1em"><tspan x="162" y="782.035">DETAILED KEY STATISTICS</tspan></text>
+    <rect x="698" y="825" width="664" height="36" fill="#E2CAFD" id="jump-rect"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="40" font-weight="500"
+          letter-spacing="-0.1em" x="711" y="855.02"><tspan>JUMP: </tspan><tspan id="jump">4509</tspan></text>
+    <rect x="698" y="900" width="404" height="36" fill="#E2CAFD" id="flow-rect"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="40" font-weight="500"
+          letter-spacing="-0.1em" x="711" y="930.02"><tspan>FLOW: </tspan><tspan id="flow">3276</tspan></text>
+    <rect x="698" y="975" width="274" height="36" fill="#82FCD5" id="precision-rect"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="40" font-weight="500"
+          letter-spacing="-0.1em" x="711" y="1005.02"><tspan>PRECISION: </tspan><tspan id="precision">1232</tspan></text>
+    <rect x="698" y="1052" width="274" height="36" fill="#82FCD5" id="speed-rect"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="40" font-weight="500"
+          letter-spacing="-0.1em" x="711" y="1081.02"><tspan>SPEED: </tspan><tspan id="speed">3213</tspan></text>
+    <rect x="698" y="1123" width="347" height="36" fill="#E2CAFD" id="stamina-rect"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="40" font-weight="500"
+          letter-spacing="-0.1em" x="710" y="1154.02"><tspan>STAMINA: </tspan><tspan id="stamina">3211</tspan></text>
+    <rect x="698" y="1200" width="499" height="36" fill="#E2CAFD" id="accuracy-rect"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="40" font-weight="500"
+          letter-spacing="-0.1em" x="710" y="1230.02"><tspan>ACCURACY: </tspan><tspan id="accuracy">3453</tspan></text>
+
+
+
+    <rect x="630" y="825" width="41" height="236" fill="#7CFFD8" id="side-rect-2"/>
+    <rect x="100" y="1272" width="1600" height="208" fill="#A28AFD" id="bottom"/>
+    <rect x="100" y="1480" width="1600" height="208" fill="#44EAA2" id="bottom-2"/>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="150" font-weight="500"
+          letter-spacing="-0.1em"><tspan x="128" y="1452.07">TESTING/APRIL_FOOLS</tspan></text>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="50" font-weight="500"
+          letter-spacing="-0.1em"><tspan x="137" y="1559.03">TYPE-011_FULL</tspan></text>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="50" font-weight="500"
+          letter-spacing="-0.1em"><tspan x="137" y="1606.03">INTERNAL_BUILD_VERSION_256</tspan></text>
+    <text fill="black"
+          font-family="HammerBro101 Movie Reg" font-size="50" font-weight="500"
+          letter-spacing="-0.1em"><tspan x="137" y="1652.03">NOT_FOR_PUBLIC_USE</tspan></text>
+    <rect x="137" y="825" width="493" height="410" fill="#91A8DB" id="type-rect"/>
+    <line x1="136.998" y1="862.476" x2="629.994" y2="860.5" stroke="#9AB0E4" />
+    <line x1="136.998" y1="909.5" x2="629.994" y2="907.5" stroke="#9AB0E4" />
+    <line x1="136.998" y1="956.476" x2="629.994" y2="954.5" stroke="#9AB0E4" />
+    <line x1="136.998" y1="1003.5" x2="629.994" y2="1001.5" stroke="#9AB0E4" />
+    <line x1="136.998" y1="1050.48" x2="629.994" y2="1048.5" stroke="#9AB0E4" />
+    <line x1="136.998" y1="1097.5" x2="629.994" y2="1095.5" stroke="#9AB0E4" />
+    <line x1="136.998" y1="1191.5" x2="629.994" y2="1189.5" stroke="#9AB0E4" />
+    <path d="M182.5 1235V825" stroke="#9AB0E4" />
+    <line x1="228.5" y1="1235" x2="228.5" y2="825" stroke="#9AB0E4" />
+    <line x1="322" y1="1235" x2="322" y2="825" stroke="#9AB0E4" />
+    <path d="M369 1236V826" stroke="#9AB0E4" />
+    <line x1="415" y1="1236" x2="415" y2="826" stroke="#9AB0E4" />
+    <path d="M462.5 1236V826" stroke="#9AB0E4" />
+    <line x1="508.5" y1="1236" x2="508.5" y2="826" stroke="#9AB0E4" />
+    <path d="M556 1235V825" stroke="#9AB0E4" />
+    <line x1="602" y1="1235" x2="602" y2="825" stroke="#9AB0E4" />
+    <path
+            d="M235.023 1162.3L235.252 1219.42L223.892 1219.47L223.769 1188.75L180.889 1188.92L181.012 1219.64L169.653 1219.68L169.424 1162.57C169.4 1156.7 171.141 1151.89 174.646 1148.14L196 1126.78L208.16 1126.73L229.685 1147.92C233.22 1151.64 235 1156.44 235.023 1162.3ZM223.729 1178.67L223.667 1163.31C223.653 1159.79 222.736 1157.12 220.915 1155.32L202.92 1136.67L201.64 1136.68L183.475 1155.47C181.669 1157.29 180.773 1159.96 180.787 1163.48L180.849 1178.84L223.729 1178.67ZM283.259 1208.67L283.302 1219.23L244.902 1219.38L244.86 1208.82L258.299 1208.77L258.012 1137.09L244.572 1137.14L244.53 1126.58L282.93 1126.43L282.972 1136.99L269.372 1137.04L269.659 1208.72L283.259 1208.67ZM364.271 1126.1L364.643 1218.9L353.123 1218.95L352.829 1145.51L332.447 1169.91L324.767 1169.94L304.19 1145.7L304.484 1219.14L292.964 1219.19L292.592 1126.39L302.352 1126.35L327.917 1157.45L329.197 1157.44L354.512 1126.14L364.271 1126.1Z"
+            fill="#AFC0E9" fill-opacity="0.9" />
+</svg>

@@ -491,7 +491,7 @@ public class PlayerServiceImpl implements PlayerService
         PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
                 null,
                 performance);
-        HSL mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getBannerUrl()));
+        HSL mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getAvatarUrl()));
 
         boolean isTooDarkOrBright = mainColor.getSaturation()<4 || mainColor.getLightness()>94;
         if (isTooDarkOrBright)

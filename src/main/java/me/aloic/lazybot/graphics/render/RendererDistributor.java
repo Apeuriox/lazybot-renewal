@@ -124,6 +124,8 @@ public class RendererDistributor
         if (type==0) return SVGRenderer.renderSVGDocumentToByteArray(
                 PlusCardSVGMapper.mapPlusInfoToCardCC2024(player.getPerformance(),player.getPlayer()),
                 1);
+        if (type==2) return SVGRenderer.renderSVGDocumentToByteArray(
+                PlusCardSVGMapper.mapPlusInfoToEaster(player.getPerformance(),player.getPlayer()),1);
         return SVGRenderer.renderSVGDocumentToByteArray(
                 PlusCardSVGMapper.mapPlusInfoToCard(player.getPerformance(),player.getPlayer()),
                 2);

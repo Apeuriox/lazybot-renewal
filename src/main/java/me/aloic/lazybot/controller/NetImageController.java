@@ -19,8 +19,6 @@ public class NetImageController
 {
     @Resource
     private PlayerService playerService;
-    private static final List<Integer> BETA_USER = Arrays.asList(11232623,9037287);
-
 
     @GetMapping(value = "/card", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> renderMoelleuxCard(
@@ -28,9 +26,6 @@ public class NetImageController
             @RequestParam(value = "hue", required = false) Integer hue,
             @RequestParam(value = "version", required = false) Integer version) throws Exception
     {
-
-        if (!BETA_USER.contains(playerId))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         if (version==null)
             version = 0;
         byte[] image = RendererDistributor.renderMMoelleuxCardTrimmed(playerService.cardMoelleux(new CardMoelleuxParameter(playerId,hue,version)));
