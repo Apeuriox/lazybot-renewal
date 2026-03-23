@@ -2,6 +2,7 @@ package me.aloic.lazybot.graphics.mapping;
 
 import org.w3c.dom.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -25,5 +26,11 @@ public class SVGElementHelper
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
         return dateTime.format(outputFormatter);
+    }
+    public static String dateNowNumber(){
+        LocalDate currentDate = LocalDate.now();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        return currentDate.format(formatter);
     }
 }

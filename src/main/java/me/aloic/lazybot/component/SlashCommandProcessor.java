@@ -79,7 +79,7 @@ public class SlashCommandProcessor
         }
         catch (Exception e) {
             logger.error(e.getMessage());
-            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 出现未知错误").build(), false);
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 出现预期外的错误: " + e.getMessage()).build(), false);
         }
         return CompletableFuture.completedFuture(null);
     }

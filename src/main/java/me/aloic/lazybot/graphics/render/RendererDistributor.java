@@ -10,6 +10,7 @@ import me.aloic.lazybot.util.TransformerUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class RendererDistributor
@@ -121,11 +122,16 @@ public class RendererDistributor
 
     public static byte[] renderPerformancePlusCard(PerformancePlusProfile player, int type) throws IOException
     {
+        LocalDate today = LocalDate.now();
+        double basicPossibility = 0.005;
+        if ( today.getMonthValue() == 4 && today.getDayOfMonth() == 1) {
+            basicPossibility *=40;
+        }
+        if (Math.random()> (1.0- basicPossibility)) return SVGRenderer.renderSVGDocumentToByteArray(
+            PlusCardSVGMapper.mapPlusInfoToEaster(player.getPerformance(),player.getPlayer()),1);
         if (type==0) return SVGRenderer.renderSVGDocumentToByteArray(
                 PlusCardSVGMapper.mapPlusInfoToCardCC2024(player.getPerformance(),player.getPlayer()),
                 1);
-        if (type==2) return SVGRenderer.renderSVGDocumentToByteArray(
-                PlusCardSVGMapper.mapPlusInfoToEaster(player.getPerformance(),player.getPlayer()),1);
         return SVGRenderer.renderSVGDocumentToByteArray(
                 PlusCardSVGMapper.mapPlusInfoToCard(player.getPerformance(),player.getPlayer()),
                 2);

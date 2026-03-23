@@ -134,6 +134,7 @@ public class CommonTool {
         return String.format("%.2f", hours);
     }
 
+
     public static int textWidthRough(String text)
     {
         text=text.toLowerCase();

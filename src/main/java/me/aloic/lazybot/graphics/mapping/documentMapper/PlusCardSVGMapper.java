@@ -1,6 +1,7 @@
 package me.aloic.lazybot.graphics.mapping.documentMapper;
 
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
+import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
@@ -229,10 +230,11 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
         if (player.getGlobalRank()!=null)
             document.getElementById("global-rank").setTextContent("#" + CommonTool.formatNumber(player.getGlobalRank()));
         else{
-            document.getElementById("global-rank").setTextContent("#0");
+            document.getElementById("global-rank").setTextContent("# -");
             document.getElementById("global-rank").setAttribute("opacity","0.7");
         }
-
+        document.getElementById("date").setTextContent(SVGElementHelper.dateNowNumber());
+        document.getElementById("playtime").setTextContent(String.valueOf((int)(player.getTotalPlayTime()/3600.0)));
         document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", player.getAvatarUrl());
 
         int jumpAim= (int) Math.round(performance.getPpJumpAim());
@@ -300,6 +302,8 @@ public class PlusCardSVGMapper extends LazybotSVGMapper
         document.getElementById("deco-6").setAttribute("fill",decoBlockColor.toString());
         document.getElementById("deco-7").setAttribute("fill",decoBlockColor.toString());
         document.getElementById("deco-8").setAttribute("fill",decoBlockColor.toString());
+        document.getElementById("lazy").setAttribute("fill",new HSL(CommonTool.circularHueSubtract(player.getPrimaryColor(),48), 57, 80).toString());
+        document.getElementById("lines").setAttribute("stroke",new HSL(CommonTool.circularHueSubtract(player.getPrimaryColor(),48), 58, 75).toString());
 
         return document;
     }
