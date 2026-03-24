@@ -541,9 +541,11 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         {
             Document doc = SVGTemplateLoader.loadSVGTemplate("ScoreCardListPlus");
             Element svgRoot = doc.getDocumentElement();
-            String totalHeight = String.valueOf(100 + 340 * (int)(performance.getScores().size())/3);
-            svgRoot.setAttribute("height", totalHeight);
-            doc.getElementById("background").setAttribute("height", totalHeight);
+            int totalHeight = 440 + 340 *  ((performance.getScores().size())/3);
+            if (performance.getScores().size() %3 ==0)
+                totalHeight -= 340;
+            svgRoot.setAttribute("height", String.valueOf(totalHeight));
+            doc.getElementById("background").setAttribute("height", String.valueOf(totalHeight));
             doc.getElementById("date").setTextContent(new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss").format(new Date()));
             doc.getElementById("name").setTextContent(performance.getName());
             doc.getElementById("sort").setTextContent(performance.getDimension());
