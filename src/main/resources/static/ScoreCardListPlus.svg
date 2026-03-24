@@ -1,0 +1,54 @@
+<svg width="1200" height="430"
+ fill="none" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient id="linear_1" x1="205" y1="79" x2="205" y2="239"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-opacity="0" />
+            <stop offset="1" stop-opacity="0.35" />
+        </linearGradient>
+        <linearGradient id="linear_2" x1="600" y1="79" x2="600" y2="239"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-opacity="0" />
+            <stop offset="1" stop-opacity="0.35" />
+        </linearGradient>
+        <linearGradient id="linear_3" x1="991" y1="79" x2="991" y2="239"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-opacity="0" />
+            <stop offset="1" stop-opacity="0.35" />
+        </linearGradient>
+        <style>
+            .cls-1 {
+                font-family: Outfit, Outfit;
+            }
+        </style>
+
+    </defs>
+
+
+
+         <rect id="background" y="0" width="1200" height="430" fill="#F2F2F2"/>
+    <rect width="1200" height="60" fill="#F2F2F2" />
+    <path d="M13 9H53V49H13V9Z" fill="url(#pattern0_2154_496)" />
+    <text fill="#0D0D0D" font-family="Outfit"
+        font-size="20" letter-spacing="0em" text-anchor="middle" x="120" y="36" id="name">Apeuriox</text>
+    <!-- <text fill="#0D0D0D" font-family="Outfit"
+        font-size="20" letter-spacing="0em" x="262" y="36" id="pp" text-anchor="middle">8081pp</text>
+     -->
+        <text fill="#0D0D0D" font-family="Outfit"
+        font-size="18" font-weight="300" letter-spacing="0em"><tspan x="219" y="36">Sorted by </tspan></text>
+    <text fill="#0D0D0D" font-family="Outfit"
+        font-size="18" letter-spacing="0em"><tspan x="301" y="36" id="sort">AIM </tspan></text>
+    <path transform="translate(38, 0)" d="M923 10V50" stroke="black" />
+    <path d="M197 9V49" stroke="black" />
+
+    <image
+              xlink:href="assets/guestAvatar.png"
+              x="10" y="10" width="40" height="40"
+             preserveAspectRatio="xMidYMid slice"
+              id="avatar"/>
+    <text fill="#0D0D0D" text-anchor="middle" x="1080" y="36.52" id="date" class="cls-1">0000-00-00 / 00:00:00</text>
+    <line y1="59.5" x2="1200" y2="59.5" stroke="black" />
+
+
+</svg>

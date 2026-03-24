@@ -25,4 +25,31 @@ public class ScorePerformanceDTO
     private LazybotPlayerSummary player;
     private List<String> mods;
     private LazybotScoreStatistics statistics;
+
+    private String rank;
+
+
+    @Override
+    public String toString()
+    {
+        return "ScorePerformanceDTO{" +
+                "scoreId=" + scoreId +
+                ", accuracy=" + accuracy +
+                ", pp=" + pp +
+                ", ppSpeed=" + ppSpeed +
+                ", ppAim=" + ppAim +
+                ", ppStamina=" + ppStamina +
+                ", ppJump=" + ppJump +
+                ", ppFlow=" + ppFlow +
+                ", ppPrecision=" + ppPrecision +
+                ", ppAccuracy=" + ppAccuracy +
+                ", combo=" + combo +
+                ", createdAt=" + createdAt +
+                ", beatmap=" + beatmap +
+                ", player=" + player +
+                ", mods=" + mods +
+                ", statistics=" + statistics +
+                ", rank='" + rank + '\'' +
+                '}';
+    }
 }

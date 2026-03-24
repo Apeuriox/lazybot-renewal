@@ -28,6 +28,19 @@ public class AssetDownloader
         String targetUrl = URLBuildUtil.buildURLOfSayobotMapBG(sid,sayoData.getBid_data().getFirst().getBg());
         AssetDownloadUtil.backgroundDownload(desiredLocalPath,targetUrl,false);
     }
+    public String downloadBeatmapBackgroundFromSayobotByBid(int bid)
+    {
+        SayoData sayoData = dataExtractor.extractSayobotBeatmapSetByBid(bid);
+        int sid = sayoData.getSid();
+        String desiredLocalPath= ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/mapBG/" + sid +".jpg";
+        File saveFilePath = new File(desiredLocalPath);
+        if (saveFilePath.exists()) {
+            return desiredLocalPath;
+        }
+        String targetUrl = URLBuildUtil.buildURLOfSayobotMapBG(sid,sayoData.getBid_data().getFirst().getBg());
+        AssetDownloadUtil.backgroundDownload(desiredLocalPath,targetUrl,false);
+        return desiredLocalPath;
+    }
 
     public String beatmapBackgroundAbsolutePath(Integer sid)
     {

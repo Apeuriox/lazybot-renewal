@@ -27,7 +27,7 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bp","best","pbp","pb","b","bsm"})
+@LazybotCommandMapping({"bp","best","pbp","b","bsm"})
 @Component
 public class BpCommand implements LazybotSlashCommand
 {
@@ -150,7 +150,7 @@ public class BpCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Best Performance","Bp, Best, Pbp, Pb",
+                new CommandHelp("Best Performance","Bp, Best, Pbp",
                         "查询指定用户的最佳成绩中的指定的第几个，Pbp即Pb会包含PP+数据",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Bp #1")

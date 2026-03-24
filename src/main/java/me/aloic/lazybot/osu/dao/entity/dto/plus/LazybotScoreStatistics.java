@@ -35,4 +35,19 @@ public class LazybotScoreStatistics
         this.countTick= Optional.ofNullable(statisticsLazer.getLarge_tick_hit()).orElse(0);
         this.countEnd= Optional.ofNullable(statisticsLazer.getSlider_tail_hit()).orElse(0);
     }
+
+    @Override
+    public String toString()
+    {
+        return "LazybotScoreStatistics{" +
+                "scoreId=" + scoreId +
+                ", count300=" + count300 +
+                ", count100=" + count100 +
+                ", count50=" + count50 +
+                ", count0=" + count0 +
+                ", countTick=" + countTick +
+                ", countEnd=" + countEnd +
+                '}';
+    }
 }
+

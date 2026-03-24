@@ -33,6 +33,14 @@ public class RendererDistributor
         );
     }
 
+    public static byte[] renderPlusScoresToCardList(PlusScorePerformance performance) throws IOException
+    {
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreListSVGMapper.mapScorePerformanceDimensionToBpCard(
+                       performance)
+        );
+    }
+
 
     public static byte[] renderThumbnailClassical(ThumbnailClassicalVO tcData)
     {

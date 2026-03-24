@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.OsuSubruleset;
+import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -258,13 +259,45 @@ public class URLBuildUtil
                 .addQuery("id", id);
         return builder.build();
     }
-
+    public static String buildURLOfScorePerformanceDimensionPlus(Integer id, ScorePerformanceDimension dimension)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("player")
+                .addPath("dimension")
+                .addQuery("id", id)
+                .addQuery("dimension", dimension.getField())
+                .addQuery("offset", "0")
+                .addQuery("limit", "21");
+        return builder.build();
+    }
+    public static String buildURLOfScorePerformanceDimensionPlus(Integer id, ScorePerformanceDimension dimension, Integer offset, Integer limit)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("player")
+                .addPath("dimension")
+                .addQuery("id", id)
+                .addQuery("dimension", dimension.getField())
+                .addQuery("offset", offset)
+                .addQuery("limit", limit);
+        return builder.build();
+    }
     public static String buildURLOfSayobotBeatmap(Integer beatmapId)
     {
         UrlBuilder builder = UrlBuilder.ofHttp("https://api.sayobot.cn", CharsetUtil.CHARSET_UTF_8)
                 .addPath("v2")
                 .addPath("beatmapinfo")
                 .addQuery("K", beatmapId);
+        return builder.build();
+    }
+    public static String buildURLOfSayobotBeatmap(Integer beatmapId, Integer type)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp("https://api.sayobot.cn", CharsetUtil.CHARSET_UTF_8)
+                .addPath("v2")
+                .addPath("beatmapinfo")
+                .addQuery("K", beatmapId)
+                .addQuery("T", type);
         return builder.build();
     }
 

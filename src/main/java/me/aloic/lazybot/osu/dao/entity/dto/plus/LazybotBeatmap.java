@@ -25,6 +25,9 @@ public class LazybotBeatmap
     private Double bpm;
     private String checksum;
 
+
+    private String bgUrl;
+    private double star;
     public LazybotBeatmap(BeatmapDTO beatmap, BeatmapsetDTO beatmapset) {
         this.id= Long.valueOf(beatmap.getId());
         this.title=beatmapset.getTitle();
@@ -32,5 +35,20 @@ public class LazybotBeatmap
         this.version=beatmap.getVersion();
         this.bpm=beatmap.getBpm();
         this.checksum=beatmap.getChecksum();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "LazybotBeatmap{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", version='" + version + '\'' +
+                ", bpm=" + bpm +
+                ", checksum='" + checksum + '\'' +
+                ", bgUrl='" + bgUrl + '\'' +
+                ", star=" + star +
+                '}';
     }
 }

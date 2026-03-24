@@ -5,6 +5,7 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
@@ -363,4 +364,14 @@ public class OsuToolsUtil
                 .map(CompletableFuture::join)
                 .collect(Collectors.toList());
     }
+
+    public List<ScorePerformanceDTO> setupScorePerformanceList(List<ScorePerformanceDTO> scorelist) {
+        for (ScorePerformanceDTO score : scorelist) {
+            score.setRank(GradeCalculator.calculateGrade(score.getStatistics(),score.getMods()));
+            score.getBeatmap().setBgUrl(assetDownloader.downloadBeatmapBackgroundFromSayobotByBid(Math.toIntExact(score.getBeatmap().getId())));
+
+        }
+        return scorelist;
+    }
+
 }

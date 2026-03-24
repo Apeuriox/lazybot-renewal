@@ -3,10 +3,7 @@ package me.aloic.lazybot.osu.service;
 import desu.life.RosuFFI;
 import me.aloic.lazybot.entity.command.*;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
-import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
-import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.parameter.*;
 
 import java.io.IOException;
@@ -57,6 +54,8 @@ public interface PlayerService
     MoelleuxCard cardMoelleuxTrimmed(CardMoelleuxParameter params) throws Exception;
 
     PerformancePlusProfile getPerformancePlusPlayerInfo(GeneralParameter params) throws Exception;
+
+    PlusScorePerformance getPerformanceDimensionList(PlusListParameter params);
 
     AddScorePlus addScoreForPerformancePlus(ScoreParameter params);
 

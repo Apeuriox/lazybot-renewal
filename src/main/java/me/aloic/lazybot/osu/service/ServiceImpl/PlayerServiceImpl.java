@@ -14,12 +14,14 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.dao.mapper.*;
+import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileLightTheme;
@@ -531,6 +533,34 @@ public class PlayerServiceImpl implements PlayerService
             throw new LazybotRuntimeException("Pp+服务正在维护或生成失败，请稍后再试");
         }
 
+    }
+    @Override
+    public PlusScorePerformance getPerformanceDimensionList(PlusListParameter params)
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("此功能为PP+相关，仅支持osu模式");
+        PlayerInfoDTO player = getTargetPlayerInfoDTO(params);
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(player);
+
+        List<ScorePerformanceDTO> scores;
+        ScorePerformanceDimension dimension =  ScorePerformanceDimension.getDimension(params.getDimension());
+        try{
+            scores=dataExtractor.extractPerformancePlusDimension(playerInfoVO.getId(),
+                    dimension,
+                    params.getFrom()-1,
+                    params.getTo()-params.getFrom()+1
+            );
+        }
+        catch (LazybotRuntimeException e) {
+            logger.warn("Lazybot-PPplus数据获取失败，请稍后再试: {}", e);
+            throw new LazybotRuntimeException("Lazybot-PPplus数据获取失败，请稍后再试");
+
+        }
+        PlusScorePerformance playerPerformance=new PlusScorePerformance(scores);
+        playerPerformance.setScores(osuToolsUtil.setupScorePerformanceList(playerPerformance.getScores()));
+        playerPerformance.setName(playerInfoVO.getPlayerName());
+        playerPerformance.setAvatarUrl(playerInfoVO.getAvatarUrl());
+        playerPerformance.setDimension(dimension.getShowcase());
+        return playerPerformance;
     }
 
 

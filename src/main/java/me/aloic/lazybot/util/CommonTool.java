@@ -167,6 +167,14 @@ public class CommonTool {
         else
             return null;
     }
+    public static String modListToString(List<String> modArray)
+    {
+        if(modArray!=null && !modArray.isEmpty()) {
+            return "+" + String.join("", modArray);
+        }
+        else
+            return "Nomod";
+    }
     public static String modArrayToString(List<Mod> modArray)
     {
         if(modArray!=null && !modArray.isEmpty())
@@ -204,6 +212,12 @@ public class CommonTool {
     public static String formatJsonDateToString(String timeStampString, String outputFormat)
     {
         OffsetDateTime odt = OffsetDateTime.parse(timeStampString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputFormat);
+        return odt.toLocalDateTime().plusHours(8).format(outputFormatter);
+    }
+    public static String formatJsonDateToStringNoTimezone(String timeStampString, String outputFormat)
+    {
+        OffsetDateTime odt = OffsetDateTime.parse(timeStampString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputFormat);
         return odt.toLocalDateTime().plusHours(8).format(outputFormatter);
     }
@@ -808,6 +822,11 @@ public class CommonTool {
         double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
 
         return sign * y;
+    }
+
+    public static int randomIntegerWithin(int min, int max)
+    {
+        return (int)(Math.random() * (max - min + 1)) + min;
     }
 
 }
