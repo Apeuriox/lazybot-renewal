@@ -1,4 +1,4 @@
-package me.aloic.lazybot.osu.dao.entity.dto.lazybot;
+package me.aloic.lazybot.osu.dao.entity.dto.plus;
 
 import lombok.Data;
 

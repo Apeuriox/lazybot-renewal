@@ -11,7 +11,7 @@ import me.aloic.lazybot.monitor.CompareMonitor;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
-import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;

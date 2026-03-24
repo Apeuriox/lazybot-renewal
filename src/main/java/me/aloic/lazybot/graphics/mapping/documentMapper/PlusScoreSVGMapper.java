@@ -2,7 +2,7 @@ package me.aloic.lazybot.graphics.mapping.documentMapper;
 
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
-import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
