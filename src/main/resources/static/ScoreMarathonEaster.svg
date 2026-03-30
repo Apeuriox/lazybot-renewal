@@ -1,0 +1,713 @@
+<svg width="1780" height="1080" fill="none"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <rect width="1780" height="1080" fill="#202020" />
+    <rect x="24" width="90" height="1080" fill="#20211B" />
+    <rect width="13" height="1080" fill="#C0FE05" />
+    <rect x="1022" width="90" height="1080" fill="#4503F9" />
+    <rect x="24" width="988" height="1080" fill="black" />
+    <image
+            opacity="0.6"
+            xlink:href="assets/emptyBG.jpg"
+            x="114" y="0" width="898" height="540" preserveAspectRatio="xMidYMid slice" id="map-bg"/>
+
+    <text fill="#EEEEEE"
+          font-family="Marathon Shapiro" font-size="60" font-weight="30" letter-spacing="0.01em"><tspan x="141" y="413.9">FALL IN THE DARK</tspan></text>
+    <text fill="#EEEEEE"
+          font-family="Marathon Shapiro" font-size="40" font-weight="30" letter-spacing="0.01em"><tspan x="141" y="465.1">Shibayan feat. yana</tspan></text>
+    <rect x="141" y="514" width="4" height="4" fill="#EEEEEE" />
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em" x="157" y="522.3"><tspan>BID </tspan><tspan id="bid">123456</tspan></text>
+    <rect x="313" y="514" width="4" height="4" fill="#EEEEEE" />
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em" x="329" y="522.3"><tspan>mapper </tspan><tspan id="mapper">lasse</tspan></text>
+    <rect x="313" y="489" width="4" height="4" fill="#EEEEEE" />
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em" x="329" y="497.3"><tspan>version </tspan><tspan id="version">despair</tspan></text>
+    <rect x="141" y="489" width="4" height="4" fill="#EEEEEE" />
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em" x="157" y="497.3"><tspan>SID </tspan><tspan id="sid">654321</tspan></text>
+    <text fill="#C0FE03" font-family="KH Interference"
+          font-size="14" letter-spacing="0.01em"><tspan x="119" y="557.4">SCORE DETAILS</tspan></text>
+    <path d="M244.222 558H242.778V544L244.222 544V558Z" fill="#C0FE03" />
+    <path d="M244.222 555.103H245.667V556.552H244.222V555.103Z" fill="#C0FE03" />
+    <path d="M248.556 550.759H250V552.207H248.556V550.759Z" fill="#C0FE03" />
+    <path d="M247.111 552.207H248.556V553.655H247.111V552.207Z" fill="#C0FE03" />
+    <path d="M245.667 553.655H247.111V555.103H245.667V553.655Z" fill="#C0FE03" />
+    <path d="M237 550.759H238.444V552.207H237V550.759Z" fill="#C0FE03" />
+    <path d="M241.333 555.103H242.778V556.552H241.333V555.103Z" fill="#C0FE03" />
+    <path d="M239.889 553.655H241.333V555.103H239.889V553.655Z" fill="#C0FE03" />
+    <path d="M238.444 552.207H239.889V553.655H238.444V552.207Z" fill="#C0FE03" />
+    <text fill="#C0FE03" font-family="KH Interference"
+          font-size="14" letter-spacing="0.01em"><tspan x="270" y="557.4">SCORE DETAILS</tspan></text>
+    <path d="M395.222 558H393.778V544L395.222 544V558Z" fill="#C0FE03" />
+    <path d="M395.222 555.103H396.667V556.552H395.222V555.103Z" fill="#C0FE03" />
+    <path d="M399.556 550.759H401V552.207H399.556V550.759Z" fill="#C0FE03" />
+    <path d="M398.111 552.207H399.556V553.655H398.111V552.207Z" fill="#C0FE03" />
+    <path d="M396.667 553.655H398.111V555.103H396.667V553.655Z" fill="#C0FE03" />
+    <path d="M388 550.759H389.444V552.207H388V550.759Z" fill="#C0FE03" />
+    <path d="M392.333 555.103H393.778V556.552H392.333V555.103Z" fill="#C0FE03" />
+    <path d="M390.889 553.655H392.333V555.103H390.889V553.655Z" fill="#C0FE03" />
+    <path d="M389.444 552.207H390.889V553.655H389.444V552.207Z" fill="#C0FE03" />
+    <text fill="#C0FE03" font-family="KH Interference"
+          font-size="14" letter-spacing="0.01em"><tspan x="421" y="557.4">SCORE DETAILS</tspan></text>
+    <path d="M546.222 558H544.778V544L546.222 544V558Z" fill="#C0FE03" />
+    <path d="M546.222 555.103H547.667V556.552H546.222V555.103Z" fill="#C0FE03" />
+    <path d="M550.556 550.759H552V552.207H550.556V550.759Z" fill="#C0FE03" />
+    <path d="M549.111 552.207H550.556V553.655H549.111V552.207Z" fill="#C0FE03" />
+    <path d="M547.667 553.655H549.111V555.103H547.667V553.655Z" fill="#C0FE03" />
+    <path d="M539 550.759H540.444V552.207H539V550.759Z" fill="#C0FE03" />
+    <path d="M543.333 555.103H544.778V556.552H543.333V555.103Z" fill="#C0FE03" />
+    <path d="M541.889 553.655H543.333V555.103H541.889V553.655Z" fill="#C0FE03" />
+    <path d="M540.444 552.207H541.889V553.655H540.444V552.207Z" fill="#C0FE03" />
+    <text fill="#C0FE03" font-family="KH Interference"
+          font-size="14" letter-spacing="0.01em"><tspan x="572" y="557.4">SCORE DETAILS</tspan></text>
+    <path d="M697.222 558H695.778V544L697.222 544V558Z" fill="#C0FE03" />
+    <path d="M697.222 555.103H698.667V556.552H697.222V555.103Z" fill="#C0FE03" />
+    <path d="M701.556 550.759H703V552.207H701.556V550.759Z" fill="#C0FE03" />
+    <path d="M700.111 552.207H701.556V553.655H700.111V552.207Z" fill="#C0FE03" />
+    <path d="M698.667 553.655H700.111V555.103H698.667V553.655Z" fill="#C0FE03" />
+    <path d="M690 550.759H691.444V552.207H690V550.759Z" fill="#C0FE03" />
+    <path d="M694.333 555.103H695.778V556.552H694.333V555.103Z" fill="#C0FE03" />
+    <path d="M692.889 553.655H694.333V555.103H692.889V553.655Z" fill="#C0FE03" />
+    <path d="M691.444 552.207H692.889V553.655H691.444V552.207Z" fill="#C0FE03" />
+    <text fill="#C0FE03" font-family="KH Interference"
+          font-size="14" letter-spacing="0.01em"><tspan x="723" y="557.4">SCORE DETAILS</tspan></text>
+    <path d="M848.222 558H846.778V544L848.222 544V558Z" fill="#C0FE03" />
+    <path d="M848.222 555.103H849.667V556.552H848.222V555.103Z" fill="#C0FE03" />
+    <path d="M852.556 550.759H854V552.207H852.556V550.759Z" fill="#C0FE03" />
+    <path d="M851.111 552.207H852.556V553.655H851.111V552.207Z" fill="#C0FE03" />
+    <path d="M849.667 553.655H851.111V555.103H849.667V553.655Z" fill="#C0FE03" />
+    <path d="M841 550.759H842.444V552.207H841V550.759Z" fill="#C0FE03" />
+    <path d="M845.333 555.103H846.778V556.552H845.333V555.103Z" fill="#C0FE03" />
+    <path d="M843.889 553.655H845.333V555.103H843.889V553.655Z" fill="#C0FE03" />
+    <path d="M842.444 552.207H843.889V553.655H842.444V552.207Z" fill="#C0FE03" />
+    <text fill="#C0FE03" font-family="KH Interference"
+          font-size="14" letter-spacing="0.01em"><tspan x="874" y="557.4">SCORE DETAILS</tspan></text>
+    <path d="M999.222 558H997.778V544L999.222 544V558Z" fill="#C0FE03" />
+    <path d="M999.222 555.103H1000.67V556.552H999.222V555.103Z" fill="#C0FE03" />
+    <path d="M1003.56 550.759H1005V552.207H1003.56V550.759Z" fill="#C0FE03" />
+    <path d="M1002.11 552.207H1003.56V553.655H1002.11V552.207Z" fill="#C0FE03" />
+    <path d="M1000.67 553.655H1002.11V555.103H1000.67V553.655Z" fill="#C0FE03" />
+    <path d="M992 550.759H993.444V552.207H992V550.759Z" fill="#C0FE03" />
+    <path d="M996.333 555.103H997.778V556.552H996.333V555.103Z" fill="#C0FE03" />
+    <path d="M994.889 553.655H996.333V555.103H994.889V553.655Z" fill="#C0FE03" />
+    <path d="M993.444 552.207H994.889V553.655H993.444V552.207Z" fill="#C0FE03" />
+
+
+
+    <text transform="matrix(0 1 -1 0 1089 16)" fill="#EEEEEE" font-family="Marathon Shapiro" font-size="50" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="49">PLAYER STATISTICS</tspan></text>
+    <text transform="matrix(0 1 -1 0 1103 20)" fill="#EEEEEE" font-family="KH Interference" font-size="16" letter-spacing="0.01em"><tspan x="0" y="15.1">Request date</tspan></text>
+    <text transform="matrix(0 1 -1 0 1103 176)" fill="#EEEEEE" font-family="KH Interference" font-size="16" letter-spacing="0.01em"><tspan x="0" y="15.1" id="date">2026 - Mar 30</tspan></text>
+    <line x1="1088.35" y1="154.646" x2="1097.92" y2="164.211" stroke="#EEEEEE" />
+    <line x1="1088.65" y1="164.211" x2="1098.21" y2="154.646" stroke="#EEEEEE" />
+    <rect x="1091.8" y="158" width="3" height="3" fill="#EEEEEE" />
+    <image opacity="0.9"
+           xlink:href="assets/guestAvatar.png"
+           x="1112" width="543" height="539" preserveAspectRatio="xMidYMid slice" id="avatar"/>
+
+    <rect x="114" y="897" width="224" height="183" fill="#C0FE05" />
+    <g opacity="0.6">
+        <rect x="121.5" y="938.5" width="92" height="31" stroke="#111111" />
+        <rect x="284.5" y="1022.5" width="39" height="39" stroke="#111111" />
+        <rect x="290" y="1028" width="28" height="28" fill="#111111" />
+        <rect x="121.5" y="1030.5" width="61" height="31" stroke="#111111" />
+        <rect x="155" y="1034" width="24" height="24" stroke="#111111" stroke-width="6" />
+        <rect x="188" y="929" width="2" height="2" fill="#111111" />
+        <rect x="192" y="929" width="2" height="2" fill="#111111" />
+        <rect x="196" y="929" width="2" height="2" fill="#111111" />
+        <rect x="200" y="929" width="2" height="2" fill="#111111" />
+        <rect x="204" y="929" width="2" height="2" fill="#111111" />
+        <rect x="208" y="929" width="2" height="2" fill="#111111" />
+        <rect x="212" y="929" width="2" height="2" fill="#111111" />
+        <rect x="216" y="929" width="2" height="2" fill="#111111" />
+        <rect x="188" y="933" width="2" height="2" fill="#111111" />
+        <rect x="192" y="933" width="2" height="2" fill="#111111" />
+        <rect x="196" y="933" width="2" height="2" fill="#111111" />
+        <rect x="200" y="933" width="2" height="2" fill="#111111" />
+        <rect x="204" y="933" width="2" height="2" fill="#111111" />
+        <rect x="208" y="933" width="2" height="2" fill="#111111" />
+        <rect x="212" y="933" width="2" height="2" fill="#111111" />
+        <rect x="216" y="933" width="2" height="2" fill="#111111" />
+        <rect x="188" y="937" width="2" height="2" fill="#111111" />
+        <rect x="192" y="937" width="2" height="2" fill="#111111" />
+        <rect x="196" y="937" width="2" height="2" fill="#111111" />
+        <rect x="200" y="937" width="2" height="2" fill="#111111" />
+        <rect x="204" y="937" width="2" height="2" fill="#111111" />
+        <rect x="208" y="937" width="2" height="2" fill="#111111" />
+        <rect x="212" y="937" width="2" height="2" fill="#111111" />
+        <rect x="216" y="937" width="2" height="2" fill="#111111" />
+        <rect x="188" y="941" width="2" height="2" fill="#111111" />
+        <rect x="192" y="941" width="2" height="2" fill="#111111" />
+        <rect x="196" y="941" width="2" height="2" fill="#111111" />
+        <rect x="200" y="941" width="2" height="2" fill="#111111" />
+        <rect x="204" y="941" width="2" height="2" fill="#111111" />
+        <rect x="208" y="941" width="2" height="2" fill="#111111" />
+        <rect x="212" y="941" width="2" height="2" fill="#111111" />
+        <rect x="216" y="941" width="2" height="2" fill="#111111" />
+        <rect x="188" y="945" width="2" height="2" fill="#111111" />
+        <rect x="192" y="945" width="2" height="2" fill="#111111" />
+        <rect x="196" y="945" width="2" height="2" fill="#111111" />
+        <rect x="200" y="945" width="2" height="2" fill="#111111" />
+        <rect x="204" y="945" width="2" height="2" fill="#111111" />
+        <rect x="208" y="945" width="2" height="2" fill="#111111" />
+        <rect x="212" y="945" width="2" height="2" fill="#111111" />
+        <rect x="216" y="945" width="2" height="2" fill="#111111" />
+        <rect x="188" y="949" width="2" height="2" fill="#111111" />
+        <rect x="192" y="949" width="2" height="2" fill="#111111" />
+        <rect x="196" y="949" width="2" height="2" fill="#111111" />
+        <rect x="200" y="949" width="2" height="2" fill="#111111" />
+        <rect x="204" y="949" width="2" height="2" fill="#111111" />
+        <rect x="208" y="949" width="2" height="2" fill="#111111" />
+        <rect x="212" y="949" width="2" height="2" fill="#111111" />
+        <rect x="216" y="949" width="2" height="2" fill="#111111" />
+        <rect x="114" y="1024" width="56" height="56" fill="#111111" fill-opacity="0.1" />
+        <rect x="170" y="980" width="56" height="100" fill="#111111" fill-opacity="0.1" />
+        <rect x="226" y="935" width="56" height="145" fill="#111111" fill-opacity="0.1" />
+        <rect x="282" y="897" width="56" height="183" fill="#111111" fill-opacity="0.1" />
+        <line x1="114" y1="919.5" x2="282" y2="919.5" stroke="black" stroke-opacity="0.1" />
+        <line x1="114" y1="916.5" x2="282" y2="916.5" stroke="black" stroke-opacity="0.1" />
+        <line x1="114" y1="922.5" x2="282" y2="922.5" stroke="black" stroke-opacity="0.1" />
+    </g>
+    <line x1="120.5" y1="901" x2="120.5" y2="908" stroke="black" />
+    <line x1="117" y1="904.5" x2="124" y2="904.5" stroke="black" />
+    <line x1="330.5" y1="901" x2="330.5" y2="908" stroke="black" />
+    <line x1="327" y1="904.5" x2="334" y2="904.5" stroke="black" />
+    <line x1="120.5" y1="1069" x2="120.5" y2="1076" stroke="black" />
+    <line x1="117" y1="1072.5" x2="124" y2="1072.5" stroke="black" />
+    <line x1="330.5" y1="1069" x2="330.5" y2="1076" stroke="black" />
+    <line x1="327" y1="1072.5" x2="334" y2="1072.5" stroke="black" />
+
+    <text fill="black" font-family="KH Interference"
+          font-size="90" letter-spacing="0.01em" x="225" y="1016.5" id="grade" text-anchor="middle">SH</text>
+
+    <text transform="translate(255 1069)" fill="black"
+          font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">0 1 3 1 -grade__///</tspan></text>
+    <rect x="338" y="897" width="225" height="183" fill="#111111" />
+    <rect x="338" y="996" width="135" height="84" fill="#4507FC" />
+    <path d="M338 963L393 975H338V963Z" fill="#4507FC" />
+    <path
+            d="M493 947V988H488V989.5H493V994.5C493.5 992 494.82 990.284 496 989.5C495.116 972.795 494.871 963.484 495 947H493Z"
+            fill="#4507FC" />
+    <rect x="473" y="1016" width="21" height="64" fill="#4507FC" />
+    <rect x="540" y="1000" width="23" height="62" fill="#4507FC" />
+    <path
+            d="M530.5 1041H538C539.133 1040.5 539.553 1040.05 540 1039V1062C535.387 1061.66 533.5 1061 530.5 1056V1041Z"
+            fill="#4507FC" />
+    <path
+            d="M535 1003L538.5 1003C539.479 1002.38 539.766 1001.93 540 1001L542.5 1003C543.633 1002.5 544.053 1004.05 544.5 1003V1024C539.887 1023.66 538 1023 535 1018V1003Z"
+            fill="#4507FC" />
+    <path d="M418.282 989H473V996H403C412.851 995.012 417.093 993.883 418.282 989Z" fill="#4507FC" />
+    <circle cx="470.5" cy="1003.5" r="4.5" fill="#4507FC" />
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="60" letter-spacing="0.01em" x="362.359" y="1009" id="pp">727PP</text>
+    <path d="M409.521 950.75H377.479L393.5 923L409.521 950.75Z" stroke="#F3F436" stroke-width="2" />
+    <rect x="392" y="945" width="3" height="3" fill="#F3F436" />
+    <rect x="392" y="932" width="3" height="11" fill="#F3F436" />
+    <text fill="#F3F436"
+          font-family="HammerBro101 Movie Bold" font-size="8" font-weight="500"
+          letter-spacing="0.01em"><tspan x="416" y="927.404">RECACULATION_INVOVED</tspan></text>
+    <text fill="#F3F436"
+          font-family="HammerBro101 Movie Bold" font-size="8" font-weight="500"
+          letter-spacing="0.01em"><tspan x="416" y="935.404">RESULT</tspan></text>
+    <text fill="#F3F436"
+          font-family="HammerBro101 Movie Bold" font-size="8" font-weight="500"
+          letter-spacing="0.01em"><tspan x="416" y="943.404">MAY_NOT_BE</tspan></text>
+    <text fill="#F3F436"
+          font-family="HammerBro101 Movie Bold" font-size="8" font-weight="500"
+          letter-spacing="0.01em"><tspan x="416" y="950.404">ACCURATE</tspan></text>
+    <mask id="mask0_2200_299" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="359" y="1054"
+          width="99" height="26">
+        <rect x="359" y="1054" width="99" height="26" fill="#D9D9D9" />
+    </mask>
+    <g mask="url(#mask0_2200_299)">
+        <path d="M388.5 1054H398.5L372.5 1080.5H363L388.5 1054Z" fill="#111111" />
+        <path d="M408.5 1054H418.5L392.5 1080.5H383L408.5 1054Z" fill="#111111" />
+        <path d="M428.5 1054H438.5L412.5 1080.5H403L428.5 1054Z" fill="#111111" />
+        <path d="M448.5 1054H458.5L432.5 1080.5H423L448.5 1054Z" fill="#111111" />
+        <path d="M467.5 1054H477.5L451.5 1080.5H442L467.5 1054Z" fill="#111111" />
+        <path d="M369.5 1054H379.5L353.5 1080.5H344L369.5 1054Z" fill="#111111" />
+    </g>
+    <text fill="#EEEEEE"
+          font-family="HammerBro101 Movie Bold" font-size="8" font-weight="500"
+          letter-spacing="0.01em" x="365" y="1018.4" id="if-fc"><tspan>IF FC </tspan><tspan>1030PP</tspan></text>
+    <line x1="553.5" y1="990" x2="553.5" y2="997" stroke="#4507FC" />
+    <line x1="550" y1="993.5" x2="557" y2="993.5" stroke="#4507FC" />
+    <text transform="matrix(0 1 -1 0 558 904)" fill="#4507FC" font-family="HammerBro101 Movie Bold" font-size="8" font-weight="500"
+          letter-spacing="0.01em"><tspan x="0" y="6.404">PERFORMANCE</tspan></text>
+    <rect x="554" y="976" width="3" height="7" fill="#4507FC" />
+    <rect x="554" y="962" width="3" height="7" fill="#4507FC" />
+    <rect x="550" y="971" width="3" height="3" fill="#4507FC" />
+    <text transform="translate(365 1043)" fill="black"
+          font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">0 1 3 2 -performance__///</tspan></text>
+    <rect x="563" y="897" width="224" height="183" fill="#F6FE05" />
+    <text fill="black" font-family="KH Interference"
+          font-size="50" letter-spacing="-0.05em" x="599.309" y="1001.5" id="accuracy">98.99%</text>
+    <text transform="matrix(0 1 -1 0 584 964)" fill="black" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0.212891" y="5.6">[1]ACCURACY</tspan></text>
+    <text transform="matrix(0 1 -1 0 596 899)" fill="black" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">0 1 3 3 -lazy_status__///</tspan></text>
+    <text fill="black" font-family="KH Interference"
+          font-size="14" letter-spacing="0em" x="603.027" y="1022.4" id="combo">1230/2340x</text>
+    <text transform="matrix(0 1 -1 0 584 1007)" fill="black" font-family="KH Interference" font-size="6" letter-spacing="-0.01em"><tspan x="0.319375" y="5.6">[2]COMBO</tspan></text>
+    <mask id="mask1_2200_299" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="758" y="1008"
+          width="29" height="72">
+        <rect x="758" y="1080" width="72" height="29" transform="rotate(-90 758 1080)"
+              fill="#D9D9D9" />
+    </mask>
+    <g mask="url(#mask1_2200_299)">
+        <path d="M758 1046.22V1035.11L787.444 1064V1074.56L758 1046.22Z" fill="#111111" />
+        <path d="M758 1024V1012.89L787.444 1041.78V1052.33L758 1024Z" fill="#111111" />
+        <path d="M758 1001.78V990.667L787.444 1019.56V1030.11L758 1001.78Z" fill="#111111" />
+        <path d="M758 1067.33V1056.22L787.444 1085.11V1095.67L758 1067.33Z" fill="#111111" />
+    </g>
+    <line x1="586.5" y1="897" x2="586.5" y2="1080" stroke="black" />
+    <line x1="563" y1="1007.5" x2="787" y2="1007.5" stroke="black" />
+    <line x1="563" y1="1037.5" x2="787" y2="1037.5" stroke="black" />
+    <rect x="593.5" y="1064.5" width="60" height="11" stroke="black" />
+    <text fill="black" font-family="KH Interference"
+          font-size="6" letter-spacing="0em"><tspan x="599" y="1071.6">not full combo</tspan></text>
+    <path d="M773.111 922H770.889V900L773.111 900V922Z" fill="#111111" />
+    <path d="M773.111 917.448H775.333V919.724H773.111V917.448Z" fill="#111111" />
+    <path d="M779.778 910.621H782V912.897H779.778V910.621Z" fill="#111111" />
+    <path d="M777.556 912.897H779.778V915.172H777.556V912.897Z" fill="#111111" />
+    <path d="M775.333 915.172H777.556V917.448H775.333V915.172Z" fill="#111111" />
+    <path d="M762 910.621H764.222V912.897H762V910.621Z" fill="#111111" />
+    <path d="M768.667 917.448H770.889V919.724H768.667V917.448Z" fill="#111111" />
+    <path d="M766.444 915.172H768.667V917.448H766.444V915.172Z" fill="#111111" />
+    <path d="M764.222 912.897H766.444V915.172H764.222V912.897Z" fill="#111111" />
+    <rect x="787" y="897" width="225" height="183" fill="#111111" />
+    <rect x="921" y="1045" width="84" height="31" fill="#FB3268" />
+    <rect x="811" y="1065" width="84" height="11" fill="#FB3268" />
+    <rect x="831" y="1060" width="37" height="13" fill="#FB3268" />
+    <path d="M997.111 922H994.889V900L997.111 900V922Z" fill="#111111" />
+    <path d="M997.111 917.448H999.333V919.724H997.111V917.448Z" fill="#111111" />
+    <path d="M1003.78 910.621H1006V912.897H1003.78V910.621Z" fill="#111111" />
+    <path d="M1001.56 912.897H1003.78V915.172H1001.56V912.897Z" fill="#111111" />
+    <path d="M999.333 915.172H1001.56V917.448H999.333V915.172Z" fill="#111111" />
+    <path d="M986 910.621H988.222V912.897H986V910.621Z" fill="#111111" />
+    <path d="M992.667 917.448H994.889V919.724H992.667V917.448Z" fill="#111111" />
+    <path d="M990.444 915.172H992.667V917.448H990.444V915.172Z" fill="#111111" />
+    <path d="M988.222 912.897H990.444V915.172H988.222V912.897Z" fill="#111111" />
+    <path d="M806 1061H820L813.5 1054H820.5L829.5 1063L821 1072.5H814L820 1065.5H806V1061Z"
+          fill="#EEEEEE" />
+    <path d="M837 1061H851L844.5 1054H851.5L860.5 1063L852 1072.5H845L851 1065.5H837V1061Z"
+          fill="#EEEEEE" />
+    <path d="M867 1061H881L874.5 1054H881.5L890.5 1063L882 1072.5H875L881 1065.5H867V1061Z"
+          fill="#EEEEEE" />
+    <rect x="974" y="1048" width="2" height="2" fill="#EEEEEE" />
+    <rect x="974" y="1059" width="2" height="2" fill="#EEEEEE" />
+    <rect x="974" y="1054" width="2" height="2" fill="#EEEEEE" />
+    <rect x="974" y="1065" width="2" height="2" fill="#EEEEEE" />
+    <rect x="974" y="1071" width="2" height="2" fill="#EEEEEE" />
+    <rect x="980" y="1048" width="2" height="2" fill="#EEEEEE" />
+    <rect x="980" y="1059" width="2" height="2" fill="#EEEEEE" />
+    <rect x="980" y="1054" width="2" height="2" fill="#EEEEEE" />
+    <rect x="980" y="1065" width="2" height="2" fill="#EEEEEE" />
+    <rect x="980" y="1071" width="2" height="2" fill="#EEEEEE" />
+    <rect x="986" y="1048" width="2" height="2" fill="#EEEEEE" />
+    <rect x="986" y="1059" width="2" height="2" fill="#EEEEEE" />
+    <rect x="986" y="1054" width="2" height="2" fill="#EEEEEE" />
+    <rect x="986" y="1065" width="2" height="2" fill="#EEEEEE" />
+    <rect x="986" y="1071" width="2" height="2" fill="#EEEEEE" />
+    <rect x="968" y="1059" width="2" height="2" fill="#EEEEEE" />
+    <rect x="968" y="1065" width="2" height="2" fill="#EEEEEE" />
+    <rect x="968" y="1071" width="2" height="2" fill="#EEEEEE" />
+    <rect x="992" y="1059" width="2" height="2" fill="#EEEEEE" />
+    <rect x="992" y="1049" width="7" height="7" fill="#EEEEEE" />
+    <rect x="992" y="1065" width="2" height="2" fill="#EEEEEE" />
+    <rect x="992" y="1071" width="2" height="2" fill="#EEEEEE" />
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="50" letter-spacing="-0.05em" x="898.2" y="1003.5" id="mod" text-anchor="middle">Nomod</text>
+    <path d="M906 1008H920.667V1019.02C919.911 1019.19 919.589 1019.41 919.2 1020H906V1008Z"
+          fill="#FB3268" />
+    <path
+            d="M923.333 1008H965.751L966 1019H932.815C931.451 1018.97 930.848 1019.19 930.07 1020H923.333V1008Z"
+            fill="#FB3268" />
+    <mask id="mask2_2200_299" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="831" y="901"
+          width="119" height="147">
+        <rect width="50" height="161.31" transform="matrix(1 0 0.422618 0.906308 831.601 901)"
+              fill="#FB3268" />
+    </mask>
+    <g mask="url(#mask2_2200_299)">
+        <text fill="#FB3268"
+              font-family="KH Interference" font-size="50" letter-spacing="-0.05em" x="898.2" y="1003.5" id="mod" text-anchor="middle">Nomod</text>
+    </g>
+    <rect x="893" y="1010" width="68" height="2" fill="#EEEEEE" />
+    <rect x="893" y="1021" width="68" height="2" fill="#EEEEEE" />
+    <rect x="826" y="1018" width="61" height="2" fill="#EEEEEE" />
+    <rect x="801.5" y="913.5" width="29" height="4" stroke="#EEEEEE" />
+    <rect x="803" y="915" width="26" height="1" fill="#EEEEEE" />
+    <rect x="892" y="943" width="50" height="2" fill="#EEEEEE" />
+    <rect x="935" y="938" width="70" height="2" fill="#EEEEEE" />
+    <path d="M895 904H935V908H934V905H896V908H895V904Z" fill="#EEEEEE" />
+    <path d="M909 904H926V905H925H910V908H909V904Z" fill="#EEEEEE" />
+    <rect x="913" y="938" width="7" height="2" fill="#EEEEEE" />
+    <rect x="892" y="938" width="7" height="2" fill="#EEEEEE" />
+    <rect x="955" y="943" width="50" height="2" fill="#EEEEEE" />
+    <rect x="826" y="1025" width="29" height="2" fill="#EEEEEE" />
+    <rect x="866" y="1025" width="6" height="2" fill="#EEEEEE" />
+    <rect x="885" y="1025" width="6" height="2" fill="#EEEEEE" />
+    <rect x="906" y="1025" width="6" height="2" fill="#EEEEEE" />
+    <rect x="826" y="1031" width="14" height="7" fill="#EEEEEE" />
+    <rect x="843" y="1031" width="2" height="7" fill="#EEEEEE" />
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="6" letter-spacing="-0.05em"><tspan x="801" y="907.6">0011 1101</tspan></text>
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="6" letter-spacing="0em"><tspan x="940" y="907.6">0 1 3 4 -mods__///</tspan></text>
+    <rect x="834" y="904" width="4" height="4" fill="#EEEEEE" />
+    <rect x="841.5" y="904.5" width="3" height="3" stroke="#EEEEEE" />
+    <g opacity="0.1">
+        <rect x="917.5" y="918.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="933.5" y="918.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="950.5" y="918.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="967.5" y="918.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="983.5" y="918.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="1000.5" y="918.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="917.5" y="932.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="933.5" y="932.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="931.5" y="930.5" width="7" height="7" stroke="#EEEEEE" />
+        <rect x="931.5" y="916.5" width="7" height="7" stroke="#EEEEEE" />
+        <rect x="915.5" y="930.5" width="7" height="7" stroke="#EEEEEE" />
+        <rect x="915.5" y="930.5" width="7" height="7" stroke="#EEEEEE" />
+        <rect x="931.5" y="944.5" width="7" height="7" stroke="#EEEEEE" />
+        <rect x="948.5" y="930.5" width="7" height="7" stroke="#EEEEEE" />
+        <rect x="965.5" y="930.5" width="7" height="7" stroke="#EEEEEE" />
+        <rect x="950.5" y="932.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="967.5" y="932.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="983.5" y="932.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="1000.5" y="932.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="917.5" y="946.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="933.5" y="946.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="950.5" y="946.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="967.5" y="946.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="983.5" y="946.5" width="3" height="3" stroke="#EEEEEE" />
+        <rect x="1000.5" y="946.5" width="3" height="3" stroke="#EEEEEE" />
+    </g>
+    <g opacity="0.1">
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 887 1040)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 871 1040)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 854 1040)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 837 1040)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 821 1040)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 804 1040)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 887 1054)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 871 1054)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="7" height="7" transform="matrix(-1 0 0 1 873 1052)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="7" height="7" transform="matrix(-1 0 0 1 873 1038)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="7" height="7" transform="matrix(-1 0 0 1 889 1052)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="7" height="7" transform="matrix(-1 0 0 1 889 1052)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="7" height="7" transform="matrix(-1 0 0 1 873 1066)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="7" height="7" transform="matrix(-1 0 0 1 856 1052)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="7" height="7" transform="matrix(-1 0 0 1 839 1052)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 854 1054)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 837 1054)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 821 1054)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 804 1054)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 887 1068)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 871 1068)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 854 1068)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 837 1068)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 821 1068)"
+              stroke="#EEEEEE" />
+        <rect x="-0.5" y="0.5" width="3" height="3" transform="matrix(-1 0 0 1 804 1068)"
+              stroke="#EEEEEE" />
+    </g>
+    <rect x="114" y="563" width="449" height="334" fill="#111111" />
+    <rect x="144" y="593" width="388" height="273" fill="#1C1C1C" />
+    <line x1="114" y1="592.5" x2="174" y2="592.5" stroke="#717171" />
+    <line x1="143.5" y1="623" x2="143.5" y2="563" stroke="#717171" />
+    <line x1="503" y1="592.5" x2="563" y2="592.5" stroke="#717171" />
+    <line x1="532.5" y1="623" x2="532.5" y2="563" stroke="#717171" />
+    <line x1="503" y1="866.5" x2="563" y2="866.5" stroke="#717171" />
+    <line x1="532.5" y1="897" x2="532.5" y2="837" stroke="#717171" />
+    <line x1="114" y1="866.5" x2="174" y2="866.5" stroke="#717171" />
+    <line x1="143.5" y1="897" x2="143.5" y2="837" stroke="#717171" />
+    <text fill="#717171" font-family="D-DIN Condensed"
+          font-size="12" letter-spacing="-0.05em"><tspan x="158" y="615.472">0 1 2 1  - MAP_INFO_ _ ///</tspan></text>
+    <text fill="#717171" font-family="D-DIN Condensed"
+          font-size="12" letter-spacing="-0.05em" x="466" y="773.472"><tspan>AR - </tspan><tspan id="ar">10.00</tspan></text>
+    <text fill="#717171" font-family="D-DIN Condensed"
+          font-size="12" letter-spacing="-0.05em" x="466" y="788.472"><tspan>CS - </tspan><tspan id="cs">04.50</tspan></text>
+    <text fill="#717171" font-family="D-DIN Condensed"
+          font-size="12" letter-spacing="-0.05em" x="466" y="803.472"><tspan>HP - </tspan><tspan id="hp">05.00</tspan></text>
+    <text fill="#717171" font-family="D-DIN Condensed"
+          font-size="12" letter-spacing="-0.05em" x="466" y="819.472"><tspan>STAR - </tspan><tspan id="star">07.20</tspan></text>
+    <text fill="#717171" font-family="D-DIN Condensed"
+          font-size="12" letter-spacing="-0.05em" x="466" y="835.472"><tspan>BPM - </tspan><tspan id="bpm">240.21</tspan></text>
+    <text fill="#717171" font-family="D-DIN Condensed"
+          font-size="12" letter-spacing="-0.05em" x="466" y="851.472"><tspan>LENGTH - </tspan><tspan id="length">10:41</tspan></text>
+    <text fill="#717171" font-family="D-DIN Condensed"
+          font-size="12" letter-spacing="-0.05em" x="466" y="758.472"><tspan>OD - </tspan><tspan id="od">09.00</tspan></text>
+    <g opacity="0.05">
+        <path d="M378.762 814H373.527V807.498H289.511V799.55H373.527V793.048H378.762V814Z"
+              fill="#717171" />
+        <path
+                d="M379.273 781.762C379.273 787.723 375.825 792.419 371.739 792.419H296.533C292.447 792.419 289 787.723 289 781.762C289 775.982 292.447 771.286 296.533 771.286H371.739C375.825 771.286 379.273 775.982 379.273 781.762ZM296.023 784.471H372.25C373.272 784.471 374.038 783.207 374.038 781.762C374.038 780.317 373.272 779.233 372.25 779.233H296.023C295.129 779.233 294.235 780.317 294.235 781.762C294.235 783.207 295.129 784.471 296.023 784.471Z"
+                fill="#717171" />
+        <path
+                d="M329.604 765.961H297.044C292.958 765.961 289.638 761.265 289.638 755.304V744.828H378.762V755.304C378.762 761.265 375.442 765.961 371.229 765.961H338.925C337.137 765.961 335.605 765.058 334.328 763.613C333.051 765.058 331.391 765.961 329.604 765.961ZM338.542 758.013H371.739C372.761 758.013 373.655 756.749 373.655 755.304V752.775H336.754V755.304C336.754 756.749 337.52 758.013 338.542 758.013ZM296.533 758.013H329.604C330.625 758.013 331.519 756.749 331.519 755.304V752.775H294.746V755.304C294.746 756.749 295.512 758.013 296.533 758.013Z"
+                fill="#717171" />
+        <path
+                d="M378.762 737.696H335.477C332.413 737.696 329.731 734.987 328.582 731.013H289.638V723.066H328.582C329.731 719.273 332.413 716.564 335.477 716.564H378.762V724.511H334.966C334.073 724.511 333.179 725.595 333.179 727.04C333.179 728.485 334.073 729.749 334.966 729.749H378.762V737.696Z"
+                fill="#717171" />
+        <path
+                d="M373.527 701.485V696.247H338.669V688.299H378.762V709.432H339.052C334.966 709.432 331.519 704.736 331.519 698.775C331.519 697.331 330.753 696.247 329.731 696.247H294.746V701.485H329.604V709.432H289.638V688.299H329.221C333.434 688.299 336.754 692.996 336.754 698.775C336.754 700.22 337.52 701.485 338.542 701.485H373.527Z"
+                fill="#717171" />
+        <path
+                d="M379.273 670.511C379.273 676.472 375.825 681.168 371.739 681.168H289.638V673.221H331.519V667.983H289.638V660.035H371.739C375.825 660.035 379.273 664.731 379.273 670.511ZM336.754 673.221H372.25C373.272 673.221 374.038 671.956 374.038 670.511C374.038 669.066 373.272 667.983 372.25 667.983H336.754V673.221Z"
+                fill="#717171" />
+        <path d="M289.638 645H378.762V652.947H294.746V659.45H289.511L289.638 645Z" fill="#717171" />
+    </g>
+    <rect x="563" y="563" width="449" height="334" fill="black" />
+    <line x1="583" y1="612.5" x2="598" y2="612.5" stroke="#B79FDD" />
+    <line x1="612.5" y1="597.999" x2="612.516" y2="582.999" stroke="#B79FDD" />
+    <rect x="603" y="603" width="10" height="10" fill="#B79FDD" />
+    <line y1="-0.5" x2="15" y2="-0.5" transform="matrix(-1 0 0 1 988.016 613)" stroke="#B79FDD" />
+    <line y1="-0.5" x2="15" y2="-0.5"
+          transform="matrix(-0.00105599 -0.999999 -0.999999 0.00105599 958.016 598)" stroke="#B79FDD" />
+    <rect width="10" height="10" transform="matrix(-1 0 0 1 968.016 603)" fill="#B79FDD" />
+    <line y1="-0.5" x2="15" y2="-0.5" transform="matrix(1 0 0 -1 583 841)" stroke="#B79FDD" />
+    <line y1="-0.5" x2="15" y2="-0.5"
+          transform="matrix(0.00105599 0.999999 0.999999 -0.00105599 613 856)" stroke="#B79FDD" />
+    <rect width="10" height="10" transform="matrix(1 0 0 -1 603 851)" fill="#B79FDD" />
+    <line x1="988.016" y1="841.5" x2="973.016" y2="841.5" stroke="#B79FDD" />
+    <line x1="958.516" y1="856.001" x2="958.5" y2="871.001" stroke="#B79FDD" />
+    <rect x="968.016" y="851" width="10" height="10" transform="rotate(180 968.016 851)"
+          fill="#B79FDD" />
+    <rect x="631" y="623" width="55" height="186" fill="#038AF9" />
+    <text fill="#EFA9E0" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em" x="631" y="636.3" id="great">02134</text>
+    <text fill="#111111" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em"><tspan x="631" y="674.3">GREAT</tspan></text>
+    <text fill="#111111" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em" x="631" y="696.3" id="great-hitwindow">H20.1</text>
+    <rect x="728" y="660" width="44" height="79" fill="#17E51E" />
+    <text fill="#A9ACEF" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em" x="728" y="674.3" id="good">0654</text>
+    <text fill="#111111" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em"><tspan x="728" y="712.3">good</tspan></text>
+    <text fill="#111111" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em"><tspan x="728" y="734.3" id="good-percentage">p21%</tspan></text>
+    <rect x="820" y="636" width="33" height="137" fill="#E5DE17" />
+    <text fill="#EFA9A9" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em" x="820" y="713.3" id="meh">004</text>
+    <text fill="#111111" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em"><tspan x="820" y="751.3">meh</tspan></text>
+    <text fill="#111111" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em" x="820" y="773.3" id="meh-rating">r03</text>
+    <rect x="901" y="742" width="44" height="99" fill="#E31963" />
+    <text fill="#EFD9A9" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em"><tspan x="901" y="756.3" id="miss">0001</tspan></text>
+    <text fill="#111111" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em"><tspan x="901" y="794.3">miss</tspan></text>
+    <text fill="#111111" font-family="KH Interference"
+          font-size="18" letter-spacing="0.01em"><tspan x="901" y="816.3" id="miss-penalty">m11p</tspan></text>
+    <text fill="#B79FDD" font-family="KH Interference"
+          font-size="8" letter-spacing="-0.05em"><tspan x="631" y="828.8">0 1 2 2 -HIT_DISTRIBUTION__///</tspan></text>
+    <text transform="matrix(0 1 -1 0 89 16)" fill="#C1FE01" font-family="Marathon Shapiro" font-size="50" font-weight="30"
+          letter-spacing="0em"><tspan x="0" y="49">SCORE INFOMARION</tspan></text>
+    <text transform="matrix(0 1 -1 0 103 16)" fill="#C1FE01" font-family="KH Interference" font-size="18" letter-spacing="0.01em"><tspan x="0" y="17.3">EASTER_EGG//EDITION</tspan></text>
+    <rect x="56" y="916" width="5" height="5" fill="#C0FE05" />
+    <rect x="61" y="921" width="5" height="5" fill="#C0FE05" />
+    <rect x="66" y="926" width="5" height="5" fill="#C0FE05" />
+    <rect x="66" y="916" width="5" height="5" fill="#C0FE05" />
+    <rect x="71" y="921" width="5" height="5" fill="#C0FE05" />
+    <rect x="76" y="916" width="5" height="5" fill="#C0FE05" />
+    <rect x="76" y="926" width="5" height="5" fill="#C0FE05" />
+    <rect x="56" y="926" width="5" height="5" fill="#C0FE05" />
+    <rect x="61" y="931" width="5" height="5" fill="#C0FE05" />
+    <rect x="66" y="936" width="5" height="5" fill="#C0FE05" />
+    <rect x="71" y="931" width="5" height="5" fill="#C0FE05" />
+    <rect x="76" y="936" width="5" height="5" fill="#C0FE05" />
+    <rect x="56" y="936" width="5" height="5" fill="#C0FE05" />
+    <rect x="56.5" y="868.5" width="24" height="40" stroke="#C0FE05" />
+    <rect x="56.5" y="868.5" width="24" height="25" stroke="#C0FE05" />
+    <text transform="matrix(0 1 -1 0 75 877)" fill="#C0FE05" font-family="Marathon Shapiro" font-size="10" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="9.9">S</tspan></text>
+    <text transform="matrix(0 1 -1 0 75 898)" fill="#C0FE05" font-family="Marathon Shapiro" font-size="10" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="9.9">1</tspan></text>
+    <text transform="matrix(0 1 -1 0 81 948)" fill="#C0FE05" font-family="KH Interference" font-size="6" letter-spacing="0.01em"><tspan x="0" y="5.6">ORIGINAL BY MARATHON</tspan></text>
+    <text transform="matrix(0 1 -1 0 63 948)" fill="#C0FE05" font-family="KH Interference" font-size="6" letter-spacing="0.01em"><tspan x="0" y="5.6">20260330.ALOIC.REVISED.LAZYBOT</tspan></text>
+    <text transform="matrix(0 1 -1 0 72 948)" fill="#C0FE05" font-family="KH Interference" font-size="6" letter-spacing="0.01em"><tspan x="0" y="5.6">V0.9.0.0</tspan></text>
+    <rect x="1054.5" y="869.5" width="24" height="40" stroke="#FFE7FF" />
+    <rect x="1054.5" y="869.5" width="24" height="25" stroke="#FFE7FF" />
+    <text transform="matrix(0 1 -1 0 1073 878)" fill="#FFE7FF" font-family="Marathon Shapiro" font-size="10" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="9.9">S</tspan></text>
+    <text transform="matrix(0 1 -1 0 1073 898)" fill="#FFE7FF" font-family="Marathon Shapiro" font-size="10" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="9.9">2</tspan></text>
+    <text transform="matrix(0 1 -1 0 1079 949)" fill="#FFE7FF" font-family="KH Interference" font-size="6" letter-spacing="0.01em"><tspan x="0" y="5.6">PLAYER STATS COMES FROM PPY</tspan></text>
+    <text transform="matrix(0 1 -1 0 1061 949)" fill="#FFE7FF" font-family="KH Interference" font-size="6" letter-spacing="0.01em"><tspan x="0" y="5.6">I DONT KNOW WHAT TO SAT HERE LOL</tspan></text>
+    <text transform="matrix(0 1 -1 0 1070 949)" fill="#FFE7FF" font-family="KH Interference" font-size="6" letter-spacing="0.01em"><tspan x="0" y="5.6">LAZYBOT 1.1.90/20260330</tspan></text>
+    <rect x="1067" y="917" width="12" height="12" fill="#FFE7FF" />
+    <rect x="1055.5" y="929.5" width="11" height="11" stroke="#FFE7FF" />
+    <rect x="1058" y="932" width="6" height="6" fill="#FFE7FF" />
+    <rect x="1713.5" y="871.5" width="24" height="40" stroke="#EEEEEE" />
+    <rect x="1713.5" y="871.5" width="24" height="25" stroke="#EEEEEE" />
+    <text transform="matrix(0 1 -1 0 1732 880)" fill="#EEEEEE" font-family="Marathon Shapiro" font-size="10" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="9.9">S</tspan></text>
+    <text transform="matrix(0 1 -1 0 1732 900)" fill="#EEEEEE" font-family="Marathon Shapiro" font-size="10" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="9.9">3</tspan></text>
+    <text transform="matrix(0 1 -1 0 1738 953)" fill="#EEEEEE" font-family="KH Interference" font-size="6" letter-spacing="0.01em"><tspan x="0" y="5.6">THIS PAGE&#x2019;S WHITE BEING #EEEEEE</tspan></text>
+    <text transform="matrix(0 1 -1 0 1720 953)" fill="#EEEEEE" font-family="KH Interference" font-size="6" letter-spacing="0.01em"><tspan x="0" y="5.6">COLORS BEING HIGH SATURATION</tspan></text>
+    <text transform="matrix(0 1 -1 0 1729 953)" fill="#EEEEEE" font-family="KH Interference" font-size="6" letter-spacing="0.01em"><tspan x="0" y="5.6">BLACK BEING #111111</tspan></text>
+    <rect x="1713" y="920" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1718" y="925" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1723" y="930" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1723" y="920" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1728" y="925" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1733" y="920" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1733" y="930" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1713" y="930" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1718" y="935" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1723" y="940" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1728" y="935" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1733" y="940" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1713" y="940" width="5" height="5" fill="#EEEEEE" />
+    <rect x="1112" y="539" width="543" height="306" fill="#C0A2EA" />
+    <rect opacity="0.05" x="1112" y="732" width="343" height="113" fill="#111111" />
+    <rect opacity="0.05" width="163" height="129" transform="matrix(-1 0 0 1 1618 716)"
+          fill="#111111" />
+    <rect opacity="0.05" width="163" height="129" transform="matrix(-1 0 0 1 1475 587)"
+          fill="#111111" />
+    <rect opacity="0.05" width="200" height="46" transform="matrix(-1 0 0 1 1312 639)"
+          fill="#111111" />
+    <rect opacity="0.05" width="97" height="100" transform="matrix(-1 0 0 1 1260 539)"
+          fill="#111111" />
+    <rect opacity="0.05" width="180" height="62" transform="matrix(-1 0 0 1 1655 560)"
+          fill="#111111" />
+    <text transform="translate(1163 631)" fill="#111111" font-family="KH Interference" font-size="16" letter-spacing="0.01em"><tspan x="0" y="15.1">PLAYERNAME</tspan></text>
+    <text transform="translate(1163 570)" fill="#111111" font-family="Marathon Shapiro" font-size="60" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="58.9" id="playername">ALOIC</tspan></text>
+    <text transform="translate(1160 716)" fill="#111111" font-family="Marathon Shapiro" font-size="60" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="58.9" id="pp">8,298</tspan></text>
+    <text transform="translate(1163 787)" fill="#111111" font-family="KH Interference" font-size="16" letter-spacing="0.01em"><tspan x="0" y="15.1">PERFORMANCE</tspan></text>
+    <line x1="1121" y1="560" x2="1140" y2="560" stroke="#5C4E5F" />
+    <line x1="1130.5" y1="570" x2="1130.5" y2="551" stroke="#5C4E5F" />
+    <line x1="1121" y1="825" x2="1140" y2="825" stroke="#5C4E5F" />
+    <line x1="1130.5" y1="835" x2="1130.5" y2="816" stroke="#5C4E5F" />
+    <line x1="1627" y1="560" x2="1646" y2="560" stroke="#5C4E5F" />
+    <line x1="1636.5" y1="570" x2="1636.5" y2="551" stroke="#5C4E5F" />
+    <line x1="1627" y1="825" x2="1646" y2="825" stroke="#5C4E5F" />
+    <line x1="1636.5" y1="835" x2="1636.5" y2="816" stroke="#5C4E5F" />
+    <rect x="1630" y="591" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1630" y="602" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1630" y="597" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1630" y="608" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1630" y="614" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="591" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="602" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="597" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="608" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="614" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="591" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="602" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="597" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="608" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="614" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1630" y="620" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1630" y="631" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1630" y="626" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1630" y="637" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1630" y="643" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="620" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="631" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="626" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="637" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1636" y="643" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="620" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="631" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="626" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="637" width="2" height="2" fill="#5C4E5F" />
+    <rect x="1642" y="643" width="2" height="2" fill="#5C4E5F" />
+    <text transform="matrix(0 1 -1 0 1642 666)" fill="#5C4E5F" font-family="KH Interference" font-size="8" letter-spacing="-0.05em"><tspan x="0" y="7.8">0 2 1 -PLAYER_BASICS__///</tspan></text>
+    <mask id="mask3_2200_299" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="1756" y="654"
+          width="24" height="119">
+        <rect x="1756" y="654" width="24" height="119" fill="#D9D9D9" />
+    </mask>
+    <g mask="url(#mask3_2200_299)">
+        <path d="M1780 638V647L1756 669V660L1780 638Z" fill="#D9D9D9" />
+        <path d="M1780 657V666L1756 688V679L1780 657Z" fill="#D9D9D9" />
+        <path d="M1780 676V685L1756 707V698L1780 676Z" fill="#D9D9D9" />
+        <path d="M1780 695V704L1756 726V717L1780 695Z" fill="#D9D9D9" />
+        <path d="M1780 714V723L1756 745V736L1780 714Z" fill="#D9D9D9" />
+        <path d="M1780 733V742L1756 764V755L1780 733Z" fill="#D9D9D9" />
+        <path d="M1780 752V761L1756 783V774L1780 752Z" fill="#D9D9D9" />
+        <path d="M1780 771V780L1756 802V793L1780 771Z" fill="#D9D9D9" />
+    </g>
+    <rect x="1112" y="845" width="543" height="235" fill="#9D7BD1" />
+    <rect x="1112" y="1041" width="136" height="39" fill="#41046B" />
+    <rect x="1248" y="1041" width="135" height="39" fill="#7418B7" />
+    <rect x="1383" y="1041" width="137" height="39" fill="#9A25ED" />
+    <rect x="1520" y="1041" width="135" height="39" fill="#B958FF" />
+    <rect width="2" height="2" transform="matrix(-1 0 0 1 1221 925)" fill="#5B3E6F" />
+    <rect width="2" height="2" transform="matrix(-1 0 0 1 1221 962)" fill="#5B3E6F" />
+    <rect width="2" height="2" transform="matrix(-1 0 0 1 1221 1000)" fill="#5B3E6F" />
+    <rect width="2" height="2" transform="matrix(-1 0 0 1 1333 925)" fill="#5B3E6F" />
+    <rect width="2" height="2" transform="matrix(-1 0 0 1 1431 925)" fill="#5B3E6F" />
+    <rect width="2" height="2" transform="matrix(-1 0 0 1 1443 925)" fill="#5B3E6F" />
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="1225" y="870.68" id="pc">3,4562</tspan></text>
+    <text transform="matrix(0 1 -1 0 1745 16)" fill="#EEEEEE" font-family="Marathon Shapiro" font-size="50" font-weight="30"
+          letter-spacing="0.01em"><tspan x="0" y="49">LAZYBOT RESULT IMAGE</tspan></text>
+    <text transform="matrix(0 1 -1 0 1759 20)" fill="#EEEEEE" font-family="KH Interference" font-size="16" letter-spacing="0.01em"><tspan x="0" y="15.1">FINAL LABEL</tspan></text>
+    <rect width="2" height="2" transform="matrix(-1 0 0 1 1554 925)" fill="#5B3E6F" />
+    <rect x="1163.5" y="852.5" width="42" height="29" stroke="#5B3E6F" />
+    <rect x="1163.5" y="887.5" width="42" height="29" stroke="#5B3E6F" />
+    <rect x="1163.5" y="923.5" width="42" height="29" stroke="#5B3E6F" />
+    <rect x="1163.5" y="960.5" width="42" height="67" stroke="#5B3E6F" />
+    <rect x="1217.5" y="923.5" width="99" height="29" stroke="#5B3E6F" />
+    <rect x="1217.5" y="960.5" width="99" height="29" stroke="#5B3E6F" />
+    <rect x="1217.5" y="998.5" width="99" height="29" stroke="#5B3E6F" />
+    <rect x="1439.5" y="923.5" width="99" height="29" stroke="#5B3E6F" />
+    <rect x="1550.5" y="923.5" width="99" height="29" stroke="#5B3E6F" />
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="20" letter-spacing="0.01em"><tspan x="1137.43" y="1068" id="join-date">2017.11</tspan></text>
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="20" letter-spacing="0.01em"><tspan x="1274.43" y="1068" id="rank">#12,453</tspan></text>
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="20" letter-spacing="0.01em"><tspan x="1415.43" y="1068" id="level">LVL.102</tspan></text>
+    <text fill="#EEEEEE" font-family="KH Interference"
+          font-size="20" letter-spacing="0.01em"><tspan x="1552.02" y="1068" id="total-accuracy">99.32%</tspan></text>
+    <text transform="translate(1439 960)" fill="#5B3E6F" font-family="KH Interference" font-size="8" letter-spacing="-0.05em"><tspan x="0" y="7.8">0 2 2 -PLAYER_DETAILS__///</tspan></text>
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="-0.05em"><tspan x="1174" y="870.68">PC</tspan></text>
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="-0.05em"><tspan x="1170" y="905.68">TTH</tspan></text>
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="1225" y="905.68" id="tth">13,119,003</tspan></text>
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="1179" y="942.68">S</tspan></text>
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="1225" y="942.68" id="s-count">456</tspan></text>
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="1179" y="979.68">A</tspan></text>
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="1225" y="979.68" id="a-count">1188</tspan></text>
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="1179" y="1016.68">X</tspan></text>
+    <text fill="#5B3E6F"
+          font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="1225" y="1016.68" id="x-count">43</tspan></text>
+
+</svg>

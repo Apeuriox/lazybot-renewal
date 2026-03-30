@@ -115,8 +115,8 @@ public class ScoreCommand implements LazybotSlashCommand
                         "按照指定用户查询指定地图下的指定Mod组合中分数最高的成绩, Pscore会以PP+数据返回",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Score 4889657+HDHR")
-                        .addExample("/Score Aloic 4889657")
-                        .addExample("/Score Aloic 4889657+HDHR &")
+                        .addExample("/s Aloic 4889657")
+                        .addExample("/Pscore Aloic 4889657+HDHR &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("BID","查询的地图ID", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Mod","Mod过滤项", CommandParameter.ParameterType.OPTIONAL))

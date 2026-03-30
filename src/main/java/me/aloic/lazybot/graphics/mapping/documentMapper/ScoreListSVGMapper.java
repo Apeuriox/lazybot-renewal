@@ -497,8 +497,8 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             doc.getElementById("StaticCommandName").setTextContent(type);
             doc.getElementById("footer").setAttribute("transform", "translate(0," + 120 * (scorelist.size() - 1) + ")");
             doc.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("class", "cls-24");
-            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
+            doc.getElementById(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe()).setAttribute("class", "cls-24");
+            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe())).setAttribute("opacity","1");
             return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot,offset);
         }
         catch (Exception e)
@@ -522,8 +522,8 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             doc.getElementById("playername").setTextContent(info.getPlayerName());
             doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", info.getAvatarUrl());
             doc.getElementById("totalPp").setTextContent(String.valueOf(Math.round(info.getPerformancePoint())));
-            doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("fill",primaryColor);
-            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
+            doc.getElementById(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe()).setAttribute("fill",primaryColor);
+            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe())).setAttribute("opacity","1");
             doc.getElementById("playernameLabel").setAttribute("fill", primaryColor);
             doc.getElementById("totalPpLabel").setAttribute("fill", primaryColor);
             return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot, offset);

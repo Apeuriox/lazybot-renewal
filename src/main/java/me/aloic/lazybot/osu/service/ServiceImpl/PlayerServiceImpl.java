@@ -423,7 +423,6 @@ public class PlayerServiceImpl implements PlayerService
                 type);
         noChokeListVO.setScoreList(noChokeListVO.getScoreList().stream().limit(51).collect(Collectors.toList()));
         return noChokeListVO;
-
     }
     @Override
     public PlayerInfoVO getPlayerInfoVO(GeneralParameter params) {
@@ -551,13 +550,13 @@ public class PlayerServiceImpl implements PlayerService
             );
         }
         catch (LazybotRuntimeException e) {
-            logger.warn("Lazybot-PPplus数据获取失败，请稍后再试: {}", e);
             throw new LazybotRuntimeException("Lazybot-PPplus数据获取失败，请稍后再试");
 
         }
         PlusScorePerformance playerPerformance=new PlusScorePerformance(scores);
         playerPerformance.setScores(osuToolsUtil.setupScorePerformanceList(playerPerformance.getScores()));
         playerPerformance.setName(playerInfoVO.getPlayerName());
+        playerPerformance.setOffset(params.getFrom()-1);
         playerPerformance.setAvatarUrl(playerInfoVO.getAvatarUrl());
         playerPerformance.setDimension(dimension.getShowcase());
         return playerPerformance;

@@ -96,7 +96,7 @@ public class BpSeriesCommand implements LazybotSlashCommand
     {
         return HelpFormatter.format(
                 new CommandHelp("Bp Series","Bs, Bps",
-                        "等效/Bpcard 1-[index]，用于快速查询，输入&以List形式返回，默认为21",
+                        "等效/Bpcard [start]-[index]，用于快速查询，输入&以List形式返回，默认为21",
                         "Aloic", "Aloic", "2024-07-23")
                         .addExample("/Bs")
                         .addExample("/Bs Aloic")

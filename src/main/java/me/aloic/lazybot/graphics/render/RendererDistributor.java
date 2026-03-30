@@ -33,7 +33,7 @@ public class RendererDistributor
         );
     }
 
-    public static byte[] renderPlusScoresToCardList(PlusScorePerformance performance) throws IOException
+    public static byte[] renderPlusScoresToCardList(PlusScorePerformance performance)
     {
         return SVGRenderer.renderSVGDocumentToByteArray(
                 ScoreListSVGMapper.mapScorePerformanceDimensionToBpCard(

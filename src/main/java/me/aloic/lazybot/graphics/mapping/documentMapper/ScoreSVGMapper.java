@@ -624,6 +624,10 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         }
         svgRoot.appendChild(sectionFull);
     }
+    private static Document mapScoreToScorePanelMarathon(ScoreVO targetScore,int[] primaryColor)
+    {
+           return SVGTemplateLoader.loadSVGTemplate("ScoreMarathonEaster");
+    }
 
     public static Document renderScoreToImage(ScoreVO targetScore, int version, int[] primaryColor)
     {
@@ -635,6 +639,8 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc = mapScoreToScorePanelWhite(targetScore);
         else if (version==2)
             doc = mapScoreToScorePanelMaterial(targetScore,primaryColor);
+        else if (version==3)
+            doc = mapScoreToScorePanelMarathon(targetScore,primaryColor);
         else throw new LazybotRuntimeException("不支持的面板版本: " + version);
         return doc;
     }

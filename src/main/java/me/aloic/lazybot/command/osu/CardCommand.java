@@ -37,7 +37,6 @@ public class CardCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
-
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
