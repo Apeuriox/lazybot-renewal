@@ -3,6 +3,7 @@ package me.aloic.lazybot.graphics.render;
 import me.aloic.lazybot.entity.command.*;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
 import me.aloic.lazybot.graphics.mapping.documentMapper.*;
+import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.CommandUsage;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.util.CommonTool;
@@ -19,7 +20,7 @@ public class RendererDistributor
     public static byte[] renderScoreVOToImage(ScoreVO score, int version) throws IOException
     {
         return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreSVGMapper.renderScoreToImage(score, version, CommonTool.getDominantColorArray(score))
+                ScoreSVGMapper.renderScoreToImage(score, version, CommonTool.getDominantColorArray(score)), Math.max(1,version-1)
         );
     }
 
@@ -130,12 +131,7 @@ public class RendererDistributor
 
     public static byte[] renderPerformancePlusCard(PerformancePlusProfile player, int type) throws IOException
     {
-        LocalDate today = LocalDate.now();
-        double basicPossibility = 0.005;
-        if ( today.getMonthValue() == 4 && today.getDayOfMonth() == 1) {
-            basicPossibility *=40;
-        }
-        if (Math.random()> (1.0- basicPossibility)) return SVGRenderer.renderSVGDocumentToByteArray(
+        if (CommonTool.shouldTriggerEaster()) return SVGRenderer.renderSVGDocumentToByteArray(
             PlusCardSVGMapper.mapPlusInfoToEaster(player.getPerformance(),player.getPlayer()),1);
         if (type==0) return SVGRenderer.renderSVGDocumentToByteArray(
                 PlusCardSVGMapper.mapPlusInfoToCardCC2024(player.getPerformance(),player.getPlayer()),

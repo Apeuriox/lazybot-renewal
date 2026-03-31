@@ -26,7 +26,6 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
     {
         Document document = SVGTemplateLoader.loadSVGTemplate("PlusScoreCrimson");
         Element svgRoot = document.getDocumentElement();
-        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
         HSL mainColor = new HSL(hue, 85, 60);
         HSL darkColor = new HSL(hue, 35, 35);
         HSL mainBarColor = new HSL(CommonTool.circularHueSubtract(hue, -5), 77, 57);

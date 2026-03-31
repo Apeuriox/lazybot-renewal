@@ -2,6 +2,7 @@ package me.aloic.lazybot.osu.dao.entity.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 import me.aloic.lazybot.osu.enums.SupportedSubServer;
@@ -32,6 +33,8 @@ public class ScoreVO implements Comparable<ScoreVO>
     private Boolean isLazer;
     private Boolean isPerfectCombo;
     private SupportedSubServer osuSubServer;
+
+    private PlayerInfoDTO rawPlayerData;
 
     @Override
     public int compareTo(@NotNull ScoreVO o)

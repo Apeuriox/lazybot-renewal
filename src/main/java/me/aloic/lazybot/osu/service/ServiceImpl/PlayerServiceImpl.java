@@ -198,7 +198,14 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public ScoreVO getUserBestPerformanceSingle(BpParameter params)
     {
-        if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
+        boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if (easterTrigger && !Objects.equals(params.getMode(), "osu")) easterTrigger=false;
+
+        PlayerInfoDTO player = null;
+        if (params.getPlayerName()!=null) {
+            player=dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+            params.setPlayerId(player.getId());
+        }
         List<ScoreLazerDTO> scoreDTO = dataExtractor.extractUserBestScoreList(
                 String.valueOf(params.getPlayerId()),
                 params.getIndex()-1,
@@ -210,6 +217,13 @@ public class PlayerServiceImpl implements PlayerService
                 false);
         verifyBeatmapsCache(scoreVO);
         CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+
+        if(easterTrigger || params.getVersion()==3) {
+            if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+            scoreVO.setRawPlayerData(player);
+            params.setVersion(3);
+        }
+
         return scoreVO;
     }
 

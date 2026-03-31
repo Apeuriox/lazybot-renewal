@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -99,6 +100,19 @@ public class CommonTool {
 
     }
     public static String transformNumber(int number)
+    {
+        return transformNumber(String.valueOf(number));
+    }
+    public static boolean shouldTriggerEaster()
+    {
+        LocalDate today = LocalDate.now();
+        double basicPossibility = 0.01;
+        if ( today.getMonthValue() == 4 && today.getDayOfMonth() == 1) {
+            basicPossibility *=40;
+        }
+        return Math.random()> (1.0 - basicPossibility);
+    }
+    public static String transformNumber(long number)
     {
         return transformNumber(String.valueOf(number));
     }
@@ -184,6 +198,15 @@ public class CommonTool {
         else
             return "NoMod";
     }
+    public static String modArrayToStringNoSpace(List<Mod> modArray)
+    {
+        if(modArray!=null && !modArray.isEmpty())
+        {
+            return modArray.stream().map(Mod::getAcronym).reduce((a,b)->a.concat("").concat(b)).get();
+        }
+        else
+            return "Nomod";
+    }
     public static int[] getDominantColorArray(ScoreVO scoreVO) throws IOException {
         return CommonTool.getDominantColorColorThief(new File(scoreVO.getBeatmap().getBgUrl()));
     }
@@ -207,6 +230,17 @@ public class CommonTool {
         }
         return targetColor;
     }
+    public static String padLeftZeros(int number, int width) {
+        if (width <= 0) {
+            return String.valueOf(number);
+        }
+        return String.format("%0" + width + "d", number);
+    }
+    public static double calculateMissPenalty(double missCount, double difficultStrainCount)
+    {
+       return 0.93 / (missCount / (4 * Math.log10(difficultStrainCount)) + 1);
+    }
+
 
 
     public static String formatJsonDateToString(String timeStampString, String outputFormat)

@@ -3,8 +3,11 @@ package me.aloic.lazybot.graphics.mapping.documentMapper;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
+import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
+import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
@@ -624,10 +627,90 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         }
         svgRoot.appendChild(sectionFull);
     }
-    private static Document mapScoreToScorePanelMarathon(ScoreVO targetScore,int[] primaryColor)
+    private static Document mapScoreToScorePanelMarathon(ScoreVO targetScore, PlayerInfoDTO player)
     {
-           return SVGTemplateLoader.loadSVGTemplate("ScoreMarathonEaster");
+
+        Document doc = SVGTemplateLoader.loadSVGTemplate("ScoreMarathonEaster");
+        doc.getElementById("playername").setTextContent(targetScore.getUser_name());
+        String artist = targetScore.getBeatmap().getArtist();
+        if (artist.length() > 28)
+        {
+            artist = artist.substring(0, 26).concat("...");
+        }
+        String title = targetScore.getBeatmap().getTitle();
+        if (title.length() > 18)
+        {
+            title = title.substring(0, 17).concat("...");
+        }
+        doc.getElementById("artist").setTextContent(artist);
+        doc.getElementById("title").setTextContent(title);
+        doc.getElementById("map-bg").setAttributeNS(xlinkns, "xlink:href", targetScore.getBeatmap().getBgUrl());
+        doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", targetScore.getAvatarUrl());
+
+        doc.getElementById("mapper").setTextContent(targetScore.getBeatmap().getCreator());
+        doc.getElementById("bid").setTextContent(String.valueOf(targetScore.getBeatmap().getBid()));
+        doc.getElementById("sid").setTextContent(String.valueOf(targetScore.getBeatmap().getSid()));
+        doc.getElementById("version").setTextContent(targetScore.getBeatmap().getVersion());
+
+        doc.getElementById("date").setTextContent(SVGElementHelper.dateNowMarathon());
+
+        doc.getElementById("star").setTextContent(CommonTool.toString(targetScore.getBeatmap().getDifficult_rating()));
+        doc.getElementById("grade").setTextContent(targetScore.getRank().toLowerCase());
+        doc.getElementById("pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat("PP"));
+        doc.getElementById("iffc").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getIfFc())).concat("PP"));
+        doc.getElementById("accuracy").setTextContent(CommonTool.toString(targetScore.getAccuracy() * 100).concat("%"));
+        doc.getElementById("combo").setTextContent(CommonTool.toString(targetScore.getMaxCombo()).concat("/")
+                .concat(CommonTool.toString(targetScore.getBeatmap().getMax_combo()).concat("x")));
+        doc.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));
+        doc.getElementById("length").setTextContent(CommonTool.formatHitLength(targetScore.getBeatmap().getAttributes().getLength()));
+        doc.getElementById("ar").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getAr()));
+        doc.getElementById("od").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getOd()));
+        doc.getElementById("hp").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getHp()));
+        doc.getElementById("cs").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getCs()));
+        doc.getElementById("mod").setTextContent(CommonTool.modArrayToStringNoSpace(targetScore.getModJSON()));
+        doc.getElementById("mod-mask").setTextContent(CommonTool.modArrayToStringNoSpace(targetScore.getModJSON()));
+
+        doc.getElementById("good").setTextContent(CommonTool.padLeftZeros(targetScore.getStatistics().getOk(), 4));
+        doc.getElementById("great").setTextContent(CommonTool.padLeftZeros(targetScore.getStatistics().getGreat(), 5));
+        doc.getElementById("meh").setTextContent(CommonTool.padLeftZeros(targetScore.getStatistics().getMeh(), 3));
+        doc.getElementById("miss").setTextContent(CommonTool.padLeftZeros(targetScore.getStatistics().getMiss(), 4));
+
+        if (targetScore.getStatistics().getOk()==null || targetScore.getStatistics().getOk()==0)
+            doc.getElementById("good-block").setAttribute("opacity","0.2");
+        if (targetScore.getStatistics().getMeh()==null || targetScore.getStatistics().getMeh()==0)
+            doc.getElementById("meh-block").setAttribute("opacity","0.2");
+        if (targetScore.getStatistics().getMiss()==null || targetScore.getStatistics().getMiss()==0)
+            doc.getElementById("miss-block").setAttribute("opacity","0.2");
+
+
+
+        int allHitRegs = targetScore.getStatistics().getMeh() + targetScore.getStatistics().getGreat() + targetScore.getStatistics().getOk() + targetScore.getStatistics().getMiss();
+        doc.getElementById("good-percentage").setTextContent("P" + CommonTool.padLeftZeros((int) Math.round(((double) targetScore.getStatistics().getOk() / (double) allHitRegs)*100), 2).concat("%"));
+        doc.getElementById("great-hitwindow").setTextContent("H" + CommonTool.toString((80.0 - (targetScore.getBeatmap().getAttributes().getOd() * 6.0)), 1));
+        doc.getElementById("meh-rating").setTextContent("R" + CommonTool.padLeftZeros((int)(((double)targetScore.getStatistics().getMeh() /(double) allHitRegs) * 200), 2));
+        doc.getElementById("miss-penalty").setTextContent("M" + CommonTool.padLeftZeros((int) (100 - (CommonTool.calculateMissPenalty(targetScore.getStatistics().getMiss(), 500) * 100)), 2) + "P");
+
+
+        doc.getElementById("totalPP").setTextContent(CommonTool.transformNumber((int) Math.round(player.getStatistics().getPp())));
+        doc.getElementById("pc").setTextContent(CommonTool.transformNumber(player.getStatistics().getPlay_count()));
+        doc.getElementById("tth").setTextContent(CommonTool.transformNumber(player.getStatistics().getTotal_hits()));
+        doc.getElementById("s-count").setTextContent(CommonTool.transformNumber(player.getStatistics().getGrade_counts().getS()+player.getStatistics().getGrade_counts().getSh()));
+        doc.getElementById("a-count").setTextContent(CommonTool.transformNumber(player.getStatistics().getGrade_counts().getA()));
+        doc.getElementById("x-count").setTextContent(CommonTool.transformNumber(player.getStatistics().getGrade_counts().getSs())+player.getStatistics().getGrade_counts().getSsh());
+
+        doc.getElementById("join-date").setTextContent(SVGElementHelper.convertDateMonth(player.getJoin_date()));
+        Integer rank = player.getStatistics().getGlobal_rank();
+        if (rank != null)
+            doc.getElementById("rank").setTextContent("#" + CommonTool.transformNumber(player.getStatistics().getGlobal_rank()));
+        else {
+            doc.getElementById("rank").setTextContent("# - ");
+        }
+        doc.getElementById("level").setTextContent("LVL."+player.getStatistics().getLevel().getCurrent());
+        doc.getElementById("total-accuracy").setTextContent(CommonTool.toString(player.getStatistics().getHit_accuracy()).concat("%"));
+
+        return doc;
     }
+
 
     public static Document renderScoreToImage(ScoreVO targetScore, int version, int[] primaryColor)
     {
@@ -640,7 +723,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         else if (version==2)
             doc = mapScoreToScorePanelMaterial(targetScore,primaryColor);
         else if (version==3)
-            doc = mapScoreToScorePanelMarathon(targetScore,primaryColor);
+            doc = mapScoreToScorePanelMarathon(targetScore,targetScore.getRawPlayerData());
         else throw new LazybotRuntimeException("不支持的面板版本: " + version);
         return doc;
     }
