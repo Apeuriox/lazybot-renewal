@@ -50,7 +50,7 @@ public class SVGRenderer
         }
         catch (Exception e){
             logger.error(e.getMessage());
-            throw new LazybotRuntimeException("渲染成绩图时出错");
+            throw new LazybotRuntimeException("渲染成绩图时出错: "+e.getMessage());
         }
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
 

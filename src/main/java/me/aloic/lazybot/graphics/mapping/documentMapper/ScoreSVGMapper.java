@@ -21,6 +21,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.File;
+
 
 @Slf4j
 public class ScoreSVGMapper extends LazybotSVGMapper
@@ -629,8 +631,18 @@ public class ScoreSVGMapper extends LazybotSVGMapper
     }
     private static Document mapScoreToScorePanelMarathon(ScoreVO targetScore, PlayerInfoDTO player)
     {
-
         Document doc = SVGTemplateLoader.loadSVGTemplate("ScoreMarathonEaster");
+        int primaryHueForBeatmap, primaryHueForAvatar;
+        try{
+            primaryHueForBeatmap = CommonTool.getDominantHSLColorThief(new File(targetScore.getBeatmap().getBgUrl())).getHue();
+            primaryHueForAvatar = CommonTool.getDominantHSLColorThief(new File(targetScore.getAvatarUrl())).getHue();
+            primaryHueForBeatmap = primaryHueForBeatmap>360?75:primaryHueForBeatmap;
+            primaryHueForAvatar = primaryHueForAvatar>360?75:primaryHueForAvatar;
+        }
+        catch (Exception e)
+        {
+            throw new LazybotRuntimeException("处理主色调时出错");
+        }
         doc.getElementById("playername").setTextContent(targetScore.getUser_name());
         String artist = targetScore.getBeatmap().getArtist();
         if (artist.length() > 28)
@@ -667,7 +679,13 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         doc.getElementById("od").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getOd()));
         doc.getElementById("hp").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getHp()));
         doc.getElementById("cs").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getCs()));
-        doc.getElementById("mod").setTextContent(CommonTool.modArrayToStringNoSpace(targetScore.getModJSON()));
+        String modStr = CommonTool.modArrayToStringNoSpace(targetScore.getModJSON());
+        doc.getElementById("mod").setTextContent(modStr);
+        if (modStr.length() > 6) {
+            doc.getElementById("mod").setAttribute("font-size", String.valueOf(Math.max(1,(50 - (modStr.length() - 6)*2))));
+            doc.getElementById("mod-mask").setAttribute("font-size", String.valueOf(Math.max(1,(50 - (modStr.length() - 6)*2))));
+        }
+
         doc.getElementById("mod-mask").setTextContent(CommonTool.modArrayToStringNoSpace(targetScore.getModJSON()));
 
         doc.getElementById("good").setTextContent(CommonTool.padLeftZeros(targetScore.getStatistics().getOk(), 4));
@@ -696,7 +714,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         doc.getElementById("tth").setTextContent(CommonTool.transformNumber(player.getStatistics().getTotal_hits()));
         doc.getElementById("s-count").setTextContent(CommonTool.transformNumber(player.getStatistics().getGrade_counts().getS()+player.getStatistics().getGrade_counts().getSh()));
         doc.getElementById("a-count").setTextContent(CommonTool.transformNumber(player.getStatistics().getGrade_counts().getA()));
-        doc.getElementById("x-count").setTextContent(CommonTool.transformNumber(player.getStatistics().getGrade_counts().getSs())+player.getStatistics().getGrade_counts().getSsh());
+        doc.getElementById("x-count").setTextContent(CommonTool.transformNumber(player.getStatistics().getGrade_counts().getSs()+player.getStatistics().getGrade_counts().getSsh()));
 
         doc.getElementById("join-date").setTextContent(SVGElementHelper.convertDateMonth(player.getJoin_date()));
         Integer rank = player.getStatistics().getGlobal_rank();
@@ -708,6 +726,67 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         doc.getElementById("level").setTextContent("LVL."+player.getStatistics().getLevel().getCurrent());
         doc.getElementById("total-accuracy").setTextContent(CommonTool.toString(player.getStatistics().getHit_accuracy()).concat("%"));
 
+
+        HSL color1 = new HSL(primaryHueForBeatmap, 99, 51);
+        HSL color2 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,-180), 98, 51);
+        if (CommonTool.isWarmColor(CommonTool.circularHueSubtract(primaryHueForBeatmap,-180)))
+            color2 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,-120), 98, 51);
+        HSL color3 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,15), 90, 58);
+        HSL color4 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,269), 96, 59);
+        HSL colorExtra = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,13), 99, 51);
+
+        HSL color5 = new HSL(CommonTool.circularHueSubtract(primaryHueForAvatar,9), 98, 49);
+        HSL color6 = new HSL(primaryHueForAvatar, 100, 95);
+        HSL color7 = new HSL(primaryHueForAvatar,  63, 78);
+        HSL color8 = new HSL(CommonTool.circularHueSubtract(primaryHueForAvatar,-24),  10, 34);
+        HSL color9 = new HSL(CommonTool.circularHueSubtract(primaryHueForAvatar,1),  48, 65);
+        HSL color10 = new HSL(CommonTool.circularHueSubtract(primaryHueForAvatar,1),  93, 22);
+        HSL color11 = new HSL(CommonTool.circularHueSubtract(primaryHueForAvatar,-10),  77, 41);
+        HSL color12 = new HSL(CommonTool.circularHueSubtract(primaryHueForAvatar,-10),  85, 54);
+        HSL color13 = new HSL(CommonTool.circularHueSubtract(primaryHueForAvatar,-10),   100, 67);
+        HSL color14 = new HSL(CommonTool.circularHueSubtract(primaryHueForAvatar,-11),  28, 34);
+
+        boolean isWarmColorAvatar = CommonTool.isWarmColor(primaryHueForAvatar);
+        doc.getElementById("color14-1").setAttribute("fill",color14.toString());
+        doc.getElementById("color14-2").setAttribute("stroke",color14.toString());
+        doc.getElementById("color13-1").setAttribute("fill",color13.toString());
+        doc.getElementById("color12-1").setAttribute("fill",color12.toString());
+        doc.getElementById("color11-1").setAttribute("fill",color11.toString());
+        doc.getElementById("color10-1").setAttribute("fill",color10.toString());
+        doc.getElementById("color9-1").setAttribute("fill",color9.toString());
+        doc.getElementById("color8-2").setAttribute("fill",color8.toString());
+        doc.getElementById("color8-1").setAttribute("stroke",color8.toString());
+        doc.getElementById("color7-1").setAttribute("fill",color7.toString());
+        doc.getElementById("color6-1").setAttribute("fill",color6.toString());
+        doc.getElementById("color6-2").setAttribute("stroke",color6.toString());
+        doc.getElementById("color5-1").setAttribute("fill",color5.toString());
+        if (isWarmColorAvatar)
+        {
+            doc.getElementById("color6-1").setAttribute("fill","#111111");
+            doc.getElementById("color6-2").setAttribute("stroke","#111111");
+            doc.getElementById("warmColor-1").setAttribute("fill","#111111");
+            doc.getElementById("warmColor-2").setAttribute("stroke","#111111");
+        }
+
+
+
+        doc.getElementById("colorExtra-1").setAttribute("fill",colorExtra.toString());
+        doc.getElementById("color4-1").setAttribute("fill",color4.toString());
+        doc.getElementById("mod-mask").setAttribute("fill",color4.toString());
+        doc.getElementById("color4-2").setAttribute("fill",color4.toString());
+        doc.getElementById("color3-1").setAttribute("fill",color3.toString());
+        doc.getElementById("color3-2").setAttribute("stroke",color3.toString());
+        doc.getElementById("color2-1").setAttribute("fill",color2.toString());
+        doc.getElementById("color1-1").setAttribute("fill",color1.toString());
+        doc.getElementById("color1-2").setAttribute("fill",color1.toString());
+        doc.getElementById("color1-3").setAttribute("fill",color1.toString());
+        doc.getElementById("color1-4").setAttribute("fill",color1.toString());
+        doc.getElementById("color1-5").setAttribute("fill",color1.toString());
+        doc.getElementById("color1-6").setAttribute("fill",color1.toString());
+        doc.getElementById("color1-7").setAttribute("fill",color1.toString());
+        doc.getElementById("color1-8").setAttribute("fill",color1.toString());
+        doc.getElementById("color1-9").setAttribute("fill",color1.toString());
+        doc.getElementById("color1-10").setAttribute("stroke",color1.toString());
         return doc;
     }
 
@@ -722,7 +801,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc = mapScoreToScorePanelWhite(targetScore);
         else if (version==2)
             doc = mapScoreToScorePanelMaterial(targetScore,primaryColor);
-        else if (version==3)
+        else if (version==727)
             doc = mapScoreToScorePanelMarathon(targetScore,targetScore.getRawPlayerData());
         else throw new LazybotRuntimeException("不支持的面板版本: " + version);
         return doc;

@@ -20,7 +20,7 @@ public class RendererDistributor
     public static byte[] renderScoreVOToImage(ScoreVO score, int version) throws IOException
     {
         return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreSVGMapper.renderScoreToImage(score, version, CommonTool.getDominantColorArray(score)), Math.max(1,version-1)
+                ScoreSVGMapper.renderScoreToImage(score, version, CommonTool.getDominantColorArray(score)), Math.max(1,version-725)
         );
     }
 

@@ -106,9 +106,15 @@ public class CommonTool {
     public static boolean shouldTriggerEaster()
     {
         LocalDate today = LocalDate.now();
+        int year = today.getYear();
+        LocalDate d1 = LocalDate.of(year, 3, 31);
+        LocalDate d2 = LocalDate.of(year, 4, 1);
+        LocalDate d3 = LocalDate.of(year, 4, 2);
         double basicPossibility = 0.01;
-        if ( today.getMonthValue() == 4 && today.getDayOfMonth() == 1) {
-            basicPossibility *=40;
+        if (today.equals(d1) || today.equals(d3)) {
+            basicPossibility *= 20;
+        } else if (today.equals(d2)) {
+            basicPossibility *= 40;
         }
         return Math.random()> (1.0 - basicPossibility);
     }

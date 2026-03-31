@@ -70,7 +70,13 @@ public class PlayerServiceImpl implements PlayerService
     public ScoreVO getUserHighestScoreOnMap(ScoreParameter params)
     {
         int playerId = params.getPlayerId();
-        if (params.getPlayerName()!=null) playerId = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(), params.getMode()).getId();
+        boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if (easterTrigger && !Objects.equals(params.getMode(), "osu")) easterTrigger=false;
+        PlayerInfoDTO player = null;
+        if (params.getPlayerName()!=null) {
+            player=dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+            playerId = player.getId();
+        }
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()),
                 playerId,
@@ -82,6 +88,11 @@ public class PlayerServiceImpl implements PlayerService
                 beatmapUserScoreLazer.getScore(),
                 false);
         verifyBeatmapsCache(scoreVO);
+        if(easterTrigger) {
+            if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+            scoreVO.setRawPlayerData(player);
+            params.setVersion(727);
+        }
         if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
        return scoreVO;
@@ -170,7 +181,14 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public ScoreVO getUserRecentScoreList(RecentParameter params, int type)
     {
-        if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
+        boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if (easterTrigger && !Objects.equals(params.getMode(), "osu")) easterTrigger=false;
+
+        PlayerInfoDTO player = null;
+        if (params.getPlayerName()!=null) {
+            player=dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+            params.setPlayerId(player.getId());
+        }
         List<ScoreLazerDTO> scoreList = dataExtractor.extractRecentScoreList(params.getPlayerId(), type, params.getIndex(), params.getMode());
         if(params.getIndex()>scoreList.size()) {
             throw new LazybotRuntimeException("当前超出能索引的最大距离，当前为: "+params.getIndex());
@@ -180,6 +198,11 @@ public class PlayerServiceImpl implements PlayerService
                 scoreList.get(params.getIndex() - 1),
                 false);
         verifyBeatmapsCache(scoreVO);
+        if(easterTrigger) {
+            if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+            scoreVO.setRawPlayerData(player);
+            params.setVersion(727);
+        }
         if (params.getChannelId()!=null)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return scoreVO;
@@ -218,10 +241,10 @@ public class PlayerServiceImpl implements PlayerService
         verifyBeatmapsCache(scoreVO);
         CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
 
-        if(easterTrigger || params.getVersion()==3) {
+        if(easterTrigger) {
             if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
             scoreVO.setRawPlayerData(player);
-            params.setVersion(3);
+            params.setVersion(727);
         }
 
         return scoreVO;
@@ -775,6 +798,7 @@ public class PlayerServiceImpl implements PlayerService
         scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssetDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
         return scorePlus;
     }
+
 
 
 
