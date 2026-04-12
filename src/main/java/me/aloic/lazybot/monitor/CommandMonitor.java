@@ -56,7 +56,7 @@ public class CommandMonitor {
         commandStats.clear();
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?", zone = "Asia/Shanghai")
     public void clearOldStats() {
         log.info("正在保存旧数据...");
         usageMapper.insert(setupCommandUsage(commandStats, startTime));

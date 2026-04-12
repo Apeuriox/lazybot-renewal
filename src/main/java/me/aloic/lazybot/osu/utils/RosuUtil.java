@@ -5,10 +5,8 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
-import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
-import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.*;
+import me.aloic.lazybot.util.CommonTool;
 import org.spring.osu.OsuMode;
 import org.spring.osu.extended.rosu.*;
 
@@ -63,12 +61,18 @@ public class RosuUtil
     }
     public static JniDifficultyAttributes nomodMapStats(JniBeatmap beatmap, String mode)
     {
+       return fullStatsWithMods(beatmap,null,mode);
+    }
+    public static JniDifficultyAttributes fullStatsWithMods(JniBeatmap beatmap,String modJSON, String mode)
+    {
         JniPerformance performance=beatmap.createPerformance();
         OsuMode osuMode=me.aloic.lazybot.osu.enums.OsuMode.convertMode(String.valueOf(mode));
         performance.setMode(osuMode);
         JniPerformanceAttributes rosuResult;
         performance.setAcc(100.0);
         performance.setLazer(true);
+        if (modJSON!=null)
+            performance.setMods(modJSON,osuMode);
         rosuResult=performance.calculate();
         return switch (rosuResult) {
             case OsuPerformanceAttributes osu -> osu.getDifficulty();
@@ -77,6 +81,54 @@ public class RosuUtil
             case CatchPerformanceAttributes catchPerformance -> catchPerformance.getDifficulty();
             default -> null;
         };
+    }
+    public static JniPerformanceAttributes fullStatsPerformanceWithMods(JniBeatmap beatmap,String modJSON, String mode)
+    {
+        JniPerformance performance=beatmap.createPerformance();
+        OsuMode osuMode=me.aloic.lazybot.osu.enums.OsuMode.convertMode(String.valueOf(mode));
+        performance.setMode(osuMode);
+        JniPerformanceAttributes rosuResult;
+        performance.setAcc(100.0);
+        performance.setLazer(true);
+        if (modJSON!=null)
+            performance.setMods(modJSON,osuMode);
+        switch (osuMode)
+        {
+            case Osu:
+//                performance.setN300(beatmap.getObjects());
+//                performance.setN100(0);
+//                performance.setN50(0);
+//                performance.setMisses(0);
+//                performance.setLazer(true);
+                rosuResult= performance.calculate();
+                break;
+            case Taiko:
+//                performance.setN300(beatmap.getObjects());
+//                performance.setN100(0);
+//                performance.setMisses(0);
+                rosuResult= performance.calculate();
+                break;
+            case Mania:
+//                performance.setGeki(beatmap.getObjects());
+//                performance.setN300(beatmap.getObjects());
+//                performance.setKatu(0);
+//                performance.setN100(0);
+//                performance.setN50(0);
+//                performance.setMisses(0);
+                rosuResult= performance.calculate();
+                break;
+            case Catch:
+//                performance.setN300(beatmap.getObjects());
+//                performance.setN100(Optional.ofNullable(statistics.getLarge_tick_hit()).orElse(0));
+//                performance.setN50(Optional.ofNullable(statistics.getSmall_tick_hit()).orElse(0));
+//                performance.setKatu(Optional.ofNullable(statistics.getSmall_tick_miss()).orElse(0));
+//                performance.setMisses(Optional.ofNullable(statistics.getMiss()).orElse(0));
+                rosuResult= performance.calculate();
+                break;
+            default:
+                throw new IllegalStateException("Unsupported mode: " + mode);
+        }
+        return rosuResult;
     }
 
 
@@ -127,6 +179,20 @@ public class RosuUtil
             resultPerformance.setFlashlightPP(0.0);
         }
         return resultPerformance;
+    }
+
+    public static void setupBeatmapStatistics(BeatmapStatistics bs) throws IOException
+    {
+        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssetDownloadUtil.beatmapPath(bs.getBeatmap().getBid(),false)));
+        bs.getBeatmap().setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, bs.getBeatmap().getMode().getDescribe()));
+        bs.getBeatmap().setLengthBonus(CommonTool.lengthBonusCalc(bs.getBeatmap().getCountCircles()+bs.getBeatmap().getCountSliders()+bs.getBeatmap().getCountSpinners()));
+        ImaginaryPerformance ip=new ImaginaryPerformance();
+        JniPerformanceAttributes performance = fullStatsPerformanceWithMods(beatmap, JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe());
+
+//        bs.setPerformance();
+//        mapScores=mapScores.stream().sorted(comparing.reversed()).toList();
+//        verifyBeatmapsCache(beatmapPerformance.getBid(), checksum);
+//        return mapScores;
     }
 
     private static JniPerformanceAttributes getPPStats(JniBeatmap beatmap, String modJSON, ScoreStatisticsLazer statistics,

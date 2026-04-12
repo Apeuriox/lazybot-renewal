@@ -123,6 +123,21 @@ public class PlayerServiceImpl implements PlayerService
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), params.getBeatmapId());
         return new UserAllScore(mapScoreList,beatmapPerformance);
     }
+    @Override
+    public BeatmapStatistics getBeatmapStatisticsWithImaginaryParams(BeatmapStatisticsParameter params) throws Exception {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("暂不支持其他模式，请等待更新");
+
+        BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()),params.getMode());
+        BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
+
+        BeatmapStatistics result = new BeatmapStatistics(beatmapPerformance);
+        PlayerInfoDTO mapper = dataExtractor.extractPlayerInfoDTO(beatmapPerformance.getCreator().trim(),params.getMode());
+        result.setMapperAvatarUrl(OsuToolsUtil.getOsuAvatarUrl(mapper));
+        result.setMapBackgroundUrl(osuToolsUtil.getBeatmapUrl(result.getBeatmap().getSid()));
+
+
+        return result;
+    }
 
 
     @Override

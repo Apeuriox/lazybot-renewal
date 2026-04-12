@@ -515,6 +515,9 @@ public class TransformerUtil
         beatmap.setCountSpinners(Optional.ofNullable(beatmapDTO.getCount_spinners()).orElse(0));
         beatmap.setConvert(beatmapDTO.getConvert());
         beatmap.setMode(OsuMode.getMode(beatmapDTO.getMode_int()));
+        beatmap.setUser_id(beatmapDTO.getUser_id());
+        beatmap.setLast_updated(beatmapDTO.getLast_updated());
+        beatmap.setUser_rating(beatmapDTO.getBeatmapset().getRatings());
         return beatmap;
     }
 

@@ -112,9 +112,9 @@ public class CommonTool {
         LocalDate d3 = LocalDate.of(year, 4, 2);
         double basicPossibility = 0.01;
         if (today.equals(d1) || today.equals(d3)) {
-            basicPossibility *= 20;
-        } else if (today.equals(d2)) {
             basicPossibility *= 40;
+        } else if (today.equals(d2)) {
+            basicPossibility *= 60;
         }
         return Math.random()> (1.0 - basicPossibility);
     }
@@ -867,6 +867,15 @@ public class CommonTool {
     public static int randomIntegerWithin(int min, int max)
     {
         return (int)(Math.random() * (max - min + 1)) + min;
+    }
+
+    public static boolean isThisStringADouble(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 }

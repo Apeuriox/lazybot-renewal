@@ -634,16 +634,20 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         Document doc = SVGTemplateLoader.loadSVGTemplate("ScoreMarathonEaster");
         int primaryHueForBeatmap, primaryHueForAvatar;
         try{
-            primaryHueForBeatmap = CommonTool.getDominantHSLColorThief(new File(targetScore.getBeatmap().getBgUrl())).getHue();
+//            primaryHueForBeatmap = CommonTool.getDominantHSLColorThief(new File(targetScore.getBeatmap().getBgUrl())).getHue();
             primaryHueForAvatar = CommonTool.getDominantHSLColorThief(new File(targetScore.getAvatarUrl())).getHue();
-            primaryHueForBeatmap = primaryHueForBeatmap>360?75:primaryHueForBeatmap;
+//            primaryHueForBeatmap = primaryHueForBeatmap>360?75:primaryHueForBeatmap;
             primaryHueForAvatar = primaryHueForAvatar>360?75:primaryHueForAvatar;
         }
         catch (Exception e)
         {
             throw new LazybotRuntimeException("处理主色调时出错");
         }
-        doc.getElementById("playername").setTextContent(targetScore.getUser_name());
+        String playername = targetScore.getUser_name();
+        doc.getElementById("playername").setTextContent(playername);
+        if (playername.length() > 6) {
+            doc.getElementById("playername").setAttribute("font-size", String.valueOf(Math.max(2,(60 - (playername.length() - 6)*2))));
+        }
         String artist = targetScore.getBeatmap().getArtist();
         if (artist.length() > 28)
         {
@@ -662,7 +666,12 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         doc.getElementById("mapper").setTextContent(targetScore.getBeatmap().getCreator());
         doc.getElementById("bid").setTextContent(String.valueOf(targetScore.getBeatmap().getBid()));
         doc.getElementById("sid").setTextContent(String.valueOf(targetScore.getBeatmap().getSid()));
-        doc.getElementById("version").setTextContent(targetScore.getBeatmap().getVersion());
+        String version = targetScore.getBeatmap().getVersion();
+        if (version.length() > 20)
+        {
+            version = version.substring(0, 18).concat("...");
+        }
+        doc.getElementById("version").setTextContent(version);
 
         doc.getElementById("date").setTextContent(SVGElementHelper.dateNowMarathon());
 
@@ -671,6 +680,8 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         doc.getElementById("pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat("PP"));
         doc.getElementById("iffc").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getIfFc())).concat("PP"));
         doc.getElementById("accuracy").setTextContent(CommonTool.toString(targetScore.getAccuracy() * 100).concat("%"));
+        if (targetScore.getAccuracy()>0.99999)
+            doc.getElementById("accuracy").setAttribute("font-size","44");
         doc.getElementById("combo").setTextContent(CommonTool.toString(targetScore.getMaxCombo()).concat("/")
                 .concat(CommonTool.toString(targetScore.getBeatmap().getMax_combo()).concat("x")));
         doc.getElementById("bpm").setTextContent(CommonTool.toString(targetScore.getBeatmap().getAttributes().getBpm()));
@@ -682,8 +693,8 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         String modStr = CommonTool.modArrayToStringNoSpace(targetScore.getModJSON());
         doc.getElementById("mod").setTextContent(modStr);
         if (modStr.length() > 6) {
-            doc.getElementById("mod").setAttribute("font-size", String.valueOf(Math.max(1,(50 - (modStr.length() - 6)*2))));
-            doc.getElementById("mod-mask").setAttribute("font-size", String.valueOf(Math.max(1,(50 - (modStr.length() - 6)*2))));
+            doc.getElementById("mod").setAttribute("font-size", String.valueOf(Math.max(1,(50 - (modStr.length() - 6)*4))));
+            doc.getElementById("mod-mask").setAttribute("font-size", String.valueOf(Math.max(1,(50 - (modStr.length() - 6)*4))));
         }
 
         doc.getElementById("mod-mask").setTextContent(CommonTool.modArrayToStringNoSpace(targetScore.getModJSON()));
@@ -727,13 +738,13 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         doc.getElementById("total-accuracy").setTextContent(CommonTool.toString(player.getStatistics().getHit_accuracy()).concat("%"));
 
 
-        HSL color1 = new HSL(primaryHueForBeatmap, 99, 51);
-        HSL color2 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,-180), 98, 51);
-        if (CommonTool.isWarmColor(CommonTool.circularHueSubtract(primaryHueForBeatmap,-180)))
-            color2 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,-120), 98, 51);
-        HSL color3 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,15), 90, 58);
-        HSL color4 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,269), 96, 59);
-        HSL colorExtra = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,13), 99, 51);
+//        HSL color1 = new HSL(primaryHueForBeatmap, 99, 51);
+//        HSL color2 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,-180), 98, 51);
+//        if (CommonTool.isWarmColor(CommonTool.circularHueSubtract(primaryHueForBeatmap,-180)))
+//            color2 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,-120), 98, 51);
+//        HSL color3 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,15), 90, 58);
+//        HSL color4 = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,269), 96, 59);
+//        HSL colorExtra = new HSL(CommonTool.circularHueSubtract(primaryHueForBeatmap,13), 99, 51);
 
         HSL color5 = new HSL(CommonTool.circularHueSubtract(primaryHueForAvatar,9), 98, 49);
         HSL color6 = new HSL(primaryHueForAvatar, 100, 95);
@@ -770,23 +781,23 @@ public class ScoreSVGMapper extends LazybotSVGMapper
 
 
 
-        doc.getElementById("colorExtra-1").setAttribute("fill",colorExtra.toString());
-        doc.getElementById("color4-1").setAttribute("fill",color4.toString());
-        doc.getElementById("mod-mask").setAttribute("fill",color4.toString());
-        doc.getElementById("color4-2").setAttribute("fill",color4.toString());
-        doc.getElementById("color3-1").setAttribute("fill",color3.toString());
-        doc.getElementById("color3-2").setAttribute("stroke",color3.toString());
-        doc.getElementById("color2-1").setAttribute("fill",color2.toString());
-        doc.getElementById("color1-1").setAttribute("fill",color1.toString());
-        doc.getElementById("color1-2").setAttribute("fill",color1.toString());
-        doc.getElementById("color1-3").setAttribute("fill",color1.toString());
-        doc.getElementById("color1-4").setAttribute("fill",color1.toString());
-        doc.getElementById("color1-5").setAttribute("fill",color1.toString());
-        doc.getElementById("color1-6").setAttribute("fill",color1.toString());
-        doc.getElementById("color1-7").setAttribute("fill",color1.toString());
-        doc.getElementById("color1-8").setAttribute("fill",color1.toString());
-        doc.getElementById("color1-9").setAttribute("fill",color1.toString());
-        doc.getElementById("color1-10").setAttribute("stroke",color1.toString());
+//        doc.getElementById("colorExtra-1").setAttribute("fill",colorExtra.toString());
+//        doc.getElementById("color4-1").setAttribute("fill",color4.toString());
+//        doc.getElementById("mod-mask").setAttribute("fill",color4.toString());
+//        doc.getElementById("color4-2").setAttribute("fill",color4.toString());
+//        doc.getElementById("color3-1").setAttribute("fill",color3.toString());
+//        doc.getElementById("color3-2").setAttribute("stroke",color3.toString());
+//        doc.getElementById("color2-1").setAttribute("fill",color2.toString());
+//        doc.getElementById("color1-1").setAttribute("fill",color1.toString());
+//        doc.getElementById("color1-2").setAttribute("fill",color1.toString());
+//        doc.getElementById("color1-3").setAttribute("fill",color1.toString());
+//        doc.getElementById("color1-4").setAttribute("fill",color1.toString());
+//        doc.getElementById("color1-5").setAttribute("fill",color1.toString());
+//        doc.getElementById("color1-6").setAttribute("fill",color1.toString());
+//        doc.getElementById("color1-7").setAttribute("fill",color1.toString());
+//        doc.getElementById("color1-8").setAttribute("fill",color1.toString());
+//        doc.getElementById("color1-9").setAttribute("fill",color1.toString());
+//        doc.getElementById("color1-10").setAttribute("stroke",color1.toString());
         return doc;
     }
 

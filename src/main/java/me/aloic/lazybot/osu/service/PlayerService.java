@@ -17,6 +17,8 @@ public interface PlayerService
 
     UserAllScore getUserAllScoresOnMap(ScoreParameter params) throws Exception;
 
+    BeatmapStatistics getBeatmapStatisticsWithImaginaryParams(BeatmapStatisticsParameter params) throws Exception;
+
     ThumbnailClassicalVO thumbnailClassicalScore(ThumbnailParameter params);
 
     ThumbnailClassicalVO thumbnailClassicalRecent(ThumbnailParameter params);

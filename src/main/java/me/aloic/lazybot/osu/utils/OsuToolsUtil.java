@@ -35,14 +35,18 @@ public class OsuToolsUtil
     public BeatmapVO setupBeatmapVO(BeatmapDTO beatmapDTO)
     {
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransform(beatmapDTO);
-        beatmapVO.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapVO.getBeatmapset_id()));
+        beatmapVO.setBgUrl(getBeatmapUrl(beatmapVO.getBeatmapset_id()));
         return beatmapVO;
     }
     public BeatmapVO setupBeatmapVO(ScoreStarMoon scoreStarMoon, String mode)
     {
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransform(scoreStarMoon, mode);
-        beatmapVO.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapVO.getBeatmapset_id()));
+        beatmapVO.setBgUrl(getBeatmapUrl(beatmapVO.getBeatmapset_id()));
         return beatmapVO;
+    }
+    public String getBeatmapUrl(Integer sid)
+    {
+        return assetDownloader.beatmapBackgroundAbsolutePath(sid);
     }
 
 
@@ -244,6 +248,10 @@ public class OsuToolsUtil
     {
         playerInfoDTO.setAvatar_url((AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,false)));
         return TransformerUtil.userTransform(playerInfoDTO);
+    }
+    public static String getOsuAvatarUrl(PlayerInfoDTO playerInfoDTO)
+    {
+        return AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,false);
     }
 
     public NoChokeListVO setupNoChokeList(PlayerInfoVO info, List<ScoreVO> scoreList, int type)
