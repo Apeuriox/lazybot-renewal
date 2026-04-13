@@ -23,5 +23,10 @@ public class BeatmapStatistics
     {
         this.beatmap=beatmap;
     }
+    public BeatmapStatistics(BeatmapPerformance beatmap, double acc)
+    {
+        this.beatmap=beatmap;
+        this.performance=new ImaginaryPerformance(acc);
+    }
 
 }

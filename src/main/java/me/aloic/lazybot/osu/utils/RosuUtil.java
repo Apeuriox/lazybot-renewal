@@ -87,48 +87,11 @@ public class RosuUtil
         JniPerformance performance=beatmap.createPerformance();
         OsuMode osuMode=me.aloic.lazybot.osu.enums.OsuMode.convertMode(String.valueOf(mode));
         performance.setMode(osuMode);
-        JniPerformanceAttributes rosuResult;
         performance.setAcc(100.0);
         performance.setLazer(true);
         if (modJSON!=null)
             performance.setMods(modJSON,osuMode);
-        switch (osuMode)
-        {
-            case Osu:
-//                performance.setN300(beatmap.getObjects());
-//                performance.setN100(0);
-//                performance.setN50(0);
-//                performance.setMisses(0);
-//                performance.setLazer(true);
-                rosuResult= performance.calculate();
-                break;
-            case Taiko:
-//                performance.setN300(beatmap.getObjects());
-//                performance.setN100(0);
-//                performance.setMisses(0);
-                rosuResult= performance.calculate();
-                break;
-            case Mania:
-//                performance.setGeki(beatmap.getObjects());
-//                performance.setN300(beatmap.getObjects());
-//                performance.setKatu(0);
-//                performance.setN100(0);
-//                performance.setN50(0);
-//                performance.setMisses(0);
-                rosuResult= performance.calculate();
-                break;
-            case Catch:
-//                performance.setN300(beatmap.getObjects());
-//                performance.setN100(Optional.ofNullable(statistics.getLarge_tick_hit()).orElse(0));
-//                performance.setN50(Optional.ofNullable(statistics.getSmall_tick_hit()).orElse(0));
-//                performance.setKatu(Optional.ofNullable(statistics.getSmall_tick_miss()).orElse(0));
-//                performance.setMisses(Optional.ofNullable(statistics.getMiss()).orElse(0));
-                rosuResult= performance.calculate();
-                break;
-            default:
-                throw new IllegalStateException("Unsupported mode: " + mode);
-        }
-        return rosuResult;
+        return performance.calculate();
     }
 
 
@@ -187,12 +150,28 @@ public class RosuUtil
         bs.getBeatmap().setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, bs.getBeatmap().getMode().getDescribe()));
         bs.getBeatmap().setLengthBonus(CommonTool.lengthBonusCalc(bs.getBeatmap().getCountCircles()+bs.getBeatmap().getCountSliders()+bs.getBeatmap().getCountSpinners()));
         ImaginaryPerformance ip=new ImaginaryPerformance();
-        JniPerformanceAttributes performance = fullStatsPerformanceWithMods(beatmap, JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe());
+        OsuPerformanceAttributes performance = (OsuPerformanceAttributes) fullStatsPerformanceWithMods(beatmap, JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe());
+        OsuDifficultyAttributes difficultyAttributes = (OsuDifficultyAttributes) bs.getBeatmap().getDifficultyAttributes();
+        Map<Integer,Double> resultAccPpList=new ConcurrentHashMap<>();
+        resultAccPpList.put(100,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),100.0,true));
+        resultAccPpList.put(99,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),99.0,true));
+        resultAccPpList.put(98,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),98.0,true));
+        resultAccPpList.put(97,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),97.0,true));
+        resultAccPpList.put(95,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),95.0,true));
+        resultAccPpList.put(93,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),93.0,true));
+        double imaginaryPP= getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),bs.getPerformance().getImaginaryAccuracy(),true);
+        ip.setAccPPList(resultAccPpList);
+        ip.setAimPP(performance.getPpAim());
+        ip.setAccPP(performance.getPpAcc());
+        ip.setSpdPP(performance.getPpSpeed());
+        ip.setFlashlightPP(performance.getPpFlashlight());
+        ip.setStar(performance.getStarRating());
+        ip.setAimStar(difficultyAttributes.getAim());
+        ip.setSpeedStar(difficultyAttributes.getSpeed());
+        ip.setImaginaryAccuracy(bs.getPerformance().getImaginaryAccuracy());
+        ip.setImaginaryPP(imaginaryPP);
+        bs.setPerformance(ip);
 
-//        bs.setPerformance();
-//        mapScores=mapScores.stream().sorted(comparing.reversed()).toList();
-//        verifyBeatmapsCache(beatmapPerformance.getBid(), checksum);
-//        return mapScores;
     }
 
     private static JniPerformanceAttributes getPPStats(JniBeatmap beatmap, String modJSON, ScoreStatisticsLazer statistics,

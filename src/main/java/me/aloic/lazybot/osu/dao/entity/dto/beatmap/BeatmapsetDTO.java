@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -33,13 +34,13 @@ public class BeatmapsetDTO implements Serializable {
 //    private String discussions;
 //    private String events;
     private String genre;
-    private Boolean has_favourited;
+//    private Boolean has_favourited;
     private String language;
-    private String nominations;
-    private String[] pack_tags;
-    private Float ratings;
-    private String recent_favourites;
-    private String related_users;
-    private String user;
-    private Long track_id;
+//    private String nominations;
+//    private String[] pack_tags;
+    private List<Integer> ratings;
+//    private String recent_favourites;
+//    private String related_users;
+//    private String user;
+//    private Long track_id;
 }

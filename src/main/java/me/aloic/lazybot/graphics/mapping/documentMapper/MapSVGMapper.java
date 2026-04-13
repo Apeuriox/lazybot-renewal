@@ -17,7 +17,7 @@ public class MapSVGMapper extends LazybotSVGMapper
 {
 
 
-    public static Document mapBeatmapStatsToPanel(BeatmapStatistics beatmapStatistics) throws IOException
+    public static Document mapBeatmapStatsToPanel(BeatmapStatistics beatmapStatistics)
     {
         Document document = SVGTemplateLoader.loadSVGTemplate("MapStats");
 
@@ -42,14 +42,14 @@ public class MapSVGMapper extends LazybotSVGMapper
         document.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", beatmapStatistics.getMapperAvatarUrl());
 
 
-        document.getElementById("pp-aim").setTextContent(beatmapStatistics.getPerformance().getAimPP() + "pp");
-        document.getElementById("pp-speed").setTextContent(beatmapStatistics.getPerformance().getSpdPP() + "pp");
-        document.getElementById("pp-accuracy").setTextContent(beatmapStatistics.getPerformance().getAccPP() + "pp");
+        document.getElementById("pp-aim").setTextContent(Math.round(beatmapStatistics.getPerformance().getAimPP()) + "pp");
+        document.getElementById("pp-speed").setTextContent(Math.round(beatmapStatistics.getPerformance().getSpdPP()) + "pp");
+        document.getElementById("pp-accuracy").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPP()) + "pp");
         document.getElementById("pp-distri").setTextContent(beatmapStatistics.getPpBreakdownRatioChain());
 
         String titleAndArtist=beatmapStatistics.getBeatmap().getArtist().concat(" - ").concat(beatmapStatistics.getBeatmap().getTitle());
         if (titleAndArtist.length()>46) titleAndArtist=titleAndArtist.substring(0,44)+"...";
-        document.getElementById("titleAndArtist").setTextContent(titleAndArtist);
+        document.getElementById("artistAndTitle").setTextContent(titleAndArtist);
         document.getElementById("version").setTextContent("["+beatmapStatistics.getBeatmap().getVersion()+"]");
         document.getElementById("bid").setTextContent(String.valueOf(beatmapStatistics.getBeatmap().getBid()));
 
@@ -77,11 +77,11 @@ public class MapSVGMapper extends LazybotSVGMapper
                 document.getElementById("bs-r-4").setTextContent(CommonTool.toString(beatmapStatistics.getBeatmap().getUser_rating()));
                 document.getElementById("bs-r-5").setTextContent(beatmapStatistics.getBeatmap().getMax_combo() + "x");
 
-                document.getElementById("da-l-1").setTextContent(CommonTool.toString(beatmapStatistics.getBeatmap().getLengthBonus(), 3));
-                document.getElementById("da-l-2").setTextContent(String.valueOf(Math.round(osu.getAimDifficultStrainCount())));
-                document.getElementById("da-l-3").setTextContent(String.valueOf(Math.round(osu.getSpeedDifficultStrainCount())));
-                document.getElementById("da-l-4").setTextContent(CommonTool.toString(osu.getSliderFactor() * 100).concat("%"));
-                document.getElementById("da-l-5").setTextContent(String.valueOf(osu.getSpeedNoteCount()));
+                document.getElementById("da-r-1").setTextContent((int)(beatmapStatistics.getBeatmap().getLengthBonus()*100)+"%");
+                document.getElementById("da-r-2").setTextContent(String.valueOf(Math.round(osu.getAimDifficultStrainCount())));
+                document.getElementById("da-r-3").setTextContent(String.valueOf(Math.round(osu.getSpeedDifficultStrainCount())));
+                document.getElementById("da-r-4").setTextContent(CommonTool.toString(osu.getSliderFactor() * 100).concat("%"));
+                document.getElementById("da-r-5").setTextContent(CommonTool.toString(osu.getSpeedNoteCount()));
             }
             case null, default -> throw new LazybotRuntimeException("暂支支持其他模式");
         }
@@ -89,14 +89,14 @@ public class MapSVGMapper extends LazybotSVGMapper
         document.getElementById("star-speed").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getSpeedStar()));
 
 
-        document.getElementById("pp-1").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(0).intValue() + "pp");
-        document.getElementById("pp-2").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(1).intValue() + "pp");
-        document.getElementById("pp-3").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(2).intValue() + "pp");
-        document.getElementById("pp-4").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(3).intValue() + "pp");
-        document.getElementById("pp-5").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(4).intValue() + "pp");
-        document.getElementById("pp-6").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(5).intValue() + "pp");
+        document.getElementById("pp-1").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(100).intValue() + "pp");
+        document.getElementById("pp-2").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(99).intValue() + "pp");
+        document.getElementById("pp-3").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(98).intValue() + "pp");
+        document.getElementById("pp-4").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(97).intValue() + "pp");
+        document.getElementById("pp-5").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(95).intValue() + "pp");
+        document.getElementById("pp-6").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(93).intValue() + "pp");
         document.getElementById("pp").setTextContent(beatmapStatistics.getPerformance().getImaginaryPP().intValue() + "pp");
-        document.getElementById("target-acc").setTextContent("("+CommonTool.toString(beatmapStatistics.getPerformance().getImaginaryAccuracy() * 100.0) + "%)");
+        document.getElementById("target-acc").setTextContent("("+CommonTool.toString(beatmapStatistics.getPerformance().getImaginaryAccuracy()) + "%)");
 
 
 

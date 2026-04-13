@@ -21,6 +21,7 @@ import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.dao.mapper.*;
+import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.theme.Color.HSL;
@@ -42,6 +43,7 @@ import java.nio.file.Files;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -130,14 +132,24 @@ public class PlayerServiceImpl implements PlayerService
         BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()),params.getMode());
         BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
 
-        BeatmapStatistics result = new BeatmapStatistics(beatmapPerformance);
+        BeatmapStatistics result = new BeatmapStatistics(beatmapPerformance,params.getTargetAccuracy());
         PlayerInfoDTO mapper = dataExtractor.extractPlayerInfoDTO(beatmapPerformance.getCreator().trim(),params.getMode());
         result.setMapperAvatarUrl(OsuToolsUtil.getOsuAvatarUrl(mapper));
         result.setMapBackgroundUrl(osuToolsUtil.getBeatmapUrl(result.getBeatmap().getSid()));
-
-
+        result.setMode(OsuMode.getMode(params.getMode()));
+        result.setImaginaryMods(OsuToolsUtil.wireModEntities(List.of(params.getModCombination().split("(?<=\\G.{2})"))));
+        RosuUtil.setupBeatmapStatistics(result);
+        double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);
+        double weightSpeed = Math.pow(result.getPerformance().getSpdPP(), 1.1);
+        double weightAccuracy = Math.pow(result.getPerformance().getAccPP(), 1.1);
+        double totalWeight = weightAim + weightSpeed + weightAccuracy;
+        int ratioAim = (int) Math.round(weightAim * 100.0 / totalWeight);
+        int ratioSpeed = (int) Math.round(weightSpeed * 100.0 / totalWeight);
+        result.setPpBreakdownRatioChain(ratioAim +"%-" + ratioSpeed+"%-" + (100-ratioAim-ratioSpeed) +"%");
+        ModCalculatorUtil.afterModMapInfo(result.getBeatmap(), result.getImaginaryMods());
         return result;
     }
+
 
 
     @Override

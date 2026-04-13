@@ -11,7 +11,6 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -138,6 +137,9 @@ public class CommonTool {
 
     public static String toString(Double num) {
         return toString(num, 2);
+    }
+    public static String toString(Float num) {
+        return toString(Double.valueOf(num), 2);
     }
 
     public static String toString(Double num, int pointAft) {
@@ -450,7 +452,25 @@ public class CommonTool {
             return result.substring(0,2);
         }
     }
+    public static float calculateAverageRating(List<Integer> ratingCounts) {
+        if (ratingCounts == null || ratingCounts.size() != 11) {
+            throw new IllegalArgumentException("List must be of length 11");
+        }
 
+        long totalScore = 0;
+        int totalCount = 0;
+
+        for (int i = 0; i <= 10; i++) {
+            int count = ratingCounts.get(i);
+            totalScore += (long) i * count;
+            totalCount += count;
+        }
+
+        if (totalCount == 0) {
+            return 0F;
+        }
+        return (float) totalScore / totalCount;
+    }
 
     public static Double totalPpCalculator(List<ScoreVO> scoreList)
     {

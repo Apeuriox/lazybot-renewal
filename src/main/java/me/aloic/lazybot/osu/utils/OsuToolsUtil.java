@@ -326,7 +326,7 @@ public class OsuToolsUtil
         return scoreList;
     }
 
-    private static List<Mod> wireModEntities(List<String> modStrList) {
+    public static List<Mod> wireModEntities(List<String> modStrList) {
         List<Mod> modList = new ArrayList<>();
         for (String modStr : modStrList) {
             modStr=modStr.toUpperCase();

@@ -40,6 +40,9 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
         if(modCombination!=null && modCombination.length()%2!=0) {
             throw new IllegalArgumentException("mod输入值不合法: " + modCombination);
         }
+        if(targetAccuracy==null || (targetAccuracy<0 || targetAccuracy>100)) {
+            targetAccuracy=100.0;
+        }
     }
     public static BeatmapStatisticsParameter analyzeParameter(List<String> params)
     {
@@ -89,7 +92,6 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
         scoreParameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (scoreParameter.getMode() == null)
             scoreParameter.setMode(accessTokenPO.getDefault_mode());
-
     }
 
 }

@@ -24,6 +24,13 @@ public class RendererDistributor
         );
     }
 
+    public static byte[] renderBeatmapStatisticsToImage(BeatmapStatistics bs) throws IOException
+    {
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                MapSVGMapper.mapBeatmapStatsToPanel(bs)
+        );
+    }
+
 
     public static byte[] renderPPPlusScoreToQuadraGrid(PPPlusScore scorePlus) throws IOException
     {
