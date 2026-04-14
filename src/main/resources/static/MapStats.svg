@@ -55,7 +55,7 @@
         </text>
         <text fill="white" font-family="Outfit"
             font-size="20" font-weight="500" letter-spacing="0em">
-            <tspan x="1785" y="529.52" id="bid">1234567890</tspan>
+            <tspan x="1900" text-anchor="end" y="529.52" id="bid">1234567890</tspan>
         </text>
 
         <path d="M10 570H1920V1020H10V570Z" fill="#F2F2F2" />

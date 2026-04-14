@@ -35,6 +35,8 @@ public class AccessTokenPO implements Serializable {
 
     private String star_moon_ruleset;
 
+    private Integer preferred_panel_version;
+
 
     public AccessTokenPO(String refresh_token,String access_token) {
         this.refresh_token = refresh_token;

@@ -228,6 +228,8 @@
 		<rect id="star-rect" x="1890" y="1048" fill="#000" width="20" height="20"/>
 		<text id="star-1" fill="#0D0D0D" text-anchor="middle" class="cls-1" font-size="20" x="1880" y="1056.52">9.90</text>
 		<text id="star-2" clip-path="url(#star-clip)" fill="#fed967" text-anchor="middle" class="cls-1" font-size="20" x="1880" y="1056.52">9.90</text>
+		
+		
 		<g id="InCompatible Notice" opacity="0">
 			<rect width="743" height="350" x="385" y="80" fill="rgb(166,166,166)" fill-opacity="0.4" />
 			<rect width="539" height="200" x="391" y="150" fill="rgb(166,166,166)" fill-opacity="0.4" />
