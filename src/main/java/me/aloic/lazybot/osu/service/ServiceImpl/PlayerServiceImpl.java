@@ -1,6 +1,6 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import desu.life.RosuFFI;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.command.*;
@@ -72,6 +72,10 @@ public class PlayerServiceImpl implements PlayerService
     {
         int playerId = params.getPlayerId();
         boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if(params.getVersion()==4) {
+            easterTrigger=true;
+            params.setVersion(1);
+        }
         if (easterTrigger && !Objects.equals(params.getMode(), "osu")) easterTrigger=false;
         PlayerInfoDTO player = null;
         if (params.getPlayerName()!=null) {
@@ -208,6 +212,10 @@ public class PlayerServiceImpl implements PlayerService
     public ScoreVO getUserRecentScoreList(RecentParameter params, int type)
     {
         boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if(params.getVersion()==4) {
+            easterTrigger=true;
+            params.setVersion(1);
+        }
         if (easterTrigger && !Objects.equals(params.getMode(), "osu")) easterTrigger=false;
 
         PlayerInfoDTO player = null;
@@ -248,6 +256,10 @@ public class PlayerServiceImpl implements PlayerService
     public ScoreVO getUserBestPerformanceSingle(BpParameter params)
     {
         boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if(params.getVersion()==4) {
+            easterTrigger=true;
+            params.setVersion(1);
+        }
         if (easterTrigger && !Objects.equals(params.getMode(), "osu")) easterTrigger=false;
 
         PlayerInfoDTO player = null;

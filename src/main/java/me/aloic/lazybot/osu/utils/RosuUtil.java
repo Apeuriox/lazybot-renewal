@@ -7,8 +7,9 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.util.CommonTool;
-import org.spring.osu.OsuMode;
 import org.spring.osu.extended.rosu.*;
+import org.spring.osu.OsuMode;
+
 
 import java.io.IOException;
 import java.nio.file.Files;

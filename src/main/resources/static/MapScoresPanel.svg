@@ -386,12 +386,12 @@
 		<text class="cls-1" x="403" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Stamina</text>
 		<text class="cls-1" x="458" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Rhythm</text>
 		<text class="cls-1" x="515" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Color</text>
-		<text class="cls-1" x="571" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Peak</text>
+		<text class="cls-1" x="571" y="351" font-size="8px" fill="#DBF0E9" opacity="0.9">Reading</text>
 
 		<text class="cls-1" x="403" y="365" font-size="12px" fill="#fff" id="stamina">3.45</text>
 		<text class="cls-1" x="458" y="365" font-size="12px" fill="#fff" id="rhythm">0.89</text>
 		<text class="cls-1" x="515" y="365" font-size="12px" fill="#fff" id="color">1.29</text>
-		<text class="cls-1" x="571" y="365" font-size="12px" fill="#fff" id="peak">2.15(E-6)</text>
+		<text class="cls-1" x="571" y="365" font-size="12px" fill="#fff" id="reading">2.15(E-6)</text>
 	</g>
 
 	<g id="fruits-stats-3" opacity="0">

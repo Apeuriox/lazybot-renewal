@@ -65,7 +65,7 @@ public class ScoreCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         ScoreParameter params=setupParameter(event,proxy.getAccessToken(event));
-        if (event.getCommandType().equalsIgnoreCase("pscore")) {
+        if (event.getCommandType().equalsIgnoreCase("pscore") || params.getVersion() == 3) {
             PPPlusScore scorePlus =  playerService.getUserHighestScoreOnMapPlus(params);
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderPPPlusScoreToQuadraGrid(scorePlus)
@@ -84,7 +84,7 @@ public class ScoreCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         ScoreParameter params=setupParameter(event,proxy.getAccessToken(event));
-        if (event.getCommandType().equalsIgnoreCase("pscore")) {
+        if (event.getCommandType().equalsIgnoreCase("pscore") || params.getVersion() == 3) {
             PPPlusScore scorePlus =  playerService.getUserHighestScoreOnMapPlus(params);
             testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(scorePlus));
         }
@@ -95,11 +95,15 @@ public class ScoreCommand implements LazybotSlashCommand
         }
 
     }
-    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
         ScoreParameter.setupDefaultValue(params,tokenPO);
         params.setVersion(event.getScorePanelVersion());
+        if (tokenPO.getPreferred_panel_version()!=null)
+            params.setVersion(tokenPO.getPreferred_panel_version());
+        if (event.getScorePanelVersion()!=0)
+            params.setVersion(event.getScorePanelVersion());
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.validateParams();
