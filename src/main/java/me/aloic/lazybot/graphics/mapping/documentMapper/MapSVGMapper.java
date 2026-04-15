@@ -89,15 +89,14 @@ public class MapSVGMapper extends LazybotSVGMapper
         document.getElementById("star-speed").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getSpeedStar()));
 
 
-        document.getElementById("pp-1").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(100).intValue() + "pp");
-        document.getElementById("pp-2").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(99).intValue() + "pp");
-        document.getElementById("pp-3").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(98).intValue() + "pp");
-        document.getElementById("pp-4").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(97).intValue() + "pp");
-        document.getElementById("pp-5").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(95).intValue() + "pp");
-        document.getElementById("pp-6").setTextContent(beatmapStatistics.getPerformance().getAccPPList().get(93).intValue() + "pp");
-        document.getElementById("pp").setTextContent(beatmapStatistics.getPerformance().getImaginaryPP().intValue() + "pp");
+        document.getElementById("pp-1").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPPList().get(100)) + "pp");
+        document.getElementById("pp-2").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPPList().get(99)) + "pp");
+        document.getElementById("pp-3").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPPList().get(98)) + "pp");
+        document.getElementById("pp-4").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPPList().get(97)) + "pp");
+        document.getElementById("pp-5").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPPList().get(95)) + "pp");
+        document.getElementById("pp-6").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPPList().get(93)) + "pp");
+        document.getElementById("pp").setTextContent(Math.round(beatmapStatistics.getPerformance().getImaginaryPP()) + "pp");
         document.getElementById("target-acc").setTextContent("("+CommonTool.toString(beatmapStatistics.getPerformance().getImaginaryAccuracy()) + "%)");
-
 
 
         return document;
