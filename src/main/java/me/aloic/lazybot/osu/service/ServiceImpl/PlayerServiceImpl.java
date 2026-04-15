@@ -17,6 +17,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
@@ -43,6 +44,7 @@ import java.nio.file.Files;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -140,8 +142,12 @@ public class PlayerServiceImpl implements PlayerService
         result.setMapperAvatarUrl(OsuToolsUtil.getOsuAvatarUrl(mapper));
         result.setMapBackgroundUrl(osuToolsUtil.getBeatmapUrl(result.getBeatmap().getSid()));
         result.setMode(OsuMode.getMode(params.getMode()));
-        result.setImaginaryMods(OsuToolsUtil.wireModEntities(List.of(params.getModCombination().split("(?<=\\G.{2})"))));
+        if (params.getModCombination()!=null)
+            result.setImaginaryMods(OsuToolsUtil.wireModEntities(List.of(params.getModCombination().split("(?<=\\G.{2})"))));
+        else
+            result.setImaginaryMods(new ArrayList<>());
         RosuUtil.setupBeatmapStatistics(result);
+
         double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);
         double weightSpeed = Math.pow(result.getPerformance().getSpdPP(), 1.1);
         double weightAccuracy = Math.pow(result.getPerformance().getAccPP(), 1.1);

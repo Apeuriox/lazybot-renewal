@@ -49,10 +49,12 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
         BeatmapStatisticsParameter result=new BeatmapStatisticsParameter();
         if (!params.isEmpty()) {
             String last = params.getLast();
-            if (CommonTool.isThisStringADouble(last)) {
+            if (CommonTool.isDecimal(last)) {
                 result.setTargetAccuracy(Double.parseDouble(last));
                 params.removeLast();
-                last = params.getLast();
+                if (!params.isEmpty()) {
+                    last = params.getLast();
+                }
             }
             Matcher m = Pattern.compile("^(\\d{1,10})\\+([a-z]+)$").matcher(last);
             if (m.matches()) {

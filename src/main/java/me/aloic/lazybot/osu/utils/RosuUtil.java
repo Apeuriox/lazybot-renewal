@@ -148,10 +148,12 @@ public class RosuUtil
     public static void setupBeatmapStatistics(BeatmapStatistics bs) throws IOException
     {
         JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssetDownloadUtil.beatmapPath(bs.getBeatmap().getBid(),false)));
-        bs.getBeatmap().setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, bs.getBeatmap().getMode().getDescribe()));
+
+        bs.getBeatmap().setDifficultyAttributes(RosuUtil.fullStatsWithMods(beatmap, JSONUtil.toJsonStr(bs.getImaginaryMods()), bs.getBeatmap().getMode().getDescribe()));
         bs.getBeatmap().setLengthBonus(CommonTool.lengthBonusCalc(bs.getBeatmap().getCountCircles()+bs.getBeatmap().getCountSliders()+bs.getBeatmap().getCountSpinners()));
         ImaginaryPerformance ip=new ImaginaryPerformance();
         OsuPerformanceAttributes performance = (OsuPerformanceAttributes) fullStatsPerformanceWithMods(beatmap, JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe());
+
         OsuDifficultyAttributes difficultyAttributes = (OsuDifficultyAttributes) bs.getBeatmap().getDifficultyAttributes();
         Map<Integer,Double> resultAccPpList=new ConcurrentHashMap<>();
         resultAccPpList.put(100,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),100.0,true));
@@ -237,7 +239,8 @@ public class RosuUtil
     private static double getIfFc(JniBeatmap beatmap,String modJSON,String mode,double accuracy,boolean isLazerScore)
     {
         JniPerformance performance = beatmap.createPerformance();
-        performance.setMods(modJSON,me.aloic.lazybot.osu.enums.OsuMode.convertMode(mode));
+        if (modJSON!=null)
+            performance.setMods(modJSON,me.aloic.lazybot.osu.enums.OsuMode.convertMode(mode));
         performance.setAcc(accuracy);
         performance.setLazer(isLazerScore);
         return performance.calculate().getPP();

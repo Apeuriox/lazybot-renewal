@@ -889,7 +889,9 @@ public class CommonTool {
         return (int)(Math.random() * (max - min + 1)) + min;
     }
 
-    public static boolean isThisStringADouble(String str) {
+    public static boolean isDecimal(String str) {
+        if (str == null || str.isEmpty()) return false;
+        if (!str.contains(".")) return false;
         try {
             Double.parseDouble(str);
             return true;
