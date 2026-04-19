@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -119,6 +120,7 @@ public class UserServiceImpl implements UserService
     {
         isValidUsername(username);
         PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
+        checkUserBindability(player);
         Optional.ofNullable(tokenMapper.selectByPlayerId(player.getId())).ifPresent(this::createAlreadyBindError);
         Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
                 .ifPresentOrElse(
@@ -163,6 +165,7 @@ public class UserServiceImpl implements UserService
     }
     private void insertUserToTable(SlashCommandInteractionEvent event, @Nonnull String username){
         PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
+        checkUserBindability(player);
         UserTokenPO user = new UserTokenPO(event.getUser().getIdLong(), player.getId(), player.getUsername());
         Optional.ofNullable(discordTokenMapper.selectByPlayername(player.getUsername()))
                 .ifPresentOrElse(
@@ -204,14 +207,15 @@ public class UserServiceImpl implements UserService
     private void createBindError(AccessTokenPO token){
         throw new LazybotRuntimeException("您已绑定用户: " +token.getPlayer_name());
     }
+
     private void createBindError(TokenStarMoon token){
         throw new LazybotRuntimeException("您已绑定StarMoon用户: " +token.getStar_moon_name());
     }
     private void createAlreadyBindError(AccessTokenPO token){
-        throw new LazybotRuntimeException("该用户已绑定账户: " +token.getQq_code());
+        throw new LazybotRuntimeException("该用户已存在，如果你的账户被冒用请联系开发人员");
     }
     private void createAlreadyBindError(TokenStarMoon token){
-        throw new LazybotRuntimeException("该用户已绑定StarMoon账户: " +token.getQq_code());
+        throw new LazybotRuntimeException("该用户已绑定StarMoon账户");
     }
     private void createNotBindError(){
         {
@@ -222,5 +226,27 @@ public class UserServiceImpl implements UserService
         if (input==null||input.trim().isEmpty()) throw new LazybotRuntimeException("输入用户名为空");
         if(input.trim().length()>15) throw new LazybotRuntimeException("输入用户名过长");
         if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) throw new LazybotRuntimeException("已输入的用户名含有非法字符");
+    }
+    private void checkUserBindability(PlayerInfoDTO player)
+    {
+        if (player.getStatistics().getGlobal_rank() == null) {
+            throw new LazybotRuntimeException("用户不活跃，无法实际确定绑定可行性，请在游玩1pc后重试");
+        }
+        if (player.getId()==2)
+            throw new LazybotRuntimeException("操作已终止，只见后台传回一段话：您哪位？");
+        if (player.getStatistics().getGlobal_rank() > 1000) {
+            return;
+        }
+        else {
+            if (player.getCountry_code().equalsIgnoreCase("CN") ||
+                    player.getCountry_code().equalsIgnoreCase("HK") ||
+                    player.getCountry_code().equalsIgnoreCase("TW") ||
+                    player.getCountry_code().equalsIgnoreCase("MO")) {
+                return;
+            }
+            else {
+                throw new LazybotRuntimeException("当前绑定高概率为冒用，已拒绝请求。若确为本人请联系开发人员");
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ import me.aloic.lazybot.osu.dao.entity.po.*;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
+import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.dao.mapper.UsageMapper;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
@@ -53,6 +54,8 @@ public class ManageServiceImpl implements ManageService
     private UsageMapper usageMapper;
     @Resource
     private TipsMapper tipsMapper;
+    @Resource
+    private TokenMapper tokenMapper;
     private static final Logger logger = LoggerFactory.getLogger(ManageServiceImpl.class);
 
     @Resource
@@ -154,7 +157,8 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String unlinkUser(GeneralParameter params)
     {
-//        Optional.ofNullable(tokenMapper.selectByQq_code())
+//        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(), "osu");
+//        Optional.ofNullable(tokenMapper.selectByPlayerId(player.getId()))
 //                .ifPresentOrElse(
 //                        token -> tokenMapper.deleteByQQ(event.getMessageEvent().getSender().getUserId()),
 //                        this::createNotBindError);
