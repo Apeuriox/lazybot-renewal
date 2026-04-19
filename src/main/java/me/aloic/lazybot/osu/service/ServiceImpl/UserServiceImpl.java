@@ -15,7 +15,9 @@ import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.*;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.OsuSubruleset;
+import me.aloic.lazybot.osu.enums.ScorePanelType;
 import me.aloic.lazybot.osu.service.UserService;
+import me.aloic.lazybot.parameter.UpdatePanelVersionParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.DataExtractor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -23,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -248,5 +249,17 @@ public class UserServiceImpl implements UserService
                 throw new LazybotRuntimeException("当前绑定高概率为冒用，已拒绝请求。若确为本人请联系开发人员");
             }
         }
+    }
+
+    @Override
+    public String updatedUserPreferredPanelVersion(UpdatePanelVersionParameter params)
+    {
+        //UpdatePanelVersionParameter extends GeneralParameter which stores all parameter into one String as PlayerName
+        ScorePanelType panel= ScorePanelType.getPanelType(String.valueOf(params.getPlayerName()));
+        Optional.ofNullable(tokenMapper.selectByQq_code(params.getQqCode()))
+                .ifPresentOrElse(
+                        token -> tokenMapper.updatePreferredPanel(panel.getInternalVersionCode(),params.getQqCode()),
+                        this::createNotBindError);
+        return "[Lazybot] 成功将默认渲染切换为 " + panel.getDescribe();
     }
 }

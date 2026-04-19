@@ -2,6 +2,7 @@ package me.aloic.lazybot.osu.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 
 
 @AllArgsConstructor
@@ -17,6 +18,20 @@ public enum ScorePanelType
     private final Integer internalVersionCode;
     private final String fullName;
     private final String describe;
+
+
+    public static ScorePanelType getPanelType(String input) {
+        if (input == null) return Dark;
+        return switch (input)
+        {
+            case "0", "dark" -> Dark;
+            case "1", "white", "light" -> White;
+            case "2","material", "md" -> Material;
+            case "3", "quadragrid", "quadra", "grid", "pp+" -> QuadraGrid;
+            case "4", "marathon", "acid" -> Marathon;
+            default -> throw new LazybotRuntimeException("无效的成绩面板类型指定: " + input);
+        };
+    }
 
 
 
