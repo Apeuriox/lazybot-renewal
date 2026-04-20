@@ -376,7 +376,7 @@ public class OsuToolsUtil
     public List<ScorePerformanceDTO> setupScorePerformanceList(List<ScorePerformanceDTO> scorelist) {
         for (ScorePerformanceDTO score : scorelist) {
             score.setRank(GradeCalculator.calculateGrade(score.getStatistics(),score.getMods()));
-            score.getBeatmap().setBgUrl(assetDownloader.downloadBeatmapBackgroundFromSayobotByBid(Math.toIntExact(score.getBeatmap().getId())));
+            score.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(Math.toIntExact(score.getBeatmap().getSid())));
 
         }
         return scorelist;

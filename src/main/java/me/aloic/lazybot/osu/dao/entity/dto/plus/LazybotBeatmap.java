@@ -24,6 +24,7 @@ public class LazybotBeatmap
     private String version;
     private Double bpm;
     private String checksum;
+    private Integer sid;
 
 
     private String bgUrl;
