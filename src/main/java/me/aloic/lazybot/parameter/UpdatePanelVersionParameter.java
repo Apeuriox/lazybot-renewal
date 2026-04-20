@@ -10,4 +10,10 @@ import lombok.NoArgsConstructor;
 public class UpdatePanelVersionParameter extends GeneralParameter
 {
    private Long qqCode;
+
+   public UpdatePanelVersionParameter(GeneralParameter p)
+   {
+      this.setPlayerName(p.getPlayerName());
+   }
+
 }

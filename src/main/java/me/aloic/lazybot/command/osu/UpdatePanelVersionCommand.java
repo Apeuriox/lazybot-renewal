@@ -7,21 +7,13 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
-import me.aloic.lazybot.discord.util.ErrorResultHandler;
-import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.enums.OsuMode;
-import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.UpdatePanelVersionParameter;
-import me.aloic.lazybot.parameter.UpdateParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -67,7 +59,7 @@ public class UpdatePanelVersionCommand implements LazybotSlashCommand
     }
     private UpdatePanelVersionParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO token)
     {
-        UpdatePanelVersionParameter params = (UpdatePanelVersionParameter) GeneralParameter.analyzeParameter(event.getCommandParameters());
+        UpdatePanelVersionParameter params = new UpdatePanelVersionParameter(GeneralParameter.analyzeParameter(event.getCommandParameters()));
         params.setQqCode(token.getQq_code());
         if (params.getPlayerName() == null)
             throw new LazybotRuntimeException("参数在哪");

@@ -9,9 +9,9 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 @Getter
 public enum ScorePanelType
 {
-    Dark(null,"暗色模式", "默认样式，支持四模式"),
-    White(1, "亮色模式","最初版废案"),
-    Material(2,"Material","废案，以Material 3风格设计，支持不佳不建议使用"),
+    Dark(null,"暗色模式 (Dark)", "默认样式，支持四模式"),
+    White(1, "亮色模式 (White)","最初版废案"),
+    Material(2,"Material Design","废案，以Material 3风格设计，支持不佳不建议使用"),
     QuadraGrid(3,"Quadra Grid","为PP+单独设计，包含PP+数据，仅限osu模式"),
     Marathon(4,"Marathon","2026年愚人节特供，高饱和酸性艺术设计，仅限osu模式");
 

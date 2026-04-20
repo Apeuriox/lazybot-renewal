@@ -260,6 +260,6 @@ public class UserServiceImpl implements UserService
                 .ifPresentOrElse(
                         token -> tokenMapper.updatePreferredPanel(panel.getInternalVersionCode(),params.getQqCode()),
                         this::createNotBindError);
-        return "[Lazybot] 成功将默认渲染切换为 " + panel.getDescribe();
+        return "[Lazybot] 成功将默认渲染切换为 " + panel.getFullName();
     }
 }
