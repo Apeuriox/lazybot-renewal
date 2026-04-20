@@ -9,9 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class SVGRenderer
 {
@@ -53,7 +50,7 @@ public class SVGRenderer
         }
         catch (Exception e){
             logger.error(e.getMessage());
-            throw new LazybotRuntimeException("渲染成绩图时出错");
+            throw new LazybotRuntimeException("渲染成绩图时出错: "+e.getMessage());
         }
         logger.info("Render cost:{}ms", System.currentTimeMillis() - startingTime);
 

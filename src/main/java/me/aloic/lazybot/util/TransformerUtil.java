@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  *将osu api中返回的对象转换为最终需要发送消息的对象（参数的精简）
@@ -515,6 +517,9 @@ public class TransformerUtil
         beatmap.setCountSpinners(Optional.ofNullable(beatmapDTO.getCount_spinners()).orElse(0));
         beatmap.setConvert(beatmapDTO.getConvert());
         beatmap.setMode(OsuMode.getMode(beatmapDTO.getMode_int()));
+        beatmap.setUser_id(beatmapDTO.getUser_id());
+        beatmap.setLast_updated(beatmapDTO.getLast_updated());
+        beatmap.setUser_rating(CommonTool.calculateAverageRating(beatmapDTO.getBeatmapset().getRatings()));
         return beatmap;
     }
 

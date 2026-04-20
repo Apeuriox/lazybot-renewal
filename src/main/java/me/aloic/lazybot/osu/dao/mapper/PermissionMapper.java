@@ -5,7 +5,6 @@ import me.aloic.lazybot.entity.po.PermissionPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.security.Permission;
 import java.util.List;
 
 @Mapper

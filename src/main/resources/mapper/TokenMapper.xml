@@ -12,9 +12,10 @@
         <result column="player_name" jdbcType="VARCHAR" property="player_name"/>
         <result column="default_mode" jdbcType="INTEGER" property="default_mode"/>
         <result column="avatar_url" jdbcType="VARCHAR" property="avatar_url"/>
+        <result column="preferred_panel_version" jdbcType="INTEGER" property="preferred_panel_version"/>
     </resultMap>
     <sql id = "Base_Column_List">
-        id, qq_code, player_id, access_token, refresh_token, expires_in, default_mode, player_name, valid, avatar_url
+        id, qq_code, player_id, access_token, refresh_token, expires_in, default_mode, player_name, valid, avatar_url, preferred_panel_version
     </sql>
 
     <select id="selectByQq_code" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -62,6 +63,15 @@
         update token
         <set>
             access_token=#{access_token},
+        </set>
+        where qq_code =#{qq_code,jdbcType=BIGINT}
+    </update>
+
+
+    <update id="updatePreferredPanel">
+        update token
+        <set>
+            preferred_panel_version=#{version},
         </set>
         where qq_code =#{qq_code,jdbcType=BIGINT}
     </update>

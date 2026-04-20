@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;

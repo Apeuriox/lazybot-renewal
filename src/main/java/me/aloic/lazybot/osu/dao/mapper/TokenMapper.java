@@ -20,7 +20,7 @@ public interface TokenMapper extends BaseMapper<AccessTokenPO> {
 
     void deleteByQQ(@Param("qq_code")Long qq_code);
     void updateAvatar(@Param("avatar_url")String avatar_url, @Param("player_id")Integer player_id);
-
+    void updatePreferredPanel(@Param("version")Integer version, @Param("qq_code")Long qq_code);
 
     /**
      * 根据给定的qqid列表返回对应的token信息。

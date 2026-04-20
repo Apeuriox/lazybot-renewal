@@ -11,7 +11,6 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -22,6 +21,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -102,6 +102,25 @@ public class CommonTool {
     {
         return transformNumber(String.valueOf(number));
     }
+    public static boolean shouldTriggerEaster()
+    {
+        LocalDate today = LocalDate.now();
+        int year = today.getYear();
+        LocalDate d1 = LocalDate.of(year, 3, 31);
+        LocalDate d2 = LocalDate.of(year, 4, 1);
+        LocalDate d3 = LocalDate.of(year, 4, 2);
+        double basicPossibility = 0.01;
+        if (today.equals(d1) || today.equals(d3)) {
+            basicPossibility *= 40;
+        } else if (today.equals(d2)) {
+            basicPossibility *= 60;
+        }
+        return Math.random()> (1.0 - basicPossibility);
+    }
+    public static String transformNumber(long number)
+    {
+        return transformNumber(String.valueOf(number));
+    }
     public static String transformNumber(String number){
         int length = number.length();
         int offset = length%3;
@@ -119,6 +138,9 @@ public class CommonTool {
     public static String toString(Double num) {
         return toString(num, 2);
     }
+    public static String toString(Float num) {
+        return toString(Double.valueOf(num), 2);
+    }
 
     public static String toString(Double num, int pointAft) {
         if(isEmpty(num)) {
@@ -133,6 +155,7 @@ public class CommonTool {
         double hours = seconds / 3600.0;
         return String.format("%.2f", hours);
     }
+
 
     public static int textWidthRough(String text)
     {
@@ -166,6 +189,14 @@ public class CommonTool {
         else
             return null;
     }
+    public static String modListToString(List<String> modArray)
+    {
+        if(modArray!=null && !modArray.isEmpty()) {
+            return "+" + String.join("", modArray);
+        }
+        else
+            return "Nomod";
+    }
     public static String modArrayToString(List<Mod> modArray)
     {
         if(modArray!=null && !modArray.isEmpty())
@@ -174,6 +205,15 @@ public class CommonTool {
         }
         else
             return "NoMod";
+    }
+    public static String modArrayToStringNoSpace(List<Mod> modArray)
+    {
+        if(modArray!=null && !modArray.isEmpty())
+        {
+            return modArray.stream().map(Mod::getAcronym).reduce((a,b)->a.concat("").concat(b)).get();
+        }
+        else
+            return "Nomod";
     }
     public static int[] getDominantColorArray(ScoreVO scoreVO) throws IOException {
         return CommonTool.getDominantColorColorThief(new File(scoreVO.getBeatmap().getBgUrl()));
@@ -198,11 +238,28 @@ public class CommonTool {
         }
         return targetColor;
     }
+    public static String padLeftZeros(int number, int width) {
+        if (width <= 0) {
+            return String.valueOf(number);
+        }
+        return String.format("%0" + width + "d", number);
+    }
+    public static double calculateMissPenalty(double missCount, double difficultStrainCount)
+    {
+       return 0.93 / (missCount / (4 * Math.log10(difficultStrainCount)) + 1);
+    }
+
 
 
     public static String formatJsonDateToString(String timeStampString, String outputFormat)
     {
         OffsetDateTime odt = OffsetDateTime.parse(timeStampString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX"));
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputFormat);
+        return odt.toLocalDateTime().plusHours(8).format(outputFormatter);
+    }
+    public static String formatJsonDateToStringNoTimezone(String timeStampString, String outputFormat)
+    {
+        OffsetDateTime odt = OffsetDateTime.parse(timeStampString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputFormat);
         return odt.toLocalDateTime().plusHours(8).format(outputFormatter);
     }
@@ -395,7 +452,25 @@ public class CommonTool {
             return result.substring(0,2);
         }
     }
+    public static float calculateAverageRating(List<Integer> ratingCounts) {
+        if (ratingCounts == null || ratingCounts.size() != 11) {
+            throw new IllegalArgumentException("List must be of length 11");
+        }
 
+        long totalScore = 0;
+        int totalCount = 0;
+
+        for (int i = 0; i <= 10; i++) {
+            int count = ratingCounts.get(i);
+            totalScore += (long) i * count;
+            totalCount += count;
+        }
+
+        if (totalCount == 0) {
+            return 0F;
+        }
+        return (float) totalScore / totalCount;
+    }
 
     public static Double totalPpCalculator(List<ScoreVO> scoreList)
     {
@@ -784,6 +859,45 @@ public class CommonTool {
     }
     public static boolean isWarmColor(int hue) {
         return ((hue >= 270 && hue <= 360) || (hue >= 0 && hue <= 60));
+    }
+    /**
+     * 计算误差函数 erf(x)
+     * 参考 Abramowitz and Stegun 公式 7.1.26
+     */
+    public static double erf(double x) {
+        // erf(-x) = -erf(x)
+        double sign = (x < 0) ? -1 : 1;
+        x = Math.abs(x);
+
+        // 常数定义
+        double a1 =  0.254829592;
+        double a2 = -0.284496736;
+        double a3 =  1.421413741;
+        double a4 = -1.453152027;
+        double a5 =  1.061405429;
+        double p  =  0.3275911;
+
+        // A&S 公式近似计算
+        double t = 1.0 / (1.0 + p * x);
+        double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+
+        return sign * y;
+    }
+
+    public static int randomIntegerWithin(int min, int max)
+    {
+        return (int)(Math.random() * (max - min + 1)) + min;
+    }
+
+    public static boolean isDecimal(String str) {
+        if (str == null || str.isEmpty()) return false;
+        if (!str.contains(".")) return false;
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 }

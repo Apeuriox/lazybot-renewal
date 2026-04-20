@@ -16,6 +16,7 @@ public class HelpFormatter {
             help.getOptions().forEach((params) -> {
                 sb.append("  ").append(params.toString()).append("\n");
             });
+            sb.append("==========\n");
         }
 
         if (!help.getUsageExamples().isEmpty()) {

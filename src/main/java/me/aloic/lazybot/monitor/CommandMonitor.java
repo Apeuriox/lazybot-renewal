@@ -56,7 +56,7 @@ public class CommandMonitor {
         commandStats.clear();
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?", zone = "Asia/Shanghai")
     public void clearOldStats() {
         log.info("正在保存旧数据...");
         usageMapper.insert(setupCommandUsage(commandStats, startTime));
@@ -80,16 +80,7 @@ public class CommandMonitor {
                 .map(entry -> new LazybotUsageSource(indexSource.getAndIncrement(), entry.getKey(), entry.getValue().intValue()))
                 .toList();
 
-//        List<LazybotUsageTimeDistribution> timeDistList = commandStatMap.values().stream()
-//                .flatMap(stat -> stat.getCallRecords().stream())
-//                .collect(Collectors.groupingBy(
-//                        record -> record.timestamp().withMinute(0).withSecond(0).withNano(0),
-//                        Collectors.counting()
-//                ))
-//                .entrySet().stream()
-//                .sorted(Map.Entry.comparingByKey()) // 时间升序
-//                .map(entry -> new LazybotUsageTimeDistribution(entry.getKey(), entry.getValue().intValue()))
-//                .toList();
+
         List<LazybotUsageTimeDistribution> timeDistList = setupTimeDistribution(commandStatMap);
 
         List<LazybotUsageCommand> commandList = commandStatMap.entrySet().stream()

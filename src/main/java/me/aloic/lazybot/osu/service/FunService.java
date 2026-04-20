@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.service;
 
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotSongGuessData;
+import me.aloic.lazybot.parameter.DeviationFittingParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.parameter.WhatIfParameter;
@@ -17,6 +18,8 @@ public interface FunService
     String nameGuessGroupRandomName(List<Long> userIds);
 
     String whatIfIGotSomePP(WhatIfParameter whatIfParameter);
+
+    String accuracyUsingNormalDistribution(DeviationFittingParameter params);
 
     LazybotSongGuessData songGuessImage(GeneralParameter params);
 }

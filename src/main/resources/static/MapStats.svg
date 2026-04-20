@@ -1,0 +1,352 @@
+<svg width="1920" height="1080" fill="none"
+    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g clip-path="url(#clip0_2054_2)">
+        <rect width="1920" height="1080" fill="#F2F2F2" />
+        <mask id="path-1-inside-1_2054_2" fill="white">
+            <path d="M0 0H1920V60H0V0Z" />
+        </mask>
+        <path d="M0 0H1920V60H0V0Z" fill="#F2F2F2" />
+        <path d="M1920 60V59H0V60V61H1920V60Z" fill="#0D0D0D" mask="url(#path-1-inside-1_2054_2)" />
+        <image
+            xlink:href="assets/zet.jpg"
+            width="40"
+            x="10"
+            y="10"
+            height="40"
+            preserveAspectRatio="xMidYMid slice"
+            id="avatar" />
+        <text fill="#0D0D0D" id="playername" class="cls-1" x="130" y="37" font-size="20"
+            text-anchor="middle">Apeuriox</text>
+        <path d="M228 10V50" stroke="black" transform="translate(-1,0)" />
+
+        <text fill="#0D0D0D" id="time" class="cls-1" x="365" y="37" text-anchor="middle"
+            font-size="20">0000-00-00 / 00:00:00</text>
+        <path d="M578 10V50" stroke="black" transform="translate(-75,0)" />
+
+        <text fill="#0D0D0D" class="cls-1" x="610" y="37" text-anchor="middle" font-size="20">
+            <tspan id="mod">Nomod</tspan>
+        </text>
+        <path d="M578 10V50" stroke="black" transform="translate(140,0)" />
+
+        <path d="M1864 10V50" stroke="black" transform="translate(-30,0)" />
+        <text fill="#0D0D0D" id="mode" class="cls-1" font-size="20" text-anchor="middle" x="1880"
+            y="36.88">Osu!</text>
+
+        <image
+            xlink:href="assets/zet.jpg"
+            width="1920"
+            x="0"
+            y="60"
+            height="510"
+            preserveAspectRatio="xMidYMid slice"
+            id="map-bg" />
+
+
+        <rect width="1920" height="510" transform="translate(0 60)"
+            fill="url(#paint0_linear_2054_2)" style="mix-blend-mode:multiply" />
+
+        <text fill="white" font-family="Outfit"
+            font-size="60" letter-spacing="0em">
+            <tspan x="26" y="493.06" id="artistAndTitle">Some Aewsome Artist - Their Best Song Name</tspan>
+        </text>
+        <text fill="white" font-family="Outfit"
+            font-size="30" letter-spacing="0em">
+            <tspan x="26" y="533.28" id="version">[Despair]</tspan>
+        </text>
+        <text fill="white" font-family="Outfit"
+            font-size="20" font-weight="500" letter-spacing="0em">
+            <tspan x="1900" text-anchor="end" y="529.52" id="bid">1234567890</tspan>
+        </text>
+
+        <path d="M10 570H1920V1020H10V570Z" fill="#F2F2F2" />
+        <path d="M1920 1020V1019H10V1020V1021H1920V1020Z" fill="#0D0D0D" />
+
+        <g id="basicStats">
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="45" letter-spacing="0em">
+                <tspan x="20" y="620.42">Basic Stats</tspan>
+            </text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="20" y="703.02" id="bs-l-1">Circle Count</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="430" y="703.02" id="bs-r-1">
+                9999</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="20" y="744.52" id="bs-l-2">Slider Count</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="430" y="744.52" id="bs-r-2">
+                9997</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="20" y="786.02" id="bs-l-3">Spinner Count</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="430" y="786.02" id="bs-r-3">
+                9998</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="20" y="827.52" id="bs-l-4">User Rating</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="430" y="827.52" id="bs-r-4">
+                9.38</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="20" y="869.02" id="bs-l-5">Max Combo</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="430" y="869.02" id="bs-r-5">
+                9999x</text>
+        </g>
+        <text fill="black" fill-opacity="0.1"
+            font-family="Outfit" font-size="90" letter-spacing="0em">
+            <tspan x="20" y="999.84">Lazybot</tspan>
+        </text>
+
+        <path d="M470 580V1010" stroke="black" />
+
+        <g id="difficultyAttributes">
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="45" letter-spacing="0em">
+                <tspan x="510" y="620.42">Difficulty Attributes</tspan>
+            </text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="510" y="712.52" id="da-l-1">Length Bonus</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="920" y="712.52" id="da-r-1">
+                112%</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="510" y="754.02" id="da-l-2">Aim Strain</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="920" y="754.02" id="da-r-2">
+                444</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="510" y="795.52" id="da-l-3">Speed Strain</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="920" y="795.52" id="da-r-3">
+                321</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="510" y="837.02" id="da-l-4">Slider Factor</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="920" y="837.02" id="da-r-4">
+                99.94%</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="510" y="878.52" id="da-l-5">Speed Note</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" text-anchor="end" x="920" y="878.52" id="da-r-5">
+                1123</text>
+
+            <text fill="black" font-family="Outfit" x="510" y="999.64">
+                <tspan font-size="60" id="star-aim">3.2</tspan>
+                <tspan font-size="24" id="star-aim-label">Aim</tspan>
+            </text>
+
+            <text fill="black" font-family="Outfit" text-anchor="end" x="920" y="999.06">
+                <tspan font-size="60" id="star-speed">4.2</tspan>
+                <tspan font-size="24" id="star-speed-label">Spd</tspan>
+            </text>
+        </g>
+
+        <path d="M960 580V1010" stroke="black" />
+
+
+        <g id="ppAccCorrelations">
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="45" letter-spacing="0em">
+                <tspan x="1000" y="620.42">PP-Acc Correlations</tspan>
+            </text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1000" y="703.02">100.00%</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" id="pp-1" text-anchor="end" x="1530" y="703.02">
+                1234pp</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1000" y="736.22">99.00%</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" id="pp-2" text-anchor="end" x="1530" y="736.22">
+                1123pp</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1000" y="769.42">98.00%</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" id="pp-3" text-anchor="end" x="1530" y="769.42">
+                1001pp</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1000" y="802.62">97.00%</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" id="pp-4" text-anchor="end" x="1530" y="802.62">
+                923pp</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1000" y="835.82">95.00%</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" id="pp-5" text-anchor="end" x="1530" y="835.82">
+                765pp</text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1000" y="869.02">93.00%</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" id="pp-6" text-anchor="end" x="1530" y="869.02">
+                654pp</text>
+            <text fill="black" font-family="Outfit" letter-spacing="0em" x="1000" y="999.84">
+                <tspan font-size="90" id="pp">420pp </tspan>
+                <tspan font-size="36" id="target-acc">(92.15%)</tspan>
+            </text>
+        </g>
+
+        <path d="M1561 580V1010" stroke="black" />
+
+        <g id="ppDetails">
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="45" letter-spacing="0em">
+                <tspan x="1591" y="620.42">PP Details</tspan>
+            </text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1591" y="716.52">Aim</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" x="1900" y="716.52" text-anchor="end" id="pp-aim">999pp
+            </text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1591" y="758.02">Speed</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" x="1900" y="758.02" text-anchor="end" id="pp-speed">654pp
+            </text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1591" y="799.52">Accuracy</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                font-size="20" letter-spacing="0em" x="1900" y="799.52" text-anchor="end" id="pp-accuracy">765pp
+            </text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1591" y="841.02">--</tspan>
+            </text>
+            <text fill="#A6A6A6" font-family="Outfit"
+                font-size="20" letter-spacing="0em">
+                <tspan x="1591" y="882.52">--</tspan>
+            </text>
+            <text fill="black" font-family="Outfit"
+                font-size="50" letter-spacing="0em">
+                <tspan x="1591" y="999.8" id="pp-distri">56%-25%-19%</tspan>
+            </text>
+        </g>
+
+        <mask id="path-69-inside-3_2054_2" fill="white">
+            <path d="M0 1020H1920V1080H0V1020Z" />
+        </mask>
+
+        <path d="M0 1020H1920V1080H0V1020Z" fill="#F2F2F2" />
+        <path d="M0 1020V1021H1920V1020V1019H0V1020Z" fill="#0D0D0D"
+            mask="url(#path-69-inside-3_2054_2)" />
+       
+       
+        		<text fill="#0D0D0D" class="cls-1" font-size="20"><tspan x="15" y="1056.52">BPM</tspan></text>
+		<text fill="#0D0D0D" class="cls-1" id="bpm" font-size="20" x="67" y="1056.52">000.00</text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20"><tspan x="200" y="1056.52">Length</tspan></text>
+		<text fill="#0D0D0D" class="cls-1" id="length" font-size="20" x="273" y="1056.52">00:00</text>
+		<path d="M580.143 1030V1070" stroke="black" transform="translate(-200,0)"/>
+
+
+		<text fill="#0D0D0D" class="cls-1" font-size="20" x="410" y="1056.52">AR</text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" id="ar" x="450" y="1056.52">10.0</text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" x="550" y="1056.52">OD</text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" id="od" x="590" y="1056.52">10.0</text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" x="690" y="1056.52">CS</text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" id="cs" x="730" y="1056.52">4.1</text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" x="830" y="1056.52">HP</text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" id="hp" x="870" y="1056.52">9.9</text>
+		<path d="M1740 1070H1740.5V1030H1740H1739.5V1070H1740Z" transform="translate(-810,0)" fill="#0D0D0D"/>
+		
+
+
+		<g id="ranked" opacity="0">
+			<rect x="1780" y="1032" fill="#CEF2C1" width="36" height="36"/>
+			<text fill="#0D0D0D" class="cls-1" font-size="20" x="1735" y="1056.52">Ranked</text>
+		</g>
+		<g id="approved" opacity="0">
+			<rect x="1800" y="1032" fill="#CEF2C1" width="36" height="36"/>
+			<text fill="#0D0D0D" class="cls-1" font-size="20" x="1735" y="1056.52">Approved</text>
+		</g>
+		<g id="qualified" opacity="0">
+			<rect x="1793" y="1032" fill="#C1E6F2" width="36" height="36"/>
+			<text fill="#0D0D0D" class="cls-1" font-size="20" x="1735" y="1056.52">Qualified</text>
+		</g>
+		<g id="loved" opacity="0">
+			<rect x="1765" y="1032" fill="#FFB2CC" width="36" height="36"/>
+			<text fill="#0D0D0D" class="cls-1" font-size="20" x="1735" y="1056.52">Loved</text>
+		</g>
+		<g id="pending" opacity="0">
+			<rect x="1785" y="1032" fill="#FCDF90" width="36" height="36"/>
+			<text fill="#0D0D0D" class="cls-1" font-size="20" x="1735" y="1056.52">Pending</text>
+		</g>
+		<g id="wip" opacity="0">
+			<rect x="1755" y="1032" fill="#FEA889" width="36" height="36"/>
+			<text fill="#0D0D0D" class="cls-1" font-size="20" x="1735" y="1056.52">WIP</text>
+		</g>
+		<g id="graveyard" opacity="0">
+			<rect x="1805" y="1032" fill="#BFBFBF" width="36" height="36"/>
+			<text fill="#0D0D0D" class="cls-1" font-size="20" x="1735" y="1056.52">Graveyard</text>
+		</g>
+
+		<rect id="star-rect" x="1890" y="1048" fill="#000" width="20" height="20"/>
+		<text id="star-1" fill="#0D0D0D" text-anchor="middle" class="cls-1" font-size="20" x="1880" y="1056.52">9.90</text>
+		<text id="star-2" clip-path="url(#star-clip)" fill="#fed967" text-anchor="middle" class="cls-1" font-size="20" x="1880" y="1056.52">9.90</text>
+		
+        <path d="M1709 1030V1070" stroke="black" />
+    </g>
+    <defs>
+        <pattern id="pattern0_2054_2" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image0_2054_2" transform="scale(0.000244141)" />
+        </pattern>
+        <pattern id="pattern1_2054_2" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use xlink:href="#image1_2054_2"
+                transform="matrix(0.000263296 0 0 0.000991234 0 -0.198324)" />
+        </pattern>
+        <linearGradient id="paint0_linear_2054_2" x1="960" y1="510" x2="960" y2="0"
+            gradientUnits="userSpaceOnUse">
+            <stop stop-opacity="0.35" />
+            <stop offset="1" stop-opacity="0" />
+        </linearGradient>
+        <clipPath id="clip0_2054_2">
+            <rect width="1920" height="1080" fill="white" />
+        </clipPath>
+        		<clipPath id="star-clip">
+			<rect x="1890" y="1048" fill="#000" width="20" height="20"/>
+		</clipPath>
+        <style>
+            .cls-1 {
+            font-family: Outfit-Regular, Outfit;
+            }
+
+        </style>
+
+    </defs>
+</svg>

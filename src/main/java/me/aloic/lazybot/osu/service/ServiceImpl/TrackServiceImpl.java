@@ -173,7 +173,9 @@ public class TrackServiceImpl implements TrackService
                 .collect(Collectors.toList());
     }
 
-    private <T, K> Map<Integer, K> mappingRankToObject(List<T> items, Function<T, String> keyExtractor, Map<String, K> mapping)
+    private <T, K> Map<Integer, K> mappingRankToObject(List<T> items,
+                                                       Function<T, String> keyExtractor,
+                                                       Map<String, K> mapping)
     {
         Map<Integer, K> result = new HashMap<>();
         for (int i = 0; i < items.size(); i++) {

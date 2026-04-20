@@ -22,7 +22,6 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @LazybotCommandMapping({"ppmap"})
 public class PpmapCommand implements LazybotSlashCommand
@@ -87,7 +86,7 @@ public class PpmapCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Time-PP Scatter Chart ","ppmap",
+                new CommandHelp("Time-PP Scatter Chart","ppmap",
                         "以Osu Track数据绘制指定用户的历史BP散点图，使用/update track可更新数据",
                         "Aloic", null, "2024-06-14")
                         .addExample("/ppmap")

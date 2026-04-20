@@ -36,7 +36,7 @@ public class CommandListener
         }
         // 对于超过 2秒 的消息直接舍弃, 解决重新登陆后疯狂刷命令
         if (nowTime - event.getTime() > 25) return;
-        messageDeduplicator.replicateCheck(bot,factory.setupSlashCommandEvent(event));
+        messageDeduplicator.replicateCheck(bot, factory.setupSlashCommandEvent(event));
     }
 
 

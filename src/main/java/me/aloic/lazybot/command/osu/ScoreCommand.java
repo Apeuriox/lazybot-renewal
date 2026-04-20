@@ -65,7 +65,7 @@ public class ScoreCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         ScoreParameter params=setupParameter(event,proxy.getAccessToken(event));
-        if (event.getCommandType().equalsIgnoreCase("pscore")) {
+        if (event.getCommandType().equalsIgnoreCase("pscore") || params.getVersion() == 3) {
             PPPlusScore scorePlus =  playerService.getUserHighestScoreOnMapPlus(params);
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderPPPlusScoreToQuadraGrid(scorePlus)
@@ -84,7 +84,7 @@ public class ScoreCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         ScoreParameter params=setupParameter(event,proxy.getAccessToken(event));
-        if (event.getCommandType().equalsIgnoreCase("pscore")) {
+        if (event.getCommandType().equalsIgnoreCase("pscore") || params.getVersion() == 3) {
             PPPlusScore scorePlus =  playerService.getUserHighestScoreOnMapPlus(params);
             testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(scorePlus));
         }
@@ -95,11 +95,15 @@ public class ScoreCommand implements LazybotSlashCommand
         }
 
     }
-    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
         ScoreParameter.setupDefaultValue(params,tokenPO);
         params.setVersion(event.getScorePanelVersion());
+        if (tokenPO.getPreferred_panel_version()!=null)
+            params.setVersion(tokenPO.getPreferred_panel_version());
+        if (event.getScorePanelVersion()!=0)
+            params.setVersion(event.getScorePanelVersion());
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.validateParams();
@@ -115,8 +119,8 @@ public class ScoreCommand implements LazybotSlashCommand
                         "按照指定用户查询指定地图下的指定Mod组合中分数最高的成绩, Pscore会以PP+数据返回",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Score 4889657+HDHR")
-                        .addExample("/Score Aloic 4889657")
-                        .addExample("/Score Aloic 4889657+HDHR &")
+                        .addExample("/s Aloic 4889657")
+                        .addExample("/Pscore Aloic 4889657+HDHR &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("BID","查询的地图ID", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Mod","Mod过滤项", CommandParameter.ParameterType.OPTIONAL))

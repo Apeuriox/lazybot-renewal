@@ -8,18 +8,18 @@ import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
-import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
-import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebPlayerPerformance;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotScorePerformance;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotWebPlayerPerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotWebResult;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.BestPlay;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.HitScore;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayoData;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayobotBeatmapSet;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
-import me.aloic.lazybot.osu.dao.entity.dto.starmoon.StarMoonUserWrapper;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
@@ -27,6 +27,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
 import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -254,6 +255,35 @@ public class DataExtractor
     }
 
     /**
+     * 根据用户ID和和Plus的维度获取PP+成绩
+     * @param playerId 用户ID
+     * @param dimension 维度
+     * @param offset 偏移量
+     * @param limit 请求最大返回数量
+     * @return 该玩家在该维度下的PP+列表
+     */
+    public List<ScorePerformanceDTO> extractPerformancePlusDimension(Integer playerId, ScorePerformanceDimension dimension, int offset, int limit)
+    {
+        try{
+            LazybotWebResult<List<ScorePerformanceDTO>> result = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfScorePerformanceDimensionPlus(playerId,dimension,offset,limit),
+                    HTTPTypeEnum.GET,
+                    TokenMonitor.getLazybotToken(),
+                    null,
+                    new TypeReference<LazybotWebResult<List<ScorePerformanceDTO>>>() {});
+            if(result.getData()==null) {
+                throw new LazybotRuntimeException("获取成绩为空");
+            }
+            return result.getData();
+        }
+        catch (LazybotNotFoundException e) {
+            throw new LazybotRuntimeException("获取成绩失败: " + e.getMessage());
+        }
+    }
+
+
+
+    /**
      * 获取用户的最近游玩成绩列表
      * @param playerId 用户ID
      * @param type 请求类型, 0会包含失败成绩
@@ -457,6 +487,22 @@ public class DataExtractor
         }
         return sayobotBeatmapSet.getData();
     }
+    public SayoData extractSayobotBeatmapSetByBid(Integer bid)
+    {
+        SayobotBeatmapSet sayobotBeatmapSet= apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfSayobotBeatmap(bid,1),
+                HTTPTypeEnum.GET,
+                null,
+                null,
+                SayobotBeatmapSet.class);
+        if(sayobotBeatmapSet==null || sayobotBeatmapSet.getData()==null) {
+            throw new LazybotRuntimeException("Sayobot暂无数据");
+        }
+        return sayobotBeatmapSet.getData();
+    }
+
+
+
     public Integer extractRankByPP(String mode, Double pp)
     {
         String rankStr = apiRequestExecutor.execute(

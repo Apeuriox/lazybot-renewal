@@ -88,10 +88,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
         String commandType = event.getCommandType().toLowerCase();
         RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
-            case "rp" ,"pr" ,"playrecent" ->
-                CommandResultHandler.uploadImageToOnebot(bot, event,
-                        RendererDistributor.renderScoreVOToImage(
-                                playerService.getUserRecentScoreList(params, 1), params.getVersion()));
+            case "rp" ,"pr" ,"playrecent","p" -> determineSubPanelVersion(params,1, bot, event);
             case "ppr" ->
                 CommandResultHandler.uploadImageToOnebot(bot, event,
                         RendererDistributor.renderPPPlusScoreToQuadraGrid(
@@ -100,10 +97,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
                 CommandResultHandler.uploadImageToOnebot(bot, event,
                         RendererDistributor.renderPPPlusScoreToQuadraGrid(
                                 playerService.getUserRecentScoreListPlus(params, 0)));
-            default ->
-                CommandResultHandler.uploadImageToOnebot(bot, event,
-                        RendererDistributor.renderScoreVOToImage(
-                                playerService.getUserRecentScoreList(params, 0), params.getVersion()));
+            default -> determineSubPanelVersion(params,2, bot, event);
 
         }
 
@@ -116,10 +110,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
         String commandType = event.getCommandType().toLowerCase();
         RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
-            case "rp" ,"pr" ,"playrecent" ->
-                    testOutputTool.saveImageToLocal(
-                            RendererDistributor.renderScoreVOToImage(
-                                    playerService.getUserRecentScoreList(params, 1), params.getVersion()));
+            case "rp" ,"pr" ,"playrecent","p" -> determineSubPanelVersionTest(params,1);
             case "ppr" ->
                     testOutputTool.saveImageToLocal(
                             RendererDistributor.renderPPPlusScoreToQuadraGrid(
@@ -129,13 +120,35 @@ public class PlayRecentCommand implements LazybotSlashCommand
                     testOutputTool.saveImageToLocal(
                             RendererDistributor.renderPPPlusScoreToQuadraGrid(
                                     playerService.getUserRecentScoreListPlus(params, 0)));
-            default ->
-                    testOutputTool.saveImageToLocal(
-                            RendererDistributor.renderScoreVOToImage(
-                                    playerService.getUserRecentScoreList(params, 0), params.getVersion()));
-
+            default -> determineSubPanelVersionTest(params,0);
         }
 
+    }
+    private void determineSubPanelVersionTest(RecentParameter params,int type) throws RosuFFI.FFIException, IOException
+    {
+        if (params.getVersion()==3) {
+            testOutputTool.saveImageToLocal(
+                    RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                            playerService.getUserRecentScoreListPlus(params, type)));
+        }
+        else {
+            testOutputTool.saveImageToLocal(
+                    RendererDistributor.renderScoreVOToImage(
+                            playerService.getUserRecentScoreList(params, type), params.getVersion()));
+        }
+    }
+    private void determineSubPanelVersion(RecentParameter params,int type, Bot bot, LazybotSlashCommandEvent event) throws RosuFFI.FFIException, IOException
+    {
+        if (params.getVersion()==3) {
+            CommandResultHandler.uploadImageToOnebot(bot, event,
+                    RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                            playerService.getUserRecentScoreListPlus(params, type)));
+        }
+        else {
+            CommandResultHandler.uploadImageToOnebot(bot, event,
+                    RendererDistributor.renderScoreVOToImage(
+                            playerService.getUserRecentScoreList(params, type), params.getVersion()));
+        }
     }
     private RecentParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {
@@ -144,6 +157,10 @@ public class PlayRecentCommand implements LazybotSlashCommand
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.setVersion(event.getScorePanelVersion());
+        if (tokenPO.getPreferred_panel_version()!=null)
+            params.setVersion(tokenPO.getPreferred_panel_version());
+        if (event.getScorePanelVersion()!=0)
+            params.setVersion(event.getScorePanelVersion());
         params.validateParams();
         if (event.getMessageEvent()!=null)
             params.setChannelId(event.getMessageEvent().getGroupId());

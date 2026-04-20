@@ -1,4 +1,4 @@
-package me.aloic.lazybot.osu.dao.entity.dto.lazybot;
+package me.aloic.lazybot.osu.dao.entity.dto.plus;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -24,7 +24,11 @@ public class LazybotBeatmap
     private String version;
     private Double bpm;
     private String checksum;
+    private Integer sid;
 
+
+    private String bgUrl;
+    private double star;
     public LazybotBeatmap(BeatmapDTO beatmap, BeatmapsetDTO beatmapset) {
         this.id= Long.valueOf(beatmap.getId());
         this.title=beatmapset.getTitle();
@@ -32,5 +36,20 @@ public class LazybotBeatmap
         this.version=beatmap.getVersion();
         this.bpm=beatmap.getBpm();
         this.checksum=beatmap.getChecksum();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "LazybotBeatmap{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", version='" + version + '\'' +
+                ", bpm=" + bpm +
+                ", checksum='" + checksum + '\'' +
+                ", bgUrl='" + bgUrl + '\'' +
+                ", star=" + star +
+                '}';
     }
 }

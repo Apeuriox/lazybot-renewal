@@ -1,5 +1,66 @@
 # 更新日志
 
+## Lazybot V1.1.81/20260420
+
+- 新增`/年度总结`功能。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/ur`功能，输入指定OD和UR，以正态分布估计Acc值。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/Pb`功能，用户可通过他查询自己的 **PP+** 最好成绩列表。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- - 新增`/SetPanel`功能，用以设定默认成绩面板。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了`/p`被错误传递为`/r`的问题。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为星数大于9的难度添加了新的颜色。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 添加了愚人节版的 **PP+** 卡片以及成绩面板。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- **Trimmed Card**已对所有人开放，同时添加了部分设置参数。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为`/Link`添加了限制，现在用户不能随意绑定知名人物，同时绑定已绑定用户的账户不会再返回该用户的绑定数据。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 更新了**Rosu-pp**本地计算器。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 更新了**Springboot**及其相关依赖。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+
+
+## Lazybot V1.1.74/20251201
+
+- 新增对**Star Moon**私服的支持。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增**Badge Challenge**系统，功能类似于Map Pack，用户完成一系列挑战后可获得Badge。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了使用`/update track`时，远程请求返回错误导致反序列化出错无法正常返回结果的问题。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 将地图背景的默认获取改为Sayobot，将ppy官方的获取作为fallback方法，此改动是因为ppy偷偷摸摸改了图片获取方法才不得不改的。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 重构了**PlayerService**的所有方法，将大部分方法的返回类型由二进制图片数据转为渲染所需的数据结构，同时将图片渲染操作移动至**Command**层，调用**RendererDistributor**类的静态方法渲染以增加灵活性。作者: [Aloic](https://osu.ppy.sh/users/11232623)
+
+
+## Lazybot V1.1.65/20251027
+
+- 新增Badge系统，和Redeem系统。 作者: [Aloic](https://osu.ppy.sh/users/11232623)
+- 新增`/ScoreRank`功能，用以查询指定图下指定QQ群聊内所有绑定Lazybot用户的成绩。 作者: [LazyChildren](https://osu.ppy.sh/users/14697856)<br>
+-  为Quadra Grid面板添加不兼容模组提示。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 添加了头像自动更新逻辑。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为`/name`指令添加一个只显示当前群聊玩家的变种。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 移除了ScoreVO对象中的字符串列表兼容层，现已采用更现代的方式。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 移除了所有额外的Apache Batik Node创建。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了DarkScore中不正确的星级文本颜色问题。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了DarkScore中超过10星的星级的错误对齐问题。作者: [Aloic](https://osu.ppy.sh/users/11232623)
+
+## Lazybot V1.1.60/20251016
+
+- 新增Quadra Grid成绩面板样式，用以查询成绩的PP+详情以及PP详情。 作者: [Aloic](https://osu.ppy.sh/users/11232623)
+
+- 新增`/Oa`功能，用以查询用户的Osu头像。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+-  添加了`/Thumbnail`功能，用于生成Alivemaster样式的视频封面。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为Moelleux样式卡片添加低饱和度模式。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 添加了头像自动更新逻辑。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为Moelleux添加了色相覆盖功能。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 添加了缩放版Moelleux卡片，仅支持HTTP获取。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 移除了所有额外的\[Lazybot\]表示。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 修复了将`/card`中纯数字名称过滤后文本为空导致的数组越界问题。作者: [Aloic](https://osu.ppy.sh/users/11232623)
+
+## Lazybot V1.1.52/20250903
+
+- 新增`/Filter`功能，以给定的条件过滤用户的BP 200数据。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/CheckIn`功能，用户签到功能，使用新日历面板。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 新增`/Compare`功能，在其他用户查询单个成绩时快速返回自己的结果。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 重写了图形滤镜以满足**Gameboy, GameGadget**面板的功能。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 为`/Card`添加了**Moelleux**样式卡片，限制暂时不可公开调用。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 重写调用命令逻辑，现在以责任链模式调用。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 重构所有帮助页面到责任链中。作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>
+- 添加权限控制，使其可单独禁用命令，作用域，调用人。 作者: [Aloic](https://osu.ppy.sh/users/11232623)
+
+
 ## Lazybot V1.1.43/20250803
 
 - 新增`/Song`娱乐功能，随机挑选玩家BP进行裁剪以让玩家识别，即猜歌功能。 作者: [Aloic](https://osu.ppy.sh/users/11232623)<br>

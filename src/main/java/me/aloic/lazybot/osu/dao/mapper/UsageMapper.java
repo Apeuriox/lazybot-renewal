@@ -13,7 +13,7 @@ public interface UsageMapper extends BaseMapper<CommandUsage> {
 
     CommandUsage selectById(@Param("id")Integer id);
 
-    List<CommandUsage> selectByDate(LocalDateTime startTime, LocalDateTime endTime);
+    List<CommandUsage> selectByDate(LocalDateTime start, LocalDateTime end);
 
     void deleteById(@Param("id")Integer id);
 }

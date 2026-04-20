@@ -43,5 +43,9 @@ public class BeatmapVO
     private String checksum;
     private String genre;
     private String language;
+    private String last_updated;
+    private Float user_rating;
+    private Integer user_id;
+
 
 }

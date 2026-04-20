@@ -5,6 +5,7 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
@@ -34,14 +35,18 @@ public class OsuToolsUtil
     public BeatmapVO setupBeatmapVO(BeatmapDTO beatmapDTO)
     {
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransform(beatmapDTO);
-        beatmapVO.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapVO.getBeatmapset_id()));
+        beatmapVO.setBgUrl(getBeatmapUrl(beatmapVO.getBeatmapset_id()));
         return beatmapVO;
     }
     public BeatmapVO setupBeatmapVO(ScoreStarMoon scoreStarMoon, String mode)
     {
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransform(scoreStarMoon, mode);
-        beatmapVO.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapVO.getBeatmapset_id()));
+        beatmapVO.setBgUrl(getBeatmapUrl(beatmapVO.getBeatmapset_id()));
         return beatmapVO;
+    }
+    public String getBeatmapUrl(Integer sid)
+    {
+        return assetDownloader.beatmapBackgroundAbsolutePath(sid);
     }
 
 
@@ -244,6 +249,10 @@ public class OsuToolsUtil
         playerInfoDTO.setAvatar_url((AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,false)));
         return TransformerUtil.userTransform(playerInfoDTO);
     }
+    public static String getOsuAvatarUrl(PlayerInfoDTO playerInfoDTO)
+    {
+        return AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,false);
+    }
 
     public NoChokeListVO setupNoChokeList(PlayerInfoVO info, List<ScoreVO> scoreList, int type)
     {
@@ -317,7 +326,7 @@ public class OsuToolsUtil
         return scoreList;
     }
 
-    private static List<Mod> wireModEntities(List<String> modStrList) {
+    public static List<Mod> wireModEntities(List<String> modStrList) {
         List<Mod> modList = new ArrayList<>();
         for (String modStr : modStrList) {
             modStr=modStr.toUpperCase();
@@ -363,4 +372,14 @@ public class OsuToolsUtil
                 .map(CompletableFuture::join)
                 .collect(Collectors.toList());
     }
+
+    public List<ScorePerformanceDTO> setupScorePerformanceList(List<ScorePerformanceDTO> scorelist) {
+        for (ScorePerformanceDTO score : scorelist) {
+            score.setRank(GradeCalculator.calculateGrade(score.getStatistics(),score.getMods()));
+            score.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(Math.toIntExact(score.getBeatmap().getSid())));
+
+        }
+        return scorelist;
+    }
+
 }

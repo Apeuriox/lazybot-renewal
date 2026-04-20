@@ -4,10 +4,7 @@ package me.aloic.lazybot.osu.utils;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
-import me.aloic.lazybot.osu.dao.entity.vo.BeatmapAttributeVO;
-import me.aloic.lazybot.osu.dao.entity.vo.BeatmapVO;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.util.CommonTool;
 
@@ -22,6 +19,13 @@ public class ModCalculatorUtil
                                                             initialScore.getBeatmap().getCs(), initialScore.getBeatmap().getDrain(),
                                                             initialScore.getBeatmap().getBpm(), initialScore.getMode(), initialScore.getBeatmap().getTotal_length());
         initialScore.getBeatmap().setAttributes(calcAllValues(attributes,initialScore.getModJSON(), OsuMode.getMode(initialScore.getMode())));
+    }
+    public static void afterModMapInfo(BeatmapVO beatmap, List<Mod> mods)
+    {
+        BeatmapAttributeVO attributes=new BeatmapAttributeVO(beatmap.getAr(), beatmap.getAccuracy(),
+                beatmap.getCs(), beatmap.getDrain(),
+                beatmap.getBpm(), OsuMode.getMode(beatmap.getMode_int()).getDescribe(), beatmap.getTotal_length());
+        beatmap.setAttributes(calcAllValues(attributes,mods, OsuMode.getMode(beatmap.getMode_int())));
     }
     public static void afterModMapInfo(ScoreLazerDTO initialScore)
     {

@@ -4,6 +4,8 @@ import me.aloic.lazybot.osu.dao.entity.po.CommandUsage;
 import me.aloic.lazybot.parameter.*;
 import org.apache.batik.dom.GenericNotation;
 
+import java.util.List;
+
 public interface ManageService
 {
     String update(UpdateParameter params);
@@ -21,4 +23,6 @@ public interface ManageService
     String ppTest(ScoreParameter params, Long userIdentity);
 
     CommandUsage commandUsage();
+
+    String annualCommandUsage();
 }

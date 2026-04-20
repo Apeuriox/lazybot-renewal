@@ -5,12 +5,11 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
-import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
-import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
-import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
-import org.spring.osu.OsuMode;
+import me.aloic.lazybot.osu.dao.entity.vo.*;
+import me.aloic.lazybot.util.CommonTool;
 import org.spring.osu.extended.rosu.*;
+import org.spring.osu.OsuMode;
+
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -63,12 +62,18 @@ public class RosuUtil
     }
     public static JniDifficultyAttributes nomodMapStats(JniBeatmap beatmap, String mode)
     {
+       return fullStatsWithMods(beatmap,null,mode);
+    }
+    public static JniDifficultyAttributes fullStatsWithMods(JniBeatmap beatmap,String modJSON, String mode)
+    {
         JniPerformance performance=beatmap.createPerformance();
         OsuMode osuMode=me.aloic.lazybot.osu.enums.OsuMode.convertMode(String.valueOf(mode));
         performance.setMode(osuMode);
         JniPerformanceAttributes rosuResult;
         performance.setAcc(100.0);
         performance.setLazer(true);
+        if (modJSON!=null)
+            performance.setMods(modJSON,osuMode);
         rosuResult=performance.calculate();
         return switch (rosuResult) {
             case OsuPerformanceAttributes osu -> osu.getDifficulty();
@@ -77,6 +82,17 @@ public class RosuUtil
             case CatchPerformanceAttributes catchPerformance -> catchPerformance.getDifficulty();
             default -> null;
         };
+    }
+    public static JniPerformanceAttributes fullStatsPerformanceWithMods(JniBeatmap beatmap,String modJSON, String mode)
+    {
+        JniPerformance performance=beatmap.createPerformance();
+        OsuMode osuMode=me.aloic.lazybot.osu.enums.OsuMode.convertMode(String.valueOf(mode));
+        performance.setMode(osuMode);
+        performance.setAcc(100.0);
+        performance.setLazer(true);
+        if (modJSON!=null)
+            performance.setMods(modJSON,osuMode);
+        return performance.calculate();
     }
 
 
@@ -127,6 +143,38 @@ public class RosuUtil
             resultPerformance.setFlashlightPP(0.0);
         }
         return resultPerformance;
+    }
+
+    public static void setupBeatmapStatistics(BeatmapStatistics bs) throws IOException
+    {
+        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssetDownloadUtil.beatmapPath(bs.getBeatmap().getBid(),false)));
+
+        bs.getBeatmap().setDifficultyAttributes(RosuUtil.fullStatsWithMods(beatmap, JSONUtil.toJsonStr(bs.getImaginaryMods()), bs.getBeatmap().getMode().getDescribe()));
+        bs.getBeatmap().setLengthBonus(CommonTool.lengthBonusCalc(bs.getBeatmap().getCountCircles()+bs.getBeatmap().getCountSliders()+bs.getBeatmap().getCountSpinners()));
+        ImaginaryPerformance ip=new ImaginaryPerformance();
+        OsuPerformanceAttributes performance = (OsuPerformanceAttributes) fullStatsPerformanceWithMods(beatmap, JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe());
+
+        OsuDifficultyAttributes difficultyAttributes = (OsuDifficultyAttributes) bs.getBeatmap().getDifficultyAttributes();
+        Map<Integer,Double> resultAccPpList=new ConcurrentHashMap<>();
+        resultAccPpList.put(100,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),100.0,true));
+        resultAccPpList.put(99,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),99.0,true));
+        resultAccPpList.put(98,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),98.0,true));
+        resultAccPpList.put(97,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),97.0,true));
+        resultAccPpList.put(95,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),95.0,true));
+        resultAccPpList.put(93,getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),93.0,true));
+        double imaginaryPP= getIfFc(beatmap,JSONUtil.toJsonStr(bs.getImaginaryMods()),bs.getMode().getDescribe(),bs.getPerformance().getImaginaryAccuracy(),true);
+        ip.setAccPPList(resultAccPpList);
+        ip.setAimPP(performance.getPpAim());
+        ip.setAccPP(performance.getPpAcc());
+        ip.setSpdPP(performance.getPpSpeed());
+        ip.setFlashlightPP(performance.getPpFlashlight());
+        ip.setStar(performance.getStarRating());
+        ip.setAimStar(difficultyAttributes.getAim());
+        ip.setSpeedStar(difficultyAttributes.getSpeed());
+        ip.setImaginaryAccuracy(bs.getPerformance().getImaginaryAccuracy());
+        ip.setImaginaryPP(imaginaryPP);
+        bs.setPerformance(ip);
+
     }
 
     private static JniPerformanceAttributes getPPStats(JniBeatmap beatmap, String modJSON, ScoreStatisticsLazer statistics,
@@ -191,7 +239,8 @@ public class RosuUtil
     private static double getIfFc(JniBeatmap beatmap,String modJSON,String mode,double accuracy,boolean isLazerScore)
     {
         JniPerformance performance = beatmap.createPerformance();
-        performance.setMods(modJSON,me.aloic.lazybot.osu.enums.OsuMode.convertMode(mode));
+        if (modJSON!=null)
+            performance.setMods(modJSON,me.aloic.lazybot.osu.enums.OsuMode.convertMode(mode));
         performance.setAcc(accuracy);
         performance.setLazer(isLazerScore);
         return performance.calculate().getPP();

@@ -27,7 +27,7 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bp","best","pbp","pb","b","bsm"})
+@LazybotCommandMapping({"bp","best","pbp","b","bsm"})
 @Component
 public class BpCommand implements LazybotSlashCommand
 {
@@ -70,18 +70,10 @@ public class BpCommand implements LazybotSlashCommand
         AccessTokenPO tokenPO;
         String commandType = event.getCommandType().toLowerCase();
         BpParameter params;
-        if (commandType.equals("pbp") || commandType.equals("pb")) {
-            tokenPO=proxy.getAccessToken(event);
-            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id());
-            CommandResultHandler.uploadImageToOnebot(bot,event,
-                    RendererDistributor.renderPPPlusScoreToQuadraGrid(
-                            playerService.getUserBestPerformanceSinglePlus(params))
-            );
-        }
-        else if (commandType.equals("bsm"))
+        if (commandType.equals("bsm"))
         {
             TokenStarMoon starMoonToken = proxy.getStarMoonToken(event);
-            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id());
+            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id(), null);
             params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderScoreVOToImage(
@@ -91,11 +83,19 @@ public class BpCommand implements LazybotSlashCommand
         else
         {
             tokenPO=proxy.getAccessToken(event);
-            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id());
-            CommandResultHandler.uploadImageToOnebot(bot,event,
-                RendererDistributor.renderScoreVOToImage(
-                        playerService.getUserBestPerformanceSingle(params), params.getVersion())
-            );
+            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id(), tokenPO.getPreferred_panel_version());
+            if (params.getVersion() == 3 || commandType.equals("pbp") || commandType.equals("pb"))
+            {
+                CommandResultHandler.uploadImageToOnebot(bot,event,
+                        RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                                playerService.getUserBestPerformanceSinglePlus(params))
+                );
+            }
+            else {
+                CommandResultHandler.uploadImageToOnebot(bot,event,
+                        RendererDistributor.renderScoreVOToImage(
+                                playerService.getUserBestPerformanceSingle(params), params.getVersion()));
+            }
         }
 
     }
@@ -106,37 +106,37 @@ public class BpCommand implements LazybotSlashCommand
         AccessTokenPO tokenPO;
         String commandType = event.getCommandType().toLowerCase();
         BpParameter params;
-        if (commandType.equals("pbp") || commandType.equals("pb")) {
-            tokenPO=proxy.getAccessToken(event);
-            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id());
-            testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(
-                    playerService.getUserBestPerformanceSinglePlus(params)));
-        }
-        else if (commandType.equals("bsm"))
+        // star moon private server
+        if (commandType.equals("bsm"))
         {
             TokenStarMoon starMoonToken = proxy.getStarMoonToken(event);
-            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id());
+            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id(), null);
             params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
             testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
                     playerService.getUserBestPerformanceSingleStarMoon(params), params.getVersion()));
         }
-        else
-        {
+        else  {
             tokenPO=proxy.getAccessToken(event);
-            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id());
-            testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
-                playerService.getUserBestPerformanceSingle(params), params.getVersion()));
+            params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id(), tokenPO.getPreferred_panel_version());
+            if (params.getVersion() == 3 || commandType.equals("pbp") || commandType.equals("pb"))
+                testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                        playerService.getUserBestPerformanceSinglePlus(params)));
+            else testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
+                    playerService.getUserBestPerformanceSingle(params), params.getVersion()));
         }
-
     }
 
-    private BpParameter setupParameter(LazybotSlashCommandEvent event, @Nonnull String mode, @Nonnull Integer playerId)
+    private BpParameter setupParameter(LazybotSlashCommandEvent event, @Nonnull String mode, @Nonnull Integer playerId, Integer version)
     {
         BpParameter params=BpParameter.analyzeParameter(event.getCommandParameters());
         BpParameter.setupDefaultValue(params,mode);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
         params.setVersion(event.getScorePanelVersion());
+        if (version!=null)
+            params.setVersion(version);
+        if (event.getScorePanelVersion()!=0)
+            params.setVersion(event.getScorePanelVersion());
         params.setPlayerId(playerId);
         params.validateParams();
         if (event.getMessageEvent()!=null)
@@ -150,7 +150,7 @@ public class BpCommand implements LazybotSlashCommand
     public String getHelp()
     {
         return HelpFormatter.format(
-                new CommandHelp("Best Performance","Bp, Best, Pbp, Pb",
+                new CommandHelp("Best Performance","Bp, Best, Pbp",
                         "查询指定用户的最佳成绩中的指定的第几个，Pbp即Pb会包含PP+数据",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Bp #1")

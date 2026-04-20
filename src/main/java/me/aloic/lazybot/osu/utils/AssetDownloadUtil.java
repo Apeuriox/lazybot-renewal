@@ -31,7 +31,7 @@ public class AssetDownloadUtil
     private static final int MAX_RETRIES;
 
     static{
-        MAX_DOWNLOADS_PER_MINUTE=96;
+        MAX_DOWNLOADS_PER_MINUTE = 96;
         ONE_MINUTE_IN_MS=60*1000;
         delayQueue=new DelayQueue<>();
         executor=Executors.newScheduledThreadPool(6);
@@ -42,6 +42,7 @@ public class AssetDownloadUtil
         MAX_RETRIES=3;
         initDownloadControl();
     }
+
     private static void initDownloadControl() {
         for (int i = 0; i < MAX_DOWNLOADS_PER_MINUTE; i++) {
             delayQueue.offer(new DownloadTask(1000));

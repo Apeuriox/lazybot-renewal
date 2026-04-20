@@ -5,13 +5,16 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.LazybotSVGMapper;
 import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
+import me.aloic.lazybot.osu.dao.entity.vo.PlusScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.RankColor;
+import me.aloic.lazybot.osu.utils.ColorUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -177,8 +180,8 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         difficulty.setTextContent("["+version+"]");
 
 
-        String diffColor="#".concat(CommonTool.calcDiffColor(scoreVO.getBeatmap().getDifficult_rating()));
-        String diffTextColor = CommonTool.getStarRatingFontColor(scoreVO.getBeatmap().getDifficult_rating());
+        String diffColor="#".concat(ColorUtil.getDifficultyBackgroundColor(scoreVO.getBeatmap().getDifficult_rating()));
+        String diffTextColor = ColorUtil.getDifficultyColor(scoreVO.getBeatmap().getDifficult_rating());
         String starType = "assets/osuResources/star-golden.svg";
         if (diffTextColor.equalsIgnoreCase("#1c1719")) {
             starType = "assets/osuResources/star-dark.svg";
@@ -494,8 +497,8 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             doc.getElementById("StaticCommandName").setTextContent(type);
             doc.getElementById("footer").setAttribute("transform", "translate(0," + 120 * (scorelist.size() - 1) + ")");
             doc.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-            doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("class", "cls-24");
-            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
+            doc.getElementById(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe()).setAttribute("class", "cls-24");
+            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe())).setAttribute("opacity","1");
             return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot,offset);
         }
         catch (Exception e)
@@ -519,8 +522,8 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             doc.getElementById("playername").setTextContent(info.getPlayerName());
             doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", info.getAvatarUrl());
             doc.getElementById("totalPp").setTextContent(String.valueOf(Math.round(info.getPerformancePoint())));
-            doc.getElementById(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe()).setAttribute("fill",primaryColor);
-            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.get(0).getRulesetId()).getDescribe())).setAttribute("opacity","1");
+            doc.getElementById(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe()).setAttribute("fill",primaryColor);
+            doc.getElementById("label-".concat(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe())).setAttribute("opacity","1");
             doc.getElementById("playernameLabel").setAttribute("fill", primaryColor);
             doc.getElementById("totalPpLabel").setAttribute("fill", primaryColor);
             return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot, offset);
@@ -530,6 +533,319 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             log.error("SVG 处理时出错", e);
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
+    }
+
+    public static Document mapScorePerformanceDimensionToBpCard(PlusScorePerformance performance)
+    {
+        try
+        {
+            Document doc = SVGTemplateLoader.loadSVGTemplate("ScoreCardListPlus");
+            Element svgRoot = doc.getDocumentElement();
+            int totalHeight = 440 + 340 *  ((performance.getScores().size())/3);
+            if (performance.getScores().size() %3 ==0)
+                totalHeight -= 340;
+            svgRoot.setAttribute("height", String.valueOf(totalHeight));
+            doc.getElementById("background").setAttribute("height", String.valueOf(totalHeight));
+            doc.getElementById("date").setTextContent(new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss").format(new Date()));
+            doc.getElementById("name").setTextContent(performance.getName());
+            doc.getElementById("sort").setTextContent(performance.getDimension());
+            doc.getElementById("avatar").setAttributeNS(xlinkns, "xlink:href", performance.getAvatarUrl());
+            return setupBpListPlusSingle(performance.getScores(), doc, svgRoot, performance.getOffset());
+        }
+        catch (Exception e)
+        {
+            log.error("SVG 处理时出错", e);
+            throw new LazybotRuntimeException("SVG 处理时出错");
+        }
+    }
+    private static Document setupBpListPlusSingle(List<ScorePerformanceDTO> scorelist,  Document doc, Element svgRoot, Integer offset)
+    {
+        int listIndex=0;
+        for (ScorePerformanceDTO score : scorelist)
+        {
+            Element sectionFull = doc.createElementNS(namespaceSVG, "g");
+
+            Element mapBGImage = doc.createElementNS(namespaceSVG, "image");
+            mapBGImage.setAttributeNS(xlinkns, "xlink:href", score.getBeatmap().getBgUrl());
+            mapBGImage.setAttribute("x", "25");
+            mapBGImage.setAttribute("y", "80");
+            mapBGImage.setAttribute("width", "360");
+            mapBGImage.setAttribute("height", "160");
+            mapBGImage.setAttribute("preserveAspectRatio", "xMidYMid slice");
+
+            Element totalBGMask = doc.createElementNS(namespaceSVG, "rect");
+            totalBGMask.setAttribute("x", "25");
+            totalBGMask.setAttribute("y", "80");
+            totalBGMask.setAttribute("width", "360");
+            totalBGMask.setAttribute("height", "160");
+            totalBGMask.setAttribute("fill", "url(#linear_1)");
+
+
+            Element titleAndArtist = doc.createElementNS(namespaceSVG, "text");
+            titleAndArtist.setAttribute("class", "cls-1");
+            titleAndArtist.setAttribute("font-size", "18");
+            titleAndArtist.setAttribute("font-weight", "600");
+            titleAndArtist.setAttribute("fill", "#f2f2f2");
+            titleAndArtist.setAttribute("transform", "translate(35 215)");
+
+            String titleAndArtistStr = score.getBeatmap().getArtist() + " - " + score.getBeatmap().getTitle();
+            if (titleAndArtistStr.length()>44)
+                titleAndArtistStr = titleAndArtistStr.substring(0, 42).concat("...");
+            titleAndArtist.setTextContent(titleAndArtistStr);
+
+
+            Element version = doc.createElementNS(namespaceSVG, "text");
+            version.setAttribute("class", "cls-1");
+            version.setAttribute("fill", "#f2f2f2");
+            version.setAttribute("font-size", "18");
+            version.setAttribute("transform", "translate(35 231)");
+            version.setAttribute("font-weight", "500");
+            version.setTextContent("[" +score.getBeatmap().getVersion() + "]");
+
+            Element decoBlockOne = doc.createElementNS(namespaceSVG, "rect");
+            decoBlockOne.setAttribute("x", "35");
+            decoBlockOne.setAttribute("y", "252.8");
+            decoBlockOne.setAttribute("width", String.valueOf(Math.round(60+ Math.random()*26)));
+            decoBlockOne.setAttribute("height", String.valueOf(Math.round(40+ Math.random()*24)));
+            decoBlockOne.setAttribute("fill", "#F2F0E8");
+
+            Element decoBlockTwo = doc.createElementNS(namespaceSVG, "rect");
+            decoBlockTwo.setAttribute("x", "143");
+            decoBlockTwo.setAttribute("y", "302");
+            decoBlockTwo.setAttribute("width", "52");
+            decoBlockTwo.setAttribute("height", "41");
+            decoBlockTwo.setAttribute("fill", "#F2F0E8");
+
+            Element jumpStats = getSingleDimensionStatElementDocument(doc, "Jump", score.getPpJump(), 0,0,null);
+            Element flowStats = getSingleDimensionStatElementDocument(doc, "Flow", score.getPpFlow(), 1,0,null);
+            Element preStats = getSingleDimensionStatElementDocument(doc, "Precision", score.getPpPrecision(), 2,0,null);
+            Element speedStats = getSingleDimensionStatElementDocument(doc, "Speed", score.getPpSpeed(), 3,0,null);
+            Element staminaStats = getSingleDimensionStatElementDocument(doc, "Stamina", score.getPpStamina(), 4,0,null);
+            Element accuracyStats = getSingleDimensionStatElementDocument(doc, "Accuracy", score.getPpAccuracy(), 5,0,null);
+
+
+            Element rankColorRect =  doc.createElementNS(namespaceSVG, "rect");
+            rankColorRect.setAttribute("x", "44");
+            rankColorRect.setAttribute("y", "371");
+            rankColorRect.setAttribute("width", "20");
+            rankColorRect.setAttribute("height", "20");
+            if (score.getRank().length()>1) {
+                rankColorRect.setAttribute("x", "80");
+            }
+            rankColorRect.setAttribute("fill", RankColor.fromString(score.getRank()).getDarkRankColorHEX());
+
+            Element rank = doc.createElementNS(namespaceSVG, "text");
+            rank.setAttribute("class", "cls-1");
+            rank.setAttribute("fill", "#000000");
+            rank.setAttribute("font-size", "48");
+            rank.setAttribute("transform", "translate(32 386)");
+            rank.setTextContent(score.getRank());
+
+            Element accuracy = doc.createElementNS(namespaceSVG, "text");
+            accuracy.setAttribute("class", "cls-1");
+            accuracy.setAttribute("fill", "#000000");
+            accuracy.setAttribute("font-size", "16");
+            accuracy.setAttribute("x", "197");
+            accuracy.setAttribute("y", "380");
+            accuracy.setAttribute("text-anchor", "end");
+            accuracy.setTextContent(CommonTool.toString(score.getAccuracy()*100.0, 2) + "%");
+
+            Element starStats = getSingleDimensionStatElementDocument(doc, "Star", 0, 0,1, CommonTool.toString(score.getBeatmap().getStar(), 2));
+            Element modsStats = getSingleDimensionStatElementDocument(doc, "Mods", 0, 1,1, CommonTool.modListToString(score.getMods()));
+            Element comboStats = getSingleDimensionStatElementDocument(doc, "Combo", 0, 2,1, score.getCombo()+"x");
+            Element bpmStats = getSingleDimensionStatElementDocument(doc, "Combo", 0, 3,1, CommonTool.toString(score.getBeatmap().getBpm(), 2));
+
+            Element nothingLine = doc.createElementNS(namespaceSVG, "text");
+            nothingLine.setAttribute("class", "cls-1");
+            nothingLine.setAttribute("fill", "#888888");
+            nothingLine.setAttribute("font-size", "10");
+            nothingLine.setAttribute("x", "216");
+            nothingLine.setAttribute("y", "325.6");
+            nothingLine.setTextContent("---");
+
+            Element nothingLineTwo = doc.createElementNS(namespaceSVG, "text");
+            nothingLineTwo.setAttribute("class", "cls-1");
+            nothingLineTwo.setAttribute("fill", "#888888");
+            nothingLineTwo.setAttribute("font-size", "10");
+            nothingLineTwo.setAttribute("x", "216");
+            nothingLineTwo.setAttribute("y", "342");
+            nothingLineTwo.setTextContent("---");
+
+
+            Element divisorLine =  doc.createElementNS(namespaceSVG, "line");
+            divisorLine.setAttribute("x1", "25");
+            divisorLine.setAttribute("x2", "385");
+            divisorLine.setAttribute("y1", "398.5");
+            divisorLine.setAttribute("y2", "398.5");
+            divisorLine.setAttribute("stroke", "#000000");
+
+            Element divisorLineTwo =  doc.createElementNS(namespaceSVG, "line");
+            divisorLineTwo.setAttribute("x1", "25");
+            divisorLineTwo.setAttribute("x2", "385");
+            divisorLineTwo.setAttribute("y1", "239.5");
+            divisorLineTwo.setAttribute("y2", "239.5");
+            divisorLineTwo.setAttribute("stroke", "#000000");
+
+            Element divisorLineThree =  doc.createElementNS(namespaceSVG, "line");
+            divisorLineThree.setAttribute("x1", "205.5");
+            divisorLineThree.setAttribute("x2", "205.5");
+            divisorLineThree.setAttribute("y1", "251");
+            divisorLineThree.setAttribute("y2", "387");
+            divisorLineThree.setAttribute("stroke", "#000000");
+
+            Element divisorLineFour =  doc.createElementNS(namespaceSVG, "line");
+            divisorLineFour.setAttribute("x1", "385.5");
+            divisorLineFour.setAttribute("x2", "385.5");
+            divisorLineFour.setAttribute("y1", "251");
+            divisorLineFour.setAttribute("y2", "387");
+            divisorLineFour.setAttribute("stroke", "#000000");
+
+
+            Element pp = doc.createElementNS(namespaceSVG, "text");
+            pp.setAttribute("class", "cls-1");
+            pp.setAttribute("x", "214");
+            pp.setAttribute("y", "386");
+
+            Element ppValue = doc.createElementNS(namespaceSVG, "tspan");
+            ppValue.setAttribute("font-size", "36");
+            ppValue.setAttribute("fill", "#000000");
+            ppValue.setTextContent(String.valueOf(Math.round(score.getPp())));
+            Element ppLabel = doc.createElementNS(namespaceSVG, "tspan");
+            ppLabel.setAttribute("font-size", "22");
+            ppLabel.setAttribute("fill", "#000000");
+            ppLabel.setTextContent("pp");
+            pp.appendChild(ppValue);
+            pp.appendChild(ppLabel);
+
+            Element index = doc.createElementNS(namespaceSVG, "text");
+            index.setAttribute("class", "cls-1");
+            index.setAttribute("font-size", "18");
+            index.setAttribute("text-anchor", "end");
+            index.setAttribute("fill", "#A6A6A6");
+            index.setAttribute("x", "372");
+            index.setAttribute("y", "386");
+            index.setTextContent("#".concat(String.valueOf(listIndex+offset+1)));
+
+
+            int decoBlockSize = CommonTool.randomIntegerWithin(50,80);
+            Element decoBlockStrokeOne =  doc.createElementNS(namespaceSVG, "rect");
+            decoBlockStrokeOne.setAttribute("x", "216.5");
+            decoBlockStrokeOne.setAttribute("y", String.valueOf(CommonTool.randomIntegerWithin(254,290)));
+            decoBlockStrokeOne.setAttribute("width", String.valueOf(decoBlockSize));
+            decoBlockStrokeOne.setAttribute("height", String.valueOf(decoBlockSize));
+            decoBlockStrokeOne.setAttribute("stroke", "#000000");
+            decoBlockStrokeOne.setAttribute("stroke-width", "0.05");
+            decoBlockStrokeOne.setAttribute("fill", "none");
+
+            //cant go out of x 372 y 370
+
+            Element decoBlockStrokeTwo =  doc.createElementNS(namespaceSVG, "rect");
+            decoBlockStrokeTwo.setAttribute("x", String.valueOf(CommonTool.randomIntegerWithin(239,287)));
+            decoBlockStrokeTwo.setAttribute("y", String.valueOf(CommonTool.randomIntegerWithin(262,278)));
+            decoBlockStrokeTwo.setAttribute("width", String.valueOf(decoBlockSize));
+            decoBlockStrokeTwo.setAttribute("height", String.valueOf(decoBlockSize));
+            decoBlockStrokeTwo.setAttribute("stroke", "#000000");
+            decoBlockStrokeTwo.setAttribute("stroke-width", "0.05");
+            decoBlockStrokeTwo.setAttribute("fill", "none");
+
+            Element decoBlockStrokeThree=  doc.createElementNS(namespaceSVG, "rect");
+            decoBlockStrokeThree.setAttribute("x", String.valueOf(372 - decoBlockSize - CommonTool.randomIntegerWithin(0,24)));
+            decoBlockStrokeThree.setAttribute("y", String.valueOf(286 - CommonTool.randomIntegerWithin(0,24)));
+            decoBlockStrokeThree.setAttribute("width", String.valueOf(decoBlockSize));
+            decoBlockStrokeThree.setAttribute("height", String.valueOf(decoBlockSize));
+            decoBlockStrokeThree.setAttribute("stroke", "#000000");
+            decoBlockStrokeThree.setAttribute("stroke-width", "0.05");
+            decoBlockStrokeThree.setAttribute("fill", "none");
+
+
+            sectionFull.appendChild(mapBGImage);
+            sectionFull.appendChild(totalBGMask);
+            sectionFull.appendChild(titleAndArtist);
+            sectionFull.appendChild(version);
+            sectionFull.appendChild(decoBlockOne);
+            sectionFull.appendChild(decoBlockTwo);
+            sectionFull.appendChild(rankColorRect);
+            sectionFull.appendChild(rank);
+            sectionFull.appendChild(accuracy);
+            sectionFull.appendChild(nothingLine);
+            sectionFull.appendChild(nothingLineTwo);
+            sectionFull.appendChild(divisorLine);
+            sectionFull.appendChild(divisorLineThree);
+            sectionFull.appendChild(divisorLineTwo);
+            sectionFull.appendChild(pp);
+            sectionFull.appendChild(divisorLineFour);
+            sectionFull.appendChild(index);
+            sectionFull.appendChild(accuracyStats);
+            sectionFull.appendChild(bpmStats);
+            sectionFull.appendChild(flowStats);
+            sectionFull.appendChild(jumpStats);
+            sectionFull.appendChild(modsStats);
+            sectionFull.appendChild(preStats);
+            sectionFull.appendChild(speedStats);
+            sectionFull.appendChild(staminaStats);
+            sectionFull.appendChild(starStats);
+            sectionFull.appendChild(comboStats);
+            sectionFull.appendChild(decoBlockStrokeOne);
+            sectionFull.appendChild(decoBlockStrokeTwo);
+            sectionFull.appendChild(decoBlockStrokeThree);
+
+            //32 horizontal 20 vertical gap
+            if (scorelist.size()==1) {
+                sectionFull.setAttribute("transform","(395,0)");
+            }
+            else if (scorelist.size()==2) {
+                //199 591
+                sectionFull.setAttribute("transform",
+                        "translate(" + (392*listIndex+199) + ")");
+            }
+            else {
+                sectionFull.setAttribute("transform",
+                        "translate(" + 392 * (listIndex % 3) + " " + 340 *  (listIndex / 3) + ")");
+            }
+
+            svgRoot.appendChild(sectionFull);
+            listIndex++;
+        }
+        return doc;
+    }
+    private static Element getSingleDimensionStatElementDocument(Document doc, String field, double statValue,int index,int type,String valueStr)
+    {
+        Element stats = doc.createElementNS(namespaceSVG, "g");
+        stats.setAttribute("class", "cls-1");
+        stats.setAttribute("font-size", "10");
+        Element label = doc.createElementNS(namespaceSVG, "text");
+        if (type == 0) {
+            label.setAttribute("x", "35");
+        }
+        else {
+            label.setAttribute("x", "216");
+        }
+        label.setAttribute("y", "260");
+        label.setAttribute("fill", "#888888");
+        label.setTextContent(field);
+        Element value = doc.createElementNS(namespaceSVG, "text");
+        if (type == 0) {
+            value.setAttribute("x", "197");
+        }
+        else {
+            value.setAttribute("x", "372");
+        }
+
+        value.setAttribute("y", "260");
+        value.setAttribute("text-anchor", "end");
+        value.setAttribute("fill", "#000000");
+        if (type==0) {
+            value.setTextContent(String.valueOf(Math.round(statValue)));
+        }
+        else {
+            value.setTextContent(valueStr);
+        }
+
+
+        stats.setAttribute("transform", "translate(0," + 16.4 * index + ")");
+        stats.appendChild(label);
+        stats.appendChild(value);
+        return stats;
     }
 
 

@@ -1,6 +1,6 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import desu.life.RosuFFI;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.command.*;
@@ -11,15 +11,19 @@ import me.aloic.lazybot.monitor.CompareMonitor;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
-import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotScorePerformance;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.dao.mapper.*;
+import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileLightTheme;
@@ -40,6 +44,7 @@ import java.nio.file.Files;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -68,7 +73,17 @@ public class PlayerServiceImpl implements PlayerService
     public ScoreVO getUserHighestScoreOnMap(ScoreParameter params)
     {
         int playerId = params.getPlayerId();
-        if (params.getPlayerName()!=null) playerId = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(), params.getMode()).getId();
+        boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if(params.getVersion()==4) {
+            easterTrigger=true;
+            params.setVersion(1);
+        }
+        if (easterTrigger && !Objects.equals(params.getMode(), "osu")) easterTrigger=false;
+        PlayerInfoDTO player = null;
+        if (params.getPlayerName()!=null) {
+            player=dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+            playerId = player.getId();
+        }
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()),
                 playerId,
@@ -80,6 +95,11 @@ public class PlayerServiceImpl implements PlayerService
                 beatmapUserScoreLazer.getScore(),
                 false);
         verifyBeatmapsCache(scoreVO);
+        if(easterTrigger) {
+            if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+            scoreVO.setRawPlayerData(player);
+            params.setVersion(727);
+        }
         if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
        return scoreVO;
@@ -110,6 +130,35 @@ public class PlayerServiceImpl implements PlayerService
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), params.getBeatmapId());
         return new UserAllScore(mapScoreList,beatmapPerformance);
     }
+    @Override
+    public BeatmapStatistics getBeatmapStatisticsWithImaginaryParams(BeatmapStatisticsParameter params) throws Exception {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("暂不支持其他模式，请等待更新");
+
+        BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()),params.getMode());
+        BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
+
+        BeatmapStatistics result = new BeatmapStatistics(beatmapPerformance,params.getTargetAccuracy());
+        PlayerInfoDTO mapper = dataExtractor.extractPlayerInfoDTO(beatmapPerformance.getCreator().trim(),params.getMode());
+        result.setMapperAvatarUrl(OsuToolsUtil.getOsuAvatarUrl(mapper));
+        result.setMapBackgroundUrl(osuToolsUtil.getBeatmapUrl(result.getBeatmap().getSid()));
+        result.setMode(OsuMode.getMode(params.getMode()));
+        if (params.getModCombination()!=null)
+            result.setImaginaryMods(OsuToolsUtil.wireModEntities(List.of(params.getModCombination().split("(?<=\\G.{2})"))));
+        else
+            result.setImaginaryMods(new ArrayList<>());
+        RosuUtil.setupBeatmapStatistics(result);
+
+        double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);
+        double weightSpeed = Math.pow(result.getPerformance().getSpdPP(), 1.1);
+        double weightAccuracy = Math.pow(result.getPerformance().getAccPP(), 1.1);
+        double totalWeight = weightAim + weightSpeed + weightAccuracy;
+        int ratioAim = (int) Math.round(weightAim * 100.0 / totalWeight);
+        int ratioSpeed = (int) Math.round(weightSpeed * 100.0 / totalWeight);
+        result.setPpBreakdownRatioChain(ratioAim +"%-" + ratioSpeed+"%-" + (100-ratioAim-ratioSpeed) +"%");
+        ModCalculatorUtil.afterModMapInfo(result.getBeatmap(), result.getImaginaryMods());
+        return result;
+    }
+
 
 
     @Override
@@ -168,7 +217,18 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public ScoreVO getUserRecentScoreList(RecentParameter params, int type)
     {
-        if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
+        boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if(params.getVersion()==4) {
+            easterTrigger=true;
+            params.setVersion(1);
+        }
+        if (easterTrigger && !Objects.equals(params.getMode(), "osu")) easterTrigger=false;
+
+        PlayerInfoDTO player = null;
+        if (params.getPlayerName()!=null) {
+            player=dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+            params.setPlayerId(player.getId());
+        }
         List<ScoreLazerDTO> scoreList = dataExtractor.extractRecentScoreList(params.getPlayerId(), type, params.getIndex(), params.getMode());
         if(params.getIndex()>scoreList.size()) {
             throw new LazybotRuntimeException("当前超出能索引的最大距离，当前为: "+params.getIndex());
@@ -178,6 +238,11 @@ public class PlayerServiceImpl implements PlayerService
                 scoreList.get(params.getIndex() - 1),
                 false);
         verifyBeatmapsCache(scoreVO);
+        if(easterTrigger) {
+            if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+            scoreVO.setRawPlayerData(player);
+            params.setVersion(727);
+        }
         if (params.getChannelId()!=null)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return scoreVO;
@@ -196,7 +261,18 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public ScoreVO getUserBestPerformanceSingle(BpParameter params)
     {
-        if (params.getPlayerName()!=null) params.setPlayerId(dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode()).getId());
+        boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if(params.getVersion()==4) {
+            easterTrigger=true;
+            params.setVersion(1);
+        }
+        if (easterTrigger && !Objects.equals(params.getMode(), "osu")) easterTrigger=false;
+
+        PlayerInfoDTO player = null;
+        if (params.getPlayerName()!=null) {
+            player=dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+            params.setPlayerId(player.getId());
+        }
         List<ScoreLazerDTO> scoreDTO = dataExtractor.extractUserBestScoreList(
                 String.valueOf(params.getPlayerId()),
                 params.getIndex()-1,
@@ -208,6 +284,13 @@ public class PlayerServiceImpl implements PlayerService
                 false);
         verifyBeatmapsCache(scoreVO);
         CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+
+        if(easterTrigger) {
+            if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+            scoreVO.setRawPlayerData(player);
+            params.setVersion(727);
+        }
+
         return scoreVO;
     }
 
@@ -421,7 +504,6 @@ public class PlayerServiceImpl implements PlayerService
                 type);
         noChokeListVO.setScoreList(noChokeListVO.getScoreList().stream().limit(51).collect(Collectors.toList()));
         return noChokeListVO;
-
     }
     @Override
     public PlayerInfoVO getPlayerInfoVO(GeneralParameter params) {
@@ -491,7 +573,7 @@ public class PlayerServiceImpl implements PlayerService
         PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
                 null,
                 performance);
-        HSL mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getBannerUrl()));
+        HSL mainColor = CommonTool.getDominantHSLColorThief(new File(playerInfoVO.getAvatarUrl()));
 
         boolean isTooDarkOrBright = mainColor.getSaturation()<4 || mainColor.getLightness()>94;
         if (isTooDarkOrBright)
@@ -531,6 +613,34 @@ public class PlayerServiceImpl implements PlayerService
             throw new LazybotRuntimeException("Pp+服务正在维护或生成失败，请稍后再试");
         }
 
+    }
+    @Override
+    public PlusScorePerformance getPerformanceDimensionList(PlusListParameter params)
+    {
+        if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("此功能为PP+相关，仅支持osu模式");
+        PlayerInfoDTO player = getTargetPlayerInfoDTO(params);
+        PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(player);
+
+        List<ScorePerformanceDTO> scores;
+        ScorePerformanceDimension dimension =  ScorePerformanceDimension.getDimension(params.getDimension());
+        try{
+            scores=dataExtractor.extractPerformancePlusDimension(playerInfoVO.getId(),
+                    dimension,
+                    params.getFrom()-1,
+                    params.getTo()-params.getFrom()+1
+            );
+        }
+        catch (LazybotRuntimeException e) {
+            throw new LazybotRuntimeException("Lazybot-PPplus数据获取失败，请稍后再试");
+
+        }
+        PlusScorePerformance playerPerformance=new PlusScorePerformance(scores);
+        playerPerformance.setScores(osuToolsUtil.setupScorePerformanceList(playerPerformance.getScores()));
+        playerPerformance.setName(playerInfoVO.getPlayerName());
+        playerPerformance.setOffset(params.getFrom()-1);
+        playerPerformance.setAvatarUrl(playerInfoVO.getAvatarUrl());
+        playerPerformance.setDimension(dimension.getShowcase());
+        return playerPerformance;
     }
 
 
@@ -732,6 +842,7 @@ public class PlayerServiceImpl implements PlayerService
         scorePlus.setMaxPerformance(PlusPPUtil.calcMaxPPPlusStats(String.valueOf(AssetDownloadUtil.beatmapPath(scoreVO,false).toAbsolutePath()),scoreVO));
         return scorePlus;
     }
+
 
 
 

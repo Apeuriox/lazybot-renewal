@@ -1,4 +1,4 @@
-package me.aloic.lazybot.osu.dao.entity.dto.lazybot;
+package me.aloic.lazybot.osu.dao.entity.dto.plus;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;

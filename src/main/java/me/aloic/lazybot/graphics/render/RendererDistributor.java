@@ -3,6 +3,7 @@ package me.aloic.lazybot.graphics.render;
 import me.aloic.lazybot.entity.command.*;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
 import me.aloic.lazybot.graphics.mapping.documentMapper.*;
+import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.CommandUsage;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.util.CommonTool;
@@ -10,6 +11,7 @@ import me.aloic.lazybot.util.TransformerUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class RendererDistributor
@@ -18,7 +20,14 @@ public class RendererDistributor
     public static byte[] renderScoreVOToImage(ScoreVO score, int version) throws IOException
     {
         return SVGRenderer.renderSVGDocumentToByteArray(
-                ScoreSVGMapper.renderScoreToImage(score, version, CommonTool.getDominantColorArray(score))
+                ScoreSVGMapper.renderScoreToImage(score, version, CommonTool.getDominantColorArray(score)), Math.max(1,version-725)
+        );
+    }
+
+    public static byte[] renderBeatmapStatisticsToImage(BeatmapStatistics bs) throws IOException
+    {
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                MapSVGMapper.mapBeatmapStatsToPanel(bs)
         );
     }
 
@@ -29,6 +38,14 @@ public class RendererDistributor
                 PlusScoreSVGMapper.mapPlusScoreToQuadraGrid(
                         scorePlus, CommonTool.getDominantHueColorThief(new File(scorePlus.getBeatmap().getBgUrl()))
                 )
+        );
+    }
+
+    public static byte[] renderPlusScoresToCardList(PlusScorePerformance performance)
+    {
+        return SVGRenderer.renderSVGDocumentToByteArray(
+                ScoreListSVGMapper.mapScorePerformanceDimensionToBpCard(
+                       performance)
         );
     }
 
@@ -111,17 +128,19 @@ public class RendererDistributor
         );
     }
 
-    public static byte[] renderMMoelleuxCardTrimmed(MoelleuxCard card)
+    public static byte[] renderMMoelleuxCardTrimmed(MoelleuxCard card, int scale)
     {
         return SVGRenderer.renderSVGDocumentToByteArrayPNG(
                 PlayerInfoSVGMapper.mapPlayerInfoMoelleuxToCardTrimmed(card.getInfo(), card.getPrimaryHue())
-                ,1
+                ,scale
         );
     }
 
     public static byte[] renderPerformancePlusCard(PerformancePlusProfile player, int type) throws IOException
     {
-        if (type==1) return SVGRenderer.renderSVGDocumentToByteArray(
+        if (CommonTool.shouldTriggerEaster()) return SVGRenderer.renderSVGDocumentToByteArray(
+            PlusCardSVGMapper.mapPlusInfoToEaster(player.getPerformance(),player.getPlayer()),1);
+        if (type==0) return SVGRenderer.renderSVGDocumentToByteArray(
                 PlusCardSVGMapper.mapPlusInfoToCardCC2024(player.getPerformance(),player.getPlayer()),
                 1);
         return SVGRenderer.renderSVGDocumentToByteArray(

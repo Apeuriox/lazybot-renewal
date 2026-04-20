@@ -2,6 +2,7 @@ package me.aloic.lazybot.graphics.mapping;
 
 import org.w3c.dom.Document;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -21,9 +22,25 @@ public class SVGElementHelper
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
         return dateTime.format(outputFormatter);
     }
+    public static String convertDateMonth(String inputDate) {
+        LocalDateTime dateTime = LocalDateTime.parse(inputDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy. MM", Locale.ENGLISH);
+        return dateTime.format(outputFormatter);
+    }
     public static String dateNow() {
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("MMM. d'th', yyyy", Locale.ENGLISH);
         return dateTime.format(outputFormatter);
+    }
+    public static String dateNowMarathon() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy - MMM. dd", Locale.ENGLISH);
+        return dateTime.format(outputFormatter);
+    }
+    public static String dateNowNumber(){
+        LocalDate currentDate = LocalDate.now();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        return currentDate.format(formatter);
     }
 }

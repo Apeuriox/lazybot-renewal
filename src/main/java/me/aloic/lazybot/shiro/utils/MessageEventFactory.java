@@ -49,6 +49,8 @@ public class MessageEventFactory
             throw new LazybotRuntimeException(" 解析参数时出错");
         }
     }
+
+
     public LazybotSlashCommandEvent setupSlashCommandEvent(String command) {
         LazybotSlashCommandEvent slashCommandEvent = new LazybotSlashCommandEvent(command);
         try{
@@ -106,6 +108,8 @@ public class MessageEventFactory
         }
         return sb.toString().trim().toLowerCase();
     }
+
+
     public static String convertString(String input) {
         if (input == null || input.isEmpty()) {
             return input;
@@ -117,6 +121,8 @@ public class MessageEventFactory
                 .replace("&amp;", "&")
                 .replace("&#44;", ",");
     }
+
+
     public static int countOccurrences(String originalStr, char target) {
         int count = 0;
         for (char c : originalStr.toCharArray()) {
