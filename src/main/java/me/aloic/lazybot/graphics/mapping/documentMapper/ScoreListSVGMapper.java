@@ -653,7 +653,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             Element starStats = getSingleDimensionStatElementDocument(doc, "Star", 0, 0,1, CommonTool.toString(score.getBeatmap().getStar(), 2));
             Element modsStats = getSingleDimensionStatElementDocument(doc, "Mods", 0, 1,1, CommonTool.modListToString(score.getMods()));
             Element comboStats = getSingleDimensionStatElementDocument(doc, "Combo", 0, 2,1, score.getCombo()+"x");
-            Element bpmStats = getSingleDimensionStatElementDocument(doc, "Combo", 0, 3,1, CommonTool.toString(score.getBeatmap().getBpm(), 2));
+            Element bpmStats = getSingleDimensionStatElementDocument(doc, "BPM", 0, 3,1, CommonTool.toString(score.getBeatmap().getBpm(), 2));
 
             Element nothingLine = doc.createElementNS(namespaceSVG, "text");
             nothingLine.setAttribute("class", "cls-1");

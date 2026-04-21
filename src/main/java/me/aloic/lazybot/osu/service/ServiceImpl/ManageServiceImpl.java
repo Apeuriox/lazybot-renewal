@@ -204,7 +204,6 @@ public class ManageServiceImpl implements ManageService
     @Override
     public String ppTest(ScoreParameter params, Long userIdentity)
     {
-        AuthorityVerifier.isAdmin(userIdentity);
         BeatmapUserScoreLazer beatmapUserScoreLazer = dataExtractor.extractBeatmapUserScore(
                 String.valueOf(params.getBeatmapId()), params.getPlayerId(), params.getMode(), params.getModCombination());
         ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
