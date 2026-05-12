@@ -41,7 +41,8 @@ public class ScoreCommand implements LazybotSlashCommand
     private TestOutputTool testOutputTool;
 
     @Override
-    public void execute(SlashCommandInteractionEvent event) throws Exception {
+    public void execute(SlashCommandInteractionEvent event) throws Exception
+    {
         event.deferReply().queue();
         UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
         UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());

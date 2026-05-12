@@ -134,13 +134,13 @@ public class ApiRequestStarter
 
 //            threadPoolExecutor.execute();
             HttpRequest request = HttpUtil.createPost(url.toString());
-            HttpResponse response = request.addHeaders(headers).body(JSON.toJSONString(bodies)).executeAsync();
-            String resp = response.body();
-//            handleHttpCode(response.getStatus());
-            T res = JSON.parseObject(resp, resultClass);
-            response.close();
-            logger.info("POST {} successfully with code of {}", this.getUrl(), response.getStatus());
-            return res;
+            try (HttpResponse response = request.addHeaders(headers).body(JSON.toJSONString(bodies)).executeAsync())
+            {
+                String resp = response.body();
+                T res = JSON.parseObject(resp, resultClass);
+                logger.info("POST {} successfully with code of {}", this.getUrl(), response.getStatus());
+                return res;
+            }
 
         }
         if(ContentUtil.HTTP_REQUEST_TYPE_GET.equals(type)) {
@@ -148,13 +148,13 @@ public class ApiRequestStarter
             int currentAttempt = 0;
             while (currentAttempt < reties) {
                 try {
-                    HttpResponse response = HttpUtil.createGet(url.toString()).addHeaders(headers).executeAsync();
-                    String resp = response.body();
-//                    handleHttpCode(response.getStatus());
-                    T res = JSON.parseObject(resp, resultClass);
-                    response.close();
-                    logger.info("GET {} successfully with code of {}", this.getUrl(), response.getStatus());
-                    return res;
+                    try (HttpResponse response = HttpUtil.createGet(url.toString()).addHeaders(headers).executeAsync())
+                    {
+                        String resp = response.body();
+                        T res = JSON.parseObject(resp, resultClass);
+                        logger.info("GET {} successfully with code of {}", this.getUrl(), response.getStatus());
+                        return res;
+                    }
                 }
                 catch (Exception e) {
                     currentAttempt++;
@@ -175,27 +175,29 @@ public class ApiRequestStarter
             }
         }
         if(ContentUtil.HTTP_REQUEST_TYPE_DELETE.equals(type)) {
-
-            HttpUtil.createRequest(Method.DELETE, url.toString()).addHeaders(headers).executeAsync().body();
+            try (HttpResponse response = HttpUtil.createRequest(Method.DELETE, url.toString()).addHeaders(headers).executeAsync()) {
+                // response closed automatically
+            }
         }
         return null;
     }
 
     public <T>T executePost(Object requestParam, Class<T> resultClass) throws Exception{
         String body = JSON.toJSONString(requestParam);
-        HttpResponse response = HttpUtil.createPost(url.toString()).addHeaders(headers).body(JSON.toJSONString(requestParam)).executeAsync();
-        String resp = response.body();
-//        System.out.println("api request resp: " + resp);
-        T res = JSON.parseObject(resp, resultClass);
-        return res;
+        try (HttpResponse response = HttpUtil.createPost(url.toString()).addHeaders(headers).body(JSON.toJSONString(requestParam)).executeAsync())
+        {
+            String resp = response.body();
+            T res = JSON.parseObject(resp, resultClass);
+            return res;
+        }
     }
 
     public <T> List<T> executeRequestForList(String type, Class<T> resultClass){
         if(ContentUtil.HTTP_REQUEST_TYPE_POST.equals(type)){
-            String resp = HttpUtil.createPost(url.toString()).addHeaders(headers).body(JSON.toJSONString(bodies)).execute().body();
-//            System.out.println("api request resp: " + resp);
-            return JSON.parseArray(resp, resultClass);
-
+            try (HttpResponse response = HttpUtil.createPost(url.toString()).addHeaders(headers).body(JSON.toJSONString(bodies)).execute()) {
+                String resp = response.body();
+                return JSON.parseArray(resp, resultClass);
+            }
         }
         if(ContentUtil.HTTP_REQUEST_TYPE_GET.equals(type)) {
             int reties=3;
@@ -203,15 +205,17 @@ public class ApiRequestStarter
             while (currentAttempt < reties) {
                 try {
                     HttpResponse response = HttpUtil.createGet(url.toString()).addHeaders(headers).execute();
-//                    handleHttpCode(response.getStatus());
-                    if(response.getStatus()==404) {
-                        logger.warn("<list> GET {} NOT FOUND, skipping", this.getUrl());
-                        return new ArrayList<>();
+                    try {
+                        if(response.getStatus()==404) {
+                            logger.warn("<list> GET {} NOT FOUND, skipping", this.getUrl());
+                            return new ArrayList<>();
+                        }
+                        List<T> res = JSON.parseArray(response.body(), resultClass);
+                        logger.info("<list> GET {} successfully with code of {}", this.getUrl(), response.getStatus());
+                        return res;
+                    } finally {
+                        response.close();
                     }
-                    List<T> res = JSON.parseArray(response.body(), resultClass);
-                    response.close();
-                    logger.info("<list> GET {} successfully with code of {}", this.getUrl(), response.getStatus());
-                    return res;
                 }
                 catch (Exception e) {
                     logger.warn("<list> GET {} failed", this.getUrl());
@@ -234,7 +238,9 @@ public class ApiRequestStarter
             return null;
         }
         if(ContentUtil.HTTP_REQUEST_TYPE_DELETE.equals(type)) {
-            HttpUtil.createRequest(Method.DELETE, url.toString()).addHeaders(headers).execute().body();
+            try (HttpResponse response = HttpUtil.createRequest(Method.DELETE, url.toString()).addHeaders(headers).execute()) {
+                // response closed automatically
+            }
         }
         return new ArrayList<>();
     }

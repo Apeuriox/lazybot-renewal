@@ -74,27 +74,32 @@ public class ApiRequestExecutor
         for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
                 HttpRequest request = createRequest(type, url, token, body);
-                HttpResponse response = request.executeAsync();
-                int status = response.getStatus();
-                String respBody = response.body();
-                if (status == 401) {
-                    logger.warn("ppy令牌过期. 正在更新...");
-                    tokenMonitor.refreshClientToken();
-                    tokenMonitor.refreshPPPlusClientToken();
-                    TimeUnit.SECONDS.sleep(10);
-                    continue;
-                }
-                if (status == 404) {
-                    throw new LazybotNotFoundException("请求对象不存在");
-                }
-                if (status >= 200 && status < 300) {
-                    response.close();
-                    logger.info("HTTP request successful: {}", url);
-                    return respBody;
-
-                } else {
-                    logger.warn("HTTP 请求失败: {}, 状态码: {}, 内容: {}", url, status, respBody);
-                    throw new LazybotRuntimeException("HTTP 请求失败, 状态码: " + status);
+                try (HttpResponse response = request.executeAsync())
+                {
+                    int status = response.getStatus();
+                    String respBody = response.body();
+                    if (status == 401)
+                    {
+                        logger.warn("ppy令牌过期. 正在更新...");
+                        tokenMonitor.refreshClientToken();
+                        tokenMonitor.refreshPPPlusClientToken();
+                        TimeUnit.SECONDS.sleep(10);
+                        continue;
+                    }
+                    if (status == 404)
+                    {
+                        throw new LazybotNotFoundException("请求对象不存在");
+                    }
+                    if (status >= 200 && status < 300)
+                    {
+                        logger.info("HTTP request successful: {}", url);
+                        return respBody;
+                    }
+                    else
+                    {
+                        logger.warn("HTTP 请求失败: {}, 状态码: {}, 内容: {}", url, status, respBody);
+                        throw new LazybotRuntimeException("HTTP 请求失败, 状态码: " + status);
+                    }
                 }
             }
             catch (LazybotNotFoundException e) {
