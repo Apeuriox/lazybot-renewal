@@ -453,7 +453,7 @@ public class PlayerServiceImpl implements PlayerService
             } catch (Exception e) {
                 throw new LazybotRuntimeException("异步获取玩家" + params.getPlayerName() + "数据失败"+ e.getMessage());
             }
-        });
+        }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR);
 
         CompletableFuture<PlayerInfoDTO> comparePlayerInfoFuture = CompletableFuture.supplyAsync(() -> {
             try {
@@ -463,16 +463,18 @@ public class PlayerServiceImpl implements PlayerService
             } catch (Exception e) {
                 throw new LazybotRuntimeException("异步获取玩家" + params.getComparePlayerName() + "数据失败"+ e.getMessage());
             }
-        });
+        }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR);
 
         CompletableFuture<ComparePlayerBpList> resultFuture = playerInfoFuture.thenCombineAsync(comparePlayerInfoFuture, (playerInfoDTO, comparePlayerInfoDTO) -> {
             try {
                 if (Objects.equals(playerInfoDTO.getId(), comparePlayerInfoDTO.getId())) throw new LazybotRuntimeException("你不能和自己对比");
                 CompletableFuture<List<ScoreLazerDTO>> scoreFuture = CompletableFuture.supplyAsync(() ->
-                        dataExtractor.extractUserBestScoreList(String.valueOf(playerInfoDTO.getId()), 100, 0, params.getMode()));
+                        dataExtractor.extractUserBestScoreList(String.valueOf(playerInfoDTO.getId()), 100, 0, params.getMode()),
+                        VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR);
 
                 CompletableFuture<List<ScoreLazerDTO>> compareScoreFuture = CompletableFuture.supplyAsync(() ->
-                        dataExtractor.extractUserBestScoreList(String.valueOf(comparePlayerInfoDTO.getId()), 100, 0, params.getMode()));
+                        dataExtractor.extractUserBestScoreList(String.valueOf(comparePlayerInfoDTO.getId()), 100, 0, params.getMode()),
+                        VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR);
 
                 List<ScoreLazerDTO> scoreDTOS = scoreFuture.get();
                 List<ScoreLazerDTO> compareScoreDTOS = compareScoreFuture.get();

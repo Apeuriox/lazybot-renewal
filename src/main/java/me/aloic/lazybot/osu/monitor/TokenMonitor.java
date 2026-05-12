@@ -34,8 +34,8 @@ public class TokenMonitor
     private String lazybotClientPassword;
 
     private static final String TOKEN_URL = "https://osu.ppy.sh/oauth/token";
-    private static String lazybotToken;
-    private static String token;
+    private static volatile String lazybotToken;
+    private static volatile String token;
 
     private static final Logger logger = LoggerFactory.getLogger(TokenMonitor.class);
 

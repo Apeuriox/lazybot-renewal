@@ -216,7 +216,7 @@ public class URLBuildUtil
     public static String buildURLOfPpRank(Integer mode,Integer pp)
     {
         UrlBuilder builder = UrlBuilder.ofHttp("https://osudaily.net/data/getPPRank.php", CharsetUtil.CHARSET_UTF_8)
-                .addQuery("m", 0)
+                .addQuery("m", mode)
                 .addQuery("t","pp")
                 .addQuery("v", pp);
         return builder.build();

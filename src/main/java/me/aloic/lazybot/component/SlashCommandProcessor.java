@@ -71,9 +71,9 @@ public class SlashCommandProcessor
         catch (ExecutionException e) {
             Throwable rootCause = e.getCause();
             if (rootCause instanceof LazybotRuntimeException) {
-                logger.error(e.getMessage());
+                logger.error(rootCause.getMessage());
                 bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(
-                        e.getMessage().replaceFirst("^.*?:\\s*", "")
+                        "[Lazybot] " + rootCause.getMessage()
                 ).build(), false);
             }
         }
@@ -101,7 +101,7 @@ public class SlashCommandProcessor
             catch (ExecutionException e) {
                 Throwable rootCause = e.getCause();
                 if (rootCause instanceof LazybotRuntimeException) {
-                    logger.error("捕获到多线程处理中的预期内exception: {}", e.getMessage(),e);
+                    logger.error("捕获到多线程处理中的预期内exception: {}", rootCause.getMessage(), rootCause);
                 }
             }
             catch (Exception e) {

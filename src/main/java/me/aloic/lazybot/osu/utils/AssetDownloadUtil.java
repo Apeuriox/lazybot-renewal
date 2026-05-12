@@ -96,6 +96,7 @@ public class AssetDownloadUtil
         catch (Exception e)
         {
             logger.error("地图下载失败: {}", e.getMessage());
+            throw new LazybotRuntimeException("地图下载失败: bid=" + bid + ", " + e.getMessage());
         }
     }
 
