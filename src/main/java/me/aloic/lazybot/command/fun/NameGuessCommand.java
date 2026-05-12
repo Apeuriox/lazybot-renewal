@@ -115,13 +115,17 @@ public class NameGuessCommand implements LazybotSlashCommand
         }
         else
         {
-            existingGameMap.get(identity).setMasked(revealOneChar(original,existingGameMap.get(identity).getMasked()));
-            if (existingGameMap.get(identity).getMasked().equals(original))
-            {
-                existingGameMap.remove(identity);
-                return "[Lazybot] 次数耗尽，正确答案为" + original;
+            GameWithTime game = existingGameMap.get(identity);
+            if (game == null) throw new LazybotRuntimeException("游戏已结束");
+            synchronized (game) {
+                game.setMasked(revealOneChar(original, game.getMasked()));
+                if (game.getMasked().equals(original))
+                {
+                    existingGameMap.remove(identity);
+                    return "[Lazybot] 次数耗尽，正确答案为" + original;
+                }
+                return "[Lazybot] 回答错误，你的题目为 " + game.getMasked();
             }
-            return "[Lazybot] 回答错误，你的题目为 " + existingGameMap.get(identity).getMasked();
         }
     }
 
