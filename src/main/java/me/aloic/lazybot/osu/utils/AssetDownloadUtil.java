@@ -56,6 +56,7 @@ public class AssetDownloadUtil
                 fileDownloadJavaHttpClient(targetUrl, desiredLocalPath);
                 delayQueue.offer(new DownloadTask(ONE_MINUTE_IN_MS));
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 logger.error(e.getMessage());
                 throw new LazybotRuntimeException("Download thread was interrupted: " +e.getMessage());
             }
@@ -71,7 +72,9 @@ public class AssetDownloadUtil
                 fileDownloadJavaHttpClient(targetUrl, desiredLocalPath);
                 delayQueue.offer(new DownloadTask(ONE_MINUTE_IN_MS));
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 logger.error(e.getMessage());
+                return null;
             }
             return null;
         });
