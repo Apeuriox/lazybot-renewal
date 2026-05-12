@@ -51,6 +51,9 @@ public class CommandResultHandler
                 bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().img("base64://"+base64Image).build(), false);
             }
             catch (Exception e) {
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
+                        MsgUtils.builder().text("发送图片失败").build(),
+                        false);
                 logger.error(e.getMessage());
         }
     }
@@ -62,6 +65,9 @@ public class CommandResultHandler
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(text).img("base64://"+base64Image).build(), false);
         }
         catch (Exception e) {
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
+                    MsgUtils.builder().text("发送图片和文本失败").build(),
+                    false);
             logger.error(e.getMessage());
         }
     }
