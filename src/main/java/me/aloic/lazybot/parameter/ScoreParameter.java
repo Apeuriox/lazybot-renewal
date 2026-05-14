@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.util.ArgumentParser;
+import me.aloic.lazybot.util.Parsers;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -47,40 +47,33 @@ public class ScoreParameter extends LazybotCommandParameter
     }
     public static ScoreParameter analyzeParameter(List<String> params)
     {
-        ScoreParameter result=new ScoreParameter();
-        if (!params.isEmpty()) {
-            String last = params.getLast();
-            Matcher m = Pattern.compile("^(\\d{1,10})\\+([a-z]+)$").matcher(last);
-            if (m.matches()) {
-                int idVal = Integer.parseInt(m.group(1));
-                String modVal = m.group(2);
-                if (modVal.length() % 2 != 0) {
-                    throw new IllegalArgumentException("不合法的Mods组合: " + modVal);
-                }
-                result.beatmapId = idVal;
-                result.modCombination = modVal;
-                params.removeLast();
+        ScoreParameter result = new ScoreParameter();
+        ArgumentParser p = ArgumentParser.of(params);
+
+        p.tryPop(Parsers.BID_PLUS_MOD_NO_SPACE, m -> {
+            result.setBeatmapId(Integer.parseInt(m.group(1)));
+            String modVal = m.group(2);
+            if (modVal.length() % 2 != 0) {
+                throw new IllegalArgumentException("不合法的Mods组合: " + modVal);
             }
-        }
-        if (result.modCombination == null && !params.isEmpty()) {
-            String maybeMods = params.getLast();
-            if (maybeMods.startsWith("+")) {
-                String modStr = maybeMods.substring(1);
+            result.setModCombination(modVal);
+        });
+
+        if (result.getModCombination() == null) {
+            p.tryPop(Parsers.MOD, m -> {
+                String modStr = m.group(1);
                 if (modStr.length() % 2 != 0) {
                     throw new IllegalArgumentException("不合法的Mods组合: " + modStr);
                 }
-                result.modCombination = modStr;
-                params.removeLast();
-            }
+                result.setModCombination(modStr);
+            });
         }
-        if (result.beatmapId == null && !params.isEmpty()) {
-            String maybeId = params.getLast().trim();
-            if (maybeId.matches("\\d+")) {
-                result.beatmapId = Integer.parseInt(maybeId);
-                params.removeLast();
-            }
+
+        if (result.getBeatmapId() == null) {
+            p.tryPop(Parsers.DIGITS, m -> result.setBeatmapId(Integer.parseInt(m.group())));
         }
-        if (!params.isEmpty()) result.setPlayerName(String.join(" ", params).trim());
+        if (p.remainder().length()>1)
+            result.setPlayerName(p.remainder());
         return result;
     }
     public static void setupDefaultValue(ScoreParameter scoreParameter, AccessTokenPO accessTokenPO)
