@@ -15,9 +15,10 @@ StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=lazybot
 
-# 路径环境变量 (由应用代码读取)
-Environment=LAZYBOT_DIR=/opt/lazybot/data
-Environment=RESVG_DIR=/opt/lazybot/resvg-cache
+Environment=LAZYBOT_DIR=/home/lazybot/work-dir
+Environment=ROSU_LIB_PATH=/home/lazybot/rosu
 
 [Install]
 WantedBy=multi-user.target
+
+

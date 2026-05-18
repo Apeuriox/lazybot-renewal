@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.13</version>
+        <version>4.0.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>me.aloic</groupId>
     <artifactId>lazybot</artifactId>
-    <version>1.1.92</version>
+    <version>1.2.0</version>
     <name>lazybot-renewal</name>
     <description>lazybot-renewal</description>
     <url/>
@@ -55,34 +55,16 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
+
+        <!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-spring-boot4-starter -->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.16</version>
+            <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
+            <version>3.5.15</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>4.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/com.github.yulichang/mybatis-plus-join-boot-starter -->
-        <dependency>
-            <groupId>com.github.yulichang</groupId>
-            <artifactId>mybatis-plus-join-boot-starter</artifactId>
-            <version>1.5.6</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-spring-boot3-starter -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-            <version>3.5.16</version>
-            <scope>compile</scope>
-        </dependency>
+
+
         <!-- Source: https://mvnrepository.com/artifact/net.dv8tion/JDA -->
         <dependency>
             <groupId>net.dv8tion</groupId>
@@ -148,7 +130,7 @@
         <dependency>
             <groupId>com.mikuac</groupId>
             <artifactId>shiro</artifactId>
-            <version>2.3.3</version>
+            <version>2.5.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
