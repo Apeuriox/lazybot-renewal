@@ -1,0 +1,23 @@
+[Unit]
+Description=Lazybot osu! Bot
+After=network-online.target mysql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lazybot
+WorkingDirectory=/opt/lazybot
+ExecStart=/usr/bin/java -jar /opt/lazybot/lazybot.jar
+ExecStop=/bin/kill -SIGTERM $MAINPID
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=lazybot
+
+# 路径环境变量 (由应用代码读取)
+Environment=LAZYBOT_DIR=/opt/lazybot/data
+Environment=RESVG_DIR=/opt/lazybot/resvg-cache
+
+[Install]
+WantedBy=multi-user.target

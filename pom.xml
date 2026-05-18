@@ -186,6 +186,13 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>local-lib</id>
+            <url>file://${project.basedir}/local-maven-repo</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>

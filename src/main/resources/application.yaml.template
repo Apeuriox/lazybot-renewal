@@ -1,18 +1,11 @@
 spring:
   application:
-    name: lazybot-jda
-  data:
-    redis:
-      port: 6379
-      host: localhost
-      database: 2
-      password: your-redis-password
-      timeout: 5000ms
+    name: lazybot-renewal
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: url-to-your-database
-    username: root
-    password: database-url
+    url: database-ul
+    username: user
+    password: password
     hikari:
       max-lifetime: 120000
   jackson:
@@ -21,9 +14,12 @@ spring:
   web:
     resources:
       add-mappings: false
+  threads:
+    virtual:
+      enabled: true
 
 server:
-  port: 9001
+  port: 1145
 
 shiro:
   ws:
@@ -40,30 +36,38 @@ shiro:
     awaitTask: true
     timeout: 10
 
-//if you disabled discord then it will not affect anything
 discord:
   bot:
-    key: your-discord-bot-key
-    id: your-discord-bot-id
-    secret: your-discord-bot-secret
-    token: your-discord-bot-token
+    key: discord_key
+    id: discord_id
+    secret: discord_secret
+    token: discord_token
+
+tencent:
+  bot:
+    id: tencent_official_id
+    secret: tencent_official_secret
+    token: tencent_official_token
 
 lazybot:
   prefix: /
-  client_id: your-osu-client-id
+  client_id: osu_client_id
   response_type: code
   scopes: friends.read identify public
-  client_secret: your-osu-client-secret
+  client_secret: osu_client_secret
   grant_type: authorization_code
+  plus:
+    client_id: lazybot-plus-id
+    client_password: lazybot-plus-password
   global:
     discord:
       enabled: false
     tencent:
       enabled: true
   test:
-    path: X:\lazybot-output
-    identity: 1524185356
-    enabled: false
+    path: windows_local_test_output_pat
+    identity: windows_local_test_default_identity
+    enabled: true
   command:
     whatif_calc_max_count: 200
 
@@ -75,6 +79,10 @@ async:
       queue_capacity: 1000
       name:
         prefix: api_request_pool-
+#mybatis-plus:
+#  configuration:
+#    default-executor-type: REUSE
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 rate-limit:
   capacity: 24
