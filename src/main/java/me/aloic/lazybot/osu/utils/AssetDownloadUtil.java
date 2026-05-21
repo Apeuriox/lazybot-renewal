@@ -114,19 +114,30 @@ public class AssetDownloadUtil
         backgroundDownload(desiredLocalPath,targetUrl,override);
 
     }
-    protected static void backgroundDownload(String desiredLocalPath, String targetUrl, boolean override)
+    protected static boolean backgroundDownload(String desiredLocalPath, String targetUrl, boolean override)
     {
         File saveFilePath = new File(desiredLocalPath);
         if (saveFilePath.exists() && !override) {
-            logger.trace("地图背景文件已存在: {}", saveFilePath.getAbsolutePath());
-            return;
+            if (saveFilePath.length() > 0) {
+                logger.trace("地图背景文件已存在: {}", saveFilePath.getAbsolutePath());
+                return true;
+            }
+            // 0 字节文件是脏文件, 删除后重试
+            logger.warn("地图背景文件为空, 删除并重新下载: {}", saveFilePath.getAbsolutePath());
+            saveFilePath.delete();
         }
         try{
-            downloadResourceQueue(targetUrl,desiredLocalPath);
+            downloadResourceQueue(targetUrl, desiredLocalPath);
+            return saveFilePath.exists() && saveFilePath.length() > 0;
         }
         catch (Exception e)
         {
             logger.error("地图背景下载失败: {}", e.getMessage());
+            // 清理可能存在的脏文件
+            if (saveFilePath.exists() && saveFilePath.length() == 0) {
+                saveFilePath.delete();
+            }
+            return false;
         }
     }
 
@@ -172,7 +183,7 @@ public class AssetDownloadUtil
         beatmapDownload(scoreVO.getBeatmap().getBid(),override);
         return Paths.get(ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/" +scoreVO.getBeatmap().getBid() +".osu");
     }
-    public static String svgAbsolutePath(Integer sid)
+    public static String backgroundAbsolutePath(Integer sid)
     {
         backgroundDownload(sid);
         return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/mapBG/" + sid +".jpg";
