@@ -101,7 +101,8 @@ public class UpdateCommand implements LazybotSlashCommand
                         .addExample("/Update Avatar Aloic")
                         .addExample("/Update Banner")
                         .addExample("/Update Plus")
-                        .addOption(new CommandParameter("Type","更新的类型", CommandParameter.ParameterType.MUST))
+                        .addExample("/Update PlusRecent Aloic")
+                        .addOption(new CommandParameter("Type","更新的类型: avatar/track/banner/plus/plusRecent", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("PlayerName","指定的用户名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

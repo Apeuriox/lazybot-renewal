@@ -25,4 +25,6 @@ public interface ManageService
     CommandUsage commandUsage();
 
     String annualCommandUsage();
+
+    String plusServerStats(StatsParameter params);
 }

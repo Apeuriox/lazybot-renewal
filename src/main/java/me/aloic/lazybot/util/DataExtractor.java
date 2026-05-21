@@ -17,6 +17,8 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.StatsApiUsage;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.StatsCount;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayoData;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayobotBeatmapSet;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
@@ -35,6 +37,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -230,6 +233,31 @@ public class DataExtractor
     }
 
     /**
+     * 重建玩家全部BP数据 (POST /player/reinit)
+     * 拉取玩家osu! API的BP 200, 下载谱面文件并并行计算所有分数的pp+
+     * @param playerId 用户ID
+     * @return 重建后的PP+玩家信息
+     */
+    public PPPlusPerformance extractPerformancePlusPlayerReinit(Integer playerId)
+    {
+        try{
+            LazybotWebPlayerPerformance performance = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfReinitPerformancePlus(playerId),
+                    HTTPTypeEnum.POST,
+                    TokenMonitor.getLazybotToken(),
+                    null,
+                    LazybotWebPlayerPerformance.class);
+            if(performance.getData()==null) {
+                throw new LazybotRuntimeException("重建" + playerId + "用户最佳成绩pp+数据失败");
+            }
+            return performance.getData().getPerformances();
+        }
+        catch (LazybotNotFoundException e) {
+            throw new LazybotRuntimeException("重建" + playerId + "用户最佳成绩pp+数据失败");
+        }
+    }
+
+    /**
      * 根据用户ID和地图ID添加成绩到PP+服务器
      * @param playerId 用户ID
      * @param beatmapId 地图ID
@@ -281,7 +309,53 @@ public class DataExtractor
         }
     }
 
+    /**
+     * 查询PP+服务器元数据统计 (GET /stats/count)
+     */
+    public StatsCount extractStatsCount()
+    {
+        LazybotWebResult<StatsCount> result = apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfStatsCount(),
+                HTTPTypeEnum.GET,
+                null,
+                null,
+                new TypeReference<LazybotWebResult<StatsCount>>() {});
+        if (result.getData() == null) {
+            throw new LazybotRuntimeException("获取统计数据失败");
+        }
+        return result.getData();
+    }
 
+    /**
+     * 查询PP+服务器API调用统计 (GET /stats/usage)
+     */
+    public Map<String, StatsApiUsage> extractStatsUsage()
+    {
+        LazybotWebResult<Map<String, StatsApiUsage>> result = apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfStatsUsage(),
+                HTTPTypeEnum.GET,
+                null,
+                null,
+                new TypeReference<LazybotWebResult<Map<String, StatsApiUsage>>>() {});
+        if (result.getData() == null) {
+            throw new LazybotRuntimeException("获取API调用统计失败");
+        }
+        return result.getData();
+    }
+
+    /**
+     * 查询上次批量更新玩家数 (GET /stats/player/updated)
+     */
+    public Integer extractStatsPlayerUpdated()
+    {
+        LazybotWebResult<Integer> result = apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfStatsPlayerUpdated(),
+                HTTPTypeEnum.GET,
+                null,
+                null,
+                new TypeReference<LazybotWebResult<Integer>>() {});
+        return result.getData();
+    }
 
     /**
      * 获取用户的最近游玩成绩列表

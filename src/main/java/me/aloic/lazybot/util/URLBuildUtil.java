@@ -259,6 +259,15 @@ public class URLBuildUtil
                 .addQuery("id", id);
         return builder.build();
     }
+    public static String buildURLOfReinitPerformancePlus(Integer id)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("player")
+                .addPath("reinit")
+                .addQuery("id", id);
+        return builder.build();
+    }
     public static String buildURLOfScorePerformanceDimensionPlus(Integer id, ScorePerformanceDimension dimension)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
@@ -282,6 +291,31 @@ public class URLBuildUtil
                 .addQuery("offset", offset)
                 .addQuery("limit", limit);
         return builder.build();
+    }
+    public static String buildURLOfStatsCount()
+    {
+        return UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("stats")
+                .addPath("count")
+                .build();
+    }
+    public static String buildURLOfStatsUsage()
+    {
+        return UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("stats")
+                .addPath("usage")
+                .build();
+    }
+    public static String buildURLOfStatsPlayerUpdated()
+    {
+        return UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("stats")
+                .addPath("player")
+                .addPath("updated")
+                .build();
     }
     public static String buildURLOfSayobotBeatmap(Integer beatmapId)
     {

@@ -8,6 +8,8 @@ import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.osuTrack.UserDifference;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.StatsApiUsage;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.StatsCount;
 import me.aloic.lazybot.osu.dao.entity.po.*;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
@@ -73,8 +75,10 @@ public class ManageServiceImpl implements ManageService
         else if(params.getType().equals("banner"))
             return updateBanner(params);
         else if(params.getType().equals("plus"))
-            return updatePlus(params);
-        return "[Lazybot] 输入Update avatar 用户名 以更新头像\n输入 Update track 用户名  以更新ppmap数据\n输入Update banner 用户名 以更新用户横幅\n输入Update plus 用户名 以更新pp+数据";
+            return updatePlusReinit(params);
+        else if(params.getType().equals("plusRecent"))
+            return updatePlusRecent(params);
+        return "[Lazybot] 输入Update avatar 用户名 以更新头像\n输入 Update track 用户名  以更新ppmap数据\n输入Update banner 用户名 以更新用户横幅\n输入Update plus 用户名 以更新pp+数据（以现BP重建）\n输入Update plusRecent 用户名 以更新pp+最近游玩数据";
     }
     private String updateAvatar(UpdateParameter params)
     {
@@ -112,13 +116,21 @@ public class ManageServiceImpl implements ManageService
         }
         return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的Osu Track数据";
     }
-    private String updatePlus(UpdateParameter params)
+    private String updatePlusReinit(UpdateParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO;
+        if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
+        else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
+        dataExtractor.extractPerformancePlusPlayerReinit(playerInfoDTO.getId());
+        return "[Lazybot] 已重建用户"+playerInfoDTO.getUsername()+"的最佳成绩PP+数据，若想添加指定成绩请使用/add";
+    }
+    private String updatePlusRecent(UpdateParameter params)
     {
         PlayerInfoDTO playerInfoDTO;
         if (params.getPlayerId()!=null) playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         else playerInfoDTO = dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
         dataExtractor.extractPerformancePlusPlayerUpdate(playerInfoDTO.getId());
-        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的PP+数据，请注意此更新仅更新最近游玩，若想添加指定成绩请使用/add";
+        return "[Lazybot] 已更新用户"+playerInfoDTO.getUsername()+"的PP+最近游玩数据，若想添加指定成绩请使用/add";
     }
 
     @Override
@@ -319,6 +331,49 @@ public class ManageServiceImpl implements ManageService
             return "服务器内部生成错误，是否为数据不完整？";
         }
 
+    }
+
+    @Override
+    public String plusServerStats(StatsParameter params)
+    {
+        return switch (params.getType()) {
+            case "count" -> pServerStatsCount();
+//            case "usage" -> pServerStatsUsage();
+            case "updated" -> pServerStatsUpdated();
+            default -> "[Lazybot] 未知二级指令: " + params.getType()
+                    + "\n可用: count / usage / updated";
+        };
+    }
+
+    private String pServerStatsCount()
+    {
+        StatsCount count = dataExtractor.extractStatsCount();
+        return "[Lazybot] PP+服务器统计\n"
+                + "总玩家数: " + count.getTotalPlayers() + "\n"
+                + "昨日实际更新数: " + count.getLastDayReallyUpdatedPlayer() + "\n"
+                + "近2月活跃玩家数: " + count.getActivePlayer() + "\n"
+                + "已记录成绩个数: " + count.getTotalRecordedScores() + "\n"
+                + "已缓存谱面个数: " + count.getTotalBeatmaps();
+    }
+
+    private String pServerStatsUsage()
+    {
+        Map<String, StatsApiUsage> usageMap = dataExtractor.extractStatsUsage();
+        StringBuilder sb = new StringBuilder("[Lazybot] API调用统计 (自上次启动)\n");
+        usageMap.values().stream()
+                .sorted((a, b) -> Integer.compare(b.getTotalCount(), a.getTotalCount()))
+                .forEach(u -> sb.append(u.getApiName())
+                        .append(": ").append(u.getTotalCount()).append("次")
+                        .append(" (成功").append(u.getSuccessCount())
+                        .append("/失败").append(u.getErrorCount())
+                        .append(") 平均").append(String.format("%.0f", u.getAvgLatency())).append("ms\n"));
+        return sb.toString().trim();
+    }
+
+    private String pServerStatsUpdated()
+    {
+        Integer updated = dataExtractor.extractStatsPlayerUpdated();
+        return "[Lazybot] 上次定时批量更新成功: " + (updated != null ? updated : 0) + " 名玩家";
     }
 
 }
