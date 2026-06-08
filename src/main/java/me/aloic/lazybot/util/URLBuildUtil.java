@@ -367,6 +367,46 @@ public class URLBuildUtil
         return builder.build();
     }
 
+    /** GD服务器关卡查询API (POST form-encoded) */
+    public static String buildURLOfGdLevelSearch()
+    {
+        return UrlBuilder.ofHttp("http://www.boomlings.com/database", CharsetUtil.CHARSET_UTF_8)
+                .addPath("getGJLevels21.php")
+                .build();
+    }
+
+    /** GDDL (Demon Ladder) 关卡详情API (GET) */
+    public static String buildURLOfGddlLevel(String levelId)
+    {
+        return UrlBuilder.ofHttp("https://gdladder.com", CharsetUtil.CHARSET_UTF_8)
+                .addPath("api")
+                .addPath("level")
+                .addPath(levelId)
+                .build();
+    }
+
+    /** Pointercrate Demonlist 查询API (GET) */
+    public static String buildURLOfDemonListByLevelId(String levelId)
+    {
+        return UrlBuilder.ofHttp("https://pointercrate.com", CharsetUtil.CHARSET_UTF_8)
+                .addPath("api")
+                .addPath("v2")
+                .addPath("demons")
+                .addPath("listed")
+                .addQuery("level_id", levelId)
+                .build();
+    }
+
+    /** Pemonlist Platformer关卡查询API (GET) */
+    public static String buildURLOfPemonListByLevelId(String levelId)
+    {
+        return UrlBuilder.ofHttp("https://pemonlist.com", CharsetUtil.CHARSET_UTF_8)
+                .addPath("api")
+                .addPath("level")
+                .addPath(levelId)
+                .build();
+    }
+
     private static String encodeJsonUrl(String playerIdentity, String mode, String subRuleset) throws JsonProcessingException
     {
         Map<String, Object> params = new HashMap<>();

@@ -7,7 +7,6 @@ import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
@@ -525,7 +524,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0) {
                 if (!targetScore.getIsLazer()) targetScore.setModJSON(targetScore.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
                 for(int i=0;i<targetScore.getModJSON().size();i++) {
-                    ModColor color=ModColor.fromString(targetScore.getModJSON().get(i).getAcronym());
+                    ModColor color = ModColor.fromString(targetScore.getModJSON().get(i).getAcronym());
                     wireModIconForDarkScore(doc,
                             i,
                             targetScore.getModJSON().get(i),

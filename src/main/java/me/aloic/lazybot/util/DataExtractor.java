@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.enums.HTTPTypeEnum;
 import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.entity.dto.geometry.DemonLadderLevel;
+import me.aloic.lazybot.entity.dto.geometry.DemonListItem;
+import me.aloic.lazybot.entity.dto.geometry.PemonListItem;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotScorePerformance;
@@ -98,6 +101,7 @@ public class DataExtractor
             throw new LazybotRuntimeException("获取Star Moon用户时出错" + e.getMessage());
         }
     }
+
     public UserResponse extractPlayerStarMoon(Integer playerId)
     {
         try{
@@ -611,6 +615,87 @@ public class DataExtractor
             return new ArrayList<>();
         }
         return tokenMapper.selectByCodes(userIds);
+    }
+
+
+
+    // Geometry Dash Parts
+
+    /**
+     * GD关卡搜索 (POST form-encoded)
+     * @param formBody 表单编码的搜索参数
+     * @return GD服务器原始响应字符串 (will be parsed by GeometryDashService)
+     */
+    public String extractGdSearchLevels(String formBody)
+    {
+        return apiRequestExecutor.executeFormPost(URLBuildUtil.buildURLOfGdLevelSearch(), formBody);
+    }
+
+
+    /**
+     * GDDL (Demon Ladder) 关卡详情获取
+     * @param levelId GD关卡ID
+     * @return DemonLadderLevel, 失败返回null
+     */
+    public DemonLadderLevel extractDemonLadderLevel(String levelId)
+    {
+        try {
+            return apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfGddlLevel(levelId),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null,
+                    DemonLadderLevel.class);
+        } catch (Exception e) {
+            log.debug("GDDL查询失败 levelId={}: {}", levelId, e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Pointercrate Demonlist 排名查询
+     * @param levelId GD关卡ID
+     * @return 排名文本 (e.g. "(#15)"), 未上榜返回null
+     */
+    public List<DemonListItem> extractDemonListItem(String levelId)
+    {
+        try {
+            List<DemonListItem> list = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfDemonListByLevelId(levelId),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null,
+                    new TypeReference<List<DemonListItem>>() {});
+            if (list != null && !list.isEmpty() && list.getFirst().getPosition() != null) {
+                return list;
+            }
+        } catch (Exception e) {
+            log.debug("Demonlist查询失败 levelId={}: {}", levelId, e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Pemonlist Platformer关卡排名查询
+     * @param levelId GD关卡ID
+     * @return 排名文本 (e.g. "(#5)"), 未上榜返回null
+     */
+    public PemonListItem extractPemonListItem(String levelId)
+    {
+        try {
+            PemonListItem item = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfPemonListByLevelId(levelId),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null,
+                    PemonListItem.class);
+            if (item != null && item.getPlacement() != null) {
+                return item;
+            }
+        } catch (Exception e) {
+            log.debug("Pemonlist查询失败 levelId={}: {}", levelId, e.getMessage());
+        }
+        return null;
     }
 
 }

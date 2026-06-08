@@ -121,6 +121,52 @@ public class ApiRequestExecutor
         return null;
     }
 
+    /**
+     * 执行 form-encoded POST 请求 (用于GD等不需要OAuth头的外部API)
+     * @param url 请求URL
+     * @param formBody 已编码的表单参数字符串 (e.g. "key1=val1&key2=val2")
+     * @return 响应体字符串
+     */
+    public String executeFormPost(String url, String formBody)
+    {
+        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                HttpRequest request = HttpUtil.createPost(url)
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .header("User-Agent", "")
+                        .body(formBody);
+                try (HttpResponse response = request.executeAsync()) {
+                    int status = response.getStatus();
+                    String respBody = response.body();
+                    if (status == 404) {
+                        throw new LazybotNotFoundException("请求对象不存在");
+                    }
+                    if (status >= 200 && status < 300) {
+                        logger.info("Form POST successful: {}", url);
+                        return respBody;
+                    } else {
+                        logger.warn("Form POST 请求失败: {}, 状态码: {}, 内容: {}", url, status, respBody);
+                        throw new LazybotRuntimeException("Form POST 请求失败, 状态码: " + status);
+                    }
+                }
+            } catch (LazybotNotFoundException e) {
+                throw e;
+            } catch (Exception e) {
+                logger.error("Form POST 在尝试 {} 次后失败: {}", attempt, e.getMessage());
+                if (attempt == MAX_RETRIES) {
+                    throw new LazybotRuntimeException("Form POST 在尝试 " + MAX_RETRIES + " 次后失败: " + e.getMessage(), e);
+                }
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException interrupted) {
+                    Thread.currentThread().interrupt();
+                    throw new LazybotRuntimeException("请求线程中断", interrupted);
+                }
+            }
+        }
+        return null;
+    }
+
     private HttpRequest createRequest(HTTPTypeEnum type,
                                       String url,
                                       String token,

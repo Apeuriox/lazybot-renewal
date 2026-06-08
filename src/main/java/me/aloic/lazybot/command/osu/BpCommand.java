@@ -11,11 +11,12 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
+import me.aloic.lazybot.graphics.TemplateRenderer;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
 import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.OsuSubruleset;
@@ -39,6 +40,8 @@ public class BpCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+    @Resource
+    private TemplateRenderer templateRenderer;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -106,14 +109,14 @@ public class BpCommand implements LazybotSlashCommand
         AccessTokenPO tokenPO;
         String commandType = event.getCommandType().toLowerCase();
         BpParameter params;
-        // star moon private server
         if (commandType.equals("bsm"))
         {
             TokenStarMoon starMoonToken = proxy.getStarMoonToken(event);
             params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id(), null);
             params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
-            testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
-                    playerService.getUserBestPerformanceSingleStarMoon(params), params.getVersion()));
+            ScoreVO scoreVO = playerService.getUserBestPerformanceSingleStarMoon(params);
+            byte[] imageBytes = templateRenderer.renderScore(scoreVO, params.getVersion());
+            testOutputTool.saveImageToLocal(imageBytes);
         }
         else  {
             tokenPO=proxy.getAccessToken(event);
@@ -121,8 +124,11 @@ public class BpCommand implements LazybotSlashCommand
             if (params.getVersion() == 3 || commandType.equals("pbp") || commandType.equals("pb"))
                 testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(
                         playerService.getUserBestPerformanceSinglePlus(params)));
-            else testOutputTool.saveImageToLocal(RendererDistributor.renderScoreVOToImage(
-                    playerService.getUserBestPerformanceSingle(params), params.getVersion()));
+            else {
+                ScoreVO scoreVO = playerService.getUserBestPerformanceSingle(params);
+                byte[] imageBytes = templateRenderer.renderScore(scoreVO, params.getVersion());
+                testOutputTool.saveImageToLocal(imageBytes);
+            }
         }
     }
 
