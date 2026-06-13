@@ -33,7 +33,7 @@ public class AssetDownloader
         if (saveFilePath.exists() && saveFilePath.length() > 0) {
             return true;
         }
-        // 清理可能存在的脏文件
+        // remove 0 bytes file
         if (saveFilePath.exists()) {
             saveFilePath.delete();
         }
@@ -41,6 +41,10 @@ public class AssetDownloader
             SayoData sayoData = dataExtractor.extractSayobotBeatmapSet(sid);
             if (sayoData.getBid_data() == null || sayoData.getBid_data().isEmpty()) {
                 logger.warn("Sayobot beatmapSet {} 无 bid_data, 回退到官方", sid);
+                return false;
+            }
+            if (sayoData.getBid_data().getFirst().getBg() == null || sayoData.getBid_data().getFirst().getBg().isEmpty()) {
+                logger.warn("Sayobot beatmapSet {} 无 BG 数据, 回退到官方", sid);
                 return false;
             }
             String targetUrl = URLBuildUtil.buildURLOfSayobotMapBG(sid, sayoData.getBid_data().getFirst().getBg());

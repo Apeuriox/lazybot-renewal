@@ -19,4 +19,20 @@ public class SayoData implements Serializable
     private Integer favourite_count;
     private Integer language;
     private String genre;
+
+    @Override
+    public String toString()
+    {
+        return "SayoData{" +
+                "bid_data=" + bid_data +
+                ", sid=" + sid +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", creator='" + creator + '\'' +
+                ", creator_id=" + creator_id +
+                ", favourite_count=" + favourite_count +
+                ", language=" + language +
+                ", genre='" + genre + '\'' +
+                '}';
+    }
 }

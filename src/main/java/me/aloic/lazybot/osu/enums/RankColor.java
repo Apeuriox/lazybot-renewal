@@ -13,7 +13,7 @@ public enum RankColor
     D("#f55757", "#512525", "#e43350"),
     S("#02b5c3", "#ffd362", "#ffd25f"),
     X( "#ce1c9d", "#ffd362", "#ffd464"),
-    SH("#02b5c3", "#ddf3f9","#ffd25f"),
+    SH("#02b5c3", "#ddf3f9","#c9eaf5"),
     XH("#ce1c9d", "#ddf3f9","#c9eaf5"),
     F("#3a015b", "#cc6faa","#892f2a");
 
