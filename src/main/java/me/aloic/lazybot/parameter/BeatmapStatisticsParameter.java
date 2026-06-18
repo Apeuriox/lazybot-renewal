@@ -8,6 +8,7 @@ import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -19,6 +20,7 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
     private String modCombination;
     private Integer beatmapId;
     private Double targetAccuracy;
+    private Double approachRate;
 
     public BeatmapStatisticsParameter(String modCombination, Integer beatmapId, String mode, Integer version, String playerName)
     {
@@ -45,8 +47,26 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
     }
     public static BeatmapStatisticsParameter analyzeParameter(List<String> params)
     {
+        // Pre-process: merge "AR" + number at the end into "AR<number>" for unified parsing
+        List<String> processed = new ArrayList<>(params);
+        if (processed.size() >= 2) {
+            int last = processed.size() - 1;
+            if (processed.get(last - 1).equalsIgnoreCase("AR")
+                    && processed.get(last).matches("\\d+(\\.\\d+)?")) {
+                processed.set(last - 1, "AR" + processed.get(last));
+                processed.remove(last);
+            }
+        }
+
         BeatmapStatisticsParameter result = new BeatmapStatisticsParameter();
-        ArgumentParser p = ArgumentParser.of(params);
+        ArgumentParser p = ArgumentParser.of(processed);
+
+        // Parse AR override (must be at the end), format: "AR1" or "AR 1", values 0-11
+        p.tryPop(Parsers.AR_COMBINED, m -> {
+            double ar = Double.parseDouble(m.group(1));
+            if (ar < 0 || ar > 11) throw new IllegalArgumentException("AR值必须在0-11之间");
+            result.setApproachRate(ar);
+        });
 
         p.tryPopIf(Parsers.NUMBER,
                 m -> Double.parseDouble(m.group()) <= 100,

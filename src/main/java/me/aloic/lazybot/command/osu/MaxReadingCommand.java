@@ -35,7 +35,7 @@ public class MaxReadingCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
-    private static final String MAXREADING_LABEL = "/MaxReading: Recalc Bps with max reading bonus. DT/NC→DA:AR10 HT/DC→DA:AR0 else→DA:AR11. HD kept.";
+    private static final String MAXREADING_LABEL = "/MaxReading: Recalc Bps with max reading bonus. HD kept.";
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

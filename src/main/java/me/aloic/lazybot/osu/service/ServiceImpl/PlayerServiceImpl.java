@@ -18,6 +18,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
@@ -146,6 +147,11 @@ public class PlayerServiceImpl implements PlayerService
             result.setImaginaryMods(OsuToolsUtil.wireModEntities(List.of(params.getModCombination().split("(?<=\\G.{2})"))));
         else
             result.setImaginaryMods(new ArrayList<>());
+        if (params.getApproachRate() != null) {
+            ModSetting daSetting = new ModSetting();
+            daSetting.setApproach_rate(params.getApproachRate());
+            result.getImaginaryMods().add(new Mod("DA", daSetting));
+        }
         RosuUtil.setupBeatmapStatistics(result);
 
         double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);

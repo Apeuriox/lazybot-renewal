@@ -37,7 +37,7 @@ public class NoReadingCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
-    private static final String NOREADING_LABEL = "/NoReading: Recalc Bps without read bonus. DT/NC→DA:AR8.5 HT/DC→DA:AR10 HR/EZ→DA(OD/CS) HD removed.";
+    private static final String NOREADING_LABEL = "/NoReading: Recalc Bps without read bonus. HD removed.";
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

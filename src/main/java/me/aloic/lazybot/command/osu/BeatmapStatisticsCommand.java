@@ -76,12 +76,14 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
     {
         return HelpFormatter.format(
                 new CommandHelp("Beatmap Statistics","Map, M",
-                        "查询指定地图在指定Mod组合下的参数",
+                        "查询指定地图在指定Mod组合下的参数，支持AR覆写",
                         "Aloic", "Slayemus, Aloic", "2026-04-13")
-                        .addExample("/Map 4889657+HDHR 98.5")
-                        .addExample("/M 4889657")
+                        .addExample("/Map 4889657+HDHR 98.5 AR9.5")
+                        .addExample("/M 4889657 AR 10")
+                        .addExample("/Map 4889657")
                         .addOption(new CommandParameter("BID","查询的地图ID", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Mod","Mod过滤项", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("TargetAccuracy","申请额外重算的Acc", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("TargetAccuracy","申请额外重算的Acc", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("AR","覆写AR值(0-11)，格式AR9.5或AR 10，仅末尾支持", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

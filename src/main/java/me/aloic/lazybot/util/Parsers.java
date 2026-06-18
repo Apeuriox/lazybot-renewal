@@ -26,5 +26,11 @@ public final class Parsers
     /** 整数或小数, 如 "96" 或 "98.5" — 用于范围有限的数值参数 (如 accuracy 0-100) */
     public static final Pattern NUMBER = Pattern.compile("^\\d+(\\.\\d+)?$");
 
+    /** "AR9.5" → group(1)=9.5 — AR override combined format */
+    public static final Pattern AR_COMBINED = Pattern.compile("^(?i)AR(\\d+(\\.\\d+)?)$");
+
+    /** "AR" → standalone AR prefix, number follows as next arg */
+    public static final Pattern AR_PREFIX = Pattern.compile("^(?i)AR$");
+
     private Parsers() {}
 }
