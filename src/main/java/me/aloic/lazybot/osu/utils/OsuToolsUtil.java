@@ -9,6 +9,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.util.CommonTool;
@@ -242,6 +243,280 @@ public class OsuToolsUtil
                 throw new LazybotRuntimeException("重算成绩详情时出错, 请重试");
             }
         }
+    }
+
+    /**
+     * Modify score mods to remove reading bonus, then recalculate pp (BpIf pattern).
+     * - If DT/NC present: add DA mod with approach_rate = 8.5
+     * - If HT/DC present: add DA mod with approach_rate = 10.0
+     * - If HD present: remove it entirely
+     * - If HR/EZ present: remove them, but embed their OD/CS/HP effects into DA
+     * Swaps pp: old pp → ppDetailsLocal.currentPP, new pp → scoreVO.pp.
+     * Original mods are restored after recalculation for display.
+     */
+    public void setupNoReadingPPStats(ScoreVO scoreVO)
+    {
+        scoreVO.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
+        List<Mod> originalMods = new ArrayList<>(scoreVO.getModJSON());
+        List<Mod> modifiedMods = new ArrayList<>(scoreVO.getModJSON());
+
+        boolean hasDT = modifiedMods.stream().anyMatch(m -> "DT".equals(m.getAcronym()) || "NC".equals(m.getAcronym()));
+        boolean hasHT = modifiedMods.stream().anyMatch(m -> "HT".equals(m.getAcronym()) || "DC".equals(m.getAcronym()));
+        boolean hasHR = modifiedMods.stream().anyMatch(m -> "HR".equals(m.getAcronym()));
+        boolean hasEZ = modifiedMods.stream().anyMatch(m -> "EZ".equals(m.getAcronym()));
+
+        // Remove HD mod — no reading bonus without Hidden
+        modifiedMods.removeIf(m -> "HD".equals(m.getAcronym()));
+
+        // Resolve or create DA mod (shared across DT/HT/HR/EZ handling)
+        Mod daMod = modifiedMods.stream().filter(m -> "DA".equals(m.getAcronym())).findFirst().orElse(null);
+        if (daMod != null) {
+            if (daMod.getSettings() == null) {
+                daMod.setSettings(new ModSetting());
+            }
+        }
+
+        // Handle HR: embed OD/CS/HP effects into DA, then remove HR
+        if (hasHR) {
+            if (daMod == null) {
+                daMod = new Mod("DA", new ModSetting());
+                modifiedMods.add(daMod);
+            }
+            BeatmapVO beatmap = scoreVO.getBeatmap();
+            if (beatmap.getAccuracy() != null)
+                daMod.getSettings().setOverall_difficulty(Math.min(beatmap.getAccuracy() * 1.4, 10.0));
+            if (beatmap.getCs() != null)
+                daMod.getSettings().setCircle_size(Math.min(beatmap.getCs() * 1.3, 10.0));
+            if (beatmap.getDrain() != null)
+                daMod.getSettings().setDrain_rate(Math.min(beatmap.getDrain() * 1.4, 10.0));
+            modifiedMods.removeIf(m -> "HR".equals(m.getAcronym()));
+        }
+
+        // Handle EZ: embed OD/CS/HP effects into DA (won't override HR since they're incompatible)
+        if (hasEZ) {
+            if (daMod == null) {
+                daMod = new Mod("DA", new ModSetting());
+                modifiedMods.add(daMod);
+            }
+            BeatmapVO beatmap = scoreVO.getBeatmap();
+            if (daMod.getSettings().getOverall_difficulty() == null && beatmap.getAccuracy() != null)
+                daMod.getSettings().setOverall_difficulty(Math.max(beatmap.getAccuracy() * 0.5, 0.0));
+            if (daMod.getSettings().getCircle_size() == null && beatmap.getCs() != null)
+                daMod.getSettings().setCircle_size(Math.max(beatmap.getCs() * 0.5, 0.0));
+            if (daMod.getSettings().getDrain_rate() == null && beatmap.getDrain() != null)
+                daMod.getSettings().setDrain_rate(Math.max(beatmap.getDrain() * 0.5, 0.0));
+            modifiedMods.removeIf(m -> "EZ".equals(m.getAcronym()));
+        }
+
+        // Set DA approach_rate for DT/HT, neutralizing AR-based reading bonus
+        if (hasDT || hasHT) {
+            if (daMod == null) {
+                daMod = new Mod("DA", new ModSetting());
+                modifiedMods.add(daMod);
+            }
+            if (hasDT) {
+                daMod.getSettings().setApproach_rate(8.5);
+            }
+            if (hasHT) {
+                daMod.getSettings().setApproach_rate(10.0);
+            }
+        }
+
+        // Apply modified mods for recalculation
+        scoreVO.setModJSON(modifiedMods);
+        try {
+            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+        } catch (Exception e) {
+            scoreVO.setModJSON(originalMods);
+            throw new LazybotRuntimeException("重算成绩详情时出错, 请重试");
+        }
+
+        // BpIf swap pattern: old pp → currentPP, new pp → scoreVO.pp
+        if (scoreVO.getPpDetailsLocal().getStar() != null) {
+            scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
+            double newCurrentPp = scoreVO.getPpDetailsLocal().getCurrentPP();
+            scoreVO.getPpDetailsLocal().setCurrentPP(scoreVO.getPp());
+            scoreVO.setPp(newCurrentPp);
+        }
+
+        // Restore original mods for display
+        scoreVO.setModJSON(originalMods);
+    }
+
+    public List<ScoreVO> setupNoReadingScoreList(PlayerInfoVO info, List<ScoreVO> scoreList)
+    {
+        double originalRawPp = CommonTool.totalPpCalculator(scoreList);
+
+        List<CompletableFuture<ScoreVO>> futureList = scoreList.stream()
+                .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
+                    try {
+                        setupNoReadingPPStats(scoreVO);
+                    } catch (Exception e) {
+                        throw new LazybotRuntimeException("[NoReading指令] 发现异常ScoreVO对象: " + scoreVO);
+                    }
+                    return scoreVO;
+                }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR)).toList();
+
+        scoreList = futureList.stream()
+                .map(CompletableFuture::join)
+                .sorted(Comparator.comparing(ScoreVO::getPp).reversed()).toList();
+
+        double fixedRawPp = CommonTool.totalPpCalculator(scoreList);
+        double bonusPp = Math.abs(info.getPerformancePoint() - originalRawPp);
+        int difference = (int) Math.round(fixedRawPp - originalRawPp);
+        String differenceStr = difference > 0 ? "+" + difference : String.valueOf(difference);
+        fixedRawPp += bonusPp;
+        StringBuilder sb = new StringBuilder(String.valueOf(Math.round(info.getPerformancePoint())));
+        sb.append(" -> ")
+                .append(Math.round(fixedRawPp))
+                .append(" (")
+                .append(differenceStr)
+                .append(")");
+        info.setFixedPPString(sb.toString());
+
+        return scoreList;
+    }
+
+    /**
+     * Modify score mods to maximize reading bonus, then recalculate pp (BpIf pattern).
+     * - If DT/NC present: add DA with approach_rate = 10
+     * - If HT/DC present: add DA with approach_rate = 0
+     * - If neither DT/HT nor HR: add DA with approach_rate = 11
+     * - If HR present: remove it, embed OD/CS/HP into DA, AR = 11
+     * - If EZ present: remove it, embed OD/CS/HP into DA
+     * - HD is kept unchanged (HD has its own reading bonus)
+     * Swaps pp: old pp → ppDetailsLocal.currentPP, new pp → scoreVO.pp.
+     * Original mods are restored after recalculation for display.
+     */
+    public void setupMaxReadingPPStats(ScoreVO scoreVO)
+    {
+        scoreVO.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
+        List<Mod> originalMods = new ArrayList<>(scoreVO.getModJSON());
+        List<Mod> modifiedMods = new ArrayList<>(scoreVO.getModJSON());
+
+        boolean hasDT = modifiedMods.stream().anyMatch(m -> "DT".equals(m.getAcronym()) || "NC".equals(m.getAcronym()));
+        boolean hasHT = modifiedMods.stream().anyMatch(m -> "HT".equals(m.getAcronym()) || "DC".equals(m.getAcronym()));
+        boolean hasHR = modifiedMods.stream().anyMatch(m -> "HR".equals(m.getAcronym()));
+        boolean hasEZ = modifiedMods.stream().anyMatch(m -> "EZ".equals(m.getAcronym()));
+
+        // HD is kept — Hidden has its own reading bonus, do not remove
+
+        // Resolve or create DA mod
+        Mod daMod = modifiedMods.stream().filter(m -> "DA".equals(m.getAcronym())).findFirst().orElse(null);
+        if (daMod != null) {
+            if (daMod.getSettings() == null) {
+                daMod.setSettings(new ModSetting());
+            }
+        }
+
+        // Handle HR: embed OD/CS/HP effects into DA, then remove HR
+        if (hasHR) {
+            if (daMod == null) {
+                daMod = new Mod("DA", new ModSetting());
+                modifiedMods.add(daMod);
+            }
+            BeatmapVO beatmap = scoreVO.getBeatmap();
+            if (beatmap.getAccuracy() != null)
+                daMod.getSettings().setOverall_difficulty(Math.min(beatmap.getAccuracy() * 1.4, 10.0));
+            if (beatmap.getCs() != null)
+                daMod.getSettings().setCircle_size(Math.min(beatmap.getCs() * 1.3, 10.0));
+            if (beatmap.getDrain() != null)
+                daMod.getSettings().setDrain_rate(Math.min(beatmap.getDrain() * 1.4, 10.0));
+            modifiedMods.removeIf(m -> "HR".equals(m.getAcronym()));
+        }
+
+        // Handle EZ: embed OD/CS/HP effects into DA
+        if (hasEZ) {
+            if (daMod == null) {
+                daMod = new Mod("DA", new ModSetting());
+                modifiedMods.add(daMod);
+            }
+            BeatmapVO beatmap = scoreVO.getBeatmap();
+            if (daMod.getSettings().getOverall_difficulty() == null && beatmap.getAccuracy() != null)
+                daMod.getSettings().setOverall_difficulty(Math.max(beatmap.getAccuracy() * 0.5, 0.0));
+            if (daMod.getSettings().getCircle_size() == null && beatmap.getCs() != null)
+                daMod.getSettings().setCircle_size(Math.max(beatmap.getCs() * 0.5, 0.0));
+            if (daMod.getSettings().getDrain_rate() == null && beatmap.getDrain() != null)
+                daMod.getSettings().setDrain_rate(Math.max(beatmap.getDrain() * 0.5, 0.0));
+            modifiedMods.removeIf(m -> "EZ".equals(m.getAcronym()));
+        }
+
+        // Set DA approach_rate to maximize reading bonus
+        if (hasDT || hasHT || hasHR || hasEZ) {
+            if (daMod == null) {
+                daMod = new Mod("DA", new ModSetting());
+                modifiedMods.add(daMod);
+            }
+            if (hasHT) {
+                daMod.getSettings().setApproach_rate(0.0);
+            } else if (hasDT) {
+                daMod.getSettings().setApproach_rate(10.0);
+            } else {
+                // HR/EZ only, no speed mod — set AR=11 to max reading bonus
+                daMod.getSettings().setApproach_rate(11.0);
+            }
+        } else {
+            // No DT/HT/HR/EZ — pure nomod: set AR=11 directly
+            if (daMod == null) {
+                daMod = new Mod("DA", new ModSetting());
+                modifiedMods.add(daMod);
+            }
+            daMod.getSettings().setApproach_rate(11.0);
+        }
+
+        // Apply modified mods for recalculation
+        scoreVO.setModJSON(modifiedMods);
+        try {
+            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+        } catch (Exception e) {
+            scoreVO.setModJSON(originalMods);
+            throw new LazybotRuntimeException("重算成绩详情时出错, 请重试");
+        }
+
+        // BpIf swap pattern: old pp → currentPP, new pp → scoreVO.pp
+        if (scoreVO.getPpDetailsLocal().getStar() != null) {
+            scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
+            double newCurrentPp = scoreVO.getPpDetailsLocal().getCurrentPP();
+            scoreVO.getPpDetailsLocal().setCurrentPP(scoreVO.getPp());
+            scoreVO.setPp(newCurrentPp);
+        }
+
+        // Restore original mods for display (including HD)
+        scoreVO.setModJSON(originalMods);
+    }
+
+    public List<ScoreVO> setupMaxReadingScoreList(PlayerInfoVO info, List<ScoreVO> scoreList)
+    {
+        double originalRawPp = CommonTool.totalPpCalculator(scoreList);
+
+        List<CompletableFuture<ScoreVO>> futureList = scoreList.stream()
+                .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
+                    try {
+                        setupMaxReadingPPStats(scoreVO);
+                    } catch (Exception e) {
+                        throw new LazybotRuntimeException("[MaxReading指令] 发现异常ScoreVO对象: " + scoreVO);
+                    }
+                    return scoreVO;
+                }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR)).toList();
+
+        scoreList = futureList.stream()
+                .map(CompletableFuture::join)
+                .sorted(Comparator.comparing(ScoreVO::getPp).reversed()).toList();
+
+        double fixedRawPp = CommonTool.totalPpCalculator(scoreList);
+        double bonusPp = Math.abs(info.getPerformancePoint() - originalRawPp);
+        int difference = (int) Math.round(fixedRawPp - originalRawPp);
+        String differenceStr = difference > 0 ? "+" + difference : String.valueOf(difference);
+        fixedRawPp += bonusPp;
+        StringBuilder sb = new StringBuilder(String.valueOf(Math.round(info.getPerformancePoint())));
+        sb.append(" -> ")
+                .append(Math.round(fixedRawPp))
+                .append(" (")
+                .append(differenceStr)
+                .append(")");
+        info.setFixedPPString(sb.toString());
+
+        return scoreList;
     }
 
     public static PlayerInfoVO setupPlayerInfoVO(PlayerInfoDTO playerInfoDTO)

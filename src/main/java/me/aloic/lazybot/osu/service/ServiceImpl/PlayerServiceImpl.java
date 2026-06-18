@@ -507,6 +507,41 @@ public class PlayerServiceImpl implements PlayerService
         noChokeListVO.setScoreList(noChokeListVO.getScoreList().stream().limit(51).collect(Collectors.toList()));
         return noChokeListVO;
     }
+
+    @Override
+    public PlayerScoreList noReading(GeneralParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+
+        List<ScoreLazerDTO> originalScoreArray = dataExtractor.extractUserBestAll(
+                String.valueOf(playerInfoDTO.getId()), params.getMode());
+
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        List<ScoreVO> scoreList = osuToolsUtil.setupNoReadingScoreList(
+                info,
+                TransformerUtil.scoreTransformForList(originalScoreArray));
+        return new PlayerScoreList(
+                scoreList.stream().limit(51).collect(Collectors.toList()),
+                info);
+    }
+
+    @Override
+    public PlayerScoreList maxReading(GeneralParameter params)
+    {
+        PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
+
+        List<ScoreLazerDTO> originalScoreArray = dataExtractor.extractUserBestAll(
+                String.valueOf(playerInfoDTO.getId()), params.getMode());
+
+        PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        List<ScoreVO> scoreList = osuToolsUtil.setupMaxReadingScoreList(
+                info,
+                TransformerUtil.scoreTransformForList(originalScoreArray));
+        return new PlayerScoreList(
+                scoreList.stream().limit(51).collect(Collectors.toList()),
+                info);
+    }
+
     @Override
     public PlayerInfoVO getPlayerInfoVO(GeneralParameter params) {
         PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
