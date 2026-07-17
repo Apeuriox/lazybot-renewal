@@ -25,7 +25,7 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"bps","bs","bssm"})
+@LazybotCommandMapping({"bps","bs"})
 @Component
 public class BpSeriesCommand implements LazybotSlashCommand
 {

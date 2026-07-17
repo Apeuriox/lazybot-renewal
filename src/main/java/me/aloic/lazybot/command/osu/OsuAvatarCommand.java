@@ -4,6 +4,13 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.command.core.CommandDefinition;
+import me.aloic.lazybot.command.core.CommandOptionDefinition;
+import me.aloic.lazybot.command.core.CommandRequest;
+import me.aloic.lazybot.command.core.CommandResult;
+import me.aloic.lazybot.command.core.PlatformIndependentCommand;
+import me.aloic.lazybot.command.identity.CommandIdentityService;
+import me.aloic.lazybot.command.parameter.BoundParameterFactory;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
@@ -23,9 +30,11 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @LazybotCommandMapping({"oa","avatar"})
-public class OsuAvatarCommand implements LazybotSlashCommand
+public class OsuAvatarCommand implements LazybotSlashCommand, PlatformIndependentCommand
 {
     @Resource
     private PlayerService playerService;
@@ -35,6 +44,24 @@ public class OsuAvatarCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+    @Resource
+    private CommandIdentityService commandIdentityService;
+    @Resource
+    private BoundParameterFactory boundParameterFactory;
+
+    @Override
+    public CommandDefinition definition() {
+        return CommandDefinition.discord(
+                "oa",
+                List.of("avatar"),
+                "生成指定玩家的osu头像",
+                List.of(
+                        CommandOptionDefinition.string("user", "指定查询的用户", false),
+                        CommandOptionDefinition.string("mode", "指定查询的模式", false),
+                        CommandOptionDefinition.integer("version", "指定生成图像的风格", false)
+                )
+        );
+    }
 
 
     @Override
@@ -69,8 +96,21 @@ public class OsuAvatarCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
             testOutputTool.saveImageToLocal(
-                    RendererDistributor.renderOsuAvatar(
-                            playerService.getPlayerInfoVO(setupParameter(event, proxy.getAccessToken(event))),event.getScorePanelVersion()));
+                     RendererDistributor.renderOsuAvatar(
+                             playerService.getPlayerInfoVO(setupParameter(event, proxy.getAccessToken(event))),event.getScorePanelVersion()));
+    }
+
+    @Override
+    public CommandResult execute(CommandRequest request) throws Exception {
+        GeneralParameter params = boundParameterFactory.general(
+                request,
+                commandIdentityService.requireOsuIdentity(request.context())
+        );
+        byte[] image = RendererDistributor.renderOsuAvatar(
+                playerService.getPlayerInfoVO(params),
+                params.getVersion()
+        );
+        return new CommandResult.Image(image, "image/jpeg", "lazybot-avatar.jpg", null);
     }
     private GeneralParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {

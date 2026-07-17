@@ -12,9 +12,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public enum CommandEnum {
-    HELP(1, "help", "帮助面板指令",
-            true, null),
-
     LINK(2, "link", "osu授权认证指令",
             true, List.of(new CommandOption(OptionType.STRING, "username", "绑定指定用户名", true, false))),
 
@@ -39,12 +36,6 @@ public enum CommandEnum {
                     new CommandOption(OptionType.INTEGER, "index", "指定查询的位置", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
                     new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格", false, false))),
-
-    BP_LIST(7, "bplist", "查询指定用户的指定from到to的bp", true,
-            List.of(new CommandOption(OptionType.INTEGER, "from", "指定开始的位置", true, false),
-            new CommandOption(OptionType.INTEGER, "to", "指定结束的位置", true, false),
-                    new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
-            new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
 
     BP(8, "bp", "查询指定用户的指定bp", true,
             List.of( new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
@@ -72,9 +63,6 @@ public enum CommandEnum {
     PP_MAP(15, "ppmap", "查询Osu track数据并绘制散点图", true,
             List.of( new CommandOption(OptionType.STRING, "user", "指定用户", false, false),
                     new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
-    RECOMMEND_DIFFICULTY(16, "rd", "查询指定模式下的推荐星数", true,
-            List.of( new CommandOption(OptionType.STRING, "user", "指定用户", false, false),
-                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
     BP_IF(17, "bpif", "按照指定mod重算全部bp", true,
             List.of( new CommandOption(OptionType.STRING, "operator", "指定运算符: +为插入, -为删除, ！为替换", true, false),
                     new CommandOption(OptionType.STRING, "mods", "指定mod组合，使用缩写且不含空格，例: HDHR, 冲突以及重复添加会被忽略", true, false),
@@ -92,8 +80,6 @@ public enum CommandEnum {
     UPDATE(19, "update", "更新指定类型缓存数据", true,
             List.of(new CommandOption(OptionType.INTEGER, "type", "指定类型", true, false),
                     new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false))),
-    TIPS(19, "tips", "获取一个Aloic的小提示", true,
-            List.of(new CommandOption(OptionType.INTEGER, "id", "指定id", false, false))),
     SET_MODE(20, "setmode", "更新默认模式", true,
             List.of(new CommandOption(OptionType.STRING, "mode", "指定模式", true, false))),
     VERIFY_MAP(20, "verifymap", "(需要权限) 验证.osu缓存是否过期", true,

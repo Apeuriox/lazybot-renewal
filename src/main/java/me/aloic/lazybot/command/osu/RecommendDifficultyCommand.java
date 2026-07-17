@@ -1,86 +1,67 @@
 package me.aloic.lazybot.command.osu;
 
-import com.mikuac.shiro.common.utils.MsgUtils;
-import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
-import me.aloic.lazybot.annotation.LazybotCommandMapping;
-import me.aloic.lazybot.command.LazybotSlashCommand;
-import me.aloic.lazybot.component.CommandDatabaseProxy;
-import me.aloic.lazybot.component.TestOutputTool;
-import me.aloic.lazybot.discord.util.ErrorResultHandler;
-import me.aloic.lazybot.discord.util.OptionMappingTool;
+import me.aloic.lazybot.command.core.CommandDefinition;
+import me.aloic.lazybot.command.core.CommandOptionDefinition;
+import me.aloic.lazybot.command.core.CommandRequest;
+import me.aloic.lazybot.command.core.CommandResult;
+import me.aloic.lazybot.command.core.PlatformIndependentCommand;
+import me.aloic.lazybot.command.identity.CommandIdentityService;
+import me.aloic.lazybot.command.parameter.BoundParameterFactory;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.parameter.GeneralParameter;
-import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
-@LazybotCommandMapping({"rd","recommenddifficulty"})
-public class RecommendDifficultyCommand implements LazybotSlashCommand
-{
-    @Resource
-    private AnalysisService analysisService;
-    @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+public class RecommendDifficultyCommand implements PlatformIndependentCommand {
+    private final AnalysisService analysisService;
+    private final CommandIdentityService commandIdentityService;
+    private final BoundParameterFactory boundParameterFactory;
 
-    @Override
-    public void execute(SlashCommandInteractionEvent event) throws Exception
-    {
-        event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
-        if (tokenPO == null) {
-            ErrorResultHandler.createNotBindOsuError(event);
-            return;
-        }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
-        String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
-        GeneralParameter params=new GeneralParameter(playerName,
-                OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
-        params.validateParams();
-        event.getHook().sendMessage(analysisService.recommendedDifficulty(params)).queue();
+    public RecommendDifficultyCommand(
+            AnalysisService analysisService,
+            CommandIdentityService commandIdentityService,
+            BoundParameterFactory boundParameterFactory
+    ) {
+        this.analysisService = analysisService;
+        this.commandIdentityService = commandIdentityService;
+        this.boundParameterFactory = boundParameterFactory;
     }
 
     @Override
-    public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
-    {
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
-                MsgUtils.builder().text(
-                        analysisService.recommendedDifficulty(
-                                GeneralParameter.setupParameter(event,
-                                        proxy.getAccessToken(event))
-                        )
-                ).build(),false);
-    }
-
-    @Override
-    public void execute(LazybotSlashCommandEvent event) throws Exception
-    {
-        testOutputTool.writeStringToFile(analysisService.recommendedDifficulty(
-                GeneralParameter.setupParameter(event, proxy.getAccessToken(event))
+    public CommandDefinition definition() {
+        return CommandDefinition.discord(
+                "rd",
+                List.of("recommenddifficulty"),
+                "查询指定模式下的推荐星数",
+                List.of(
+                        CommandOptionDefinition.string("user", "指定用户", false),
+                        CommandOptionDefinition.string("mode", "指定查询的模式", false)
                 )
         );
     }
+
     @Override
-    public String getHelp()
-    {
+    public CommandResult execute(CommandRequest request) throws Exception {
+        GeneralParameter params = boundParameterFactory.general(
+                request,
+                commandIdentityService.requireOsuIdentity(request.context())
+        );
+        return new CommandResult.Text(analysisService.recommendedDifficulty(params));
+    }
+
+    @Override
+    public String getHelp() {
         return HelpFormatter.format(
-                new CommandHelp("Recommend Difficulty","rd, recommenddifficulty",
+                new CommandHelp("Recommend Difficulty", "rd, recommenddifficulty",
                         "查询指定用户的推荐星级，上为ppy算法，下为改进版",
                         "Aloic", null, "2025-01-07")
                         .addExample("/Rd")
                         .addExample("/Rd Aloic")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName", "查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

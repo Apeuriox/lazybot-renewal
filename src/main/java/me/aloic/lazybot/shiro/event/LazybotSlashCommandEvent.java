@@ -3,6 +3,7 @@ import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.command.core.CommandContext;
 import me.aloic.lazybot.osu.enums.OsuMode;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class LazybotSlashCommandEvent
    private OsuMode osuMode;
    //only for test use
    private String commandString;
+   // Transitional bridge. New platform adapters should provide this context.
+   private CommandContext commandContext;
 
    public LazybotSlashCommandEvent(GroupMessageEvent event) {
       this.messageEvent = event;

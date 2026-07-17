@@ -21,13 +21,16 @@ public class LazybotSlashCommandRegistry
             LazybotCommandMapping mapping = command.getClass().getAnnotation(LazybotCommandMapping.class);
             if (mapping != null) {
                 for(String commandName : mapping.value()) {
-                    commandMap.put(commandName, command);
+                    LazybotSlashCommand previous = commandMap.putIfAbsent(commandName.toLowerCase(), command);
+                    if (previous != null && previous != command) {
+                        throw new IllegalStateException("Duplicate legacy command mapping: " + commandName);
+                    }
                 }
             }
         }
     }
 
     public LazybotSlashCommand getCommand(String commandName) {
-        return commandMap.get(commandName);
+        return commandMap.get(commandName.toLowerCase());
     }
 }

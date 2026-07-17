@@ -1,4 +1,5 @@
 package me.aloic.lazybot.osu.monitor;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
@@ -42,18 +43,11 @@ public class TokenMonitor
     @Scheduled(cron = "0 0 0/12 * * ? ")
     public void refreshClientToken()
     {
-        try {
+        Map<String, String> header = setupOsuHeader();
+        String queryParams = setupOsuQueryParams();
+        try (HttpResponse resp = HttpUtil.createPost(TOKEN_URL).addHeaders(header).body(queryParams).execute()) {
             logger.info("Getting Token for client");
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("client_id", clientId);
-            jsonObject.put("client_secret", clientSecret);
-            jsonObject.put("grant_type", "client_credentials");
-            jsonObject.put("scope", "public");
-            Map<String, String > heads = new HashMap<>();
-            heads.put("Accept", "application/json");
-            heads.put("Content-Type", "application/json;charset=UTF-8");
-            AccessTokenDTO tokenDTO = JSON.parseObject(HttpUtil.createPost(TOKEN_URL).addHeaders(heads).body(jsonObject.toString()).execute().body(),
-                    AccessTokenDTO.class);
+            AccessTokenDTO tokenDTO = JSON.parseObject(resp.body(), AccessTokenDTO.class);
             logger.info("successfully created client token: {}", tokenDTO.getAccess_token());
             token= tokenDTO.getAccess_token();
         }
@@ -65,12 +59,9 @@ public class TokenMonitor
     @Scheduled(cron = "0 0 0/12 * * ? ")
     public void refreshPPPlusClientToken()
     {
-        String url =  URLBuildUtil.buildURLOfLazybotToken(lazybotClientId,lazybotClientPassword);
-        try {
-            LazybotWebResult<String> lazybotTokenJSON = JSON.parseObject(
-                    HttpUtil.createPost(url).execute().body(),
-                    new TypeReference<LazybotWebResult<String>>() {}
-            );
+        String url = URLBuildUtil.buildURLOfLazybotToken(lazybotClientId,lazybotClientPassword);
+        try(HttpResponse resp = HttpUtil.createPost(url).execute()) {
+            LazybotWebResult<String> lazybotTokenJSON = JSON.parseObject(resp.body(), new TypeReference<LazybotWebResult<String>>() {});
             lazybotToken= lazybotTokenJSON.getData();
             logger.info("Lazybot token created: {}",lazybotTokenJSON.getData());
         }
@@ -91,6 +82,21 @@ public class TokenMonitor
         }
         return token;
     }
-
+    private  Map<String, String > setupOsuHeader()
+    {
+        Map<String, String > heads = new HashMap<>();
+        heads.put("Accept", "application/json");
+        heads.put("Content-Type", "application/json;charset=UTF-8");
+        return heads;
+    }
+    private String setupOsuQueryParams()
+    {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("client_id", clientId);
+        jsonObject.put("client_secret", clientSecret);
+        jsonObject.put("grant_type", "client_credentials");
+        jsonObject.put("scope", "public");
+        return jsonObject.toString();
+    }
 
 }

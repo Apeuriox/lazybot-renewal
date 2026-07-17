@@ -63,8 +63,7 @@ public class BplistParameter extends LazybotCommandParameter
         else if (params.size() > 1)
         {
             setupParameterIndexes(parameter, params.getLast());
-            params.removeLast();
-            parameter.setPlayerName(String.join(" ", params).trim());
+            parameter.setPlayerName(String.join(" ", params.subList(0, params.size() - 1)).trim());
         }
         else throw new LazybotRuntimeException("请检查输入参数");
         return parameter;

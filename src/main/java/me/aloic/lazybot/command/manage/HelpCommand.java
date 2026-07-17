@@ -1,57 +1,43 @@
 package me.aloic.lazybot.command.manage;
 
-import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
-import me.aloic.lazybot.annotation.LazybotCommandMapping;
-import me.aloic.lazybot.command.LazybotSlashCommand;
-import me.aloic.lazybot.component.TestOutputTool;
+import me.aloic.lazybot.command.core.CommandDefinition;
+import me.aloic.lazybot.command.core.CommandRequest;
+import me.aloic.lazybot.command.core.CommandResult;
+import me.aloic.lazybot.command.core.PlatformIndependentCommand;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
-import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.CommandResultHandler;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.List;
 
-@LazybotCommandMapping({"help"})
 @Component
-public class HelpCommand implements LazybotSlashCommand
-{
-    @Resource
-    private TestOutputTool testOutputTool;
+public class HelpCommand implements PlatformIndependentCommand {
+    private static final String HELP_CAPTION = "[Lazybot] 帮助页面现已合并至细分指令，输入/指令名 *h即可查询，例/card *h，进入官方群以获取更多信息，具体请看下面图片";
 
     @Override
-    public void execute(SlashCommandInteractionEvent event) throws Exception {
-        event.deferReply().queue();
-        Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
-        CommandResultHandler.uploadImageToDiscord(event,Files.readAllBytes(Paths.get(filePath.toUri())));
+    public CommandDefinition definition() {
+        return CommandDefinition.discord("help", List.of(), "帮助面板指令", List.of());
     }
 
     @Override
-    public void execute(Bot bot, LazybotSlashCommandEvent event)
-    {
+    public CommandResult execute(CommandRequest request) {
+        return new CommandResult.Image(loadHelpImage(), "image/jpeg", "lazybot-help.jpg", HELP_CAPTION);
+    }
+
+    @Override
+    public String getHelp() {
+        return "[Lazybot] 这是帮助的帮助文档";
+    }
+
+    private byte[] loadHelpImage() {
         Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
-        try{
-            CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,Files.readAllBytes(Paths.get(filePath.toUri())),"[Lazybot] 帮助页面现已合并至细分指令，输入/指令名 *h即可查询，例/card *h，进入官方群以获取更多信息，具体请看下面图片");
+        try {
+            return Files.readAllBytes(filePath);
         }
         catch (Exception e) {
-            throw new LazybotRuntimeException("读取Help页面失败");
+            throw new LazybotRuntimeException("读取Help页面失败", e);
         }
-
-    }
-
-    @Override
-    public void execute(LazybotSlashCommandEvent event) throws Exception
-    {
-        Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
-        testOutputTool.saveImageToLocal(Files.readAllBytes(Paths.get(filePath.toUri())));
-    }
-    @Override
-    public String getHelp()
-    {
-        return "[Lazybot] 这是帮助的帮助文档";
     }
 }

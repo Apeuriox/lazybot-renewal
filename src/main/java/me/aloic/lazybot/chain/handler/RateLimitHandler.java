@@ -34,14 +34,21 @@ public class RateLimitHandler implements CommandHandlerInterface {
 
         if (!rateLimitManager.tryConsume(key, rateLimit)) {
             testOutputTool.writeStringToFile("[Lazybot] 达到速率限制，请等待20秒");
+            return;
         }
         chain.doHandle(event, command);
     }
 
     private String buildKey(LazybotRateLimit.Scope scope, LazybotSlashCommandEvent event) {
+        String userId = event.getCommandContext() != null
+                ? event.getCommandContext().userId()
+                : String.valueOf(event.getMessageEvent().getSender().getUserId());
+        String channelId = event.getCommandContext() != null
+                ? event.getCommandContext().channelId()
+                : String.valueOf(event.getMessageEvent().getGroupId());
         return switch (scope) {
-            case USER -> "user:" + event.getMessageEvent().getSender().getUserId() + ":cmd:" + event.getCommandType();
-            case CHANNEL -> "channel:" + event.getMessageEvent().getGroupId() + ":cmd:" + event.getCommandType();
+            case USER -> "user:" + userId + ":cmd:" + event.getCommandType();
+            case CHANNEL -> "channel:" + channelId + ":cmd:" + event.getCommandType();
             case GLOBAL -> "global:cmd:" + event.getCommandType();
         };
     }

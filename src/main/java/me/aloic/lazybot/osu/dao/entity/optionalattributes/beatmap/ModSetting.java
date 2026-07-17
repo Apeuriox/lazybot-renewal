@@ -23,4 +23,5 @@ public class ModSetting implements Serializable
         this.speed_change=speed_change;
     }
 
+
 }

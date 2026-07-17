@@ -72,10 +72,21 @@ public class CommandDatabaseProxy
     }
     private Long determineIdentity(LazybotSlashCommandEvent event)
     {
-        Long identity;
-        if (testEnabled) identity=testIdentity;
-        else identity=event.getMessageEvent().getSender().getUserId();
-        return identity;
+        if (event.getCommandContext() != null) {
+            try {
+                return Long.parseLong(event.getCommandContext().userId());
+            }
+            catch (NumberFormatException e) {
+                throw new LazybotRuntimeException("当前命令用户ID不是有效数字");
+            }
+        }
+        if (event.getMessageEvent() != null) {
+            return event.getMessageEvent().getSender().getUserId();
+        }
+        if (testEnabled) {
+            return testIdentity;
+        }
+        throw new LazybotRuntimeException("命令上下文中缺少用户身份");
     }
 
     private  <T> T getToken(Long qqCode, Boolean isExternalQuery,
