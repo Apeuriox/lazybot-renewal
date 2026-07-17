@@ -14,6 +14,7 @@ import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.enums.SupportedSubServer;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.utils.ColorUtil;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -72,11 +73,11 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc.getElementById("achievedTime").setTextContent(CommonTool.formatJsonDateToString(targetScore.getCreate_at(),"yyyy-MM-dd   HH:mm:ss"));
             if (targetScore.getPp() != null)
             {
-                doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat(" PP"));
+                doc.getElementById("totalPP").setTextContent(formatDisplayedPp(targetScore));
             }
             else if (targetScore.getPpDetailsLocal().getCurrentPP() != null)
             {
-                doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getCurrentPP())).concat(" PP"));
+                doc.getElementById("totalPP").setTextContent(formatDisplayedPp(targetScore));
             }
             else
             {
@@ -295,10 +296,12 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             }
 
             doc.getElementById("achievedTime").setTextContent(CommonTool.formatJsonDateToString(targetScore.getCreate_at(),"yyyy/MM/dd HH:mm:ss"));
-            if (targetScore.getPp() != null)
+            if (targetScore.getPp() != null
+                    || targetScore.getPpDetailsLocal().getCurrentPP() != null)
             {
-                doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat(" PP"));
-                doc.getElementById("totalPPShadow").setTextContent(CommonTool.toString((int) Math.round(targetScore.getPp())).concat(" PP"));
+                String displayedPp = formatDisplayedPp(targetScore);
+                doc.getElementById("totalPP").setTextContent(displayedPp);
+                doc.getElementById("totalPPShadow").setTextContent(displayedPp);
             }
             else
             {
@@ -696,7 +699,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
 
         doc.getElementById("star").setTextContent(CommonTool.toString(targetScore.getBeatmap().getDifficult_rating()));
         doc.getElementById("grade").setTextContent(targetScore.getRank().toLowerCase());
-        doc.getElementById("pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat("PP"));
+        doc.getElementById("pp").setTextContent(formatDisplayedPp(targetScore).replace(" ", ""));
         doc.getElementById("iffc").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getIfFc())).concat("PP"));
         doc.getElementById("accuracy").setTextContent(CommonTool.toString(targetScore.getAccuracy() * 100).concat("%"));
         if (targetScore.getAccuracy()>0.99999)
@@ -834,6 +837,33 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         else if (version==727)
             doc = mapScoreToScorePanelMarathon(targetScore,targetScore.getRawPlayerData());
         else throw new LazybotRuntimeException("不支持的面板版本: " + version);
+        if (targetScore.getPpDetailsLocal() != null
+                && targetScore.getPpDetailsLocal().getOriginal() != null) {
+            SVGElementHelper.appendAlgorithmLabel(
+                    doc, targetScore.getPpDetailsLocal().getOriginal().algorithmId());
+        }
         return doc;
+    }
+
+    private static String formatDisplayedPp(ScoreVO score)
+    {
+        boolean historical = usesHistoricalAlgorithm(score);
+        Double pp = historical && score.getPpDetailsLocal().getCurrentPP() != null
+                ? score.getPpDetailsLocal().getCurrentPP()
+                : score.getPp();
+        if (pp == null && score.getPpDetailsLocal() != null) {
+            pp = score.getPpDetailsLocal().getCurrentPP();
+        }
+        return pp == null
+                ? "- PP"
+                : CommonTool.toString(Math.round(pp)).concat(historical ? " PP*" : " PP");
+    }
+
+    private static boolean usesHistoricalAlgorithm(ScoreVO score)
+    {
+        return score.getPpDetailsLocal() != null
+                && score.getPpDetailsLocal().getOriginal() != null
+                && score.getPpDetailsLocal().getOriginal().algorithmId()
+                    != RosuAlgorithmVersionUtil.LATEST;
     }
 }

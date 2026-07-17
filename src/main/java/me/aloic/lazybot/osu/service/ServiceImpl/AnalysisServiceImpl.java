@@ -34,10 +34,11 @@ public class AnalysisServiceImpl implements AnalysisService
         if (params.getPlayerName()!=null) playerInfoDTO=dataExtractor.extractPlayerInfoDTO(params.getPlayerName(),params.getMode());
         else playerInfoDTO=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
         PlayerInfoVO info= OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
-        List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestScoreList(String.valueOf(info.getId()),100,0,params.getMode());
+        List<ScoreLazerDTO> originalScoreArray = dataExtractor.extractUserBestAll(
+                String.valueOf(info.getId()), params.getMode());
         List<ScoreVO> scoreList=osuToolsUtil.setupBpifScoreList(params,originalScoreArray,info);
         return new PlayerScoreList(
-                scoreList.stream().limit(36).collect(Collectors.toList()),
+                scoreList.stream().limit(params.getRenderSize()).collect(Collectors.toList()),
                 info);
     }
     @Override

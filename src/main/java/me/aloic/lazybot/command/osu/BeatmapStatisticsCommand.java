@@ -67,14 +67,18 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
     {
         return HelpFormatter.format(
                 new CommandHelp("Beatmap Statistics","Map, M",
-                        "查询指定地图在指定Mod组合下的参数，支持AR覆写",
+                        "查询指定地图在指定Mod组合下的参数，支持AR、CS、OD覆写",
                         "Aloic", "Slayemus, Aloic", "2026-04-13")
-                        .addExample("/Map 4889657+HDHR 98.5 AR9.5")
-                        .addExample("/M 4889657 AR 10")
+                        .addExample("/Map 4889657+HDHR 98.5 AR9.5 CS4 OD8")
+                        .addExample("/M 4889657 AR 10 CS 4")
+                        .addExample("/Map 4889657+HD 98.5 OD9 AR9.5 @202502")
                         .addExample("/Map 4889657")
                         .addOption(new CommandParameter("BID","查询的地图ID", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Mod","Mod过滤项", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("TargetAccuracy","申请额外重算的Acc", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("AR","覆写AR值(0-11)，格式AR9.5或AR 10，仅末尾支持", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("AR","覆写AR值(0-11)，格式AR9.5或AR 10", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("CS","覆写CS值(0-10)，格式CS4或CS 4", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("OD","覆写OD值(0-11)，格式OD9或OD 9", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

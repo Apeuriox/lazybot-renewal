@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
+import me.aloic.lazybot.util.ArgumentParser;
+import me.aloic.lazybot.util.Parsers;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,49 +33,62 @@ public class BpifParameter extends LazybotCommandParameter
         this.operator=operator;
         this.mod=mod;
         this.renderSize=renderSize;
-        this.modList = Arrays.stream(mod.split("(?<=\\G.{2})"))
-                .collect(Collectors.toList());
+        this.modList = mod == null || mod.isBlank()
+                ? List.of()
+                : Arrays.stream(mod.split("(?<=\\G.{2})")).collect(Collectors.toList());
+        if (this.modList.isEmpty()) {
+            this.operator = "KEEP";
+        }
     }
 
     @Override
     public void validateParams()
     {
-        if (this.getModList()==null || this.getModList().isEmpty()) throw new LazybotRuntimeException("Mod在哪? 现阶段不支持多步操作，比如+HD -HR");
+        boolean hasMods = this.getModList() != null && !this.getModList().isEmpty();
+        if (!hasMods && this.getAlgorithmVersion() == null) {
+            throw new LazybotRuntimeException("请提供 Mod 操作或 PP 算法版本，例如 /bpif +HD 或 /bpif @202502");
+        }
+        if (!hasMods) {
+            this.operator = "KEEP";
+            this.modList = List.of();
+        }
     }
     public static BpifParameter analyzeParameter(List<String> params)
     {
-        BpifParameter parameter=new BpifParameter();
-        String modStr;
-        if (params == null||params.isEmpty()) throw new LazybotRuntimeException("参数呢?");
-        else {
-            if (params.size() == 1) {
-                modStr=params.getFirst();
-                handleBpIf(parameter, modStr);
-            }
-            else if(params.size() == 2)
-            {
-                parameter.setPlayerName(params.getFirst());
-                modStr=params.get(1);
-                handleBpIf(parameter, modStr);
-            }
+        BpifParameter parameter = new BpifParameter();
+        if (params == null || params.isEmpty()) {
+            throw new LazybotRuntimeException("参数呢?");
+        }
+
+        ArgumentParser parser = ArgumentParser.of(params);
+        parser.tryPop(Parsers.ALGORITHM_VERSION,
+                matcher -> parameter.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
+        parser.tryPop(Parsers.BPIF_MOD_OPERATION,
+                matcher -> handleBpIf(parameter, matcher.group()));
+        if (!parser.remainder().isEmpty()) {
+            parameter.setPlayerName(parser.remainder());
         }
         return parameter;
 
     }
     private static void handleBpIf(BpifParameter parameter, String modStr)
     {
-        String operator=modStr.substring(0,1);
-        if ( modStr.endsWith("!")) operator="!";
+        String operator = modStr.substring(0, 1);
         if(!operator.equals("+") && !operator.equals("-") && !operator.equals("!")) {
             throw new LazybotRuntimeException("不支持的运算符: " + operator);
         }
         else {
             parameter.setOperator(operator);
-            if(operator.equals("!")) parameter.setMod(modStr.substring(1, modStr.length()-1));
-            else parameter.setMod(modStr.substring(1));
+            String mods = modStr.substring(1);
+            if (mods.endsWith("!")) {
+                mods = mods.substring(0, mods.length() - 1);
+            }
+            parameter.setMod(mods);
 
-            parameter.setModList(Arrays.stream(parameter.getMod().split("(?<=\\G.{2})"))
-                    .collect(Collectors.toList()));
+            parameter.setModList(parameter.getMod().isBlank()
+                    ? List.of()
+                    : Arrays.stream(parameter.getMod().split("(?<=\\G.{2})"))
+                        .collect(Collectors.toList()));
         }
     }
     public static void setupDefaultValue(BpifParameter parameter, AccessTokenPO accessTokenPO)

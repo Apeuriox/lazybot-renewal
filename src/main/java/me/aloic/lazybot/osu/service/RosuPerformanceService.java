@@ -46,11 +46,19 @@ public interface RosuPerformanceService
 
     PerformanceVO calculatePerformance(Path beatmapPath, ScoreVO score);
 
+    PerformanceVO calculatePerformance(Path beatmapPath, ScoreVO score, AlgorithmVersion algorithm);
+
     PerformanceVO calculatePerformance(Path beatmapPath, ScoreLazerDTO score);
+
+    PerformanceVO calculatePerformance(Path beatmapPath, ScoreLazerDTO score, AlgorithmVersion algorithm);
 
     PerformanceVO calculateCurrentPerformance(Path beatmapPath, ScoreLazerDTO score);
 
+    PerformanceVO calculateCurrentPerformance(Path beatmapPath, ScoreLazerDTO score, AlgorithmVersion algorithm);
+
     PerformanceVO calculatePerformance(Path beatmapPath, ScoreSequence score);
+
+    PerformanceVO calculatePerformance(Path beatmapPath, ScoreSequence score, AlgorithmVersion algorithm);
 
     double recalculatePerformance(Path beatmapPath, MapScore score);
 
@@ -59,4 +67,6 @@ public interface RosuPerformanceService
     void setupMapScorePerformances(Path beatmapPath, List<MapScore> scores);
 
     void setupBeatmapStatistics(BeatmapStatistics beatmapStatistics) throws IOException;
+
+    void setupBeatmapStatistics(BeatmapStatistics beatmapStatistics, AlgorithmVersion algorithm) throws IOException;
 }

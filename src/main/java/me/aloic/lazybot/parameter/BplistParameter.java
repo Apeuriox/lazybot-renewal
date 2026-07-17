@@ -6,7 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.util.CommonTool;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
+import me.aloic.lazybot.util.ArgumentParser;
+import me.aloic.lazybot.util.Parsers;
 
 import java.util.List;
 
@@ -56,17 +58,23 @@ public class BplistParameter extends LazybotCommandParameter
     public static BplistParameter analyzeParameter(List<String> params)
     {
         BplistParameter parameter = new BplistParameter();
-        if (params == null)
+        if (params == null || params.isEmpty())
             throw new LazybotRuntimeException("请输入范围，例/bplist 1-100");
-        else if (params.size() == 1)
-                setupParameterIndexes(parameter, params.getFirst());
-        else if (params.size() > 1)
-        {
-            setupParameterIndexes(parameter, params.getLast());
-            params.removeLast();
-            parameter.setPlayerName(String.join(" ", params).trim());
+
+        ArgumentParser parser = ArgumentParser.of(params);
+        parser.tryPop(Parsers.ALGORITHM_VERSION,
+                matcher -> parameter.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
+        final boolean[] hasRange = {false};
+        parser.tryPop(Parsers.RANGE, matcher -> {
+            setupParameterIndexes(parameter, matcher.group());
+            hasRange[0] = true;
+        });
+        if (!hasRange[0]) {
+            throw new LazybotRuntimeException("请输入正确的范围，例: /bplist 1-100 @202502");
         }
-        else throw new LazybotRuntimeException("请检查输入参数");
+        if (!parser.remainder().isEmpty()) {
+            parameter.setPlayerName(parser.remainder());
+        }
         return parameter;
     }
 

@@ -16,6 +16,7 @@ import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.BplistParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -51,6 +52,9 @@ public class BpListCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("from"), 0),
                 OptionMappingTool.getOptionOrDefault(event.getOption("to"), 1));
+        if (event.getOption("algorithm") != null) {
+            params.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(event.getOption("algorithm").getAsString()));
+        }
         params.validateParams();
         CommandResultHandler.uploadImageToDiscord(event,
                 RendererDistributor.renderPlayerScoreListToList(playerService.bplistListView(params), params.getFrom()));
@@ -91,7 +95,9 @@ public class BpListCommand implements LazybotSlashCommand
                         "Aloic", "Aloic", "2024-04-27")
                         .addExample("/Bplist 1-21")
                         .addExample("/Bplist Aloic 1-21")
+                        .addExample("/Bplist Aloic 1-21 @202502")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Range","查询的范围，[num]-[num]", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("Range","查询的范围，[num]-[num]", CommandParameter.ParameterType.MUST))
+                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

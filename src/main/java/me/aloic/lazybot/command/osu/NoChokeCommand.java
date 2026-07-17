@@ -17,6 +17,7 @@ import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -55,6 +56,9 @@ public class NoChokeCommand implements LazybotSlashCommand
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
+        if (event.getOption("algorithm") != null) {
+            params.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(event.getOption("algorithm").getAsString()));
+        }
         params.validateParams();
         if (event.getFullCommandName().equalsIgnoreCase("no1miss"))
             CommandResultHandler.uploadImageToDiscord(event,
@@ -105,6 +109,8 @@ public class NoChokeCommand implements LazybotSlashCommand
                         .addExample("/NoChoke")
                         .addExample("/NoChoke Aloic")
                         .addExample("/No1Miss Aloic")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addExample("/NoChoke Aloic @202411")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

@@ -5,11 +5,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -21,6 +25,8 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
     private Integer beatmapId;
     private Double targetAccuracy;
     private Double approachRate;
+    private Double circleSize;
+    private Double overallDifficulty;
 
     public BeatmapStatisticsParameter(String modCombination, Integer beatmapId, String mode, Integer version, String playerName)
     {
@@ -47,25 +53,34 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
     }
     public static BeatmapStatisticsParameter analyzeParameter(List<String> params)
     {
-        // Pre-process: merge "AR" + number at the end into "AR<number>" for unified parsing
-        List<String> processed = new ArrayList<>(params);
-        if (processed.size() >= 2) {
-            int last = processed.size() - 1;
-            if (processed.get(last - 1).equalsIgnoreCase("AR")
-                    && processed.get(last).matches("\\d+(\\.\\d+)?")) {
-                processed.set(last - 1, "AR" + processed.get(last));
-                processed.remove(last);
+        BeatmapStatisticsParameter result = new BeatmapStatisticsParameter();
+
+        // The algorithm selector is always the final argument. Consume it first so
+        // split difficulty input such as "AR 10 CS 4 @202502" can be normalized below.
+        ArgumentParser versionParser = ArgumentParser.of(params);
+        versionParser.tryPop(Parsers.ALGORITHM_VERSION,
+                m -> result.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(m.group())));
+
+        // Normalize split suffix values ("AR 9.5") into their compact form ("AR9.5").
+        List<String> processed = new ArrayList<>(versionParser.remaining());
+        for (int i = processed.size() - 2; i >= 0; i--) {
+            if (Parsers.DIFFICULTY_OVERRIDE_PREFIX.matcher(processed.get(i)).matches()
+                    && Parsers.NUMBER.matcher(processed.get(i + 1)).matches()) {
+                processed.set(i, processed.get(i) + processed.get(i + 1));
+                processed.remove(i + 1);
             }
         }
 
-        BeatmapStatisticsParameter result = new BeatmapStatisticsParameter();
         ArgumentParser p = ArgumentParser.of(processed);
 
-        // Parse AR override (must be at the end), format: "AR1" or "AR 1", values 0-11
-        p.tryPop(Parsers.AR_COMBINED, m -> {
-            double ar = Double.parseDouble(m.group(1));
-            if (ar < 0 || ar > 11) throw new IllegalArgumentException("AR值必须在0-11之间");
-            result.setApproachRate(ar);
+        // Difficulty overrides form a suffix and may appear in any order.
+        Set<String> overriddenAttributes = new HashSet<>();
+        p.tryPopAll(Parsers.DIFFICULTY_OVERRIDE, m -> {
+            String attribute = m.group(1).toUpperCase(Locale.ROOT);
+            if (!overriddenAttributes.add(attribute)) {
+                throw new IllegalArgumentException(attribute + "覆写值不能重复");
+            }
+            setDifficultyOverride(result, attribute, Double.parseDouble(m.group(2)));
         });
 
         p.tryPopIf(Parsers.NUMBER,
@@ -101,6 +116,35 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
         }
         return result;
     }
+
+    private static void setDifficultyOverride(
+            BeatmapStatisticsParameter result, String attribute, double value)
+    {
+        switch (attribute) {
+            case "AR" -> {
+                requireRange("AR", value, 0, 11);
+                result.setApproachRate(value);
+            }
+            case "CS" -> {
+                requireRange("CS", value, 0, 10);
+                result.setCircleSize(value);
+            }
+            case "OD" -> {
+                requireRange("OD", value, 0, 11);
+                result.setOverallDifficulty(value);
+            }
+            default -> throw new IllegalArgumentException("不支持的难度覆写参数: " + attribute);
+        }
+    }
+
+    private static void requireRange(String attribute, double value, double minimum, double maximum)
+    {
+        if (value < minimum || value > maximum) {
+            throw new IllegalArgumentException(
+                    attribute + "值必须在" + (int) minimum + "-" + (int) maximum + "之间");
+        }
+    }
+
     public static void setupDefaultValue(BeatmapStatisticsParameter scoreParameter, AccessTokenPO accessTokenPO)
     {
         scoreParameter.setPlayerId(accessTokenPO.getPlayer_id());

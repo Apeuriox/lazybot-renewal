@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.utils;
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import me.aloic.rosupp.RosuPpException;
+import me.aloic.rosupp.AlgorithmVersion;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
+@Slf4j
 public class OsuToolsUtil
 {
     @Resource
@@ -83,16 +86,29 @@ public class OsuToolsUtil
 
     public ScoreVO setupScoreVO(BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override)
     {
+        return setupScoreVO(beatmapDTO, scoreLazerDTO, override, rosuPerformanceService.defaultAlgorithm());
+    }
+
+    public ScoreVO setupScoreVO(
+            BeatmapDTO beatmapDTO, ScoreLazerDTO scoreLazerDTO, Boolean override, AlgorithmVersion algorithm)
+    {
         ScoreVO scoreVO = TransformerUtil.transformScoreLazerToScoreVO(scoreLazerDTO);
         scoreVO.setBeatmap(setupBeatmapVO(beatmapDTO));
-        return setupScoreVOLocalCache(override, scoreVO);
+        return setupScoreVOLocalCache(override, scoreVO, algorithm);
     }
 
     public ScoreVO setupScoreVO(ScoreStarMoon scoreStarMoon, UserResponse user, String mode,  Boolean override)
     {
+        return setupScoreVO(scoreStarMoon, user, mode, override, rosuPerformanceService.defaultAlgorithm());
+    }
+
+    public ScoreVO setupScoreVO(
+            ScoreStarMoon scoreStarMoon, UserResponse user, String mode, Boolean override,
+            AlgorithmVersion algorithm)
+    {
         ScoreVO scoreVO = TransformerUtil.transformScoreStarMoonToScoreVO(scoreStarMoon, user, mode);
         scoreVO.setBeatmap(setupBeatmapVO(scoreStarMoon,mode));
-        setBeatmapStarRating(override, scoreVO);
+        setBeatmapStarRating(override, scoreVO, algorithm);
         ModCalculatorUtil.afterModMapInfo(scoreVO);
         return scoreVO;
     }
@@ -103,14 +119,15 @@ public class OsuToolsUtil
         BeatmapVO beatmapVO = TransformerUtil.beatmapTransformCompact(beatmapDTO);
         beatmapVO.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapVO.getBeatmapset_id()));
         scoreVO.setBeatmap(beatmapVO);
-        return setupScoreVOLocalCache(override, scoreVO);
+        return setupScoreVOLocalCache(override, scoreVO, rosuPerformanceService.defaultAlgorithm());
     }
 
     @NotNull
-    private ScoreVO setupScoreVOLocalCache(Boolean override, ScoreVO scoreVO)
+    private ScoreVO setupScoreVOLocalCache(Boolean override, ScoreVO scoreVO, AlgorithmVersion algorithm)
     {
         try {
-            scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO));
+            scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(
+                    AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO, algorithm));
         }
         catch (RosuPpException e) {
             throw e;
@@ -126,11 +143,13 @@ public class OsuToolsUtil
         return scoreVO;
     }
 
-    private void setBeatmapStarRating(Boolean override, ScoreVO scoreVO)
+    private void setBeatmapStarRating(Boolean override, ScoreVO scoreVO, AlgorithmVersion algorithm)
     {
         PerformanceVO performanceVO;
         try {
-            performanceVO= rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO);
+            performanceVO = rosuPerformanceService.calculatePerformance(
+                    AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO, algorithm);
+            scoreVO.setPpDetailsLocal(performanceVO);
         }
         catch (RosuPpException e) {
             throw e;
@@ -147,12 +166,30 @@ public class OsuToolsUtil
 
     public List<ScoreVO> setUpImageStatic(List<ScoreVO> scoreVOList)
     {
+        return setUpImageStatic(scoreVOList, rosuPerformanceService.defaultAlgorithm());
+    }
+
+    public List<ScoreVO> setUpImageStatic(List<ScoreVO> scoreVOList, AlgorithmVersion algorithm)
+    {
+        return recalculateScoreList(scoreVOList, algorithm, true);
+    }
+
+    public List<ScoreVO> recalculateScoreList(List<ScoreVO> scoreVOList, AlgorithmVersion algorithm)
+    {
+        return recalculateScoreList(scoreVOList, algorithm, false);
+    }
+
+    private List<ScoreVO> recalculateScoreList(
+            List<ScoreVO> scoreVOList, AlgorithmVersion algorithm, boolean setupBackground)
+    {
         List<CompletableFuture<ScoreVO>> futureList = scoreVOList.stream()
                 .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
-                    scoreVO.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
+                    if (setupBackground) {
+                        setupScoreBackground(scoreVO);
+                    }
                     try {
                         scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(
-                                AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+                                AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO, algorithm));
                         if (scoreVO.getPpDetailsLocal().getStar() != null) {
                             scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
                         }
@@ -170,18 +207,60 @@ public class OsuToolsUtil
                 .collect(Collectors.toList());
     }
 
+    public void setupScoreBackgrounds(List<ScoreVO> scores)
+    {
+        scores.forEach(this::setupScoreBackground);
+    }
+
+    private void setupScoreBackground(ScoreVO score)
+    {
+        score.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(
+                score.getBeatmap().getBeatmapset_id()));
+    }
+
     public List<ScoreSequence> setUpImageStaticSequence(List<ScoreSequence> scoreSequences)
+    {
+        return setUpImageStaticSequence(scoreSequences, rosuPerformanceService.defaultAlgorithm());
+    }
+
+    public List<ScoreSequence> setUpImageStaticSequence(
+            List<ScoreSequence> scoreSequences, AlgorithmVersion algorithm)
+    {
+        return recalculateScoreSequenceList(scoreSequences, algorithm, true);
+    }
+
+    public List<ScoreSequence> recalculateScoreSequenceList(
+            List<ScoreSequence> scoreSequences, AlgorithmVersion algorithm)
+    {
+        return recalculateScoreSequenceList(scoreSequences, algorithm, false);
+    }
+
+    private List<ScoreSequence> recalculateScoreSequenceList(
+            List<ScoreSequence> scoreSequences, AlgorithmVersion algorithm, boolean setupBackground)
     {
         List<CompletableFuture<ScoreSequence>> futureList = scoreSequences.stream()
                 .map(scoreSequence -> CompletableFuture.supplyAsync(() -> {
-                    scoreSequence.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreSequence.getBeatmap().getBeatmapset_id()));
-                    return calcPerformanceForSequence(scoreSequence);
+                    if (setupBackground) {
+                        setupScoreSequenceBackground(scoreSequence);
+                    }
+                    return calcPerformanceForSequence(scoreSequence, algorithm);
                 }, VirtualThreadExecutorHolder.VIRTUAL_EXECUTOR))
                 .toList();
 
         return futureList.stream()
                 .map(CompletableFuture::join)
                 .collect(Collectors.toList());
+    }
+
+    public void setupScoreSequenceBackgrounds(List<ScoreSequence> scores)
+    {
+        scores.forEach(this::setupScoreSequenceBackground);
+    }
+
+    private void setupScoreSequenceBackground(ScoreSequence score)
+    {
+        score.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(
+                score.getBeatmap().getBeatmapset_id()));
     }
     public List<ScoreLazerDTO> setupModStats(List<ScoreLazerDTO> scores)
     {
@@ -223,10 +302,18 @@ public class OsuToolsUtil
     @NotNull
     public ScoreSequence calcPerformanceForSequence(ScoreSequence scoreSequence)
     {
+        return calcPerformanceForSequence(scoreSequence, rosuPerformanceService.defaultAlgorithm());
+    }
+
+    @NotNull
+    public ScoreSequence calcPerformanceForSequence(ScoreSequence scoreSequence, AlgorithmVersion algorithm)
+    {
         ModCalculatorUtil.setupBpmChange(scoreSequence);
         try
         {
-            scoreSequence.setPpDetails(rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(), false), scoreSequence));
+            scoreSequence.setPpDetails(rosuPerformanceService.calculatePerformance(
+                    AssetDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(), false),
+                    scoreSequence, algorithm));
             if (scoreSequence.getPpDetails().getStar() != null)
             {
                 scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
@@ -244,12 +331,18 @@ public class OsuToolsUtil
 
     public void setupFixedPPStats(ScoreVO scoreVO, boolean conditions)
     {
+        setupFixedPPStats(scoreVO, conditions, rosuPerformanceService.defaultAlgorithm());
+    }
+
+    public void setupFixedPPStats(ScoreVO scoreVO, boolean conditions, AlgorithmVersion algorithm)
+    {
         if(conditions)
         {
             scoreVO.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
             try
             {
-                scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreVO,false), scoreVO));
+                scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(
+                        AssetDownloadUtil.beatmapPath(scoreVO,false), scoreVO, algorithm));
                 if (scoreVO.getPpDetailsLocal().getStar() != null)
                 {
                     scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
@@ -561,6 +654,12 @@ public class OsuToolsUtil
 
     public NoChokeListVO setupNoChokeList(PlayerInfoVO info, List<ScoreVO> scoreList, int type)
     {
+        return setupNoChokeList(info, scoreList, type, rosuPerformanceService.defaultAlgorithm());
+    }
+
+    public NoChokeListVO setupNoChokeList(
+            PlayerInfoVO info, List<ScoreVO> scoreList, int type, AlgorithmVersion algorithm)
+    {
         NoChokeListVO noChokeListVO=new NoChokeListVO();
         double originalRawPp= CommonTool.totalPpCalculator(scoreList);
         List<CompletableFuture<ScoreVO>> futureList = scoreList.stream()
@@ -569,7 +668,7 @@ public class OsuToolsUtil
                             boolean condition = type == 1
                                     ? !scoreVO.getIsPerfectCombo() && scoreVO.getStatistics().getMiss() <= 1
                                     : !scoreVO.getIsPerfectCombo();
-                            setupFixedPPStats(scoreVO, condition);
+                            setupFixedPPStats(scoreVO, condition, algorithm);
 
                         } catch (RosuPpException e) {
                             throw e;
@@ -610,12 +709,18 @@ public class OsuToolsUtil
 
     public List<ScoreVO> setupBpifScoreList(BpifParameter params, List<ScoreLazerDTO> scoreLazerDTOS, PlayerInfoVO info) throws IOException
     {
+        AlgorithmVersion algorithm = params.getAlgorithmVersion() != null
+                ? params.getAlgorithmVersion()
+                : rosuPerformanceService.defaultAlgorithm();
+        log.info("[PP重算] command=bpif, mode={}, algorithm={} ({}), operation={}, mods={}",
+                params.getMode(), algorithm.name(), algorithm.stableKey(),
+                params.getOperator(), params.getModList());
         List<ScoreVO> scoreList=TransformerUtil.scoreTransformForList(scoreLazerDTOS);
         double originalRawPp=CommonTool.totalPpCalculator(scoreList);
         List<Mod> modEntities = wireModEntities(params.getModList());
         processScoreListConcurrently(scoreList,modEntities,params);
         scoreList=scoreList.stream().sorted(Comparator.comparing(ScoreVO::getPp).reversed()).toList();
-        for(int i=0;i<params.getRenderSize();i++) {
+        for(int i = 0; i < Math.min(params.getRenderSize(), scoreList.size()); i++) {
             scoreList.get(i).getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreList.get(i).getBeatmap().getBeatmapset_id()));
         }
         double fixedRawPp=CommonTool.totalPpCalculator(scoreList);
@@ -623,6 +728,8 @@ public class OsuToolsUtil
         int difference= (int) Math.round(fixedRawPp-originalRawPp);
         String differenceStr=difference>0?"+"+difference: String.valueOf(difference);
         fixedRawPp+=bonusPp;
+        log.info("[PP重算] command=bpif, originalRawPp={}, recalculatedRawPp={}, bonusPp={}, totalPp={}",
+                originalRawPp, fixedRawPp - bonusPp, bonusPp, fixedRawPp);
         StringBuilder sb=new StringBuilder(String.valueOf(Math.round(info.getPerformancePoint())));
         sb.append(" -> ")
                 .append(Math.round(fixedRawPp))
@@ -651,6 +758,7 @@ public class OsuToolsUtil
         List<CompletableFuture<ScoreVO>> futures = scoreList.stream()
                 .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
                     switch (params.getOperator()) {
+                        case "KEEP" -> { }
                         case "!", "！" -> scoreVO.setModJSON(modEntities.stream().distinct().collect(Collectors.toList()));
                         case "+" -> scoreVO.setModJSON(Stream.concat(scoreVO.getModJSON().stream(), modEntities.stream())
                                 .distinct()
@@ -659,7 +767,8 @@ public class OsuToolsUtil
                         default -> throw new LazybotRuntimeException("Operator invalid: " + params.getOperator());
                     }
                     scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(
-                            AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+                            AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO,
+                            params.getAlgorithmVersion()));
                     if (scoreVO.getPpDetailsLocal().getStar() != null) {
                         scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
 

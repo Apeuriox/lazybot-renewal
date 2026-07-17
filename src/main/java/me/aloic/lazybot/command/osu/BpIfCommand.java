@@ -19,6 +19,7 @@ import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.AnalysisService;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -59,6 +60,9 @@ public class BpIfCommand implements LazybotSlashCommand
                 OptionMappingTool.getOptionOrDefault(event.getOption("operator"), "+"),
                 OptionMappingTool.getOptionOrDefault(event.getOption("mods"), ""),
                 OptionMappingTool.getOptionOrDefault(event.getOption("rendersize"), 30));
+        if (event.getOption("algorithm") != null) {
+            params.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(event.getOption("algorithm").getAsString()));
+        }
         params.validateParams();
         CommandResultHandler.uploadImageToDiscord(event,
                 RendererDistributor.renderPlayerScoreListToCard(
@@ -112,13 +116,16 @@ public class BpIfCommand implements LazybotSlashCommand
     {
         return HelpFormatter.format(
                 new CommandHelp("Bp If Mods","Bpif",
-                        "按照指定的规则和mod重算用户的全部成绩，使用+添加mod，使用-删除mod，使用!替换mod",
+                        "按照指定算法和Mod规则重算、排序全部BP并推演总PP；+添加，-删除，!替换Mod",
                         "Aloic", "Aloic", "2024-12-07")
                         .addExample("/Bpif +HD")
                         .addExample("/Bpif Aloic -HDHR")
                         .addExample("/Bpif !HDDT")
+                        .addExample("/Bpif @202502")
+                        .addExample("/Bpif +HD @202411")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Operator","运算符，与Mod不能有空格", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Mod","运算的Mod，冲突的Mod只取前者", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("Operator","运算符，与Mod不能有空格；仅指定算法时可以省略", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Mod","运算的Mod；仅指定算法版本时可以省略", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

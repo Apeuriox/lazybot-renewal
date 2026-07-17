@@ -15,6 +15,7 @@ import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.utils.ColorUtil;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -87,6 +88,11 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         for(int i=0;i<scoreArray.size();i++)
         {
             wireBpListCard(document,scoreArray.get(i),i,scoreArray.size(),offset,type);
+        }
+        if (!scoreArray.isEmpty() && scoreArray.getFirst().getPpDetailsLocal() != null
+                && scoreArray.getFirst().getPpDetailsLocal().getOriginal() != null) {
+            SVGElementHelper.appendAlgorithmLabel(
+                    document, scoreArray.getFirst().getPpDetailsLocal().getOriginal().algorithmId());
         }
         return document;
     }
@@ -226,7 +232,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         if(type==0) {
             ppValue.setAttribute("transform", "translate(115 180)");
             ppValue.setAttribute("class", "cls-6");
-            ppValue.setTextContent(String.valueOf(Math.round(scoreVO.getPp())).concat("pp"));
+            ppValue.setTextContent(formatDisplayedPp(scoreVO));
         }
         else if(type==2||type==3) {
             ppValue.setAttribute("transform", "translate(57 155)");
@@ -234,8 +240,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
         else {
             ppValue.setAttribute("transform", "translate(57 155)");
             ppValue.setAttribute("class", "cls-6");
-            if (scoreVO.getPp()==null) scoreVO.setPp(scoreVO.getPpDetailsLocal().getCurrentPP());
-            ppValue.setTextContent(String.valueOf(Math.round(scoreVO.getPp())).concat("pp"));
+            ppValue.setTextContent(formatDisplayedPp(scoreVO));
         }
 
         if(type==2||type==3)
@@ -499,7 +504,9 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             doc.getElementById("requestTime").setTextContent(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             doc.getElementById(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe()).setAttribute("class", "cls-24");
             doc.getElementById("label-".concat(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe())).setAttribute("opacity","1");
-            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot,offset);
+            Document result = setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot,offset);
+            appendSequenceAlgorithmLabel(result, scorelist);
+            return result;
         }
         catch (Exception e)
         {
@@ -526,7 +533,9 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             doc.getElementById("label-".concat(OsuMode.getMode(scorelist.getFirst().getRulesetId()).getDescribe())).setAttribute("opacity","1");
             doc.getElementById("playernameLabel").setAttribute("fill", primaryColor);
             doc.getElementById("totalPpLabel").setAttribute("fill", primaryColor);
-            return setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot, offset);
+            Document result = setupBpListDetailedSingle(scorelist, primaryColor, doc, svgRoot, offset);
+            appendSequenceAlgorithmLabel(result, scorelist);
+            return result;
         }
         catch (Exception e)
         {
@@ -558,6 +567,42 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             throw new LazybotRuntimeException("SVG 处理时出错");
         }
     }
+
+    private static void appendSequenceAlgorithmLabel(Document document, List<ScoreSequence> scores)
+    {
+        if (!scores.isEmpty() && scores.getFirst().getPpDetails() != null
+                && scores.getFirst().getPpDetails().getOriginal() != null) {
+            SVGElementHelper.appendAlgorithmLabel(
+                    document, scores.getFirst().getPpDetails().getOriginal().algorithmId());
+        }
+    }
+
+    private static String formatDisplayedPp(ScoreVO score)
+    {
+        boolean historical = score.getPpDetailsLocal() != null
+                && score.getPpDetailsLocal().getOriginal() != null
+                && score.getPpDetailsLocal().getOriginal().algorithmId()
+                    != RosuAlgorithmVersionUtil.LATEST;
+        Double pp = historical ? score.getPpDetailsLocal().getCurrentPP() : score.getPp();
+        if (pp == null && score.getPpDetailsLocal() != null) {
+            pp = score.getPpDetailsLocal().getCurrentPP();
+        }
+        return pp == null ? "-pp" : String.valueOf(Math.round(pp)).concat(historical ? "pp*" : "pp");
+    }
+
+    private static String formatDisplayedPp(ScoreSequence score)
+    {
+        boolean historical = score.getPpDetails() != null
+                && score.getPpDetails().getOriginal() != null
+                && score.getPpDetails().getOriginal().algorithmId()
+                    != RosuAlgorithmVersionUtil.LATEST;
+        Double pp = historical ? score.getPpDetails().getCurrentPP() : score.getPp();
+        if (pp == null && score.getPpDetails() != null) {
+            pp = score.getPpDetails().getCurrentPP();
+        }
+        return pp == null ? "-pp" : String.valueOf(Math.round(pp)).concat(historical ? "pp*" : "pp");
+    }
+
     private static Document setupBpListPlusSingle(List<ScorePerformanceDTO> scorelist,  Document doc, Element svgRoot, Integer offset)
     {
         int listIndex=0;
@@ -1009,8 +1054,7 @@ public class ScoreListSVGMapper extends LazybotSVGMapper
             pp.setAttribute("class", "cls-114");
             pp.setAttribute("text-anchor", "end");
             pp.setAttribute("transform", "translate(960 142)");
-            if (score.getPp()==null) score.setPp(score.getPpDetails().getCurrentPP());
-            pp.setTextContent(String.valueOf(Math.round(score.getPp())).concat("pp"));
+            pp.setTextContent(formatDisplayedPp(score));
 
             Element difference = doc.createElementNS(namespaceSVG, "text");
 

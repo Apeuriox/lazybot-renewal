@@ -155,11 +155,11 @@
                 <tspan font-size="20" id="star-aim-label">Aim</tspan>
             </text>
 
-            <text fill="black" font-family="Outfit" text-anchor="end" x="765" y="999.06">
+            <text fill="black" font-family="Outfit" text-anchor="end" x="765" y="999.06" id="star-speed-text">
                 <tspan font-size="50" id="star-speed">4.2</tspan>
                 <tspan font-size="20" id="star-speed-label">Spd</tspan>
             </text>
-            <text fill="black" font-family="Outfit" text-anchor="end" x="920" y="999.06">
+            <text fill="black" font-family="Outfit" text-anchor="end" x="920" y="999.06" id="star-read-text">
                 <tspan font-size="50" id="star-reading">4.2</tspan>
                 <tspan font-size="20" id="star-reading-label">Read</tspan>
             </text>

@@ -44,7 +44,11 @@ public class MapSVGMapper extends LazybotSVGMapper
 
         document.getElementById("pp-aim").setTextContent(Math.round(beatmapStatistics.getPerformance().getAimPP()) + "pp");
         document.getElementById("pp-speed").setTextContent(Math.round(beatmapStatistics.getPerformance().getSpdPP()) + "pp");
-        document.getElementById("pp-reading").setTextContent(Math.round(beatmapStatistics.getPerformance().getReadPP()) + "pp");
+        if (beatmapStatistics.getPerformance().getReadPP()!=null && beatmapStatistics.getPerformance().getReadPP()>0.1)
+            document.getElementById("pp-reading").setTextContent(Math.round(beatmapStatistics.getPerformance().getReadPP()) + "pp");
+        else {
+            document.getElementById("pp-reading").setTextContent("UNSUPPORTED");
+        }
         document.getElementById("pp-accuracy").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPP()) + "pp");
         if (beatmapStatistics.getPerformance().getFlashlightPP()!=null && beatmapStatistics.getPerformance().getFlashlightPP()>0.5)
             document.getElementById("pp-flashlight").setTextContent(Math.round(beatmapStatistics.getPerformance().getFlashlightPP()) + "pp");
@@ -89,8 +93,17 @@ public class MapSVGMapper extends LazybotSVGMapper
         }
         document.getElementById("star-aim").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getAimStar(),1));
         document.getElementById("star-speed").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getSpeedStar(),1));
-        document.getElementById("star-reading").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getReadStar(),1));
+        if (beatmapStatistics.getPerformance().getReadStar()!=null && beatmapStatistics.getPerformance().getReadStar()>0.1)
+            document.getElementById("star-reading").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getReadStar(),1));
+        else{
+            document.getElementById("star-aim").setAttribute("font-size","60");
+            document.getElementById("star-aim-label").setAttribute("font-size","24");
+            document.getElementById("star-speed").setAttribute("font-size","60");
+            document.getElementById("star-speed-label").setAttribute("font-size","24");
+            document.getElementById("star-read-text").setAttribute("opacity","0");
+            document.getElementById("star-speed-text").setAttribute("x","920");
 
+        }
 
         document.getElementById("pp-1").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPPList().get(100)) + "pp");
         document.getElementById("pp-2").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPPList().get(99)) + "pp");

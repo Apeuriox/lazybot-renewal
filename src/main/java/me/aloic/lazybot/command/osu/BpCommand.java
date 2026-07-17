@@ -21,6 +21,7 @@ import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.BpParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -59,6 +60,9 @@ public class BpCommand implements LazybotSlashCommand
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 0),
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1));
+        if (event.getOption("algorithm") != null) {
+            params.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(event.getOption("algorithm").getAsString()));
+        }
         params.validateParams();
         params.setPlayerId(tokenPO.getPlayer_id());
         CommandResultHandler.uploadImageToDiscord(event,
@@ -161,9 +165,11 @@ public class BpCommand implements LazybotSlashCommand
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Bp #1")
                         .addExample("/Bp Aloic #10")
+                        .addExample("/Bp Aloic #10 @202502")
                         .addExample("/Bp Aloic #10 &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Index","指定查询的索引，范围 1-200，默认为1", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
     }
 

@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import me.aloic.rosupp.RosuPpException;
+import me.aloic.rosupp.AlgorithmVersion;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -71,10 +72,42 @@ public class PlayerServiceImpl implements PlayerService
     @Resource
     private RosuPerformanceService rosuPerformanceService;
 
+    private void logRecalculationAlgorithm(String command, LazybotCommandParameter params)
+    {
+        AlgorithmVersion algorithm = selectedAlgorithm(params);
+        logger.info("[PP重算] command={}, mode={}, algorithm={} ({})",
+                command, params.getMode(), algorithm.name(), algorithm.stableKey());
+    }
+
+    private AlgorithmVersion selectedAlgorithm(LazybotCommandParameter params)
+    {
+        return params.getAlgorithmVersion() != null
+                ? params.getAlgorithmVersion()
+                : rosuPerformanceService.defaultAlgorithm();
+    }
+
+    private boolean usesHistoricalAlgorithm(LazybotCommandParameter params)
+    {
+        return selectedAlgorithm(params) != RosuAlgorithmVersionUtil.LATEST;
+    }
+
+    private static <T> List<T> selectBpRange(List<T> scores, BplistParameter params)
+    {
+        int fromIndex = params.getFrom() - 1;
+        if (fromIndex >= scores.size()) {
+            throw new LazybotRuntimeException(
+                    "超出能索引的最大距离，当前范围起点为: " + params.getFrom()
+                            + ", 最大为: " + scores.size());
+        }
+        int toIndex = Math.min(params.getTo(), scores.size());
+        return new ArrayList<>(scores.subList(fromIndex, toIndex));
+    }
+
 
     @Override
     public ScoreVO getUserHighestScoreOnMap(ScoreParameter params)
     {
+        logRecalculationAlgorithm("score", params);
         int playerId = params.getPlayerId();
         boolean easterTrigger = CommonTool.shouldTriggerEaster();
         if(params.getVersion()==4) {
@@ -96,7 +129,8 @@ public class PlayerServiceImpl implements PlayerService
         ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode()),
                 beatmapUserScoreLazer.getScore(),
-                false);
+                false,
+                params.getAlgorithmVersion());
         verifyBeatmapsCache(scoreVO);
         if(easterTrigger) {
             if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
@@ -135,6 +169,7 @@ public class PlayerServiceImpl implements PlayerService
     }
     @Override
     public BeatmapStatistics getBeatmapStatisticsWithImaginaryParams(BeatmapStatisticsParameter params) throws Exception {
+        logRecalculationAlgorithm("map", params);
         if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("暂不支持其他模式，请等待更新");
 
         BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()),params.getMode());
@@ -149,12 +184,16 @@ public class PlayerServiceImpl implements PlayerService
             result.setImaginaryMods(OsuToolsUtil.wireModEntities(List.of(params.getModCombination().split("(?<=\\G.{2})"))));
         else
             result.setImaginaryMods(new ArrayList<>());
-        if (params.getApproachRate() != null) {
+        if (params.getApproachRate() != null
+                || params.getCircleSize() != null
+                || params.getOverallDifficulty() != null) {
             ModSetting daSetting = new ModSetting();
             daSetting.setApproach_rate(params.getApproachRate());
+            daSetting.setCircle_size(params.getCircleSize());
+            daSetting.setOverall_difficulty(params.getOverallDifficulty());
             result.getImaginaryMods().add(new Mod("DA", daSetting));
         }
-        rosuPerformanceService.setupBeatmapStatistics(result);
+        rosuPerformanceService.setupBeatmapStatistics(result, params.getAlgorithmVersion());
 
         double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);
         double weightSpeed = Math.pow(result.getPerformance().getSpdPP(), 1.1);
@@ -227,6 +266,7 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public ScoreVO getUserRecentScoreList(RecentParameter params, int type)
     {
+        logRecalculationAlgorithm(type == 1 ? "pr" : "recent", params);
         boolean easterTrigger = CommonTool.shouldTriggerEaster();
         if(params.getVersion()==4) {
             easterTrigger=true;
@@ -246,7 +286,8 @@ public class PlayerServiceImpl implements PlayerService
         ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(scoreList.get(params.getIndex() - 1).getBeatmap_id()), params.getMode()),
                 scoreList.get(params.getIndex() - 1),
-                false);
+                false,
+                params.getAlgorithmVersion());
         verifyBeatmapsCache(scoreVO);
         if(easterTrigger) {
             if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
@@ -271,6 +312,7 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public ScoreVO getUserBestPerformanceSingle(BpParameter params)
     {
+        logRecalculationAlgorithm("bp", params);
         boolean easterTrigger = CommonTool.shouldTriggerEaster();
         if(params.getVersion()==4) {
             easterTrigger=true;
@@ -291,7 +333,8 @@ public class PlayerServiceImpl implements PlayerService
         ScoreVO scoreVO = osuToolsUtil.setupScoreVO(
                 dataExtractor.extractBeatmap(String.valueOf(scoreDTO.getFirst().getBeatmap_id()),params.getMode()),
                 scoreDTO.getFirst(),
-                false);
+                false,
+                params.getAlgorithmVersion());
         verifyBeatmapsCache(scoreVO);
         CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
 
@@ -307,6 +350,7 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public ScoreVO getUserBestPerformanceSingleStarMoon(BpParameter params)
     {
+        logRecalculationAlgorithm("bp-starmoon", params);
         List<ScoreStarMoon> score = dataExtractor.extractPlayerPerformanceStarMoon(
                 String.valueOf(params.getPlayerId()),
                 params.getMode(),
@@ -323,7 +367,8 @@ public class PlayerServiceImpl implements PlayerService
         ScoreVO scoreVO = osuToolsUtil.setupScoreVO(targetScore,
                 user,
                 params.getMode(),
-                false);
+                false,
+                params.getAlgorithmVersion());
         verifyBeatmapsCache(scoreVO);
         CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return scoreVO;
@@ -341,26 +386,45 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public PlayerScoreList bplistCardView(BplistParameter params)
     {
+        logRecalculationAlgorithm("bpcard", params);
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
+        if (usesHistoricalAlgorithm(params)) {
+            AlgorithmVersion algorithm = selectedAlgorithm(params);
+            List<ScoreLazerDTO> allScoreDtos = dataExtractor.extractUserBestAll(
+                    String.valueOf(playerInfoDTO.getId()), params.getMode());
+            List<ScoreVO> allScores = TransformerUtil.scoreTransformForList(allScoreDtos);
+
+            osuToolsUtil.recalculateScoreList(allScores, algorithm);
+            allScores.forEach(score -> score.setPp(score.getPpDetailsLocal().getCurrentPP()));
+            allScores.sort(Comparator.comparing(ScoreVO::getPp).reversed());
+
+            List<ScoreVO> selectedScores = selectBpRange(allScores, params);
+            osuToolsUtil.setupScoreBackgrounds(selectedScores);
+            return new PlayerScoreList(selectedScores, info);
+        }
         List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(
                 String.valueOf(playerInfoDTO.getId()),
                 params.getTo()-params.getFrom()+1,
                 params.getFrom()-1,
                 params.getMode());
-        List<ScoreVO> scoreVOArray= osuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreDTOS));
+        List<ScoreVO> scoreVOArray = osuToolsUtil.setUpImageStatic(
+                TransformerUtil.scoreTransformForList(scoreDTOS), params.getAlgorithmVersion());
         return new PlayerScoreList(scoreVOArray, info);
     }
     @Override
     public PlayerScoreList bplistCardViewStarMoon(BplistParameter params)
     {
+        logRecalculationAlgorithm("bpcard-starmoon", params);
         List<ScoreStarMoon> score = dataExtractor.extractPlayerPerformanceStarMoon(
                 String.valueOf(params.getPlayerId()),
                 params.getMode(),
                 params.getSubRuleset().getDescribe());
         List<ScoreStarMoon> scoreList = score.stream().limit(params.getTo()).toList();
         UserResponse user = dataExtractor.extractPlayerStarMoon(params.getPlayerId());
-        List<ScoreVO> scoreVOArray= osuToolsUtil.setUpImageStatic(TransformerUtil.scoreTransformForList(scoreList,user,params.getMode()));
+        List<ScoreVO> scoreVOArray = osuToolsUtil.setUpImageStatic(
+                TransformerUtil.scoreTransformForList(scoreList,user,params.getMode()),
+                params.getAlgorithmVersion());
         return new PlayerScoreList(scoreVOArray, TransformerUtil.userTransform(user, params.getSubRuleset(), params.getMode()));
     }
 
@@ -505,6 +569,7 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public NoChokeListVO noChoke(GeneralParameter params, int type)
     {
+        logRecalculationAlgorithm(type == 1 ? "no1miss" : "nochoke", params);
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
 
         List<ScoreLazerDTO> originalScoreArray=dataExtractor.extractUserBestAll(
@@ -513,7 +578,8 @@ public class PlayerServiceImpl implements PlayerService
         NoChokeListVO noChokeListVO=osuToolsUtil.setupNoChokeList(
                 OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO),
                 TransformerUtil.scoreTransformForList(originalScoreArray),
-                type);
+                type,
+                params.getAlgorithmVersion());
         noChokeListVO.setScoreList(noChokeListVO.getScoreList().stream().limit(51).collect(Collectors.toList()));
         return noChokeListVO;
     }
@@ -774,14 +840,37 @@ public class PlayerServiceImpl implements PlayerService
     @Override
     public PlayerScoreList bplistListView(BplistParameter params)
     {
+        logRecalculationAlgorithm("bplist", params);
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
+        if (usesHistoricalAlgorithm(params)) {
+            AlgorithmVersion algorithm = selectedAlgorithm(params);
+            List<ScoreLazerDTO> allScoreDtos = dataExtractor.extractUserBestAll(
+                    String.valueOf(info.getId()), params.getMode());
+            List<ScoreSequence> allScores = TransformerUtil.scoreSequenceListTransform(allScoreDtos, true);
+
+            osuToolsUtil.recalculateScoreSequenceList(allScores, algorithm);
+            allScores.forEach(score -> score.setPp(score.getPpDetails().getCurrentPP()));
+            allScores.sort(Comparator.comparing(ScoreSequence::getPp).reversed());
+            for (int i = 0; i < allScores.size(); i++) {
+                ScoreSequence score = allScores.get(i);
+                score.setPositionInList(i);
+                double nextPp = i + 1 < allScores.size() ? allScores.get(i + 1).getPp() : score.getPp();
+                score.setDifferenceBetweenNextScore((int) Math.round(score.getPp() - nextPp));
+            }
+            List<ScoreSequence> selectedScores = selectBpRange(allScores, params);
+            for (int i = 0; i < selectedScores.size(); i++) {
+                selectedScores.get(i).setPositionInList(i);
+            }
+            osuToolsUtil.setupScoreSequenceBackgrounds(selectedScores);
+            return new PlayerScoreList(info, selectedScores);
+        }
         List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(
                 String.valueOf(info.getId()),
                 params.getTo()-params.getFrom()+1,
                 params.getFrom()-1,
                 params.getMode());
         List<ScoreSequence> scoreSequences=TransformerUtil.scoreSequenceListTransform(scoreDTOS,false);
-        osuToolsUtil.setUpImageStaticSequence(scoreSequences);
+        osuToolsUtil.setUpImageStaticSequence(scoreSequences, params.getAlgorithmVersion());
         return new PlayerScoreList(info,scoreSequences);
     }
 

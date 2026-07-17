@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
+import me.aloic.lazybot.util.ArgumentParser;
+import me.aloic.lazybot.util.Parsers;
 
 import java.util.List;
 
@@ -32,8 +35,11 @@ public class GeneralParameter extends LazybotCommandParameter
     public static GeneralParameter analyzeParameter(List<String> params)
     {
         GeneralParameter parameter=new GeneralParameter();
-        if (!params.isEmpty()) {
-            parameter.setPlayerName(String.join(" ", params));
+        ArgumentParser parser = ArgumentParser.of(params);
+        parser.tryPop(Parsers.ALGORITHM_VERSION,
+                matcher -> parameter.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
+        if (!parser.remainder().isEmpty()) {
+            parameter.setPlayerName(parser.remainder());
         }
         return parameter;
     }

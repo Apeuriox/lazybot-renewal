@@ -18,6 +18,7 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -57,6 +58,9 @@ public class ScoreCommand implements LazybotSlashCommand
                 Optional.ofNullable(event.getOption("bid")).orElseThrow(() -> new RuntimeException("bid为必选参数")).getAsInt(),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
+        if (event.getOption("algorithm") != null) {
+            params.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(event.getOption("algorithm").getAsString()));
+        }
         params.validateParams();
         ScoreVO score = playerService.getUserHighestScoreOnMap(params);
         CommandResultHandler.uploadImageToDiscord(event, RendererDistributor.renderScoreVOToImage(score, params.getVersion()));
@@ -121,10 +125,12 @@ public class ScoreCommand implements LazybotSlashCommand
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Score 4889657+HDHR")
                         .addExample("/s Aloic 4889657")
+                        .addExample("/s Aloic 4889657+HD @202210")
                         .addExample("/Pscore Aloic 4889657+HDHR &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("BID","查询的地图ID", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Mod","Mod过滤项", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

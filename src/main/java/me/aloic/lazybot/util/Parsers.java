@@ -23,14 +23,22 @@ public final class Parsers
     /** "1-100" → group(1)=from, group(2)=to */
     public static final Pattern RANGE = Pattern.compile("^(\\d+)-(\\d+)$");
 
+    /** Explicit PP algorithm selector, e.g. "@202502", "v202502" or "algo=202502". */
+    public static final Pattern ALGORITHM_VERSION = Pattern.compile(
+            "(?i)^(?:@|v|(?:--?)?algorithm=|(?:--?)?algo=).+$");
+
+    /** BpIf mod operation, e.g. +HDHR, -HD, or !HDDT. */
+    public static final Pattern BPIF_MOD_OPERATION = Pattern.compile("^[+\\-!！][a-zA-Z]*!?$");
+
     /** 整数或小数, 如 "96" 或 "98.5" — 用于范围有限的数值参数 (如 accuracy 0-100) */
     public static final Pattern NUMBER = Pattern.compile("^\\d+(\\.\\d+)?$");
 
-    /** "AR9.5" → group(1)=9.5 — AR override combined format */
-    public static final Pattern AR_COMBINED = Pattern.compile("^(?i)AR(\\d+(\\.\\d+)?)$");
+    /** "AR9.5", "CS4", "OD8" → group(1)=attribute, group(2)=value. */
+    public static final Pattern DIFFICULTY_OVERRIDE = Pattern.compile(
+            "(?i)^(AR|CS|OD)(\\d+(?:\\.\\d+)?)$");
 
-    /** "AR" → standalone AR prefix, number follows as next arg */
-    public static final Pattern AR_PREFIX = Pattern.compile("^(?i)AR$");
+    /** Standalone difficulty attribute prefix; a numeric value follows as the next argument. */
+    public static final Pattern DIFFICULTY_OVERRIDE_PREFIX = Pattern.compile("(?i)^(AR|CS|OD)$");
 
     private Parsers() {}
 }
