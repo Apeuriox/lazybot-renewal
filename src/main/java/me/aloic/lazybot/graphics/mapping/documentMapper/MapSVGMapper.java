@@ -7,7 +7,7 @@ import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapStatistics;
 import me.aloic.lazybot.osu.utils.ColorUtil;
 import me.aloic.lazybot.util.CommonTool;
-import org.spring.osu.extended.rosu.OsuDifficultyAttributes;
+import me.aloic.rosupp.GameMode;
 import org.w3c.dom.Document;
 
 import java.io.IOException;
@@ -44,7 +44,10 @@ public class MapSVGMapper extends LazybotSVGMapper
 
         document.getElementById("pp-aim").setTextContent(Math.round(beatmapStatistics.getPerformance().getAimPP()) + "pp");
         document.getElementById("pp-speed").setTextContent(Math.round(beatmapStatistics.getPerformance().getSpdPP()) + "pp");
+        document.getElementById("pp-reading").setTextContent(Math.round(beatmapStatistics.getPerformance().getReadPP()) + "pp");
         document.getElementById("pp-accuracy").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPP()) + "pp");
+        if (beatmapStatistics.getPerformance().getFlashlightPP()!=null && beatmapStatistics.getPerformance().getFlashlightPP()>0.5)
+            document.getElementById("pp-flashlight").setTextContent(Math.round(beatmapStatistics.getPerformance().getFlashlightPP()) + "pp");
         document.getElementById("pp-distri").setTextContent(beatmapStatistics.getPpBreakdownRatioChain());
 
         String titleAndArtist=beatmapStatistics.getBeatmap().getArtist().concat(" - ").concat(beatmapStatistics.getBeatmap().getTitle());
@@ -67,10 +70,8 @@ public class MapSVGMapper extends LazybotSVGMapper
         document.getElementById("star-2").setAttribute("fill", starTextColor);
         document.getElementById("star-rect").setAttribute("fill", diffColor);
 
-        switch (beatmapStatistics.getBeatmap().getDifficultyAttributes())
-        {
-            case OsuDifficultyAttributes osu ->
-            {
+        var difficulty = beatmapStatistics.getBeatmap().getDifficultyAttributes();
+        if (difficulty != null && difficulty.mode() == GameMode.OSU) {
                 document.getElementById("bs-r-1").setTextContent(String.valueOf(beatmapStatistics.getBeatmap().getCountCircles()));
                 document.getElementById("bs-r-2").setTextContent(String.valueOf(beatmapStatistics.getBeatmap().getCountSliders()));
                 document.getElementById("bs-r-3").setTextContent(String.valueOf(beatmapStatistics.getBeatmap().getCountSpinners()));
@@ -78,15 +79,17 @@ public class MapSVGMapper extends LazybotSVGMapper
                 document.getElementById("bs-r-5").setTextContent(beatmapStatistics.getBeatmap().getMax_combo() + "x");
 
                 document.getElementById("da-r-1").setTextContent((int)(beatmapStatistics.getBeatmap().getLengthBonus()*100)+"%");
-                document.getElementById("da-r-2").setTextContent(String.valueOf(Math.round(osu.getAimDifficultStrainCount())));
-                document.getElementById("da-r-3").setTextContent(String.valueOf(Math.round(osu.getSpeedDifficultStrainCount())));
-                document.getElementById("da-r-4").setTextContent(CommonTool.toString(osu.getSliderFactor() * 100).concat("%"));
-                document.getElementById("da-r-5").setTextContent(CommonTool.toString(osu.getSpeedNoteCount()));
-            }
-            case null, default -> throw new LazybotRuntimeException("暂支支持其他模式");
+                document.getElementById("da-r-2").setTextContent(String.valueOf(Math.round(difficulty.aimDifficultStrainCount())));
+                document.getElementById("da-r-3").setTextContent(String.valueOf(Math.round(difficulty.speedDifficultStrainCount())));
+                document.getElementById("da-r-4").setTextContent(CommonTool.toString(difficulty.sliderFactor() * 100).concat("%"));
+                document.getElementById("da-r-5").setTextContent(CommonTool.toString(difficulty.speedNoteCount()));
         }
-        document.getElementById("star-aim").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getAimStar()));
-        document.getElementById("star-speed").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getSpeedStar()));
+        else {
+            throw new LazybotRuntimeException("暂支支持其他模式");
+        }
+        document.getElementById("star-aim").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getAimStar(),1));
+        document.getElementById("star-speed").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getSpeedStar(),1));
+        document.getElementById("star-reading").setTextContent(CommonTool.toString(beatmapStatistics.getPerformance().getReadStar(),1));
 
 
         document.getElementById("pp-1").setTextContent(Math.round(beatmapStatistics.getPerformance().getAccPPList().get(100)) + "pp");

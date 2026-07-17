@@ -26,6 +26,7 @@ import me.aloic.lazybot.osu.dao.mapper.*;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.service.RosuPerformanceService;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.theme.preset.ProfileLightTheme;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
@@ -36,12 +37,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spring.osu.extended.rosu.JniBeatmap;
+import me.aloic.rosupp.RosuPpException;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -68,6 +68,8 @@ public class PlayerServiceImpl implements PlayerService
     private OsuToolsUtil osuToolsUtil;
     @Resource
     private AssetDownloader assetDownloader;
+    @Resource
+    private RosuPerformanceService rosuPerformanceService;
 
 
     @Override
@@ -152,15 +154,17 @@ public class PlayerServiceImpl implements PlayerService
             daSetting.setApproach_rate(params.getApproachRate());
             result.getImaginaryMods().add(new Mod("DA", daSetting));
         }
-        RosuUtil.setupBeatmapStatistics(result);
+        rosuPerformanceService.setupBeatmapStatistics(result);
 
         double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);
         double weightSpeed = Math.pow(result.getPerformance().getSpdPP(), 1.1);
         double weightAccuracy = Math.pow(result.getPerformance().getAccPP(), 1.1);
-        double totalWeight = weightAim + weightSpeed + weightAccuracy;
+        double weightReading = Math.pow(result.getPerformance().getReadPP(), 1.1);
+        double totalWeight = weightAim + weightSpeed + weightAccuracy + weightReading;
         int ratioAim = (int) Math.round(weightAim * 100.0 / totalWeight);
         int ratioSpeed = (int) Math.round(weightSpeed * 100.0 / totalWeight);
-        result.setPpBreakdownRatioChain(ratioAim +"%-" + ratioSpeed+"%-" + (100-ratioAim-ratioSpeed) +"%");
+        int ratioReading = (int) Math.round(weightReading * 100.0 / totalWeight);
+        result.setPpBreakdownRatioChain(ratioAim +"%-" + ratioSpeed+"%-" + ratioReading+"%-"+ (100-ratioAim-ratioSpeed-ratioReading) +"%");
         ModCalculatorUtil.afterModMapInfo(result.getBeatmap(), result.getImaginaryMods());
         return result;
     }
@@ -381,7 +385,7 @@ public class PlayerServiceImpl implements PlayerService
         for(int i=0;i<scoreDTOList.size();i++) {
             scoreDTOList.get(i).setPosition(i);
         }
-        OsuToolsUtil.setupModStats(scoreDTOList);
+        osuToolsUtil.setupModStats(scoreDTOList);
         List<ScoreLazerDTO> filteredScores = scoreDTOList.stream()
                 .filter(score -> params.getFilters().stream().allMatch(f -> f.filter(score)))
                 .sorted(Comparator.comparing(ScoreLazerDTO::getPp).reversed())
@@ -835,19 +839,23 @@ public class PlayerServiceImpl implements PlayerService
     @NotNull
     private List<MapScore> setupMapScores(List<MapScore> mapScores, BeatmapPerformance beatmapPerformance, Comparator<MapScore> comparing, String checksum) throws IOException
     {
-        JniBeatmap beatmap=new JniBeatmap(Files.readAllBytes(AssetDownloadUtil.beatmapPath(beatmapPerformance.getBid(),false)));
-        beatmapPerformance.setDifficultyAttributes(RosuUtil.nomodMapStats(beatmap, beatmapPerformance.getMode().getDescribe()));
+        var beatmapPath = AssetDownloadUtil.beatmapPath(beatmapPerformance.getBid(), false);
+        beatmapPerformance.setDifficultyAttributes(
+                rosuPerformanceService.calculateDifficulty(beatmapPath, beatmapPerformance.getMode().getDescribe()));
         beatmapPerformance.setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(beatmapPerformance.getSid()));
         beatmapPerformance.setLengthBonus(CommonTool.lengthBonusCalc(beatmapPerformance.getCountCircles()+beatmapPerformance.getCountSliders()+beatmapPerformance.getCountSpinners()));
-        for (MapScore mapScore:mapScores) {
-            try {
-                RosuUtil.setupMapScorePerformance(beatmap, mapScore);
+        try {
+            rosuPerformanceService.setupMapScorePerformances(beatmapPath, mapScores);
+            for (MapScore mapScore:mapScores) {
                 mapScore.setupBpm(mapScore,beatmapPerformance);
             }
-            catch (Exception e) {
-                logger.error(e.getMessage());
-                throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
-            }
+        }
+        catch (RosuPpException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("Error during recalculations/重算成绩时出错: " + e.getMessage());
         }
         mapScores=mapScores.stream().sorted(comparing.reversed()).toList();
         verifyBeatmapsCache(beatmapPerformance.getBid(), checksum);

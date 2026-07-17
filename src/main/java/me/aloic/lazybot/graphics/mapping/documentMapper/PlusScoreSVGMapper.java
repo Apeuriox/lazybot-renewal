@@ -201,6 +201,11 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
 
         document.getElementById("aim-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getAimPP(), score.getPpDetailsLocal().getAimPPMax()));
         document.getElementById("spd-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getSpdPP(), score.getPpDetailsLocal().getSpdPPMax()));
+        document.getElementById("read-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getReadPP(), score.getPpDetailsLocal().getReadPPMax()));
+        if (score.getPpDetailsLocal().getFlashlightPP()!=null && score.getPpDetailsLocal().getFlashlightPP()>0.5)
+            document.getElementById("fl-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getFlashlightPP(), score.getPpDetailsLocal().getFlashlightPPMax()));
+
+
         document.getElementById("acc-pp").setTextContent(concatValueString(score.getPpDetailsLocal().getAccPP(), score.getPpDetailsLocal().getAccPPMax()));
         document.getElementById("pp-pp").setTextContent(Math.round(score.getPp())+"pp");
         document.getElementById("fc-pp").setTextContent(Math.round(score.getPpDetailsLocal().getIfFc())+"pp");

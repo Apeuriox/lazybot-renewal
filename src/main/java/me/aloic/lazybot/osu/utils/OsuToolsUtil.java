@@ -11,6 +11,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
+import me.aloic.lazybot.osu.service.RosuPerformanceService;
 import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.util.CommonTool;
 import me.aloic.lazybot.util.TransformerUtil;
@@ -18,6 +19,7 @@ import me.aloic.lazybot.util.VirtualThreadExecutorHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import me.aloic.rosupp.RosuPpException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class OsuToolsUtil
 {
     @Resource
     private AssetDownloader assetDownloader;
+    @Resource
+    private RosuPerformanceService rosuPerformanceService;
 
     public BeatmapVO setupBeatmapVO(BeatmapDTO beatmapDTO)
     {
@@ -103,10 +107,13 @@ public class OsuToolsUtil
     }
 
     @NotNull
-    private static ScoreVO setupScoreVOLocalCache(Boolean override, ScoreVO scoreVO)
+    private ScoreVO setupScoreVOLocalCache(Boolean override, ScoreVO scoreVO)
     {
         try {
-            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO));
+            scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO));
+        }
+        catch (RosuPpException e) {
+            throw e;
         }
         catch (Exception e) {
             throw new LazybotRuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
@@ -119,11 +126,14 @@ public class OsuToolsUtil
         return scoreVO;
     }
 
-    private static void setBeatmapStarRating(Boolean override, ScoreVO scoreVO)
+    private void setBeatmapStarRating(Boolean override, ScoreVO scoreVO)
     {
         PerformanceVO performanceVO;
         try {
-            performanceVO= RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO);
+            performanceVO= rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreVO,override), scoreVO);
+        }
+        catch (RosuPpException e) {
+            throw e;
         }
         catch (Exception e) {
             throw new LazybotRuntimeException("Error during recalculations/重算成绩详情时出错: " + e.getMessage());
@@ -141,11 +151,13 @@ public class OsuToolsUtil
                 .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
                     scoreVO.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
                     try {
-                        scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(
+                        scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(
                                 AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
                         if (scoreVO.getPpDetailsLocal().getStar() != null) {
                             scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
                         }
+                    } catch (RosuPpException e) {
+                        throw e;
                     } catch (Exception e) {
                         throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
                     }
@@ -171,7 +183,7 @@ public class OsuToolsUtil
                 .map(CompletableFuture::join)
                 .collect(Collectors.toList());
     }
-    public static List<ScoreLazerDTO> setupModStats(List<ScoreLazerDTO> scores)
+    public List<ScoreLazerDTO> setupModStats(List<ScoreLazerDTO> scores)
     {
         List<CompletableFuture<ScoreLazerDTO>> futureList = scores.stream()
                 .map(score -> CompletableFuture.supplyAsync(() -> {
@@ -179,8 +191,10 @@ public class OsuToolsUtil
                     if (CommonTool.modsContainsAnyOfStarChanging(score.getMods()))
                     {
                         try {
-                           PerformanceVO performance = RosuUtil.getCurrentPP(AssetDownloadUtil.beatmapPath(score.getBeatmap().getId(), false), score);
+                           PerformanceVO performance = rosuPerformanceService.calculateCurrentPerformance(AssetDownloadUtil.beatmapPath(score.getBeatmap().getId(), false), score);
                            score.getBeatmap().setDifficulty_rating(performance.getStar());
+                        } catch (RosuPpException e) {
+                            throw e;
                         } catch (Exception e) {
                             throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
                         }
@@ -193,7 +207,7 @@ public class OsuToolsUtil
                 .map(CompletableFuture::join)
                 .collect(Collectors.toList());
     }
-    public static List<ScoreSequence> setUpPerformanceSequence(List<ScoreSequence> scoreSequences)
+    public List<ScoreSequence> setUpPerformanceSequence(List<ScoreSequence> scoreSequences)
     {
         List<CompletableFuture<ScoreSequence>> futureList = scoreSequences.stream()
                 .map(scoreSequence -> CompletableFuture.supplyAsync(() -> {
@@ -207,16 +221,19 @@ public class OsuToolsUtil
     }
 
     @NotNull
-    public static ScoreSequence calcPerformanceForSequence(ScoreSequence scoreSequence)
+    public ScoreSequence calcPerformanceForSequence(ScoreSequence scoreSequence)
     {
         ModCalculatorUtil.setupBpmChange(scoreSequence);
         try
         {
-            scoreSequence.setPpDetails(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(), false), scoreSequence));
+            scoreSequence.setPpDetails(rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreSequence.getBeatmap().getBid(), false), scoreSequence));
             if (scoreSequence.getPpDetails().getStar() != null)
             {
                 scoreSequence.getBeatmap().setDifficult_rating(scoreSequence.getPpDetails().getStar());
             }
+        } catch (RosuPpException e)
+        {
+            throw e;
         } catch (Exception e)
         {
             throw new LazybotRuntimeException("重算成绩详情时出错: " + e.getMessage());
@@ -232,12 +249,15 @@ public class OsuToolsUtil
             scoreVO.getBeatmap().setBgUrl(assetDownloader.beatmapBackgroundAbsolutePath(scoreVO.getBeatmap().getBeatmapset_id()));
             try
             {
-                scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO,false), scoreVO));
+                scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreVO,false), scoreVO));
                 if (scoreVO.getPpDetailsLocal().getStar() != null)
                 {
                     scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
                     scoreVO.setPp(scoreVO.getPpDetailsLocal().getIfFc());
                 }
+            } catch (RosuPpException e)
+            {
+                throw e;
             } catch (Exception e)
             {
                 throw new LazybotRuntimeException("重算成绩详情时出错, 请重试");
@@ -325,7 +345,10 @@ public class OsuToolsUtil
         // Apply modified mods for recalculation
         scoreVO.setModJSON(modifiedMods);
         try {
-            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+            scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+        } catch (RosuPpException e) {
+            scoreVO.setModJSON(originalMods);
+            throw e;
         } catch (Exception e) {
             scoreVO.setModJSON(originalMods);
             throw new LazybotRuntimeException("重算成绩详情时出错, 请重试");
@@ -351,6 +374,8 @@ public class OsuToolsUtil
                 .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
                     try {
                         setupNoReadingPPStats(scoreVO);
+                    } catch (RosuPpException e) {
+                        throw e;
                     } catch (Exception e) {
                         throw new LazybotRuntimeException("[NoReading指令] 发现异常ScoreVO对象: " + scoreVO);
                     }
@@ -467,7 +492,10 @@ public class OsuToolsUtil
         // Apply modified mods for recalculation
         scoreVO.setModJSON(modifiedMods);
         try {
-            scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+            scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
+        } catch (RosuPpException e) {
+            scoreVO.setModJSON(originalMods);
+            throw e;
         } catch (Exception e) {
             scoreVO.setModJSON(originalMods);
             throw new LazybotRuntimeException("重算成绩详情时出错, 请重试");
@@ -493,6 +521,8 @@ public class OsuToolsUtil
                 .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
                     try {
                         setupMaxReadingPPStats(scoreVO);
+                    } catch (RosuPpException e) {
+                        throw e;
                     } catch (Exception e) {
                         throw new LazybotRuntimeException("[MaxReading指令] 发现异常ScoreVO对象: " + scoreVO);
                     }
@@ -541,6 +571,8 @@ public class OsuToolsUtil
                                     : !scoreVO.getIsPerfectCombo();
                             setupFixedPPStats(scoreVO, condition);
 
+                        } catch (RosuPpException e) {
+                            throw e;
                         } catch (Exception e) {
                             throw new LazybotRuntimeException("[NoChoke指令] 发现异常ScoreVO对象: " + scoreVO);
                         }
@@ -615,7 +647,7 @@ public class OsuToolsUtil
     }
 
 
-    public static List<ScoreVO> processScoreListConcurrently(List<ScoreVO> scoreList, List<Mod> modEntities, BpifParameter params) {
+    public List<ScoreVO> processScoreListConcurrently(List<ScoreVO> scoreList, List<Mod> modEntities, BpifParameter params) {
         List<CompletableFuture<ScoreVO>> futures = scoreList.stream()
                 .map(scoreVO -> CompletableFuture.supplyAsync(() -> {
                     switch (params.getOperator()) {
@@ -626,12 +658,8 @@ public class OsuToolsUtil
                         case "-" -> scoreVO.getModJSON().removeIf(modEntities::contains);
                         default -> throw new LazybotRuntimeException("Operator invalid: " + params.getOperator());
                     }
-                    try {
-                        scoreVO.setPpDetailsLocal(RosuUtil.getPPStats(AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
-                    }
-                    catch (IOException e) {
-                        throw new LazybotRuntimeException("重算成绩时出错");
-                    }
+                    scoreVO.setPpDetailsLocal(rosuPerformanceService.calculatePerformance(
+                            AssetDownloadUtil.beatmapPath(scoreVO, false), scoreVO));
                     if (scoreVO.getPpDetailsLocal().getStar() != null) {
                         scoreVO.getBeatmap().setDifficult_rating(scoreVO.getPpDetailsLocal().getStar());
 

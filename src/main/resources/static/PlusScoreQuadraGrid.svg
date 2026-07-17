@@ -139,12 +139,15 @@
 		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" id="aim-pp" x="1900" y="163.02">999/9999 (11.11%)</text>
 		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="1195" y="204.52">Speed</tspan></text>
 		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" id="spd-pp" x="1900" y="204.52">999/9999 (11.11%)</text>
-		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="1195" y="246.02">Accuracy</tspan></text>
-		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" id="acc-pp" x="1900" y="246.02">999/9999 (11.11%)</text>
-		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="1195" y="287.52">--</tspan></text>
-		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="1195" y="329.02">--</tspan></text>
+		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="1195" y="246.02">Reading</tspan></text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" id="read-pp" x="1900" y="246.02">999/9999 (11.11%)</text>
+		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="1195" y="287.52">Accuracy</tspan></text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" id="acc-pp" x="1900" y="287.52">999/9999 (11.11%)</text>
+		<text fill="#A6A6A6" class="cls-1" font-size="20"><tspan x="1195" y="329.02">Flashlight</tspan></text>
+		<text fill="#0D0D0D" class="cls-1" font-size="20" text-anchor="end" id="fl-pp" x="1900" y="329.02">--</text>
 		<text fill="black" class="cls-1" font-size="90" x="1195" id="pp-pp" y="419.84">420pp</text>
 		<text fill="#A6A6A6" text-anchor="end" x="1900" y="418" id="fc-pp" class="cls-1" font-size="40">514pp</text>
+
 
 
 

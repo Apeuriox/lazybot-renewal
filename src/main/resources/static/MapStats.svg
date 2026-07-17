@@ -150,14 +150,18 @@
                 font-size="20" letter-spacing="0em" text-anchor="end" x="920" y="878.52" id="da-r-5">
                 1123</text>
 
-            <text fill="black" font-family="Outfit" x="510" y="999.64">
-                <tspan font-size="60" id="star-aim">3.2</tspan>
-                <tspan font-size="24" id="star-aim-label">Aim</tspan>
+            <text fill="black" font-family="Outfit" x="508" y="999.64">
+                <tspan font-size="50" id="star-aim">3.2</tspan>
+                <tspan font-size="20" id="star-aim-label">Aim</tspan>
             </text>
 
+            <text fill="black" font-family="Outfit" text-anchor="end" x="765" y="999.06">
+                <tspan font-size="50" id="star-speed">4.2</tspan>
+                <tspan font-size="20" id="star-speed-label">Spd</tspan>
+            </text>
             <text fill="black" font-family="Outfit" text-anchor="end" x="920" y="999.06">
-                <tspan font-size="60" id="star-speed">4.2</tspan>
-                <tspan font-size="24" id="star-speed-label">Spd</tspan>
+                <tspan font-size="50" id="star-reading">4.2</tspan>
+                <tspan font-size="20" id="star-reading-label">Read</tspan>
             </text>
         </g>
 
@@ -239,23 +243,29 @@
                 font-size="20" letter-spacing="0em" x="1900" y="758.02" text-anchor="end" id="pp-speed">654pp
             </text>
             <text fill="#A6A6A6" font-family="Outfit"
-                font-size="20" letter-spacing="0em">
-                <tspan x="1591" y="799.52">Accuracy</tspan>
+                  font-size="20" letter-spacing="0em">
+                <tspan x="1591" y="799.52">Reading</tspan>
             </text>
             <text fill="#0D0D0D" font-family="Outfit"
-                font-size="20" letter-spacing="0em" x="1900" y="799.52" text-anchor="end" id="pp-accuracy">765pp
+                  font-size="20" letter-spacing="0em" x="1900" y="799.52" text-anchor="end" id="pp-reading">765pp
             </text>
             <text fill="#A6A6A6" font-family="Outfit"
-                font-size="20" letter-spacing="0em">
-                <tspan x="1591" y="841.02">--</tspan>
+                  font-size="20" letter-spacing="0em">
+                <tspan x="1591" y="841.02">Accuracy</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                  font-size="20" letter-spacing="0em" x="1900" y="841.02" text-anchor="end" id="pp-accuracy">123pp
             </text>
             <text fill="#A6A6A6" font-family="Outfit"
-                font-size="20" letter-spacing="0em">
-                <tspan x="1591" y="882.52">--</tspan>
+                  font-size="20" letter-spacing="0em">
+                <tspan x="1591" y="882.52">Flashlight</tspan>
+            </text>
+            <text fill="#0D0D0D" font-family="Outfit"
+                  font-size="20" letter-spacing="0em" x="1900" y="882.52" text-anchor="end" id="pp-flashlight">--
             </text>
             <text fill="black" font-family="Outfit"
-                font-size="50" letter-spacing="0em">
-                <tspan x="1591" y="999.8" id="pp-distri">56%-25%-19%</tspan>
+                  font-size="42" letter-spacing="0em">
+                <tspan x="1591" y="999.8" id="pp-distri">51%-25%-4%-19%</tspan>
             </text>
         </g>
 

@@ -87,10 +87,12 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                 doc.getElementById("aimPPtotal").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAimPPMax())));
                 doc.getElementById("spdPPtotal").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getSpdPPMax())));
                 doc.getElementById("accPPtotal").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPMax())));
+                doc.getElementById("readPPtotal").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getReadPPMax())));
 
                 doc.getElementById("aimPPget").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAimPP())));
                 doc.getElementById("accPPget").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPP())));
                 doc.getElementById("spdPPget").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getSpdPP())));
+                doc.getElementById("readPPget").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getReadPP())));
                 doc.getElementById("iffc").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getIfFc())).concat(" PP"));
 
                 doc.getElementById("95%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(95))).concat(" PP"));
@@ -328,9 +330,11 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                 String aimPPTotal = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getAimPPMax()));
                 String spdPPTotal = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getSpdPPMax()));
                 String accPPTotal = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getAccPPMax()));
+                String readPPTotal = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getReadPPMax()));
                 aimPPTotal = aimPPTotal.length() > 4 ? "9999" : aimPPTotal;
                 spdPPTotal = spdPPTotal.length() > 4 ? "9999" : spdPPTotal;
                 accPPTotal = accPPTotal.length() > 4 ? "9999" : accPPTotal;
+                readPPTotal = readPPTotal.length() > 4 ? "9999" : readPPTotal;
                 for (int i = 0; i < aimPPTotal.length(); i++)
                 {
                     doc.getElementById("aimPPTotal-" + (4 - i)).setTextContent(aimPPTotal.substring(aimPPTotal.length() - i - 1, aimPPTotal.length() - i));
@@ -352,15 +356,24 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                     doc.getElementById("accPPTotal-" + (4 - i)).setAttribute("opacity", "1");
                     doc.getElementById("accPPTotal-" + (4 - i) + "-Shadow").setAttribute("opacity", "0.4");
                 }
+                for (int i = 0; i < readPPTotal.length(); i++)
+                {
+                    doc.getElementById("readPPTotal-" + (4 - i)).setTextContent(readPPTotal.substring(readPPTotal.length() - i - 1, readPPTotal.length() - i));
+                    doc.getElementById("readPPTotal-" + (4 - i) + "-Shadow").setTextContent(readPPTotal.substring(readPPTotal.length() - i - 1, readPPTotal.length() - i));
+                    doc.getElementById("readPPTotal-" + (4 - i)).setAttribute("opacity", "1");
+                    doc.getElementById("readPPTotal-" + (4 - i) + "-Shadow").setAttribute("opacity", "0.4");
+                }
 
                 if(mode== OsuMode.Osu)
                 {
                     String aimPPGet = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getAimPP()));
                     String accPPGet = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getAccPP()));
                     String spdPPGet = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getSpdPP()));
+                    String readPPGet = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getReadPP()));
                     aimPPGet = aimPPGet.length() > 4 ? "9999" : aimPPGet;
                     spdPPGet = spdPPGet.length() > 4 ? "9999" : spdPPGet;
                     accPPGet = accPPGet.length() > 4 ? "9999" : accPPGet;
+                    readPPGet = readPPGet.length() > 4 ? "9999" : readPPGet;
                     for (int i = 0; i < aimPPGet.length(); i++)
                     {
                         doc.getElementById("aimPPGet-" + (4 - i)).setTextContent(aimPPGet.substring(aimPPGet.length() - i - 1, aimPPGet.length() - i));
@@ -381,6 +394,13 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                         doc.getElementById("accPPGet-" + (4 - i) + "-Shadow").setTextContent(accPPGet.substring(accPPGet.length() - i - 1, accPPGet.length() - i));
                         doc.getElementById("accPPGet-" + (4 - i)).setAttribute("opacity", "1");
                         doc.getElementById("accPPGet-" + (4 - i) + "-Shadow").setAttribute("opacity", "0.4");
+                    }
+                    for (int i = 0; i < readPPGet.length(); i++)
+                    {
+                        doc.getElementById("readPPGet-" + (4 - i)).setTextContent(readPPGet.substring(readPPGet.length() - i - 1, readPPGet.length() - i));
+                        doc.getElementById("readPPGet-" + (4 - i) + "-Shadow").setTextContent(readPPGet.substring(readPPGet.length() - i - 1, readPPGet.length() - i));
+                        doc.getElementById("readPPGet-" + (4 - i)).setAttribute("opacity", "1");
+                        doc.getElementById("readPPGet-" + (4 - i) + "-Shadow").setAttribute("opacity", "0.4");
                     }
                 }
 

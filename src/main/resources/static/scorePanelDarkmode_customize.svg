@@ -867,85 +867,136 @@
       <text class="cls-166" fill="black" opacity="0.45" transform="translate(1232 1156.58)">PP Details</text>
       <text class="cls-16" transform="translate(1230 1153.58)">PP Details</text>
     </g>
-    <g class="cls-35">
-      <text class="cls-28" fill="black" opacity="0.5" transform="translate(1232 1183.08)"><tspan x="0" y="0">AIM</tspan></text>
-      <text class="cls-24" fill="black" opacity="0.5" transform="translate(1284.65 1183.08)">PP</text>
-      <text class="cls-28" fill="#e6e6e6" transform="translate(1230 1181.08)"><tspan x="0" y="0">AIM</tspan></text>
-      <text class="cls-24" fill="#e6e6e6" transform="translate(1282.65 1181.08)">PP</text>
+    <g transform="translate(0,190)">
+      <text fill="black" font-family="Rubik"
+            font-size="26" letter-spacing="0em"><tspan x="1234" y="1001.41">AIM</tspan></text>
+      <text fill="black" font-family="Rubik"
+            font-size="19" font-weight="bold" letter-spacing="0em"><tspan x="1281" y="1001.01">PP</tspan></text>
+      <text fill="#E6E6E6" font-family="Rubik"
+            font-size="26" letter-spacing="0em"><tspan x="1232" y="999.405">AIM</tspan></text>
+      <text fill="#E6E6E6" font-family="Rubik"
+            font-size="19" font-weight="bold" letter-spacing="0em"><tspan x="1279" y="999.007">PP</tspan></text>
+      <text fill="black" font-family="Rubik"
+            font-size="26" letter-spacing="0em"><tspan x="1408" y="1001.41">SPD</tspan></text>
+      <text fill="black" font-family="Rubik"
+            font-size="19" font-weight="bold" letter-spacing="0em"><tspan x="1462" y="1001.01">PP</tspan></text>
+      <text fill="#E6E6E6" font-family="Rubik"
+            font-size="26" letter-spacing="0em"><tspan x="1406" y="999.405">SPD</tspan></text>
+      <text fill="#E6E6E6" font-family="Rubik"
+            font-size="19" font-weight="bold" letter-spacing="0em"><tspan x="1460" y="999.007">PP</tspan></text>
+      <text fill="black" font-family="Rubik"
+            font-size="26" letter-spacing="0em"><tspan x="1575" y="1001.41">READ</tspan></text>
+      <text fill="black" font-family="Rubik"
+            font-size="19" font-weight="bold" letter-spacing="0em"><tspan x="1647" y="1001.01">PP</tspan></text>
+      <text fill="#E6E6E6" font-family="Rubik"
+            font-size="26" letter-spacing="0em"><tspan x="1573" y="999.405">READ</tspan></text>
+      <text fill="#E6E6E6" font-family="Rubik"
+            font-size="19" font-weight="bold" letter-spacing="0em"><tspan x="1645" y="999.007">PP</tspan></text>
+      <text fill="black" font-family="Rubik"
+            font-size="26" letter-spacing="0em"><tspan x="1752" y="1001.41">ACC</tspan></text>
+      <text fill="black" font-family="Rubik"
+            font-size="19" font-weight="bold" letter-spacing="0em"><tspan x="1810" y="1001.01">PP</tspan></text>
+      <text fill="#E6E6E6" font-family="Rubik"
+            font-size="26" letter-spacing="0em"><tspan x="1750" y="999.405">ACC</tspan></text>
+      <text fill="#E6E6E6" font-family="Rubik"
+            font-size="19" font-weight="bold" letter-spacing="0em"><tspan x="1808" y="999.007">PP</tspan></text>
     </g>
+
     <g class="cls-35">
-      <text class="cls-28" fill="black" opacity="0.5" transform="translate(1493.25 1183.08)"><tspan x="0" y="0">SPD</tspan></text>
-      <text class="cls-24" fill="black" opacity="0.5" transform="translate(1552.25 1183.08)">PP</text>
-      <text class="cls-28" fill="#e6e6e6" transform="translate(1491.25 1181.08)"><tspan x="0" y="0">SPD</tspan></text>
-      <text class="cls-24" fill="#e6e6e6" transform="translate(1550.25 1181.08)">PP</text>
+      <text id="aimPPGet-1-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1239.52" y="1215">0</text>
+      <text id="aimPPGet-2-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1254.52" y="1215">0</text>
+      <text id="aimPPGet-3-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1269.52" y="1215">0</text>
+      <text id="aimPPGet-4-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1284.52" y="1215">0</text>
+
+      <text id="aimPPGet-1" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1238.02" y="1213.5">0</text>
+      <text id="aimPPGet-2" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1253.02" y="1213.5">0</text>
+      <text id="aimPPGet-3" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1268.02" y="1213.5">0</text>
+      <text id="aimPPGet-4" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1283.02" y="1213.5">0</text>
+
+      <text fill="black" opacity="0.4" font-family="Rubik" font-size="22" font-weight="bold" letter-spacing="0em" x="1293" y="1215.31">/</text>
+      <text fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" letter-spacing="0em" x="1291.5" y="1213.73">/</text>
+
+      <text id="aimPPTotal-1-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1310.56" y="1215.25">0</text>
+      <text id="aimPPTotal-2-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1321.56" y="1215.25">0</text>
+      <text id="aimPPTotal-3-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1332.56" y="1215.25">0</text>
+      <text id="aimPPTotal-4-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1343.56" y="1215.25">0</text>
+
+      <text id="aimPPTotal-1" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1308.56" y="1213.67">0</text>
+      <text id="aimPPTotal-2" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1319.56" y="1213.67">0</text>
+      <text id="aimPPTotal-3" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1330.56" y="1213.67">0</text>
+      <text id="aimPPTotal-4" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1341.56" y="1213.67">0</text>
     </g>
-    <g class="cls-35">
-      <text class="cls-28" fill="black" opacity="0.5" transform="translate(1722 1183.08)">ACC</text>
-      <text class="cls-24" fill="black" opacity="0.5" transform="translate(1780 1183.08)">PP</text>
-      <text class="cls-28" fill="#e6e6e6" transform="translate(1720 1181.08)">ACC</text>
-      <text class="cls-24" fill="#e6e6e6" transform="translate(1778 1181.08)">PP</text>
+
+    <g class="cls-35" transform="translate(175,0)">
+      <text id="spdPPGet-1-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1239.52" y="1215">0</text>
+      <text id="spdPPGet-2-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1254.52" y="1215">0</text>
+      <text id="spdPPGet-3-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1269.52" y="1215">0</text>
+      <text id="spdPPGet-4-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1284.52" y="1215">0</text>
+
+      <text id="spdPPGet-1" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1238.02" y="1213.5">0</text>
+      <text id="spdPPGet-2" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1253.02" y="1213.5">0</text>
+      <text id="spdPPGet-3" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1268.02" y="1213.5">0</text>
+      <text id="spdPPGet-4" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1283.02" y="1213.5">0</text>
+
+      <text fill="black" opacity="0.4" font-family="Rubik" font-size="22" font-weight="bold" letter-spacing="0em" x="1293" y="1215.31">/</text>
+      <text fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" letter-spacing="0em" x="1291.5" y="1213.73">/</text>
+
+      <text id="spdPPTotal-1-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1310.56" y="1215.25">0</text>
+      <text id="spdPPTotal-2-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1321.56" y="1215.25">0</text>
+      <text id="spdPPTotal-3-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1332.56" y="1215.25">0</text>
+      <text id="spdPPTotal-4-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1343.56" y="1215.25">0</text>
+      <text id="spdPPTotal-1" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1308.56" y="1213.67">0</text>
+      <text id="spdPPTotal-2" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1319.56" y="1213.67">0</text>
+      <text id="spdPPTotal-3" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1330.56" y="1213.67">0</text>
+      <text id="spdPPTotal-4" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1341.56" y="1213.67">0</text>
     </g>
-    <g transform="translate(-30,0)">
-      <g class="cls-35">
-        <text id="aimPPGet-1-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1272 1210.58)">0</text>
-        <text id="aimPPGet-2-Shadow" class="cls-15" opacity="0.1" text-anchor="middle" transform="translate(1290.5 1210.58)">0</text>
-        <text id="aimPPGet-3-Shadow" class="cls-15" opacity="0.1" text-anchor="middle" transform="translate(1309 1210.58)">0</text>
-        <text id="aimPPGet-4-Shadow" class="cls-15" opacity="0.1" text-anchor="middle" transform="translate(1327.5 1210.58)">0</text>
-        <text id="aimPPGet-1" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1270 1208.58)">0</text>
-        <text id="aimPPGet-2" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1288.5 1208.58)">0</text>
-        <text id="aimPPGet-3" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1307 1208.58)">0</text>
-        <text id="aimPPGet-4" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1325.5 1208.58)">0</text>
-        <text class="cls-15" opacity="0.4" fill="black" transform="translate(1336 1210.58)">/</text>
-        <text class="cls-15" fill="#e6e6e6" transform="translate(1335 1208.58)">/</text>
-        <text id="aimPPTotal-1-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1357 1210.58)">0</text>
-        <text id="aimPPTotal-2-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1371 1210.58)">0</text>
-        <text id="aimPPTotal-3-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1385 1210.58)">0</text>
-        <text id="aimPPTotal-4-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1399 1210.58)">0</text>
-        <text id="aimPPTotal-1" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1355 1208.58)">0</text>
-        <text id="aimPPTotal-2" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1369 1208.58)">0</text>
-        <text id="aimPPTotal-3" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1383 1208.58)">0</text>
-        <text id="aimPPTotal-4" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1397 1208.58)">0</text>
-      </g>
-      <g class="cls-35">
-        <text id="spdPPGet-1-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1532 1210.58)">0</text>
-        <text id="spdPPGet-2-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1550.5 1210.58)">0</text>
-        <text id="spdPPGet-3-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1569 1210.58)">0</text>
-        <text id="spdPPGet-4-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1588.5 1210.58)">0</text>
-        <text id="spdPPGet-1" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1530 1208.58)">0</text>
-        <text id="spdPPGet-2" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1548.5 1208.58)">0</text>
-        <text id="spdPPGet-3" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1567 1208.58)">0</text>
-        <text id="spdPPGet-4" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1585.5 1208.58)">0</text>
-        <text class="cls-15" opacity="0.4" fill="black" transform="translate(1597 1210.58)">/</text>
-        <text class="cls-15" fill="#e6e6e6" transform="translate(1595 1208.58)">/</text>
-        <text id="spdPPTotal-1-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1617 1210.58)">0</text>
-        <text id="spdPPTotal-2-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1631 1210.58)">0</text>
-        <text id="spdPPTotal-3-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1645 1210.58)">0</text>
-        <text id="spdPPTotal-4-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1659 1210.58)">0</text>
-        <text id="spdPPTotal-1" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1615 1208.58)">0</text>
-        <text id="spdPPTotal-2" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1629 1208.58)">0</text>
-        <text id="spdPPTotal-3" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1643 1208.58)">0</text>
-        <text id="spdPPTotal-4" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1657 1208.58)">0</text>
-      </g>
-      <g class="cls-35">
-        <text id="accPPGet-1-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1762 1210.58)">0</text>
-        <text id="accPPGet-2-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1780.5 1210.58)">0</text>
-        <text id="accPPGet-3-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1799 1210.58)">0</text>
-        <text id="accPPGet-4-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1817.5 1210.58)">0</text>
-        <text id="accPPGet-1" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1760 1208.58)">0</text>
-        <text id="accPPGet-2" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1778.5 1208.58)">0</text>
-        <text id="accPPGet-3" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1797 1208.58)">0</text>
-        <text id="accPPGet-4" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1815.5 1208.58)">0</text>
-        <text class="cls-15" opacity="0.4" fill="black" transform="translate(1827 1210.58)">/</text>
-        <text class="cls-15" fill="#e6e6e6" transform="translate(1825 1208.58)">/</text>
-        <text id="accPPTotal-1-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1847 1210.58)">0</text>
-        <text id="accPPTotal-2-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1861 1210.58)">0</text>
-        <text id="accPPTotal-3-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1875 1210.58)">0</text>
-        <text id="accPPTotal-4-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1889 1210.58)">0</text>
-        <text id="accPPTotal-1" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1845 1208.58)">0</text>
-        <text id="accPPTotal-2" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1859 1208.58)">0</text>
-        <text id="accPPTotal-3" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1873 1208.58)">0</text>
-        <text id="accPPTotal-4" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1887 1208.58)">0</text>
-      </g>
+    <g class="cls-35" transform="translate(342,0)">
+      <text id="readPPGet-1-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1239.52" y="1215">0</text>
+      <text id="readPPGet-2-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1254.52" y="1215">0</text>
+      <text id="readPPGet-3-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1269.52" y="1215">0</text>
+      <text id="readPPGet-4-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1284.52" y="1215">0</text>
+
+      <text id="readPPGet-1" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1238.02" y="1213.5">0</text>
+      <text id="readPPGet-2" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1253.02" y="1213.5">0</text>
+      <text id="readPPGet-3" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1268.02" y="1213.5">0</text>
+      <text id="readPPGet-4" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1283.02" y="1213.5">0</text>
+
+      <text fill="black" opacity="0.4" font-family="Rubik" font-size="22" font-weight="bold" letter-spacing="0em" x="1293" y="1215.31">/</text>
+      <text fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" letter-spacing="0em" x="1291.5" y="1213.73">/</text>
+
+      <text id="readPPTotal-1-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1310.56" y="1215.25">0</text>
+      <text id="readPPTotal-2-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1321.56" y="1215.25">0</text>
+      <text id="readPPTotal-3-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1332.56" y="1215.25">0</text>
+      <text id="readPPTotal-4-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1343.56" y="1215.25">0</text>
+
+      <text id="readPPTotal-1" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1308.56" y="1213.67">0</text>
+      <text id="readPPTotal-2" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1319.56" y="1213.67">0</text>
+      <text id="readPPTotal-3" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1330.56" y="1213.67">0</text>
+      <text id="readPPTotal-4" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1341.56" y="1213.67">0</text>
+    </g>
+    <g class="cls-35" transform="translate(518,0)">
+      <text id="accPPGet-1-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1239.52" y="1215">0</text>
+      <text id="accPPGet-2-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1254.52" y="1215">0</text>
+      <text id="accPPGet-3-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1269.52" y="1215">0</text>
+      <text id="accPPGet-4-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="22" font-weight="bold" x="1284.52" y="1215">0</text>
+
+      <text id="accPPGet-1" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1238.02" y="1213.5">0</text>
+      <text id="accPPGet-2" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1253.02" y="1213.5">0</text>
+      <text id="accPPGet-3" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1268.02" y="1213.5">0</text>
+      <text id="accPPGet-4" opacity="0.3" text-anchor="middle" fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" x="1283.02" y="1213.5">0</text>
+
+      <text fill="black" opacity="0.4" font-family="Rubik" font-size="22" font-weight="bold" letter-spacing="0em" x="1293" y="1215.31">/</text>
+      <text fill="#E6E6E6" font-family="Rubik" font-size="22" font-weight="bold" letter-spacing="0em" x="1291.5" y="1213.73">/</text>
+
+      <text id="accPPTotal-1-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1310.56" y="1215.25">0</text>
+      <text id="accPPTotal-2-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1321.56" y="1215.25">0</text>
+      <text id="accPPTotal-3-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1332.56" y="1215.25">0</text>
+      <text id="accPPTotal-4-Shadow" text-anchor="middle" opacity="0.1" fill="black" font-family="Rubik" font-size="16" font-weight="bold" x="1343.56" y="1215.25">0</text>
+
+      <text id="accPPTotal-1" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1308.56" y="1213.67">0</text>
+      <text id="accPPTotal-2" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1319.56" y="1213.67">0</text>
+      <text id="accPPTotal-3" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1330.56" y="1213.67">0</text>
+      <text id="accPPTotal-4" text-anchor="middle" opacity="0.3" fill="#E6E6E6" font-family="Rubik" font-size="16" font-weight="bold" x="1341.56" y="1213.67">0</text>
     </g>
   </g>
 

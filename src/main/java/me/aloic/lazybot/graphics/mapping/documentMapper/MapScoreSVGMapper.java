@@ -14,10 +14,7 @@ import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.utils.ColorUtil;
 import me.aloic.lazybot.util.CommonTool;
-import org.spring.osu.extended.rosu.CatchDifficultyAttributes;
-import org.spring.osu.extended.rosu.ManiaDifficultyAttributes;
-import org.spring.osu.extended.rosu.OsuDifficultyAttributes;
-import org.spring.osu.extended.rosu.TaikoDifficultyAttributes;
+import me.aloic.rosupp.DifficultyResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -73,8 +70,12 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                 lighterStar=new HSL(hue,75,5);
                 darkerStar=new HSL(hue,20,75);
             }
-            switch (beatmap.getDifficultyAttributes()) {
-                case OsuDifficultyAttributes osu -> {
+            DifficultyResult difficulty = beatmap.getDifficultyAttributes();
+            if (difficulty == null) {
+                throw new LazybotRuntimeException("谱面难度属性为空");
+            }
+            switch (difficulty.mode()) {
+                case OSU -> {
                     doc.getElementById("mode-osu").setAttribute("opacity", "1");
                     doc.getElementById("mode-osu").setAttribute("fill", darkerStar.toString());
                     doc.getElementById("osu-stats-2").setAttribute("opacity", "1");
@@ -85,15 +86,15 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                     doc.getElementById("ar-osu").setTextContent(CommonTool.toString(beatmap.getAr(), 1));
                     doc.getElementById("od-osu").setTextContent(CommonTool.toString(beatmap.getAccuracy(), 1));
                     doc.getElementById("hp-osu").setTextContent(CommonTool.toString(beatmap.getDrain(), 1));
-                    doc.getElementById("star-aim-num").setTextContent(CommonTool.toString(osu.getAim()));
-                    doc.getElementById("star-spd-num").setTextContent(CommonTool.toString(osu.getSpeed()));
+                    doc.getElementById("star-aim-num").setTextContent(CommonTool.toString(difficulty.aim()));
+                    doc.getElementById("star-spd-num").setTextContent(CommonTool.toString(difficulty.speed()));
 
-                    doc.getElementById("aimstrain").setTextContent(String.valueOf(Math.round(osu.getAimDifficultStrainCount())));
-                    doc.getElementById("speedstrain").setTextContent(String.valueOf(Math.round(osu.getSpeedDifficultStrainCount())));
-                    doc.getElementById("sliderfactor").setTextContent(CommonTool.toString(osu.getSliderFactor() * 100).concat("%"));
+                    doc.getElementById("aimstrain").setTextContent(String.valueOf(Math.round(difficulty.aimDifficultStrainCount())));
+                    doc.getElementById("speedstrain").setTextContent(String.valueOf(Math.round(difficulty.speedDifficultStrainCount())));
+                    doc.getElementById("sliderfactor").setTextContent(CommonTool.toString(difficulty.sliderFactor() * 100).concat("%"));
                     doc.getElementById("lengthbonus").setTextContent(CommonTool.toString(beatmap.getLengthBonus(),3));
                 }
-                case TaikoDifficultyAttributes taiko -> {
+                case TAIKO -> {
                     doc.getElementById("mode-taiko").setAttribute("opacity", "1");
                     doc.getElementById("mode-taiko").setAttribute("fill", darkerStar.toString());
                     doc.getElementById("taiko-stats-2").setAttribute("opacity", "1");
@@ -101,12 +102,12 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                     doc.getElementById("od-taiko").setTextContent(CommonTool.toString(beatmap.getAccuracy(), 1));
                     doc.getElementById("hp-taiko").setTextContent(CommonTool.toString(beatmap.getDrain(), 1));
 
-                    doc.getElementById("stamina").setTextContent(CommonTool.toString(taiko.getStamina()));
-                    doc.getElementById("rhythm").setTextContent(CommonTool.toString(taiko.getRhythm()));
-                    doc.getElementById("color").setTextContent(CommonTool.toString(taiko.getColor()));
-                    doc.getElementById("reading").setTextContent(CommonTool.toString(taiko.getReading()));
+                    doc.getElementById("stamina").setTextContent(CommonTool.toString(difficulty.stamina()));
+                    doc.getElementById("rhythm").setTextContent(CommonTool.toString(difficulty.rhythm()));
+                    doc.getElementById("color").setTextContent(CommonTool.toString(difficulty.color()));
+                    doc.getElementById("reading").setTextContent(CommonTool.toString(difficulty.taikoReading()));
                 }
-                case CatchDifficultyAttributes fruits -> {
+                case CATCH -> {
                     doc.getElementById("mode-ctb").setAttribute("opacity", "1");
                     doc.getElementById("mode-ctb").setAttribute("fill", darkerStar.toString());
                     doc.getElementById("fruits-stats-2").setAttribute("opacity", "1");
@@ -116,12 +117,12 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                     doc.getElementById("od-fruits").setTextContent(CommonTool.toString(beatmap.getAccuracy(), 1));
                     doc.getElementById("hp-fruits").setTextContent(CommonTool.toString(beatmap.getDrain(), 1));
 
-                    doc.getElementById("fruits").setTextContent(String.valueOf(fruits.getNFruits()));
-                    doc.getElementById("droplets").setTextContent(String.valueOf(fruits.getNDroplets()));
-                    doc.getElementById("tinydroplets").setTextContent(String.valueOf(fruits.getNTinyDroplets()));
+                    doc.getElementById("fruits").setTextContent(String.valueOf(difficulty.fruitCount()));
+                    doc.getElementById("droplets").setTextContent(String.valueOf(difficulty.dropletCount()));
+                    doc.getElementById("tinydroplets").setTextContent(String.valueOf(difficulty.tinyDropletCount()));
                     doc.getElementById("convert1").setTextContent(String.valueOf(beatmap.getConvert()));
                 }
-                case ManiaDifficultyAttributes mania -> {
+                case MANIA -> {
                     doc.getElementById("mode-taiko").setAttribute("opacity", "1");
                     doc.getElementById("mode-taiko").setAttribute("fill", darkerStar.toString());
                     doc.getElementById("mania-stats-2").setAttribute("opacity", "1");
@@ -130,8 +131,8 @@ public class MapScoreSVGMapper extends LazybotSVGMapper
                     doc.getElementById("od-mania").setTextContent(CommonTool.toString(beatmap.getAccuracy(), 1));
                     doc.getElementById("hp-mania").setTextContent(CommonTool.toString(beatmap.getDrain(), 1));
 
-                    doc.getElementById("objects").setTextContent(String.valueOf(mania.getNObjects()));
-                    doc.getElementById("holdnotes").setTextContent(String.valueOf(mania.getNHoldNotes()));
+                    doc.getElementById("objects").setTextContent(String.valueOf(difficulty.objectCount()));
+                    doc.getElementById("holdnotes").setTextContent(String.valueOf(difficulty.holdNoteCount()));
                     doc.getElementById("convert2").setTextContent(String.valueOf(beatmap.getConvert()));
                 }
             }
