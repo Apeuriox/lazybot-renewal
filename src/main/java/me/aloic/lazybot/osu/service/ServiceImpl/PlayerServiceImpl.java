@@ -176,8 +176,14 @@ public class PlayerServiceImpl implements PlayerService
         BeatmapPerformance beatmapPerformance=TransformerUtil.beatmapPerformanceTransform(beatmapDTO);
 
         BeatmapStatistics result = new BeatmapStatistics(beatmapPerformance,params.getTargetAccuracy());
-        PlayerInfoDTO mapper = dataExtractor.extractPlayerInfoDTO(beatmapPerformance.getCreator().trim(),params.getMode());
-        result.setMapperAvatarUrl(OsuToolsUtil.getOsuAvatarUrl(mapper));
+        try{
+            PlayerInfoDTO mapper = dataExtractor.extractPlayerInfoDTO(beatmapPerformance.getCreator().trim(),params.getMode());
+            result.setMapperAvatarUrl(OsuToolsUtil.getOsuAvatarUrl(mapper));
+        }
+        catch (Exception e)
+        {
+            logger.warn("Beatmap creator not found for {}",beatmapDTO.getId());
+        }
         result.setMapBackgroundUrl(osuToolsUtil.getBeatmapUrl(result.getBeatmap().getSid()));
         result.setMode(OsuMode.getMode(params.getMode()));
         if (params.getModCombination()!=null)
