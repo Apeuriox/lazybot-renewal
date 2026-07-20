@@ -364,7 +364,9 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
                 }
             }
         }
-        if (combo != 0 && legacyTotalScore != null && supportsLegacyTotalScore(algorithm)) {
+        if (combo != 0
+                && legacyTotalScore != null
+                && supportsLegacyTotalScore(algorithm, gameMode)) {
             if (legacyTotalScore < 0 || legacyTotalScore > Integer.MAX_VALUE) {
                 throw new UnsupportedOptionException("legacyTotalScore 超出 FFM 支持的整数范围: " + legacyTotalScore);
             }
@@ -443,10 +445,11 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         return new Mods(bits);
     }
 
-    private static boolean supportsLegacyTotalScore(AlgorithmVersion algorithm)
+    private static boolean supportsLegacyTotalScore(AlgorithmVersion algorithm, GameMode mode)
     {
-        return algorithm == AlgorithmVersion.REWORK_202510
-                || algorithm == AlgorithmVersion.REWORK_20260706;
+        return mode == GameMode.OSU
+                && (algorithm == AlgorithmVersion.REWORK_202510
+                    || algorithm == AlgorithmVersion.REWORK_20260706);
     }
 
     private static GameMode toGameMode(String mode)
