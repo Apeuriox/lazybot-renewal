@@ -410,7 +410,10 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
             builder.mods(toLegacyMods(mods, lazer));
         }
         else {
-            builder.scoreMode(lazer ? ScoreMode.LAZER : ScoreMode.STABLE);
+            if(mode == GameMode.OSU || mode == GameMode.MANIA) {
+                builder.scoreMode(lazer ? ScoreMode.LAZER : ScoreMode.STABLE);
+            }
+
             if (mods != null && !mods.isEmpty()) {
                 builder.modsJson(JSONUtil.toJsonStr(mods));
             }
