@@ -16,7 +16,12 @@ public enum CommandEnum {
             true, null),
 
     LINK(2, "link", "osu授权认证指令",
-            true, List.of(new CommandOption(OptionType.STRING, "username", "绑定指定用户名", true, false))),
+            true, List.of(new CommandOption(
+                    OptionType.STRING,
+                    "username",
+                    "osu! 用户名，或输入 oauth 验证本人身份",
+                    true,
+                    false))),
 
     UNLINK(3, "unlink", "osu撤回授权",
             true, null),

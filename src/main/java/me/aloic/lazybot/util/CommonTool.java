@@ -512,7 +512,7 @@ public class CommonTool {
     }
     public static boolean modsContainsAnyOfStarChanging(String[] array)
     {
-        List<String> elements = Arrays.asList("HR","DT","HT","EZ","FL","NC","TD","BL","DC");
+        List<String> elements = Arrays.asList("HR","DT","HT","EZ","FL","NC","TD","BL","DC","HD","DA");
         return Arrays.stream(array).anyMatch(elements::contains);
     }
     public static boolean modsContainsAnyOfStarChanging(List<Mod> mods)

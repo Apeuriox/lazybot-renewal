@@ -40,13 +40,11 @@ public class BpvsCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         BpvsParameter params=new BpvsParameter(OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name()),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrException(event.getOption("target"), "请输入对比对象"));

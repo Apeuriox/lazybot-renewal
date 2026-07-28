@@ -41,13 +41,11 @@ public class BpListCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         BplistParameter params=new BplistParameter(OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name()),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("from"), 0),
@@ -77,7 +75,7 @@ public class BpListCommand implements LazybotSlashCommand
                 RendererDistributor.renderPlayerScoreListToList(playerService.bplistListView(params), params.getFrom())
         );
     }
-    private BplistParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private BplistParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
     {
         BplistParameter params=BplistParameter.analyzeParameter(event.getCommandParameters());
         BplistParameter.setupDefaultValue(params,tokenPO);

@@ -43,6 +43,10 @@ public class LinkCommand implements LazybotSlashCommand
                         "用户绑定",
                         "Aloic", null, "2023-04-04")
                         .addExample("/Link Aloic")
-                        .addOption(new CommandParameter("PlayerName","指定的用户名称", CommandParameter.ParameterType.MUST)));
+                        .addExample("/Link oauth")
+                        .addOption(new CommandParameter(
+                                "PlayerName / oauth",
+                                "输入用户名为手动绑定；输入 oauth 验证本人身份",
+                                CommandParameter.ParameterType.MUST)));
     }
 }

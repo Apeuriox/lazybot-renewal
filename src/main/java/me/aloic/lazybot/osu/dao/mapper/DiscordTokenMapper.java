@@ -1,16 +1,13 @@
 package me.aloic.lazybot.osu.dao.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
+/**
+ * @deprecated Retained as an injection-compatible marker during command migration.
+ * Identity reads now go through UserBindingMapper / CommandDatabaseProxy.
+ */
+@Deprecated
 @Mapper
-public interface DiscordTokenMapper extends BaseMapper<UserTokenPO> {
-    UserTokenPO selectByDiscord(@Param("discord_code")Long discord_code);
-    void updateByToken(UserTokenPO accessTokenPO);
-    UserTokenPO selectByPlayername(String player_name);
-    void updateClientToken(@Param("access_token")String access_token);
-    void deleteByDiscord(@Param("discord_code")Long discord_code);
-    void updateDefaultMode(@Param("default_mode")String default_mode, @Param("discord_code")Long discord_code);
+public interface DiscordTokenMapper
+{
 }

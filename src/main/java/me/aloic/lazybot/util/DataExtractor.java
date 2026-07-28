@@ -34,7 +34,7 @@ import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
-import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
+import me.aloic.lazybot.osu.service.AvatarCacheService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +50,8 @@ public class DataExtractor
     private ApiRequestExecutor apiRequestExecutor;
     @Resource
     private TokenMapper tokenMapper;
+    @Resource
+    private AvatarCacheService avatarCacheService;
 
     /**
      * 根据用户名和模式获取用户信息
@@ -70,7 +72,7 @@ public class DataExtractor
             if(playerInfoDTO.getId()==null) {
                 throw new LazybotRuntimeException("没这B人: " + playerName);
             }
-            AccessTokenPO tokenPO = tokenMapper.selectByPlayername(playerName);
+            AccessTokenPO tokenPO = tokenMapper.selectByPlayerId(playerInfoDTO.getId());
             return checkCachedAvatar(playerInfoDTO, tokenPO);
         }
         catch (LazybotNotFoundException e) {
@@ -180,10 +182,7 @@ public class DataExtractor
     {
         if (tokenPO == null)
             return playerInfoDTO;
-        if (tokenPO.getAvatar_url()==null || !playerInfoDTO.getAvatar_url().equals(tokenPO.getAvatar_url())) {
-            AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,true);
-            tokenMapper.updateAvatar(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId());
-        }
+        playerInfoDTO.setAvatar_url(avatarCacheService.ensureAvatar(playerInfoDTO, tokenPO));
         return playerInfoDTO;
     }
 

@@ -25,8 +25,6 @@ public class UpdateBackgroundCommand implements LazybotSlashCommand
     @Resource
     private ManageService manageService;
     @Resource
-    private TokenMapper tokenMapper;
-    @Resource
     private TestOutputTool testOutputTool;
     @Value("${lazybot.test.identity}")
     private Long identity;
@@ -44,7 +42,7 @@ public class UpdateBackgroundCommand implements LazybotSlashCommand
     {
         CommandResultHandler.sendMessageToGroupOnebot(bot,event,
                 manageService.updateBeatmapBackground(
-                        setupParameter(event, tokenMapper.selectByQq_code(0L))
+                        setupParameter(event)
                 )
         );
     }
@@ -53,11 +51,10 @@ public class UpdateBackgroundCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         testOutputTool.writeStringToFile(manageService.updateBeatmapBackground(
-                setupParameter(event,
-                        tokenMapper.selectByQq_code(0L))
+                setupParameter(event)
         ));
     }
-    private BeatmapParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private BeatmapParameter setupParameter(LazybotSlashCommandEvent event)
     {
         BeatmapParameter params=BeatmapParameter.analyzeParameter(event.getCommandParameters());
         if(event.getOsuMode()!=null)

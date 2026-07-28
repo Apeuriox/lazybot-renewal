@@ -72,7 +72,7 @@ public class TokenMonitor
                     new TypeReference<LazybotWebResult<String>>() {}
             );
             lazybotToken= lazybotTokenJSON.getData();
-            logger.info("Lazybot token created: {}",lazybotTokenJSON.getData());
+            logger.info("Successfully refreshed Lazybot PP+ token");
         }
         catch (Exception e) {
             logger.error("更新PP+验证失败，请检查服务器: {} : {}", e.getClass(), e.getMessage());

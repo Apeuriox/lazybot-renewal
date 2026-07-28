@@ -3,9 +3,9 @@ spring:
     name: lazybot-renewal
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: database-ul
-    username: user
-    password: password
+    url: $jdbc:mysql://localhost:3306/lazybot_schema
+    username: root
+    password: $you_database_password
     hikari:
       max-lifetime: 120000
   jackson:
@@ -19,7 +19,7 @@ spring:
       enabled: true
 
 server:
-  port: 1145
+  port: 9001
 
 shiro:
   ws:
@@ -38,35 +38,45 @@ shiro:
 
 discord:
   bot:
-    key: discord_key
-    id: discord_id
-    secret: discord_secret
-    token: discord_token
+    key: your_discord_bot_key
+    id: your_discord_bot_id
+    secret: your_discord_bot_secret
+    token: your_discord_bot_token
 
 tencent:
   bot:
-    id: tencent_official_id
-    secret: tencent_official_secret
-    token: tencent_official_token
+    id: 1611727
+    secret: your_official_tencent_bot_secret_itIsAbandoned
+    token: above
 
 lazybot:
   prefix: /
-  client_id: osu_client_id
+  client_id: $osu_stuff
   response_type: code
   scopes: friends.read identify public
-  client_secret: osu_client_secret
+  client_secret: $osu_stuff
   grant_type: authorization_code
+  avatar-cache:
+    revalidate-hours: 24
+  oauth:
+    redirect-uri: https://your-domain.example/oauth/osu/callback
+    scopes: identify public
+  identity-migration:
+    # Run once with dry-run=true, review the report, then set dry-run=false.
+    # Disable this again after a successful migration.
+    enabled: false
+    dry-run: true
   plus:
-    client_id: lazybot-plus-id
-    client_password: lazybot-plus-password
+    client_id: lazybot_pp_plus_related
+    client_password: lazybot_pp_plus_related
   global:
     discord:
       enabled: false
     tencent:
       enabled: true
   test:
-    path: windows_local_test_output_pat
-    identity: windows_local_test_default_identity
+    path: X:\lazybot-output
+    identity: localTestIdentity
     enabled: true
   command:
     whatif_calc_max_count: 200
@@ -79,6 +89,7 @@ async:
       queue_capacity: 1000
       name:
         prefix: api_request_pool-
+
 #mybatis-plus:
 #  configuration:
 #    default-executor-type: REUSE

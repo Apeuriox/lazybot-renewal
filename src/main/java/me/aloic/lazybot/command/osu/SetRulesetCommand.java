@@ -23,14 +23,14 @@ public class SetRulesetCommand implements LazybotSlashCommand
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
-        userService.updateDefaultMode(event);
+        userService.updateDefaultSubset(event);
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
         CommandResultHandler.sendMessageToGroupOnebot(bot, event,
-                userService.updateDefaultMode(
+                userService.updateDefaultSubset(
                         OsuSubruleset.getRuleset(
                                 event.getCommandParameters().getFirst()), event.getMessageEvent().getSender().getUserId()
                 )

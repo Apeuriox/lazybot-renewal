@@ -15,4 +15,5 @@ public class AccessTokenDTO implements Serializable {
 
     private String refresh_token;
 
+    private String scope;
 }

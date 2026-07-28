@@ -5,6 +5,7 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
@@ -31,9 +32,7 @@ public class NameToIdCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
-    private TokenMapper tokenMapper;
+    private CommandDatabaseProxy proxy;
 
     @Resource
     private TestOutputTool testOutputTool;
@@ -42,13 +41,7 @@ public class NameToIdCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
-        if (tokenPO == null) {
-            ErrorResultHandler.createNotBindOsuError(event);
-            return;
-        }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
+        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
         String playerNameList = OptionMappingTool.getOptionOrDefault(event.getOption("list"), tokenPO.getPlayer_name());
         List<String> playerNames = Arrays.stream(playerNameList.split(","))
                 .distinct()
@@ -62,7 +55,7 @@ public class NameToIdCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
+        AccessTokenPO accessToken = proxy.getAccessToken(event);
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
                 MsgUtils.builder().text(
                         playerService.nameToId(
@@ -75,7 +68,7 @@ public class NameToIdCommand implements LazybotSlashCommand
     {
         testOutputTool.writeStringToFile(
                 playerService.nameToId(
-                        setupParameter(event,tokenMapper.selectByQq_code(0L))
+                        setupParameter(event, proxy.getAccessToken(event))
                 )
         );
     }

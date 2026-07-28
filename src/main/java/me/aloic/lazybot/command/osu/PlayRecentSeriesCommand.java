@@ -42,13 +42,11 @@ public class PlayRecentSeriesCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         Integer style = OptionMappingTool.getOptionOrDefault(event.getOption("style"), 0);
         SeriesParameter params=new SeriesParameter(21,

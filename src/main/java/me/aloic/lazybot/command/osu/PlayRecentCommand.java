@@ -45,13 +45,11 @@ public class PlayRecentCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws IOException, RosuFFI.FFIException
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         RecentParameter params=new RecentParameter(OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1),
