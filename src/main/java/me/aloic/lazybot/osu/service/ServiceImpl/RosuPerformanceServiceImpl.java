@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -492,10 +493,15 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
             BiFunction<RosuPp, Beatmap, T> operation)
     {
         Objects.requireNonNull(algorithm, "algorithm");
-        try (RosuPp calculator = RosuPp.forVersion(algorithm);
-             Beatmap beatmap = calculator.loadBeatmap(beatmapPath)) {
-            return operation.apply(calculator, beatmap);
+        byte[] beatmapBytes;
+        try {
+            beatmapBytes = Files.readAllBytes(beatmapPath);
         }
+        catch (IOException e) {
+            throw new LazybotRuntimeException("读取谱面文件失败: " + beatmapPath, e);
+        }
+
+        return withBeatmap(algorithm, beatmapBytes, operation);
     }
 
     private static <T> T withBeatmap(

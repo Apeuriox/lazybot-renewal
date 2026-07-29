@@ -6,22 +6,21 @@ import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.stereotype.Component;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Component
-@EnableAsync
 @Configuration
 public class ExecutorConfig implements AsyncConfigurer {
     private static final Logger log = LoggerFactory.getLogger(ExecutorConfig.class);
 
 
-    @Bean(name = "virtualThreadExecutor")
-    public Executor asyncExecutor() {
-        return Executors.newVirtualThreadPerTaskExecutor();
+    @Bean(name = "virtualThreadExecutor", destroyMethod = "close")
+    public ExecutorService virtualThreadExecutor() {
+        return Executors.newThreadPerTaskExecutor(
+                Thread.ofVirtual()
+                        .name("lazybot-command-", 0)
+                        .factory());
     }
 
 

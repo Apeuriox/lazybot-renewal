@@ -53,8 +53,7 @@ public class SlashCommandProcessor
             logger.error(e.getMessage());
         }
     }
-    @Async("virtualThreadExecutor")
-    public CompletableFuture<Void> processQQ(Bot bot, LazybotSlashCommandEvent event) {
+    public void processQQ(Bot bot, LazybotSlashCommandEvent event) {
         try {
             LazybotSlashCommand command = registry.getCommand(event.getCommandType());
             if (command != null) {
@@ -81,7 +80,6 @@ public class SlashCommandProcessor
             logger.error(e.getMessage());
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 出现预期外的错误: " + e.getMessage()).build(), false);
         }
-        return CompletableFuture.completedFuture(null);
     }
 
     @Async("virtualThreadExecutor")
