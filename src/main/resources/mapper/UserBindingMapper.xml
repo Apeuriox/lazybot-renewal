@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.UserBindingMapper">
+    <resultMap id="UserBindingResultMap"
+               type="me.aloic.lazybot.osu.dao.entity.po.UserBindingPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="platform_identity_id" jdbcType="BIGINT"
+                property="platform_identity_id"/>
+        <result column="platform" jdbcType="VARCHAR" property="platform"/>
+        <result column="platform_user_id" jdbcType="VARCHAR"
+                property="platform_user_id"/>
+        <result column="osu_account_id" jdbcType="BIGINT" property="osu_account_id"/>
+        <result column="player_id" jdbcType="INTEGER" property="player_id"/>
+        <result column="player_name" jdbcType="VARCHAR" property="player_name"/>
+        <result column="server" jdbcType="VARCHAR" property="server"/>
+        <result column="link_method" jdbcType="VARCHAR" property="link_method"/>
+        <result column="verified_at" jdbcType="TIMESTAMP" property="verified_at"/>
+        <result column="default_mode" jdbcType="VARCHAR" property="default_mode"/>
+        <result column="default_subset" jdbcType="VARCHAR" property="default_subset"/>
+        <result column="preferred_panel_version" jdbcType="INTEGER"
+                property="preferred_panel_version"/>
+        <result column="enabled" jdbcType="BOOLEAN" property="enabled"/>
+        <result column="avatar_etag" jdbcType="VARCHAR" property="avatar_etag"/>
+        <result column="avatar_last_checked" jdbcType="TIMESTAMP"
+                property="avatar_last_checked"/>
+        <result column="avatar_next_check_at" jdbcType="TIMESTAMP"
+                property="avatar_next_check_at"/>
+    </resultMap>
+
+    <sql id="BindingSelect">
+        select u.id,
+               p.id as platform_identity_id,
+               p.platform,
+               p.platform_user_id,
+               a.id as osu_account_id,
+               a.osu_user_id as player_id,
+               a.username_cache as player_name,
+               a.server,
+               a.link_method,
+               a.verified_at,
+               u.default_mode,
+               u.default_subset,
+               u.preferred_panel_version,
+               u.enabled,
+               a.avatar_etag,
+               a.avatar_last_checked,
+               a.avatar_next_check_at
+        from lazybot_user u
+        join platform_identity p on p.lazybot_user_id = u.id
+        join osu_account a on a.lazybot_user_id = u.id
+    </sql>
+
+    <select id="selectByPlatform" resultMap="UserBindingResultMap">
+        <include refid="BindingSelect"/>
+        where p.platform = #{platform}
+          and p.platform_user_id = #{platformUserId}
+          and a.server = #{server}
+        limit 1
+    </select>
+
+    <select id="selectByOsuUserId" resultMap="UserBindingResultMap">
+        <include refid="BindingSelect"/>
+        where a.server = #{server}
+          and a.osu_user_id = #{osuUserId}
+        limit 1
+    </select>
+
+    <select id="selectByUsername" resultMap="UserBindingResultMap">
+        <include refid="BindingSelect"/>
+        where a.server = #{server}
+          and a.username_cache = #{username}
+        limit 1
+    </select>
+
+    <select id="selectRandom" resultMap="UserBindingResultMap">
+        <include refid="BindingSelect"/>
+        where p.platform = #{platform}
+          and a.server = #{server}
+        order by rand()
+        limit 1
+    </select>
+
+    <select id="selectByPlatformIds" resultMap="UserBindingResultMap">
+        <include refid="BindingSelect"/>
+        where p.platform = #{platform}
+          and a.server = #{server}
+          and u.enabled = true
+          and p.platform_user_id in
+        <foreach collection="platformUserIds"
+                 item="id"
+                 open="("
+                 separator=","
+                 close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

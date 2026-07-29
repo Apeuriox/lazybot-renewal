@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.OsuAccountMapper">
+    <resultMap id="OsuAccountResultMap"
+               type="me.aloic.lazybot.osu.dao.entity.po.OsuAccountPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="lazybot_user_id" jdbcType="INTEGER" property="lazybot_user_id"/>
+        <result column="server" jdbcType="VARCHAR" property="server"/>
+        <result column="osu_user_id" jdbcType="INTEGER" property="osu_user_id"/>
+        <result column="username_cache" jdbcType="VARCHAR" property="username_cache"/>
+        <result column="link_method" jdbcType="VARCHAR" property="link_method"/>
+        <result column="verified_at" jdbcType="TIMESTAMP" property="verified_at"/>
+        <result column="avatar_etag" jdbcType="VARCHAR" property="avatar_etag"/>
+        <result column="avatar_last_checked" jdbcType="TIMESTAMP"
+                property="avatar_last_checked"/>
+        <result column="avatar_next_check_at" jdbcType="TIMESTAMP"
+                property="avatar_next_check_at"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="created_at"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updated_at"/>
+    </resultMap>
+
+    <sql id="OsuAccountColumns">
+        id, lazybot_user_id, server, osu_user_id, username_cache, link_method,
+        verified_at, avatar_etag, avatar_last_checked, avatar_next_check_at,
+        created_at, updated_at
+    </sql>
+
+    <select id="selectByUserAndServer" resultMap="OsuAccountResultMap">
+        select <include refid="OsuAccountColumns"/>
+        from osu_account
+        where lazybot_user_id = #{userId}
+          and server = #{server}
+        limit 1
+    </select>
+
+    <select id="selectByServerIdentity" resultMap="OsuAccountResultMap">
+        select <include refid="OsuAccountColumns"/>
+        from osu_account
+        where server = #{server}
+          and osu_user_id = #{osuUserId}
+        limit 1
+    </select>
+
+    <select id="selectByServerIdentityForUpdate" resultMap="OsuAccountResultMap">
+        select <include refid="OsuAccountColumns"/>
+        from osu_account
+        where server = #{server}
+          and osu_user_id = #{osuUserId}
+        limit 1
+        for update
+    </select>
+
+    <select id="selectByUserAndServerForUpdate" resultMap="OsuAccountResultMap">
+        select <include refid="OsuAccountColumns"/>
+        from osu_account
+        where lazybot_user_id = #{userId}
+          and server = #{server}
+        limit 1
+        for update
+    </select>
+
+    <update id="updateAvatarCacheMetadata">
+        update osu_account
+        set avatar_etag = #{etag},
+            avatar_last_checked = #{checkedAt},
+            avatar_next_check_at = #{nextCheckAt},
+            updated_at = #{checkedAt}
+        where id = #{accountId}
+    </update>
+
+    <update id="updateUsernameCache">
+        update osu_account
+        set username_cache = #{username},
+            updated_at = #{updatedAt}
+        where id = #{accountId}
+    </update>
+</mapper>

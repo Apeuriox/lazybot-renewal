@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.OAuthLinkSessionMapper">
+    <resultMap id="OAuthLinkSessionResultMap"
+               type="me.aloic.lazybot.osu.dao.entity.po.OAuthLinkSessionPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="state_hash" jdbcType="VARBINARY" property="state_hash"/>
+        <result column="platform_identity_id" jdbcType="BIGINT"
+                property="platform_identity_id"/>
+        <result column="expires_at" jdbcType="TIMESTAMP" property="expires_at"/>
+        <result column="consumed_at" jdbcType="TIMESTAMP" property="consumed_at"/>
+    </resultMap>
+
+    <sql id="OAuthLinkSessionColumns">
+        id, state_hash, platform_identity_id, expires_at, consumed_at
+    </sql>
+
+    <select id="selectByStateHashForUpdate"
+            resultMap="OAuthLinkSessionResultMap">
+        select <include refid="OAuthLinkSessionColumns"/>
+        from oauth_link_session
+        where state_hash = #{stateHash}
+        limit 1
+        for update
+    </select>
+
+    <update id="markConsumed">
+        update oauth_link_session
+        set consumed_at = #{consumedAt}
+        where id = #{id}
+          and consumed_at is null
+    </update>
+
+    <update id="invalidateOutstanding">
+        update oauth_link_session
+        set consumed_at = #{consumedAt}
+        where platform_identity_id = #{platformIdentityId}
+          and consumed_at is null
+    </update>
+</mapper>

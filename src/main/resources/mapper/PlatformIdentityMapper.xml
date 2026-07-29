@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.PlatformIdentityMapper">
+    <resultMap id="PlatformIdentityResultMap"
+               type="me.aloic.lazybot.osu.dao.entity.po.PlatformIdentityPO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="lazybot_user_id" jdbcType="INTEGER" property="lazybot_user_id"/>
+        <result column="platform" jdbcType="VARCHAR" property="platform"/>
+        <result column="platform_user_id" jdbcType="VARCHAR" property="platform_user_id"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="created_at"/>
+    </resultMap>
+
+    <sql id="PlatformIdentityColumns">
+        id, lazybot_user_id, platform, platform_user_id, created_at
+    </sql>
+
+    <select id="selectByPlatformIdentity" resultMap="PlatformIdentityResultMap">
+        select <include refid="PlatformIdentityColumns"/>
+        from platform_identity
+        where platform = #{platform}
+          and platform_user_id = #{platformUserId}
+        limit 1
+    </select>
+
+    <select id="selectByIdForUpdate" resultMap="PlatformIdentityResultMap">
+        select <include refid="PlatformIdentityColumns"/>
+        from platform_identity
+        where id = #{id}
+        for update
+    </select>
+
+    <delete id="deleteByPlatformIdentity">
+        delete from platform_identity
+        where platform = #{platform}
+          and platform_user_id = #{platformUserId}
+    </delete>
+
+    <update id="reassignToUser">
+        update platform_identity
+        set lazybot_user_id = #{userId}
+        where id = #{identityId}
+    </update>
+</mapper>

@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.service;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
+import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.mapper.OsuAccountMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,7 @@ import java.util.Objects;
 /**
  * osu! 头像的本地缓存。
  *
- * <p>osu! 的头像 URL 通常保持不变，所以不能再通过比较 URL 判断头像是否更新。
+ * <p>osu! 的头像 URL 现在被ppy改了，改了头像也不会变，所以不能再通过比较 URL 判断头像是否更新。
  * 本服务按 TTL 发起带 If-None-Match 的条件请求；TTL 内完全不访问头像服务器，
  * 304 时只刷新检查时间，200 时原子替换本地文件。</p>
  */
@@ -85,7 +86,7 @@ public class AvatarCacheService
     private void revalidate(
             String avatarUrl,
             Path avatarPath,
-            AccessTokenPO binding,
+            UserBindingPO binding,
             LocalDateTime checkedAt) throws IOException, InterruptedException
     {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder(URI.create(avatarUrl))

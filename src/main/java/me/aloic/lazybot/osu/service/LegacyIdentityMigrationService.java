@@ -134,7 +134,7 @@ public class LegacyIdentityMigrationService
                                 preferredDefaultMode(candidates),
                                 context,
                                 primary.source()),
-                        "relax",
+                        "standard",
                         primary.preferredPanelVersion(),
                         primary.enabled(),
                         context);

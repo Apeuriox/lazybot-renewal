@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.LazybotUserMapper">
+    <update id="updateDefaultMode">
+        update lazybot_user
+        set default_mode = #{mode}
+        where id = #{userId}
+    </update>
+
+    <update id="updateDefaultSubset">
+        update lazybot_user
+        set default_subset = #{subset}
+        where id = #{userId}
+    </update>
+
+    <update id="updatePreferredPanel">
+        update lazybot_user
+        set preferred_panel_version = #{version}
+        where id = #{userId}
+    </update>
+</mapper>
