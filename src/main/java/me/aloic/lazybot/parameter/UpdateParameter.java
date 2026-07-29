@@ -2,7 +2,7 @@ package me.aloic.lazybot.parameter;
 
 import lombok.*;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 
 import java.util.List;
 

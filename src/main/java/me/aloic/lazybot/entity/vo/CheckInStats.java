@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.entity.po.CardUserPointsPO;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
 
 import java.io.Serializable;
@@ -21,7 +21,7 @@ public class CheckInStats implements Serializable
     private String playerName;
     private String avatar_url;
 
-    public CheckInStats(CardUserPointsPO player,int coin, AccessTokenPO token)
+    public CheckInStats(CardUserPointsPO player,int coin, UserBindingPO token)
     {
         this.totalCheckIns = player.getAccumulated_check_time()+1;
         this.continuousCheckIns = player.getContinuous_check_time();

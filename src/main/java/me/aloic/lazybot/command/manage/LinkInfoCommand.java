@@ -7,7 +7,7 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.parameter.VerifyParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -47,7 +47,7 @@ public class LinkInfoCommand implements LazybotSlashCommand
         catch (Exception e) {
             throw new RuntimeException("输入不合法或为空");
         }
-        AccessTokenPO token=proxy.getAccessToken(targetCode,true);
+        UserBindingPO token=proxy.getQqBinding(targetCode, true);
         if (token==null) CommandResultHandler.sendMessageToGroupOnebot(bot,event,"该用户暂未绑定");
         else CommandResultHandler.sendMessageToGroupOnebot(bot,event,token.toSimpleString());
     }
@@ -63,7 +63,7 @@ public class LinkInfoCommand implements LazybotSlashCommand
         catch (Exception e) {
             throw new RuntimeException("输入不合法或为空");
         }
-        AccessTokenPO token=proxy.getAccessToken(targetCode,true);
+        UserBindingPO token=proxy.getQqBinding(targetCode, true);
         if (token==null)  testOutputTool.writeStringToFile("该用户暂未绑定");
         else testOutputTool.writeStringToFile(token.toSimpleString());
     }

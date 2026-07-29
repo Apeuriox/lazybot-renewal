@@ -61,11 +61,6 @@ lazybot:
   oauth:
     redirect-uri: https://your-domain.example/oauth/osu/callback
     scopes: identify public
-  identity-migration:
-    # Run once with dry-run=true, review the report, then set dry-run=false.
-    # Disable this again after a successful migration.
-    enabled: false
-    dry-run: true
   plus:
     client_id: lazybot_pp_plus_related
     client_password: lazybot_pp_plus_related

@@ -19,7 +19,7 @@ import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.dao.mapper.*;
@@ -64,7 +64,7 @@ public class PlayerServiceImpl implements PlayerService
     @Resource
     private BadgeShowcaseMapper badgeMapper;
     @Resource
-    private TokenMapper tokenMapper;
+    private UserBindingMapper userBindingMapper;
     @Resource
     private OsuToolsUtil osuToolsUtil;
     @Resource
@@ -820,7 +820,7 @@ public class PlayerServiceImpl implements PlayerService
             playerInfoVO.setProfileBackgroundUrl(defaultBackground);
             theme=ProfileLightTheme.createInstance(192);
         }
-        AccessTokenPO userToken = tokenMapper.selectByPlayerId(playerInfoVO.getId());
+        UserBindingPO userToken = userBindingMapper.selectByOsuUserId("bancho", playerInfoVO.getId());
         if (userToken!=null) params.setLazybotId(userToken.getId());
         List<BadgeUserShowcasePO> badges = badgeMapper.selectByUserId(params.getLazybotId());
 
@@ -882,7 +882,7 @@ public class PlayerServiceImpl implements PlayerService
 
     @Override
     public UserAllScore scoreRank(ScoreParameter params) throws Exception {
-        List<AccessTokenPO> users = dataExtractor.extractPlayerInfoByUserIdBatch(params.getGroupUserIds());
+        List<UserBindingPO> users = dataExtractor.extractPlayerInfoByUserIdBatch(params.getGroupUserIds());
         if(CollectionUtils.isEmpty(users)) {
             throw new LazybotRuntimeException("当前群聊没有人绑定账号");
         }

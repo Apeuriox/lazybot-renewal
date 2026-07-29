@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
@@ -43,14 +43,14 @@ public class GeneralParameter extends LazybotCommandParameter
         }
         return parameter;
     }
-    public static void setupDefaultValue(GeneralParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(GeneralParameter parameter, UserBindingPO accessTokenPO)
     {
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
     }
 
-    public static GeneralParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    public static GeneralParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
         params.setVersion(event.getScorePanelVersion());

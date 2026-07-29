@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.util.CommonTool;
 
@@ -46,7 +46,7 @@ public class TopScoresParameter extends LazybotCommandParameter
         }
         return parameter;
     }
-    public static void setupDefaultValue(TopScoresParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(TopScoresParameter parameter, UserBindingPO accessTokenPO)
     {
         if (parameter.getMode() == null)
             parameter.setRuleset(OsuMode.getMode(accessTokenPO.getDefault_mode()));

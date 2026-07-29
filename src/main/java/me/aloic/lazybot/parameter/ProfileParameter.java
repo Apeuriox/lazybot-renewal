@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class ProfileParameter extends LazybotCommandParameter
         }
         return parameter;
     }
-    public static void setupDefaultValue(ProfileParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(ProfileParameter parameter, UserBindingPO accessTokenPO)
     {
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)

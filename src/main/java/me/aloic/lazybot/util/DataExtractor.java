@@ -26,10 +26,10 @@ import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayoData;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayobotBeatmapSet;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.UserBindingMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
@@ -49,7 +49,7 @@ public class DataExtractor
     @Resource
     private ApiRequestExecutor apiRequestExecutor;
     @Resource
-    private TokenMapper tokenMapper;
+    private UserBindingMapper userBindingMapper;
     @Resource
     private AvatarCacheService avatarCacheService;
 
@@ -72,7 +72,7 @@ public class DataExtractor
             if(playerInfoDTO.getId()==null) {
                 throw new LazybotRuntimeException("没这B人: " + playerName);
             }
-            AccessTokenPO tokenPO = tokenMapper.selectByPlayerId(playerInfoDTO.getId());
+            UserBindingPO tokenPO = userBindingMapper.selectByOsuUserId("bancho", playerInfoDTO.getId());
             return checkCachedAvatar(playerInfoDTO, tokenPO);
         }
         catch (LazybotNotFoundException e) {
@@ -170,7 +170,7 @@ public class DataExtractor
            if(playerInfoDTO.getId()==null) {
                throw new LazybotRuntimeException("没这B人: " + playerId);
            }
-           AccessTokenPO tokenPO = tokenMapper.selectByPlayerId(playerId);
+           UserBindingPO tokenPO = userBindingMapper.selectByOsuUserId("bancho", playerId);
            return checkCachedAvatar(playerInfoDTO, tokenPO);
        }
        catch (LazybotNotFoundException e) {
@@ -178,7 +178,7 @@ public class DataExtractor
        }
     }
 
-    public PlayerInfoDTO checkCachedAvatar(PlayerInfoDTO playerInfoDTO, AccessTokenPO tokenPO)
+    public PlayerInfoDTO checkCachedAvatar(PlayerInfoDTO playerInfoDTO, UserBindingPO tokenPO)
     {
         if (tokenPO == null)
             return playerInfoDTO;
@@ -596,7 +596,7 @@ public class DataExtractor
      * @return 玩家信息DTO对象
      */
     public PlayerInfoDTO extractPlayerInfoByUserId(Long userId) {
-        AccessTokenPO accessTokenPO = tokenMapper.selectByQq_code(userId);
+        UserBindingPO accessTokenPO = userBindingMapper.selectByPlatform("qq", String.valueOf(userId), "bancho");
 
         if(accessTokenPO == null) {
             return null;
@@ -609,11 +609,14 @@ public class DataExtractor
      * @param userIds 用户ID列表
      * @return 对应用户的玩家信息列表
      */
-    public List<AccessTokenPO> extractPlayerInfoByUserIdBatch(List<Long> userIds) {
+    public List<UserBindingPO> extractPlayerInfoByUserIdBatch(List<Long> userIds) {
         if(CollectionUtils.isEmpty(userIds)) {
             return new ArrayList<>();
         }
-        return tokenMapper.selectByCodes(userIds);
+        return userBindingMapper.selectByPlatformIds(
+                "qq",
+                "bancho",
+                userIds.stream().map(String::valueOf).toList());
     }
 
 

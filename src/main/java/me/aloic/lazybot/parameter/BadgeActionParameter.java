@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -49,7 +49,7 @@ public class BadgeActionParameter extends LazybotCommandParameter
         else throw new LazybotRuntimeException("输入参数为空");
         return parameter;
     }
-    public static void setupDefaultValue(BadgeActionParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(BadgeActionParameter parameter, UserBindingPO accessTokenPO)
     {
     }
 

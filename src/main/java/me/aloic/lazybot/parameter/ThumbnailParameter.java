@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.mapping.documentMapper.ThumbnailSVGMapper;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 
 import javax.naming.ldap.PagedResultsControl;
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class ThumbnailParameter extends LazybotCommandParameter
         }
         return result;
     }
-    public static void setupDefaultValue(ThumbnailParameter scoreParameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(ThumbnailParameter scoreParameter, UserBindingPO accessTokenPO)
     {
         scoreParameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (scoreParameter.getMode() == null)

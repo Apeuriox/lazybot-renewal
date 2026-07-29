@@ -34,8 +34,16 @@ public class UserBindingPO implements Serializable
     private LocalDateTime avatar_last_checked;
     private LocalDateTime avatar_next_check_at;
 
+    public String toSimpleString()
+    {
+        return "[Lazybot] 该用户的绑定情况如下\nLazybot ID: " + id
+                + "\n缓存的用户名: " + player_name
+                + "\nBancho Osu ID: " + player_id
+                + "\n绑定方式: " + link_method
+                + "\n默认查询模式: " + default_mode;
+    }
     /** Compatibility accessor for existing QQ command parameters. */
-    public Long getQq_code()
+    public Long getQqCode()
     {
         if (!"qq".equalsIgnoreCase(platform) || platform_user_id == null) {
             return null;
@@ -44,7 +52,7 @@ public class UserBindingPO implements Serializable
     }
 
     /** Compatibility accessor for existing Discord commands. */
-    public Long getDiscord_code()
+    public Long getDiscordCode()
     {
         if (!"discord".equalsIgnoreCase(platform) || platform_user_id == null) {
             return null;
@@ -58,14 +66,5 @@ public class UserBindingPO implements Serializable
     public String getAvatar_url()
     {
         return player_id == null ? null : "https://a.ppy.sh/" + player_id;
-    }
-
-    public String toSimpleString()
-    {
-        return "[Lazybot] 该用户的绑定情况如下\nLazybot ID: " + id
-                + "\n缓存的用户名: " + player_name
-                + "\nBancho Osu ID: " + player_id
-                + "\n绑定方式: " + link_method
-                + "\n默认查询模式: " + default_mode;
     }
 }

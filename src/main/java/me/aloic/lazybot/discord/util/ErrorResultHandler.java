@@ -1,11 +1,11 @@
 package me.aloic.lazybot.discord.util;
 
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class ErrorResultHandler
 {
-    public static void createBindError(SlashCommandInteractionEvent event, UserTokenPO user) {
+    public static void createBindError(SlashCommandInteractionEvent event, UserBindingPO user) {
         event.getHook().sendMessage("您已绑定用户: " + user.getPlayer_name() ).queue();
     }
     public static void createNotBindOsuError(SlashCommandInteractionEvent event) {

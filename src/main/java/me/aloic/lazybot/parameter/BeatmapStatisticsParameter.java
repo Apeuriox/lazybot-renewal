@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
@@ -145,7 +145,7 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
         }
     }
 
-    public static void setupDefaultValue(BeatmapStatisticsParameter scoreParameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(BeatmapStatisticsParameter scoreParameter, UserBindingPO accessTokenPO)
     {
         scoreParameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (scoreParameter.getMode() == null)

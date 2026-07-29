@@ -22,6 +22,10 @@ public interface UserBindingMapper
             @Param("server") String server,
             @Param("username") String username);
 
+    UserBindingPO selectByLazybotUserId(
+            @Param("userId") Integer userId,
+            @Param("server") String server);
+
     UserBindingPO selectRandom(
             @Param("platform") String platform,
             @Param("server") String server);

@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.util.CommonTool;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class WhatIfParameter extends LazybotCommandParameter
         }
         return parameter;
     }
-    public static void setupDefaultValue(WhatIfParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(WhatIfParameter parameter, UserBindingPO accessTokenPO)
     {
         parameter.setPlayerName(accessTokenPO.getPlayer_name());
         if (parameter.getMode()==null) parameter.setMode(accessTokenPO.getDefault_mode());

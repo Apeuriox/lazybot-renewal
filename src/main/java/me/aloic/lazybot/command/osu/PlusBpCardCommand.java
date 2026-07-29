@@ -9,8 +9,7 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.PlusListParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -26,8 +25,6 @@ public class PlusBpCardCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -40,7 +37,7 @@ public class PlusBpCardCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         PlusListParameter params = setupParameter(event,tokenPO);
         CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,
                 RendererDistributor.renderPlusScoresToCardList(
@@ -52,7 +49,7 @@ public class PlusBpCardCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         PlusListParameter params = setupParameter(event,tokenPO);
         testOutputTool.saveImageToLocal(
                 RendererDistributor.renderPlusScoresToCardList(
@@ -61,7 +58,7 @@ public class PlusBpCardCommand implements LazybotSlashCommand
         );
     }
 
-    private PlusListParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    private PlusListParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         PlusListParameter params=PlusListParameter.analyzeParameter(event.getCommandParameters());
         PlusListParameter.setupDefaultValue(params,tokenPO);

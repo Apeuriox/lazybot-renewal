@@ -14,9 +14,7 @@ import me.aloic.lazybot.entity.command.PlayerScoreList;
 import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
@@ -37,8 +35,6 @@ public class BpIfCommand implements LazybotSlashCommand
     @Resource
     private AnalysisService analysisService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -47,7 +43,7 @@ public class BpIfCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
@@ -74,7 +70,7 @@ public class BpIfCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         BpifParameter params = setupParameter(event,tokenPO);
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderPlayerScoreListToCard(
@@ -88,7 +84,7 @@ public class BpIfCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         BpifParameter params = setupParameter(event,tokenPO);
         testOutputTool.saveImageToLocal(
                 RendererDistributor.renderPlayerScoreListToCard(
@@ -99,7 +95,7 @@ public class BpIfCommand implements LazybotSlashCommand
         );
     }
 
-    private BpifParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private BpifParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         BpifParameter params=BpifParameter.analyzeParameter(event.getCommandParameters());
         BpifParameter.setupDefaultValue(params,tokenPO);

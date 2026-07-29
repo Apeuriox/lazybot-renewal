@@ -10,7 +10,7 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.UpdatePanelVersionParameter;
@@ -40,7 +40,7 @@ public class UpdatePanelVersionCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO accessToken =  proxy.getAccessToken(event);
+        UserBindingPO accessToken =  proxy.getUserBinding(event);
         CommandResultHandler.sendMessageToGroupOnebot(bot,event,
                 userService.updatedUserPreferredPanelVersion(
                                 setupParameter(event, accessToken)
@@ -51,16 +51,16 @@ public class UpdatePanelVersionCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO accessToken =  proxy.getAccessToken(event);
+        UserBindingPO accessToken =  proxy.getUserBinding(event);
         testOutputTool.writeStringToFile( userService.updatedUserPreferredPanelVersion(
                         setupParameter(event, accessToken)
                 )
         );
     }
-    private UpdatePanelVersionParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO token)
+    private UpdatePanelVersionParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO token)
     {
         UpdatePanelVersionParameter params = new UpdatePanelVersionParameter(GeneralParameter.analyzeParameter(event.getCommandParameters()));
-        params.setQqCode(token.getQq_code());
+        params.setQqCode(Long.valueOf(token.getPlatform_user_id()));
         if (params.getPlayerName() == null)
             throw new LazybotRuntimeException("参数在哪");
         return params;

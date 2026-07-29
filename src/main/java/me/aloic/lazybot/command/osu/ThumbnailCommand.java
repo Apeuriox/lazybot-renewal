@@ -12,7 +12,7 @@ import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
 import me.aloic.lazybot.graphics.mapping.documentMapper.ThumbnailSVGMapper;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.parameter.ThumbnailParameter;
@@ -45,7 +45,7 @@ public class ThumbnailCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         ThumbnailParameter params;
         if (event.getCommandType().equalsIgnoreCase("tns") || event.getCommandType().equalsIgnoreCase("thumbnail"))
         {
@@ -66,7 +66,7 @@ public class ThumbnailCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO = proxy.getAccessToken(event);
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         ThumbnailParameter params;
         if (event.getCommandType().equalsIgnoreCase("tns"))
         {
@@ -80,7 +80,7 @@ public class ThumbnailCommand implements LazybotSlashCommand
         }
 
     }
-    private ThumbnailParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO,int type)
+    private ThumbnailParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO,int type)
     {
         ThumbnailParameter params=ThumbnailParameter.analyzeParameter(event.getCommandParameters());
         ThumbnailParameter.setupDefaultValue(params,tokenPO);

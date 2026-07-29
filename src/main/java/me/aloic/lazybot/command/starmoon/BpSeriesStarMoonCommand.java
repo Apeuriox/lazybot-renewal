@@ -11,10 +11,7 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.osu.service.PlayerService;
@@ -45,13 +42,13 @@ public class BpSeriesStarMoonCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-            TokenStarMoon starMoonToken= proxy.getStarMoonToken(event);
-            SeriesParameter parameter = SeriesParameter.setupParameter(event,starMoonToken.getStar_moon_id(), starMoonToken.getDefault_mode());
+            UserBindingPO starMoonToken= proxy.getStarMoonBinding(event);
+            SeriesParameter parameter = SeriesParameter.setupParameter(event,starMoonToken.getPlayer_id(), starMoonToken.getDefault_mode());
             BplistParameter params = new BplistParameter(parameter.getPlayerName(),
                     parameter.getPlayerId(),
                     parameter.getMode(),
                     1, parameter.getMaxIndex());
-            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
+            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_subset()));
             if (event.getScorePanelVersion()==0)
                 CommandResultHandler.uploadImageToOnebot(bot,event,
                         RendererDistributor.renderPlayerScoreListToCard(playerService.bplistCardViewStarMoon(params),params.getFrom(),1));
@@ -65,13 +62,13 @@ public class BpSeriesStarMoonCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        TokenStarMoon starMoonToken= proxy.getStarMoonToken(event);
-        SeriesParameter parameter = SeriesParameter.setupParameter(event,starMoonToken.getStar_moon_id(), starMoonToken.getDefault_mode());
+        UserBindingPO starMoonToken= proxy.getStarMoonBinding(event);
+        SeriesParameter parameter = SeriesParameter.setupParameter(event,starMoonToken.getPlayer_id(), starMoonToken.getDefault_mode());
         BplistParameter params = new BplistParameter(parameter.getPlayerName(),
                     parameter.getPlayerId(),
                     parameter.getMode(),
                     1, parameter.getMaxIndex());
-            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
+            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_subset()));
             if (event.getScorePanelVersion()==0)
                 testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToCard(playerService.bplistCardViewStarMoon(params),params.getFrom(),1));
             else

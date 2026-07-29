@@ -10,7 +10,7 @@ import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.monitor.CompareMonitor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -39,7 +39,7 @@ public class CompareCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        ScoreParameter params = setupParameter(event, proxy.getAccessToken(event));
+        ScoreParameter params = setupParameter(event, proxy.getUserBinding(event));
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderScoreVOToImage(
                 playerService.getUserHighestScoreOnMap(params),params.getVersion())
@@ -49,13 +49,13 @@ public class CompareCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        ScoreParameter params = setupParameter(event, proxy.getAccessToken(event));
+        ScoreParameter params = setupParameter(event, proxy.getUserBinding(event));
         testOutputTool.saveImageToLocal(
                 RendererDistributor.renderScoreVOToImage(
                         playerService.getUserHighestScoreOnMap(params),params.getVersion())
                 );
     }
-    private ScoreParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private ScoreParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         int index=1;
         if(!event.getCommandParameters().isEmpty()) {

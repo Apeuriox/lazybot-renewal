@@ -1,6 +1,6 @@
 package me.aloic.lazybot.service;
 
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface CardService
@@ -9,9 +9,9 @@ public interface CardService
     String checkIn(Integer playerId);
 
     @Transactional
-    byte[] checkIn(AccessTokenPO token);
+    byte[] checkIn(UserBindingPO token);
 
-    byte[] cardGameboy(AccessTokenPO token);
+    byte[] cardGameboy(UserBindingPO token);
 
-    byte[] cardGameGadget(AccessTokenPO token);
+    byte[] cardGameGadget(UserBindingPO token);
 }

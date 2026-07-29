@@ -11,9 +11,7 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BplistParameter;
@@ -32,8 +30,6 @@ public class BpSeriesCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -41,7 +37,7 @@ public class BpSeriesCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
@@ -57,7 +53,7 @@ public class BpSeriesCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         GeneralParameter parameter=GeneralParameter.setupParameter(event,tokenPO);
         BplistParameter params=new BplistParameter(parameter.getPlayerId(),
                 parameter.getMode(),
@@ -75,7 +71,7 @@ public class BpSeriesCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         SeriesParameter parameter=SeriesParameter.setupParameter(event,tokenPO.getPlayer_id(), tokenPO.getDefault_mode());
         BplistParameter params=new BplistParameter(parameter.getPlayerName(),
                 parameter.getPlayerId(),

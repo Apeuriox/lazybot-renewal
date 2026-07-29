@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +62,7 @@ public class BadgeParameter extends LazybotCommandParameter
         else throw new LazybotRuntimeException("使用方法: /badge list\n或/badge view <id>\n或/badge set <id1,id2,...>\n或/badge owned <id>");
         return parameter;
     }
-    public static void setupDefaultValue(BadgeParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(BadgeParameter parameter, UserBindingPO accessTokenPO)
     {
         parameter.setPlayerName(accessTokenPO.getPlayer_name());
         parameter.setPlayerId(accessTokenPO.getPlayer_id());

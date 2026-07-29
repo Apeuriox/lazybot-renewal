@@ -3,7 +3,7 @@ package me.aloic.lazybot.parameter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 
 import java.util.Iterator;
@@ -57,14 +57,14 @@ public class CardMoelleuxParameter extends LazybotCommandParameter
 
         return parameter;
     }
-    public static void setupDefaultValue(CardMoelleuxParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(CardMoelleuxParameter parameter, UserBindingPO accessTokenPO)
     {
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
     }
 
-    public static CardMoelleuxParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    public static CardMoelleuxParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         CardMoelleuxParameter params= CardMoelleuxParameter.analyzeParameter(event.getCommandParameters());
         params.setVersion(event.getScorePanelVersion());

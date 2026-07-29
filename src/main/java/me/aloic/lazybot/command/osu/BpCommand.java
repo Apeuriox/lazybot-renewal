@@ -13,11 +13,8 @@ import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.TemplateRenderer;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.osu.service.PlayerService;
@@ -36,8 +33,6 @@ public class BpCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -48,7 +43,7 @@ public class BpCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
@@ -72,14 +67,14 @@ public class BpCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO;
+        UserBindingPO tokenPO;
         String commandType = event.getCommandType().toLowerCase();
         BpParameter params;
         if (commandType.equals("bsm"))
         {
-            TokenStarMoon starMoonToken = proxy.getStarMoonToken(event);
-            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id(), null);
-            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
+            UserBindingPO starMoonToken = proxy.getStarMoonBinding(event);
+            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getPlayer_id(), null);
+            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_subset()));
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderScoreVOToImage(
                             playerService.getUserBestPerformanceSingleStarMoon(params), params.getVersion())
@@ -87,7 +82,7 @@ public class BpCommand implements LazybotSlashCommand
         }
         else
         {
-            tokenPO=proxy.getAccessToken(event);
+            tokenPO=proxy.getUserBinding(event);
             params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id(), tokenPO.getPreferred_panel_version());
             if (params.getVersion() == 3 || commandType.equals("pbp") || commandType.equals("pb"))
             {
@@ -108,20 +103,20 @@ public class BpCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO;
+        UserBindingPO tokenPO;
         String commandType = event.getCommandType().toLowerCase();
         BpParameter params;
         if (commandType.equals("bsm"))
         {
-            TokenStarMoon starMoonToken = proxy.getStarMoonToken(event);
-            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getStar_moon_id(), null);
-            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_ruleset()));
+            UserBindingPO starMoonToken = proxy.getStarMoonBinding(event);
+            params = setupParameter(event,starMoonToken.getDefault_mode(),starMoonToken.getPlayer_id(), null);
+            params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_subset()));
             ScoreVO scoreVO = playerService.getUserBestPerformanceSingleStarMoon(params);
             byte[] imageBytes = templateRenderer.renderScore(scoreVO, params.getVersion());
             testOutputTool.saveImageToLocal(imageBytes);
         }
         else  {
-            tokenPO=proxy.getAccessToken(event);
+            tokenPO=proxy.getUserBinding(event);
             params = setupParameter(event,tokenPO.getDefault_mode(),tokenPO.getPlayer_id(), tokenPO.getPreferred_panel_version());
             if (params.getVersion() == 3 || commandType.equals("pbp") || commandType.equals("pb"))
                 testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(

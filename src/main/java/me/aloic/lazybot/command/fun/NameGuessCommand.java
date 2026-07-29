@@ -9,8 +9,8 @@ import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.entity.GameWithTime;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
+import me.aloic.lazybot.osu.dao.mapper.UserBindingMapper;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -29,7 +29,7 @@ public class NameGuessCommand implements LazybotSlashCommand
     private TestOutputTool testOutputTool;
 
     @Resource
-    private TokenMapper tokenMapper;
+    private UserBindingMapper userBindingMapper;
 
     private final ConcurrentHashMap<String, GameWithTime> existingGameMap = new ConcurrentHashMap<>();
 
@@ -235,7 +235,7 @@ public class NameGuessCommand implements LazybotSlashCommand
     }
     protected String createNewGame(String identity)
     {
-        AccessTokenPO token = tokenMapper.selectRandom();
+        UserBindingPO token = userBindingMapper.selectRandom("qq", "bancho");
         if (token==null) throw new LazybotRuntimeException("数据库数据不足或获取失败");
         String obfuscatedName = obfuscateString(token.getPlayer_name());
         existingGameMap.put(identity, new GameWithTime(token.getPlayer_name(), LocalDateTime.now(),obfuscatedName));

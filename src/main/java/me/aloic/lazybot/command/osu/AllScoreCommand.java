@@ -12,9 +12,8 @@ import me.aloic.lazybot.entity.command.UserAllScore;
 import me.aloic.lazybot.graphics.mapping.documentMapper.MapScoreSVGMapper;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -44,7 +43,7 @@ public class AllScoreCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        ScoreParameter params = setupParameter(event, proxy.getAccessToken(event));
+        ScoreParameter params = setupParameter(event, proxy.getUserBinding(event));
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderMapScore(playerService.getUserAllScoresOnMap(params),false)
         );
@@ -53,12 +52,12 @@ public class AllScoreCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        ScoreParameter params = setupParameter(event, proxy.getAccessToken(event));
+        ScoreParameter params = setupParameter(event, proxy.getUserBinding(event));
         testOutputTool.saveImageToLocal(
                 RendererDistributor.renderMapScore(playerService.getUserAllScoresOnMap(params),false)
         );
     }
-    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
         ScoreParameter.setupDefaultValue(params, tokenPO);

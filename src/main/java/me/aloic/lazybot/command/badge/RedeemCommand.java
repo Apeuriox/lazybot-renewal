@@ -8,7 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.parameter.BadgeKeyParameter;
 import me.aloic.lazybot.service.BadgeKeyService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -45,7 +45,7 @@ public class RedeemCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO token = proxy.getAccessToken(event);
+        UserBindingPO token = proxy.getUserBinding(event);
         if (event.getCommandParameters()==null || event.getCommandParameters().isEmpty())
         {
             throw new IllegalArgumentException("未检测到Key");
@@ -59,7 +59,7 @@ public class RedeemCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO token = proxy.getAccessToken(event);
+        UserBindingPO token = proxy.getUserBinding(event);
         if (event.getCommandParameters()==null || event.getCommandParameters().isEmpty())
         {
             throw new IllegalArgumentException("未检测到Key");

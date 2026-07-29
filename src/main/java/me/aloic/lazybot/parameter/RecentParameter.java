@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
@@ -60,7 +60,7 @@ public class RecentParameter extends LazybotCommandParameter
         }
         return recentParameter;
     }
-    public static void setupDefaultValue(RecentParameter recentParameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(RecentParameter recentParameter, UserBindingPO accessTokenPO)
     {
         recentParameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (recentParameter.getMode() == null)

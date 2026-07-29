@@ -7,7 +7,7 @@ import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotSongGuessData;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.po.TipsPO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreIf;
 import me.aloic.lazybot.osu.dao.mapper.TipsMapper;
@@ -92,7 +92,7 @@ public class FunServiceImpl implements FunService
     @Override
     public String nameGuessGroupRandomName(List<Long> userIds)
     {
-        List<AccessTokenPO> users = dataExtractor.extractPlayerInfoByUserIdBatch(userIds);
+        List<UserBindingPO> users = dataExtractor.extractPlayerInfoByUserIdBatch(userIds);
         if(CollectionUtils.isEmpty(users)) {
             throw new LazybotRuntimeException("当前群聊还没有人绑定Lazybot呢....");
         }

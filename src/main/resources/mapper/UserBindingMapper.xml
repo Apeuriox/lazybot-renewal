@@ -74,10 +74,18 @@
         limit 1
     </select>
 
+    <select id="selectByLazybotUserId" resultMap="UserBindingResultMap">
+        <include refid="BindingSelect"/>
+        where u.id = #{userId}
+          and a.server = #{server}
+        limit 1
+    </select>
+
     <select id="selectRandom" resultMap="UserBindingResultMap">
         <include refid="BindingSelect"/>
         where p.platform = #{platform}
           and a.server = #{server}
+          and u.enabled = true
         order by rand()
         limit 1
     </select>

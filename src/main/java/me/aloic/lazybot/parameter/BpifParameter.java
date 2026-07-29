@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
@@ -91,7 +91,7 @@ public class BpifParameter extends LazybotCommandParameter
                         .collect(Collectors.toList()));
         }
     }
-    public static void setupDefaultValue(BpifParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(BpifParameter parameter, UserBindingPO accessTokenPO)
     {
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());

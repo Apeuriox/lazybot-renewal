@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 
 import java.util.List;
 @EqualsAndHashCode(callSuper = true)
@@ -40,12 +40,11 @@ public class CustomizationParameter extends LazybotCommandParameter
         else throw new LazybotRuntimeException("使用方法: /customize <类型> <图片链接>，具体请参考help页面");
         return parameter;
     }
-    public static void setupDefaultValue(CustomizationParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(CustomizationParameter parameter, UserBindingPO accessTokenPO)
     {
         parameter.setPlayerName(accessTokenPO.getPlayer_name());
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if(parameter.getQqCode() == null)
-            parameter.setQqCode(accessTokenPO.getQq_code());
-        parameter.setQqCode(accessTokenPO.getQq_code());
+            parameter.setQqCode(Long.valueOf(accessTokenPO.getPlatform_user_id()));
     }
 }

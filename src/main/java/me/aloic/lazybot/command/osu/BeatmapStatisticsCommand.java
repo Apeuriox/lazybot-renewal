@@ -9,7 +9,7 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapStatistics;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BeatmapStatisticsParameter;
@@ -39,7 +39,7 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        BeatmapStatisticsParameter params=setupParameter(event,proxy.getAccessToken(event));
+        BeatmapStatisticsParameter params=setupParameter(event,proxy.getUserBinding(event));
         BeatmapStatistics bs=playerService.getBeatmapStatisticsWithImaginaryParams(params);
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderBeatmapStatisticsToImage(bs)
@@ -49,11 +49,11 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        BeatmapStatisticsParameter params=setupParameter(event,proxy.getAccessToken(event));
+        BeatmapStatisticsParameter params=setupParameter(event,proxy.getUserBinding(event));
         BeatmapStatistics bs=playerService.getBeatmapStatisticsWithImaginaryParams(params);
         testOutputTool.saveImageToLocal(RendererDistributor.renderBeatmapStatisticsToImage(bs));
     }
-    protected static BeatmapStatisticsParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    protected static BeatmapStatisticsParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         BeatmapStatisticsParameter params=BeatmapStatisticsParameter.analyzeParameter(event.getCommandParameters());
         BeatmapStatisticsParameter.setupDefaultValue(params,tokenPO);

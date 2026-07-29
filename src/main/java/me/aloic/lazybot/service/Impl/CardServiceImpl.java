@@ -9,7 +9,7 @@ import me.aloic.lazybot.entity.vo.RetroGamerCardStats;
 import me.aloic.lazybot.graphics.mapping.documentMapper.CardCheckInSVGMapper;
 import me.aloic.lazybot.graphics.mapping.documentMapper.CardSVGMapper;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.mapper.CardPointsLogMapper;
 import me.aloic.lazybot.osu.dao.mapper.CardPointsMapper;
 import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
@@ -54,7 +54,7 @@ public class CardServiceImpl implements CardService
 
     @Transactional
     @Override
-    public byte[] checkIn(AccessTokenPO token)
+    public byte[] checkIn(UserBindingPO token)
     {
         CardUserPointsPO playerStats = cardPointsMapper.selectById(token.getPlayer_id());
         int coinThisTime = new Random().nextInt(30)+20;
@@ -100,7 +100,7 @@ public class CardServiceImpl implements CardService
 
     @Transactional
     @NotNull
-    protected byte[] UpdatePlayerCoin(Integer playerId, CardUserPointsPO playerStats,AccessTokenPO token ,int coinThisTime, int continuous)
+    protected byte[] UpdatePlayerCoin(Integer playerId, CardUserPointsPO playerStats,UserBindingPO token ,int coinThisTime, int continuous)
     {
         cardPointsMapper.updateStatsCheck(playerStats.getPoints()+coinThisTime,
                 LocalDateTime.now(),
@@ -118,7 +118,7 @@ public class CardServiceImpl implements CardService
     }
 
     @Override
-    public byte[] cardGameboy(AccessTokenPO token)
+    public byte[] cardGameboy(UserBindingPO token)
     {
         return SVGRenderer.renderSVGDocumentToByteArray(
                 CardSVGMapper.mapRetroStatsToGameboy(new RetroGamerCardStats(token))
@@ -126,7 +126,7 @@ public class CardServiceImpl implements CardService
         );
     }
     @Override
-    public byte[] cardGameGadget(AccessTokenPO token)
+    public byte[] cardGameGadget(UserBindingPO token)
     {
         return SVGRenderer.renderSVGDocumentToByteArray(
                 CardSVGMapper.mapRetroStatsToGameGadget(new RetroGamerCardStats(token))

@@ -42,13 +42,13 @@ public class BadgeCommand implements LazybotSlashCommand
         switch(badgeParameter.getType())
         {
             case LIST -> CommandResultHandler.sendMessageToGroupOnebot(bot,event,
-                    badgeService.showUserAllBadgeText(proxy.getAccessToken(event).getId()));
+                    badgeService.showUserAllBadgeText(proxy.getUserBinding(event).getId()));
             case VIEW -> CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,
-                    badgeService.showUserOwnedSingleBadge(proxy.getAccessToken(event).getId(),badgeParameter.getIndex()));
+                    badgeService.showUserOwnedSingleBadge(proxy.getUserBinding(event).getId(),badgeParameter.getIndex()));
             case SET -> CommandResultHandler.sendMessageToGroupOnebot(bot,event,
-                    badgeService.userSetShowcaseBadge(proxy.getAccessToken(event).getId(),badgeParameter.getIndexes()));
+                    badgeService.userSetShowcaseBadge(proxy.getUserBinding(event).getId(),badgeParameter.getIndexes()));
             case CLEAR -> CommandResultHandler.sendMessageToGroupOnebot(bot,event,
-                    badgeService.clearUserShowcaseBadge(proxy.getAccessToken(event).getId()));
+                    badgeService.clearUserShowcaseBadge(proxy.getUserBinding(event).getId()));
         }
     }
 
@@ -59,10 +59,10 @@ public class BadgeCommand implements LazybotSlashCommand
 
         switch(badgeParameter.getType())
         {
-            case LIST ->  testOutputTool.writeStringToFile(badgeService.showUserAllBadgeText(proxy.getAccessToken(event).getId()));
-            case VIEW -> testOutputTool.saveImageAndTextToLocal(badgeService.showUserOwnedSingleBadge(proxy.getAccessToken(event).getId(),badgeParameter.getIndex()));
-            case SET -> testOutputTool.writeStringToFile(badgeService.userSetShowcaseBadge(proxy.getAccessToken(event).getId(),badgeParameter.getIndexes()));
-            case CLEAR -> testOutputTool.writeStringToFile(badgeService.clearUserShowcaseBadge(proxy.getAccessToken(event).getId()));
+            case LIST ->  testOutputTool.writeStringToFile(badgeService.showUserAllBadgeText(proxy.getUserBinding(event).getId()));
+            case VIEW -> testOutputTool.saveImageAndTextToLocal(badgeService.showUserOwnedSingleBadge(proxy.getUserBinding(event).getId(),badgeParameter.getIndex()));
+            case SET -> testOutputTool.writeStringToFile(badgeService.userSetShowcaseBadge(proxy.getUserBinding(event).getId(),badgeParameter.getIndexes()));
+            case CLEAR -> testOutputTool.writeStringToFile(badgeService.clearUserShowcaseBadge(proxy.getUserBinding(event).getId()));
         }
     }
 

@@ -11,11 +11,9 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
@@ -35,8 +33,6 @@ public class ScoreCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -45,7 +41,7 @@ public class ScoreCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
@@ -67,7 +63,7 @@ public class ScoreCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        ScoreParameter params=setupParameter(event,proxy.getAccessToken(event));
+        ScoreParameter params=setupParameter(event,proxy.getUserBinding(event));
         if (event.getCommandType().equalsIgnoreCase("pscore") || params.getVersion() == 3) {
             PPPlusScore scorePlus =  playerService.getUserHighestScoreOnMapPlus(params);
             CommandResultHandler.uploadImageToOnebot(bot,event,
@@ -86,7 +82,7 @@ public class ScoreCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        ScoreParameter params=setupParameter(event,proxy.getAccessToken(event));
+        ScoreParameter params=setupParameter(event,proxy.getUserBinding(event));
         if (event.getCommandType().equalsIgnoreCase("pscore") || params.getVersion() == 3) {
             PPPlusScore scorePlus =  playerService.getUserHighestScoreOnMapPlus(params);
             testOutputTool.saveImageToLocal(RendererDistributor.renderPPPlusScoreToQuadraGrid(scorePlus));
@@ -98,7 +94,7 @@ public class ScoreCommand implements LazybotSlashCommand
         }
 
     }
-    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
         ScoreParameter.setupDefaultValue(params,tokenPO);

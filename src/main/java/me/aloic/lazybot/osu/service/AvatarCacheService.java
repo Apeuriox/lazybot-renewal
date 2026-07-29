@@ -3,7 +3,6 @@ package me.aloic.lazybot.osu.service;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.mapper.OsuAccountMapper;
 import org.springframework.beans.factory.annotation.Value;

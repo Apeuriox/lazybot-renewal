@@ -12,9 +12,7 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
@@ -34,8 +32,6 @@ public class PlayRecentCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -45,7 +41,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws IOException, RosuFFI.FFIException
     {
         event.deferReply().queue();
-        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
@@ -86,7 +82,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException, RosuFFI.FFIException
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         String commandType = event.getCommandType().toLowerCase();
         RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
@@ -108,7 +104,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         String commandType = event.getCommandType().toLowerCase();
         RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
@@ -152,7 +148,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
                             playerService.getUserRecentScoreList(params, type), params.getVersion()));
         }
     }
-    private RecentParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    private RecentParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         RecentParameter params=RecentParameter.analyzeParameter(event.getCommandParameters());
         RecentParameter.setupDefaultValue(params,tokenPO);

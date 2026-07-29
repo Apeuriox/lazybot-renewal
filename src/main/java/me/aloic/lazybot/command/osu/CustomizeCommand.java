@@ -11,9 +11,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.CustomizeService;
 import me.aloic.lazybot.parameter.CustomizationParameter;
@@ -29,8 +27,6 @@ public class CustomizeCommand implements LazybotSlashCommand
     @Resource
     private CustomizeService customizeService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -39,7 +35,7 @@ public class CustomizeCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
@@ -58,7 +54,7 @@ public class CustomizeCommand implements LazybotSlashCommand
                 MsgUtils.builder().text(
                         customizeService.customize(
                                 setupParameter(event,
-                                        proxy.getAccessToken(event))
+                                        proxy.getUserBinding(event))
                         )
                 ).build(),false);
     }
@@ -69,11 +65,11 @@ public class CustomizeCommand implements LazybotSlashCommand
         testOutputTool.writeStringToFile(
                 customizeService.customize(
                         setupParameter(event,
-                                proxy.getAccessToken(event))
+                                proxy.getUserBinding(event))
                 )
         );
     }
-    private CustomizationParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private CustomizationParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         CustomizationParameter params=CustomizationParameter.analyzeParameter(event.getCommandParameters());
         CustomizationParameter.setupDefaultValue(params,tokenPO);

@@ -7,7 +7,7 @@ Wants=network-online.target
 Type=simple
 User=lazybot
 WorkingDirectory=/opt/lazybot
-ExecStart=/usr/bin/java -jar /opt/lazybot/lazybot.jar
+ExecStart=/usr/bin/java --enable-preview --enable-native-access=ALL-UNNAMED -jar /opt/lazybot/lazybot.jar
 ExecStop=/bin/kill -SIGTERM $MAINPID
 Restart=on-failure
 RestartSec=10
@@ -20,5 +20,4 @@ Environment=ROSU_LIB_PATH=/home/lazybot/rosu
 
 [Install]
 WantedBy=multi-user.target
-
 

@@ -11,9 +11,7 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.CardMoelleuxParameter;
@@ -31,8 +29,6 @@ public class CardCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -41,7 +37,7 @@ public class CardCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
@@ -60,11 +56,11 @@ public class CardCommand implements LazybotSlashCommand
         if (event.getScorePanelVersion()==1)
 
             CommandResultHandler.uploadImageToOnebot(bot,event,
-                    RendererDistributor.renderPlayerInfoVOToCard(playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getAccessToken(event)))));
+                    RendererDistributor.renderPlayerInfoVOToCard(playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getUserBinding(event)))));
         else
         {
             CommandResultHandler.uploadImageToOnebot(bot,event,
-                    RendererDistributor.renderMoelleuxCard(playerService.cardMoelleux(setupParameter(event, proxy.getAccessToken(event)))));
+                    RendererDistributor.renderMoelleuxCard(playerService.cardMoelleux(setupParameter(event, proxy.getUserBinding(event)))));
         }
     }
 
@@ -73,12 +69,12 @@ public class CardCommand implements LazybotSlashCommand
     {
         if (event.getScorePanelVersion()==1)
             testOutputTool.saveImageToLocal(
-                    RendererDistributor.renderPlayerInfoVOToCard(playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getAccessToken(event)))));
+                    RendererDistributor.renderPlayerInfoVOToCard(playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getUserBinding(event)))));
         else
             testOutputTool.saveImageToLocal(
-                    RendererDistributor.renderMoelleuxCard(playerService.cardMoelleux(setupParameter(event, proxy.getAccessToken(event)))));
+                    RendererDistributor.renderMoelleuxCard(playerService.cardMoelleux(setupParameter(event, proxy.getUserBinding(event)))));
     }
-    private CardMoelleuxParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    private CardMoelleuxParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         CardMoelleuxParameter params=CardMoelleuxParameter.analyzeParameter(event.getCommandParameters());
         CardMoelleuxParameter.setupDefaultValue(params,tokenPO);
@@ -88,7 +84,7 @@ public class CardCommand implements LazybotSlashCommand
         params.validateParams();
         return params;
     }
-    private GeneralParameter setupParameterGeneral(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    private GeneralParameter setupParameterGeneral(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
         GeneralParameter.setupDefaultValue(params,tokenPO);

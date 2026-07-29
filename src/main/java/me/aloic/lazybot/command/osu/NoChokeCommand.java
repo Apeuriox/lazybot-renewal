@@ -13,8 +13,7 @@ import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
@@ -34,8 +33,6 @@ public class NoChokeCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -46,7 +43,7 @@ public class NoChokeCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO tokenPO = proxy.getDiscordBinding(event);
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
@@ -74,11 +71,11 @@ public class NoChokeCommand implements LazybotSlashCommand
         if (event.getCommandType().equalsIgnoreCase("no1miss"))
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderPlayerScoreListToCard(
-                    playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),1),0,2)
+                    playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),1),0,2)
             );
         else  CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderPlayerScoreListToCard(
-                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),0),0,3,
+                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),0),0,3,
                         NOCHOKE_LABEL)
         );
     }
@@ -89,11 +86,11 @@ public class NoChokeCommand implements LazybotSlashCommand
         if (event.getCommandType().equalsIgnoreCase("no1miss"))
             testOutputTool.saveImageToLocal(
                     RendererDistributor.renderPlayerScoreListToCard(
-                            playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),1),0,2)
+                            playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),1),0,2)
             );
         else testOutputTool.saveImageToLocal(
                 RendererDistributor.renderPlayerScoreListToCard(
-                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),0),0,3,
+                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),0),0,3,
                         NOCHOKE_LABEL)
         );
     }
