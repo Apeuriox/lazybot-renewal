@@ -96,14 +96,16 @@ public class UserServiceImpl implements UserService
             return;
         }
         isValidUsername(username);
-        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
+        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username);
+        OsuMode defaultMode = OsuMode.getMode(player.getPlaymode());
         checkUserBindability(player);
         identityService.bindManual(
                 IdentityPlatform.DISCORD,
                 event.getUser().getId(),
                 OsuServer.BANCHO,
                 player.getId(),
-                player.getUsername());
+                player.getUsername(),
+                defaultMode);
         event.getHook().sendMessage(
                 "[Lazybot] 成功绑定用户: " + player.getUsername()).queue();
     }
@@ -131,14 +133,16 @@ public class UserServiceImpl implements UserService
         isValidUsername(username);
         log.info("正在手动绑定 Bancho 用户");
 
-        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
+        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username);
+        OsuMode defaultMode = OsuMode.getMode(player.getPlaymode());
         checkUserBindability(player);
         identityService.bindManual(
                 IdentityPlatform.QQ,
                 String.valueOf(event.getMessageEvent().getSender().getUserId()),
                 OsuServer.BANCHO,
                 player.getId(),
-                player.getUsername());
+                player.getUsername(),
+                defaultMode);
         bot.sendGroupMsg(
                 event.getMessageEvent().getGroupId(),
                 MsgUtils.builder().text(
@@ -206,7 +210,8 @@ public class UserServiceImpl implements UserService
 
     private void checkUserBindability(PlayerInfoDTO player)
     {
-        if (player.getStatistics().getGlobal_rank() == null) {
+        if (player.getStatistics() == null
+                || player.getStatistics().getGlobal_rank() == null) {
             throw new LazybotRuntimeException(
                     "用户不活跃，无法实际确定绑定可行性，请在游玩1pc后重试");
         }

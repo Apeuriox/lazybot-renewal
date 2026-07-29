@@ -64,7 +64,9 @@ public class DataExtractor
     {
         try{
             PlayerInfoDTO playerInfoDTO = apiRequestExecutor.execute(
-                    URLBuildUtil.buildURLOfPlayerInfo(playerName,mode),
+                    mode == null || mode.isBlank()
+                            ? URLBuildUtil.buildURLOfPlayerInfo(playerName)
+                            : URLBuildUtil.buildURLOfPlayerInfo(playerName, mode),
                     HTTPTypeEnum.GET,
                     TokenMonitor.getToken(),
                     null,
@@ -78,6 +80,14 @@ public class DataExtractor
         catch (LazybotNotFoundException e) {
             throw new LazybotRuntimeException("没这B人: " + playerName);
         }
+    }
+
+    /**
+     * 根据用户名和玩家在 osu! 设置的默认模式获取用户信息。
+     */
+    public PlayerInfoDTO extractPlayerInfoDTO(String playerName)
+    {
+        return extractPlayerInfoDTO(playerName, null);
     }
 
     public UserResponse extractPlayerStarMoon(String playerName)

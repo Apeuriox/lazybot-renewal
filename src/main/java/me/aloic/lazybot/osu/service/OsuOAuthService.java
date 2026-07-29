@@ -9,6 +9,7 @@ import me.aloic.lazybot.osu.dao.entity.po.OsuOAuthCredentialPO;
 import me.aloic.lazybot.osu.dao.entity.po.PlatformIdentityPO;
 import me.aloic.lazybot.osu.dao.mapper.OAuthLinkSessionMapper;
 import me.aloic.lazybot.osu.enums.IdentityPlatform;
+import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.OsuServer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class OsuOAuthService
 {
     private static final String AUTHORIZE_URL = "https://osu.ppy.sh/oauth/authorize";
     private static final String TOKEN_URL = "https://osu.ppy.sh/oauth/token";
-    private static final String CURRENT_USER_URL = "https://osu.ppy.sh/api/v2/me/osu";
+    private static final String CURRENT_USER_URL = "https://osu.ppy.sh/api/v2/me";
 
     private final UserIdentityService identityService;
     private final OAuthLinkSessionMapper sessionMapper;
@@ -121,6 +122,7 @@ public class OsuOAuthService
                 OsuServer.BANCHO,
                 player.getId(),
                 player.getUsername(),
+                OsuMode.getMode(player.getPlaymode()),
                 credential);
         return player;
     }

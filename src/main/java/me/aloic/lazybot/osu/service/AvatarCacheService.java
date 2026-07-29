@@ -37,7 +37,7 @@ public class AvatarCacheService
 
     public AvatarCacheService(
             OsuAccountMapper osuAccountMapper,
-            @Value("${lazybot.avatar-cache.revalidate-hours:24}") long revalidateHours)
+            @Value("${lazybot.avatar-cache.revalidate-hours:120}") long revalidateHours)
     {
         this.osuAccountMapper = osuAccountMapper;
         this.httpClient = HttpClient.newBuilder()
@@ -66,8 +66,7 @@ public class AvatarCacheService
                 && binding.getAvatar_next_check_at().isAfter(now))
             return avatarPath.toString();
 
-        try
-        {
+        try {
             revalidate(player.getAvatar_url(), avatarPath, binding, now);
         }
         catch (Exception e)

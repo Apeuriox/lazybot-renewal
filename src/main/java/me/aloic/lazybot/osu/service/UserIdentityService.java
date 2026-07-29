@@ -52,12 +52,22 @@ public class UserIdentityService
     }
 
     @Transactional
-    public UserBindingPO bindManual(
-            IdentityPlatform platform,
-            String platformUserId,
-            OsuServer server,
-            Integer osuUserId,
-            String username)
+    public UserBindingPO bindManual(IdentityPlatform platform,
+                                    String platformUserId,
+                                    OsuServer server,
+                                    Integer osuUserId,
+                                    String username)
+    {
+        return bindManual(platform, platformUserId, server, osuUserId, username, null);
+    }
+
+    @Transactional
+    public UserBindingPO bindManual(IdentityPlatform platform,
+                                    String platformUserId,
+                                    OsuServer server,
+                                    Integer osuUserId,
+                                    String username,
+                                    OsuMode defaultMode)
     {
         if (osuAccountMapper.selectByServerIdentity(server.databaseValue(), osuUserId) != null) {
             throw new LazybotRuntimeException(
@@ -102,6 +112,7 @@ public class UserIdentityService
                     "该 " + server.databaseValue() + " 用户已被绑定", e);
         }
 
+        synchronizeDefaultMode(lazybotUserId, defaultMode);
         return findBinding(platform, platformUserId, server);
     }
 
@@ -138,6 +149,7 @@ public class UserIdentityService
             OsuServer server,
             Integer osuUserId,
             String username,
+            OsuMode defaultMode,
             OsuOAuthCredentialPO credential)
     {
         PlatformIdentityPO identity =
@@ -225,6 +237,7 @@ public class UserIdentityService
         audit.setOperation(auditOperation);
         audit.setCreated_at(LocalDateTime.now());
         accountLinkAuditMapper.insert(audit);
+        synchronizeDefaultMode(userId, defaultMode);
     }
 
     @Transactional
@@ -299,6 +312,15 @@ public class UserIdentityService
         user.setUpdated_at(LocalDateTime.now());
         lazybotUserMapper.insert(user);
         return user.getId();
+    }
+
+    private void synchronizeDefaultMode(
+            Integer lazybotUserId, OsuMode defaultMode)
+    {
+        if (defaultMode != null && defaultMode != OsuMode.Default) {
+            lazybotUserMapper.updateDefaultMode(
+                    lazybotUserId, defaultMode.getDescribe());
+        }
     }
 
     private void rejectReplacingVerifiedAccount(OsuAccountPO account)
