@@ -66,11 +66,13 @@ public class MessageDeduplicator
         String commandKey = commandKey(event);
         if (inFlightCommands.putIfAbsent(commandKey, true) != null) {
             completeDelivery(deliveryKey);
-            logger.info("指令 {} 正在排队或执行，已合并重复请求", commandKey);
+            logger.info(
+                    "{} 指令正在排队或执行，已合并重复请求",
+                    event.getCommandType());
             return;
         }
 
-        logger.info("指令进入用户队列: {}", commandKey);
+        logger.info("{} 指令进入用户队列", event.getCommandType());
         try {
             long userId = event.getMessageEvent().getSender().getUserId();
             Optional<CompletableFuture<Void>> submitted =
@@ -92,7 +94,9 @@ public class MessageDeduplicator
             submitted.get().whenComplete((ignored, throwable) -> {
                 inFlightCommands.remove(commandKey, true);
                 completeDelivery(deliveryKey);
-                logger.info("指令执行完成，已释放请求合并记录: {}", commandKey);
+                logger.info(
+                        "{} 指令执行完成，已释放请求合并记录",
+                        event.getCommandType());
             });
         }
         catch (RuntimeException e) {

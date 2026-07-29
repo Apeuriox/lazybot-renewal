@@ -4,6 +4,7 @@ import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
+import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 
 @LazybotCommandMapping({"addtips"})
+@SkipLazybotCommandPreprocessing
 @Component
 public class AddTipsCommand implements LazybotSlashCommand
 {

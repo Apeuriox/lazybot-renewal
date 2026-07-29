@@ -3,18 +3,15 @@ package me.aloic.lazybot.command.osu;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
+import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
-import me.aloic.lazybot.graphics.mapping.documentMapper.ThumbnailSVGMapper;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
-import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.parameter.ThumbnailParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -25,6 +22,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @LazybotCommandMapping({"tns","tnp","thumbnail"})
+@SkipLazybotCommandPreprocessing
 @Component
 public class ThumbnailCommand implements LazybotSlashCommand
 {

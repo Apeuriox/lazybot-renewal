@@ -3,6 +3,7 @@ package me.aloic.lazybot.command.badge;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
+import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @LazybotCommandMapping({"bum"})
+@SkipLazybotCommandPreprocessing
 @Component
 public class BadgeUserManageCommand implements LazybotSlashCommand
 {
