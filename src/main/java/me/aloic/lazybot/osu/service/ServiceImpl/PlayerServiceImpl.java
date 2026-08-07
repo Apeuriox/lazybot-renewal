@@ -72,6 +72,12 @@ public class PlayerServiceImpl implements PlayerService
     @Resource
     private RosuPerformanceService rosuPerformanceService;
 
+    private static final PPPlusPerformance EMPTY_PPPLUS_STATS;
+
+    static{
+        EMPTY_PPPLUS_STATS=PPPlusPerformance.initializeAsNumber(1D);
+    }
+
     private void logRecalculationAlgorithm(String command, LazybotCommandParameter params)
     {
         AlgorithmVersion algorithm = selectedAlgorithm(params);
@@ -639,8 +645,10 @@ public class PlayerServiceImpl implements PlayerService
         try{
             performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
         }
-        catch (LazybotRuntimeException e) {
-            throw new LazybotRuntimeException("Pp+数据获取失败，请稍后再试");
+        catch (Exception e) {
+            performance=EMPTY_PPPLUS_STATS;
+//            throw new LazybotRuntimeException("Pp+数据获取失败，请稍后再试");
+            logger.info("PP+数据暂时无法获取，以默认对象渲染");
         }
         List<ScoreLazerDTO> scoreDTOS=dataExtractor.extractUserBestScoreList(
                 String.valueOf(playerInfoVO.getId()),
@@ -686,7 +694,8 @@ public class PlayerServiceImpl implements PlayerService
             performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
         }
         catch (LazybotRuntimeException e) {
-            throw new LazybotRuntimeException("Pp+数据获取失败，请稍后再试");
+            performance=EMPTY_PPPLUS_STATS;
+            logger.warn("Trim Card内部Pp+数据获取失败，以改为默认对象");
         }
         playerInfoVO.setBannerUrl(AssetDownloadUtil.bannerAbsolutePath(player,false));
         PlayerInfoMoelleux playerInfoMoelleux=new PlayerInfoMoelleux(playerInfoVO,
@@ -720,8 +729,14 @@ public class PlayerServiceImpl implements PlayerService
             PlayerInfoVO playerInfoVO = OsuToolsUtil.setupPlayerInfoVO(getTargetPlayerInfoDTO(params));
             playerInfoVO.setMode(params.getMode());
             if (playerInfoVO.getPrimaryColor()==333) playerInfoVO.setPrimaryColor(208);
-            PPPlusPerformance performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
-
+            PPPlusPerformance performance;
+            try{
+                performance=dataExtractor.extractPerformancePlusPlayerTotal(playerInfoVO.getId());
+            }
+            catch (Exception e)
+            {
+                throw new LazybotRuntimeException("PP+附属服务离线，请等待其恢复服务后重试");
+            }
             return new PerformancePlusProfile(performance,playerInfoVO);
         }
         catch (LazybotRuntimeException e) {

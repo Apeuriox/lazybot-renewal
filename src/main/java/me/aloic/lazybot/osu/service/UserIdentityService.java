@@ -241,8 +241,7 @@ public class UserIdentityService
     }
 
     @Transactional
-    public void unlink(
-            IdentityPlatform platform, String platformUserId, OsuServer server)
+    public void unlink(IdentityPlatform platform, String platformUserId, OsuServer server)
     {
         PlatformIdentityPO identity = requirePlatformIdentity(platform, platformUserId);
         OsuAccountPO account = osuAccountMapper.selectByUserAndServer(

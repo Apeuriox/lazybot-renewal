@@ -10,7 +10,6 @@ public interface OsuOAuthCredentialMapper extends BaseMapper<OsuOAuthCredentialP
 {
     OsuOAuthCredentialPO selectByAccountIdForUpdate(@Param("accountId") Long accountId);
 
-    int updateRotatedCredential(
-            @Param("credential") OsuOAuthCredentialPO credential,
-            @Param("expectedVersion") Long expectedVersion);
+    int updateRotatedCredential(@Param("credential") OsuOAuthCredentialPO credential,
+                                @Param("expectedVersion") Long expectedVersion);
 }

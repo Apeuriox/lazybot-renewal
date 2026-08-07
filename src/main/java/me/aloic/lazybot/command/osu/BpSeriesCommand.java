@@ -59,6 +59,7 @@ public class BpSeriesCommand implements LazybotSlashCommand
                 parameter.getMode(),
                 1,21);
         if (parameter.getPlayerName()!=null) params.setPlayerName(parameter.getPlayerName());
+        if (parameter.getAlgorithmVersion()!=null) params.setAlgorithmVersion(parameter.getAlgorithmVersion());
         if (event.getScorePanelVersion()==0)
                 CommandResultHandler.uploadImageToOnebot(bot,event,
                         RendererDistributor.renderPlayerScoreListToCard(playerService.bplistCardView(params),params.getFrom(),1));
