@@ -9,7 +9,7 @@ import java.util.Locale;
 public final class RosuAlgorithmVersionUtil
 {
     public static final AlgorithmVersion LATEST = AlgorithmVersion.REWORK_20260706;
-    public static final String SUPPORTED_ALIASES = "202210, 202411, 202502, 202510, 20260706, latest";
+    public static final String SUPPORTED_ALIASES = "202210, 202411, 202502, 202510, 202607, latest";
 
     private RosuAlgorithmVersionUtil() {}
 
@@ -25,7 +25,7 @@ public final class RosuAlgorithmVersionUtil
 
         return switch (normalized) {
             case "latest", "current", "new", "20260706", "rework-20260706",
-                 "rework_20260706", "rework-20260706-9a073d2" -> AlgorithmVersion.REWORK_20260706;
+                 "202607", "rework-20260706-9a073d2" -> AlgorithmVersion.REWORK_20260706;
             case "202510", "rework-202510", "rework_202510" -> AlgorithmVersion.REWORK_202510;
             case "202502", "rework-202502", "rework_202502",
                  "rework-202502-rosu-pp-3.1.0" -> AlgorithmVersion.REWORK_202502;

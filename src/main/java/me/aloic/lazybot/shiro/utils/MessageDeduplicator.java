@@ -22,19 +22,16 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 @SuppressWarnings({"unused","StringTemplateMigration"})
+//only for Onebot messages, aka Tencent qq platform. you may ask why? cuz Discord have internal message queue somehow.
 public class MessageDeduplicator
 {
     private static final long IN_FLIGHT = Long.MAX_VALUE;
     private static final Logger logger = LoggerFactory.getLogger(MessageDeduplicator.class);
-
-    /**
-     * OneBot delivery identity -> expiry.
-     */
+    //filter same message from multiple bot instance. OneBot message id -> expiry
     private final ConcurrentHashMap<String, Long> deliveryRecords = new ConcurrentHashMap<>();
-    /**
-     * User + group + actual command content. Entries only exist while the
-     * original command is queued or executing.
-     */
+    //filter same user in certain group spamming same command
+    //Entries only exist while the original command is queued or executing
+    //key is user + group + actual command content
     private final ConcurrentHashMap<String, Boolean> inFlightCommands = new ConcurrentHashMap<>();
     private final SlashCommandProcessor slashCommandProcessor;
     private final UserCommandSequencer commandSequencer;
@@ -62,13 +59,11 @@ public class MessageDeduplicator
             return;
         }
 
-        //for same user spamming same command request
+        //for same user spamming same command request while the actual one being processing
         String commandKey = commandKey(event);
         if (inFlightCommands.putIfAbsent(commandKey, true) != null) {
             completeDelivery(deliveryKey);
-            logger.info(
-                    "{} 指令正在排队或执行，已合并重复请求",
-                    event.getCommandType());
+            logger.info("{} 指令正在排队或执行，已合并重复请求", event.getCommandType());
             return;
         }
 
@@ -76,9 +71,7 @@ public class MessageDeduplicator
         try {
             long userId = event.getMessageEvent().getSender().getUserId();
             Optional<CompletableFuture<Void>> submitted =
-                    commandSequencer.submit(
-                            userId,
-                            () -> slashCommandProcessor.processQQ(bot, event));
+                    commandSequencer.submit(userId, () -> slashCommandProcessor.processQQ(bot, event));
             if (submitted.isEmpty()) {
                 inFlightCommands.remove(commandKey, true);
                 removeDelivery(deliveryKey);
@@ -119,6 +112,18 @@ public class MessageDeduplicator
     private boolean reserveDelivery(String key)
     {
         long now = System.nanoTime();
+        //ok i shall add some comments cuz someone cant understand my code if it is kinda abstract.
+        //this while true loop below is a lock-free CAS loop, for multithread to read and modified the same object without synchronized
+        //for example there are 2 threads.
+        //1. Thread A and B read the same old expired timestamp at the same time.
+        //2. Thread A modified existing object's value to IN_FLIGHT successfully, returning TRUE.
+        //3. Thread B failed to modified, cuz the value was already modified by Thread A.
+        //4. Thread B starting the second loop to reread value.
+        //5. Thread B read the existing value as IN_FLIGHT, returning FALSE.
+        //
+        //this works cuz putIfAbsent and replace methods are ATOMIC.
+        //
+        //some will say it only moves the lock into the Map methods, it cant cancel it out. Ill answer that later
         while (true) {
             Long existing = deliveryRecords.putIfAbsent(key, IN_FLIGHT);
             if (existing == null) {
@@ -136,9 +141,7 @@ public class MessageDeduplicator
     private void completeDelivery(String key)
     {
         if (key != null) {
-            deliveryRecords.replace(key,
-                    IN_FLIGHT,
-                    System.nanoTime() + deliveryRetentionNanos);
+            deliveryRecords.replace(key, IN_FLIGHT, System.nanoTime() + deliveryRetentionNanos);
         }
     }
 

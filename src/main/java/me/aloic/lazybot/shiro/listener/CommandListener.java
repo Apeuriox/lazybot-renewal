@@ -32,6 +32,7 @@ public class CommandListener
         }
         // 对于超过 25 秒的消息直接舍弃，避免重新登录后集中处理积压命令。
         if (nowTime - event.getTime() > 25) return;
+        //preprocess command to see if it's our command
         LazybotSlashCommandEvent commandEvent;
         try{
             commandEvent = factory.setupSlashCommandEvent(event);

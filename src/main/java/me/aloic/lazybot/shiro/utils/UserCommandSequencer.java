@@ -20,35 +20,27 @@ import java.util.concurrent.atomic.AtomicReference;
 @Component
 public class UserCommandSequencer
 {
-    private static final Logger logger =
-            LoggerFactory.getLogger(UserCommandSequencer.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserCommandSequencer.class);
 
-    private final ConcurrentHashMap<Long, UserQueue> queues =
-            new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, UserQueue> queues = new ConcurrentHashMap<>();
     private final Executor executor;
     private final int maxPendingPerUser;
 
-    public UserCommandSequencer(
-            @Qualifier("virtualThreadExecutor") Executor executor,
-            @Value("${lazybot.command.max-pending-per-user:16}")
-            int maxPendingPerUser)
+    public UserCommandSequencer(@Qualifier("virtualThreadExecutor") Executor executor,
+                                @Value("${lazybot.command.max-pending-per-user:16}") int maxPendingPerUser)
     {
         this.executor = executor;
         this.maxPendingPerUser = Math.max(1, maxPendingPerUser);
     }
 
     /**
-     * @return the command completion, or empty when this user's queue is full
+     * @return the command completion, or empty when THIS user's queue is full
      */
-    public Optional<CompletableFuture<Void>> submit(
-            long userId, Runnable command)
+    public Optional<CompletableFuture<Void>> submit(long userId, Runnable command)
     {
-        Objects.requireNonNull(command, "command");
-
+        Objects.requireNonNull(command, "command should not be null");
         AtomicReference<UserQueue> selectedQueue = new AtomicReference<>();
-        AtomicReference<CompletableFuture<Void>> selectedFuture =
-                new AtomicReference<>();
-
+        AtomicReference<CompletableFuture<Void>> selectedFuture = new AtomicReference<>();
         queues.compute(userId, (ignored, queue) -> {
             UserQueue current = queue == null ? new UserQueue() : queue;
             if (current.pending >= maxPendingPerUser) {
