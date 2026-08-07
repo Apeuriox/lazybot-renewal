@@ -4,13 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.LazybotUserPO;
-import me.aloic.lazybot.osu.dao.entity.po.AccountLinkAuditPO;
 import me.aloic.lazybot.osu.dao.entity.po.OsuAccountPO;
 import me.aloic.lazybot.osu.dao.entity.po.OsuOAuthCredentialPO;
 import me.aloic.lazybot.osu.dao.entity.po.PlatformIdentityPO;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.mapper.LazybotUserMapper;
-import me.aloic.lazybot.osu.dao.mapper.AccountLinkAuditMapper;
 import me.aloic.lazybot.osu.dao.mapper.OsuAccountMapper;
 import me.aloic.lazybot.osu.dao.mapper.OsuOAuthCredentialMapper;
 import me.aloic.lazybot.osu.dao.mapper.PlatformIdentityMapper;
@@ -39,8 +37,6 @@ public class UserIdentityService
     private OsuOAuthCredentialMapper oauthCredentialMapper;
     @Resource
     private UserBindingMapper userBindingMapper;
-    @Resource
-    private AccountLinkAuditMapper accountLinkAuditMapper;
 
     public UserBindingPO findBinding(
             IdentityPlatform platform, String platformUserId, OsuServer server)
@@ -163,9 +159,6 @@ public class UserIdentityService
         OsuAccountPO target = osuAccountMapper.selectByServerIdentityForUpdate(
                 server.databaseValue(), osuUserId);
 
-        String auditOperation = "oauth_bind";
-        Integer previousUserId = null;
-
         if (target != null && !target.getLazybot_user_id().equals(userId))
         {
             if (AccountLinkMethod.OAUTH.databaseValue().equals(target.getLink_method()))
@@ -174,10 +167,8 @@ public class UserIdentityService
                     rejectReplacingVerifiedAccount(current);
                 }
 
-                previousUserId = userId;
                 userId = target.getLazybot_user_id();
                 platformIdentityMapper.reassignToUser(platformIdentityId, userId);
-                auditOperation = "oauth_merge_platform_identity";
             }
             else
             {
@@ -186,9 +177,7 @@ public class UserIdentityService
                     deleteAccountExplicitly(current);
                 }
 
-                previousUserId = target.getLazybot_user_id();
                 target.setLazybot_user_id(userId);
-                auditOperation = "oauth_transfer_manual_claim";
             }
         }
         else if (target == null)
@@ -197,7 +186,6 @@ public class UserIdentityService
             {
                 rejectReplacingVerifiedAccount(current);
                 deleteAccountExplicitly(current);
-                auditOperation = "oauth_replace_manual";
             }
 
             target = new OsuAccountPO();
@@ -230,13 +218,6 @@ public class UserIdentityService
             }
         }
 
-        AccountLinkAuditPO audit = new AccountLinkAuditPO();
-        audit.setOsu_account_id(target.getId());
-        audit.setPrevious_user_id(previousUserId);
-        audit.setCurrent_user_id(userId);
-        audit.setOperation(auditOperation);
-        audit.setCreated_at(LocalDateTime.now());
-        accountLinkAuditMapper.insert(audit);
         synchronizeDefaultMode(userId, defaultMode);
     }
 
@@ -244,16 +225,13 @@ public class UserIdentityService
     public void unlink(IdentityPlatform platform, String platformUserId, OsuServer server)
     {
         PlatformIdentityPO identity = requirePlatformIdentity(platform, platformUserId);
-        OsuAccountPO account = osuAccountMapper.selectByUserAndServer(
+        OsuAccountPO account = osuAccountMapper.selectByUserAndServerForUpdate(
                 identity.getLazybot_user_id(), server.databaseValue());
         if (account == null) {
             throw new LazybotRuntimeException("您并未绑定");
         }
 
-        // No database cascade: delete dependent rows explicitly before the account.
-        accountLinkAuditMapper.deleteByAccountId(account.getId());
-        oauthCredentialMapper.deleteById(account.getId());
-        osuAccountMapper.deleteById(account.getId());
+        deleteAccountExplicitly(account);
     }
 
     public void updateDefaultMode(
@@ -332,7 +310,7 @@ public class UserIdentityService
 
     private void deleteAccountExplicitly(OsuAccountPO account)
     {
-        accountLinkAuditMapper.deleteByAccountId(account.getId());
+        // No database cascade: the optional credential references osu_account.
         oauthCredentialMapper.deleteById(account.getId());
         osuAccountMapper.deleteById(account.getId());
     }
