@@ -70,13 +70,11 @@ public class MessageDeduplicator
         logger.info("{} 指令进入用户队列", event.getCommandType());
         try {
             long userId = event.getMessageEvent().getSender().getUserId();
-            Optional<CompletableFuture<Void>> submitted =
-                    commandSequencer.submit(userId, () -> slashCommandProcessor.processQQ(bot, event));
+            Optional<CompletableFuture<Void>> submitted = commandSequencer.submit(userId, () -> slashCommandProcessor.processQQ(bot, event));
             if (submitted.isEmpty()) {
                 inFlightCommands.remove(commandKey, true);
                 removeDelivery(deliveryKey);
-                bot.sendGroupMsg(
-                        event.getMessageEvent().getGroupId(),
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
                         MsgUtils.builder()
                                 .text("[Lazybot] 当前排队指令过多，请稍后重试")
                                 .build(),
@@ -87,9 +85,7 @@ public class MessageDeduplicator
             submitted.get().whenComplete((ignored, throwable) -> {
                 inFlightCommands.remove(commandKey, true);
                 completeDelivery(deliveryKey);
-                logger.info(
-                        "{} 指令执行完成，已释放请求合并记录",
-                        event.getCommandType());
+                logger.info("{} 指令执行完成，已释放请求合并记录", event.getCommandType());
             });
         }
         catch (RuntimeException e) {
@@ -123,7 +119,7 @@ public class MessageDeduplicator
         //
         //this works cuz putIfAbsent and replace methods are ATOMIC.
         //
-        //some will say it only moves the lock into the Map methods, it cant cancel it out. Ill answer that later
+        //some will say it only moves the lock into the ConcurrentHashMap internal methods, it cant cancel it out. Ill answer that later
         while (true) {
             Long existing = deliveryRecords.putIfAbsent(key, IN_FLIGHT);
             if (existing == null) {

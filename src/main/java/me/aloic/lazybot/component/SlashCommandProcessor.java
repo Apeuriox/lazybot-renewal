@@ -47,20 +47,19 @@ public class SlashCommandProcessor
                                 : "出现预期外的错误，请稍后重试")));
     }
 
+    // we r using shiro internal thread executor
     public void processQQ(Bot bot, LazybotSlashCommandEvent event)
     {
         processCommand(new CommandExecution(
                 event.getCommandType(),
                 "OneBot",
-                String.valueOf(
-                        event.getMessageEvent().getSender().getUserId()),
+                String.valueOf(event.getMessageEvent().getSender().getUserId()),
                 String.valueOf(event.getMessageEvent().getGroupId()),
                 command -> commandChainProcessor.process(bot, event, command),
                 (throwable, expected) -> replyQQ(
                         bot,
                         event,
-                        expected
-                                ? safeMessage(throwable)
+                        expected ? safeMessage(throwable)
                                 : "出现预期外的错误，请稍后重试")));
     }
 
@@ -179,7 +178,5 @@ public class SlashCommandProcessor
             String userId,
             String channelId,
             CommandInvocation invocation,
-            FailureHandler failureHandler)
-    {
-    }
+            FailureHandler failureHandler) { }
 }

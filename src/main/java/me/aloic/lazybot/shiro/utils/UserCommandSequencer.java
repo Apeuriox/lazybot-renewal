@@ -46,7 +46,6 @@ public class UserCommandSequencer
             if (current.pending >= maxPendingPerUser) {
                 return current;
             }
-
             CompletableFuture<Void> next = current.tail
                     .handle((result, throwable) -> null)
                     .thenRunAsync(command, executor);
@@ -65,10 +64,7 @@ public class UserCommandSequencer
         UserQueue queue = selectedQueue.get();
         future.whenComplete((ignored, throwable) -> {
             if (throwable != null) {
-                logger.error(
-                        "用户命令执行发生未捕获异常: userId={}",
-                        userId,
-                        throwable);
+                logger.error("用户命令执行时发生未捕获异常: userId={}", userId, throwable);
             }
             queues.computeIfPresent(userId, (ignoredKey, current) -> {
                 if (current != queue) {
@@ -80,14 +76,12 @@ public class UserCommandSequencer
                         : current;
             });
         });
-
         return Optional.of(future);
     }
 
     private static final class UserQueue
     {
-        private CompletableFuture<Void> tail =
-                CompletableFuture.completedFuture(null);
+        private CompletableFuture<Void> tail = CompletableFuture.completedFuture(null);
         private int pending;
     }
 }
