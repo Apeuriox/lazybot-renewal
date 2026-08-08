@@ -8,7 +8,7 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
@@ -35,7 +35,7 @@ public class CheckInCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
-        AccessTokenPO token =  proxy.getAccessToken(event);
+        UserBindingPO token =  proxy.getUserBinding(event);
         if (event.getScorePanelVersion() == 0)
         {
             CommandResultHandler.uploadImageToOnebot(bot, event, cardService.checkIn(token));
@@ -46,7 +46,7 @@ public class CheckInCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO token =  proxy.getAccessToken(event);
+        UserBindingPO token =  proxy.getUserBinding(event);
         if (event.getScorePanelVersion() == 0) {
             testOutputTool.saveImageToLocal(cardService.checkIn(token));
         }

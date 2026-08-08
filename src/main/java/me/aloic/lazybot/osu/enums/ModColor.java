@@ -144,9 +144,6 @@ public enum ModColor
             return DEFAULT;
         }
     }
-    public static String getModTypeColorHEX(org.spring.osu.model.Mod mod) {
-        return getModTypeColorHEX(mod.getType());
-    }
     public static String getModTypeColorHEX(Mod mod) {
         return getModTypeColorHEX(mod.getAcronym());
     }

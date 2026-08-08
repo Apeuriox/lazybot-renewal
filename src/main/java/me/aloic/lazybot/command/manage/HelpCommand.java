@@ -3,6 +3,7 @@ package me.aloic.lazybot.command.manage;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
+import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
@@ -17,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @LazybotCommandMapping({"help"})
+@SkipLazybotCommandPreprocessing
 @Component
 public class HelpCommand implements LazybotSlashCommand
 {

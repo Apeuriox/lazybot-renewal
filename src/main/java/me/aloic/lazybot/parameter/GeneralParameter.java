@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
+import me.aloic.lazybot.util.ArgumentParser;
+import me.aloic.lazybot.util.Parsers;
 
 import java.util.List;
 
@@ -32,19 +35,22 @@ public class GeneralParameter extends LazybotCommandParameter
     public static GeneralParameter analyzeParameter(List<String> params)
     {
         GeneralParameter parameter=new GeneralParameter();
-        if (!params.isEmpty()) {
-            parameter.setPlayerName(String.join(" ", params));
+        ArgumentParser parser = ArgumentParser.of(params);
+        parser.tryPop(Parsers.ALGORITHM_VERSION,
+                matcher -> parameter.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
+        if (!parser.remainder().isEmpty()) {
+            parameter.setPlayerName(parser.remainder());
         }
         return parameter;
     }
-    public static void setupDefaultValue(GeneralParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(GeneralParameter parameter, UserBindingPO accessTokenPO)
     {
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());
     }
 
-    public static GeneralParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    public static GeneralParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
         params.setVersion(event.getScorePanelVersion());

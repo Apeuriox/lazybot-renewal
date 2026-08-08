@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class BadgeImageParameter extends LazybotCommandParameter
         }
 
     }
-    public static void setupDefaultValue(BadgeImageParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(BadgeImageParameter parameter, UserBindingPO accessTokenPO)
     {
 
     }

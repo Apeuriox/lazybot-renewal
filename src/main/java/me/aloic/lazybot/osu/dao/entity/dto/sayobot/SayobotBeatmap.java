@@ -21,4 +21,23 @@ public class SayobotBeatmap implements Serializable
     private Integer sliders;
     private Integer spinners;
     private String bg;
+
+    @Override
+    public String toString()
+    {
+        return "SayobotBeatmap{" +
+                "bid=" + bid +
+                ", mode=" + mode +
+                ", version='" + version + '\'' +
+                ", aim=" + aim +
+                ", speed=" + speed +
+                ", pp_aim=" + pp_aim +
+                ", pp_speed=" + pp_speed +
+                ", pp_acc=" + pp_acc +
+                ", circles=" + circles +
+                ", sliders=" + sliders +
+                ", spinners=" + spinners +
+                ", bg='" + bg + '\'' +
+                '}';
+    }
 }

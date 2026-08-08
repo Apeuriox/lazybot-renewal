@@ -11,10 +11,8 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ProfileParameter;
@@ -31,8 +29,6 @@ public class ProfileCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private CustomizationMapper customizationMapper;
@@ -43,13 +39,11 @@ public class ProfileCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         ProfileParameter params=new ProfileParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
@@ -64,7 +58,7 @@ public class ProfileCommand implements LazybotSlashCommand
     {
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderProfileInfo(
-                playerService.profile(setupParameter(event, proxy.getAccessToken(event))))
+                playerService.profile(setupParameter(event, proxy.getUserBinding(event))))
         );
     }
 
@@ -72,10 +66,10 @@ public class ProfileCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         testOutputTool.saveImageToLocal(RendererDistributor.renderProfileInfo(
-                playerService.profile(setupParameter(event, proxy.getAccessToken(event))))
+                playerService.profile(setupParameter(event, proxy.getUserBinding(event))))
         );
     }
-    private ProfileParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    private ProfileParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         ProfileParameter params=ProfileParameter.analyzeParameter(event.getCommandParameters());
         ProfileParameter.setupDefaultValue(params,tokenPO);

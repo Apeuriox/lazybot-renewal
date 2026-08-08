@@ -7,8 +7,7 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -22,8 +21,6 @@ public class RetroCardCommand implements LazybotSlashCommand
     @Resource
     private CardService cardService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -36,7 +33,7 @@ public class RetroCardCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO token = proxy.getAccessToken(event);
+        UserBindingPO token = proxy.getUserBinding(event);
         if (event.getScorePanelVersion()==0)
         {
             CommandResultHandler.uploadImageToOnebot(bot,event,
@@ -53,7 +50,7 @@ public class RetroCardCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO token = proxy.getAccessToken(event);
+        UserBindingPO token = proxy.getUserBinding(event);
         if (event.getScorePanelVersion()==0)
         {
             testOutputTool.saveImageToLocal(

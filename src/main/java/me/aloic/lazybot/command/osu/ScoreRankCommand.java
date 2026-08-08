@@ -51,7 +51,7 @@ public class ScoreRankCommand implements LazybotSlashCommand
         if(CollectionUtils.isEmpty(members)) {
             return;
         }
-        ScoreParameter scoreParameter = ScoreCommand.setupParameter(event, proxy.getAccessToken(event));
+        ScoreParameter scoreParameter = ScoreCommand.setupParameter(event, proxy.getUserBinding(event));
         scoreParameter.setGroupUserIds(
                 members.stream()
                         .map(GroupMemberInfoResp::getUserId)

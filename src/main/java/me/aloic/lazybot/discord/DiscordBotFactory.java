@@ -30,6 +30,7 @@ public class DiscordBotFactory
                         .build().awaitReady();
             } catch (InterruptedException e)
             {
+                Thread.currentThread().interrupt();
                 throw new RuntimeException(e);
             }
         };

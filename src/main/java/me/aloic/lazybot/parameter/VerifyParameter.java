@@ -3,7 +3,7 @@ package me.aloic.lazybot.parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.util.CommonTool;
 
 import java.util.List;
@@ -35,8 +35,8 @@ public class VerifyParameter extends LazybotCommandParameter
         }
         return parameter;
     }
-    public static void setupDefaultValue(VerifyParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(VerifyParameter parameter, UserBindingPO accessTokenPO)
     {
-        parameter.setQqCode(accessTokenPO.getQq_code());
+        parameter.setQqCode(Long.valueOf(accessTokenPO.getPlatform_user_id()));
     }
 }

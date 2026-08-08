@@ -11,9 +11,7 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.TodaybpParameter;
@@ -30,8 +28,6 @@ public class TodaybpCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -40,13 +36,11 @@ public class TodaybpCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         TodaybpParameter params=new TodaybpParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
@@ -59,7 +53,7 @@ public class TodaybpCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        TodaybpParameter params = setupParameter(event,proxy.getAccessToken(event));
+        TodaybpParameter params = setupParameter(event,proxy.getUserBinding(event));
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderPlayerScoreListToCard(
                 playerService.getPlayerTodayNewBps(params),0,4,"Current command: /todayBp. Showing new Bps within " + params.getMaxDays() +" day(s)"));
@@ -68,11 +62,11 @@ public class TodaybpCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        TodaybpParameter params = setupParameter(event,proxy.getAccessToken(event));
+        TodaybpParameter params = setupParameter(event,proxy.getUserBinding(event));
         testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToCard(
                 playerService.getPlayerTodayNewBps(params),0,4,"Current command: /todayBp. Showing new Bps within " + params.getMaxDays() +" day(s)"));
     }
-    private TodaybpParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private TodaybpParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         TodaybpParameter params=TodaybpParameter.analyzeParameter(event.getCommandParameters());
         TodaybpParameter.setupDefaultValue(params,tokenPO);

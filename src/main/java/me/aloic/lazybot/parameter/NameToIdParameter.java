@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.util.CommonTool;
 
 import java.util.Arrays;
@@ -37,7 +37,7 @@ public class NameToIdParameter extends LazybotCommandParameter
         parameter.setTargets(List.of(String.join(" ", params).split(",")));
         return parameter;
     }
-    public static void setupDefaultValue(NameToIdParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(NameToIdParameter parameter, UserBindingPO accessTokenPO)
     {
         if (parameter.getMode() == null)
             parameter.setMode(accessTokenPO.getDefault_mode());

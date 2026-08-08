@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,7 +47,7 @@ public class BpvsParameter extends LazybotCommandParameter
         }
         return parameter;
     }
-    public static void setupDefaultValue(BpvsParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(BpvsParameter parameter, UserBindingPO accessTokenPO)
     {
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null)

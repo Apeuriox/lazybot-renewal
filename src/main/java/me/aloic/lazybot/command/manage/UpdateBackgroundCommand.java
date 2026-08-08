@@ -7,9 +7,7 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.parameter.BeatmapParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -24,8 +22,6 @@ public class UpdateBackgroundCommand implements LazybotSlashCommand
 {
     @Resource
     private ManageService manageService;
-    @Resource
-    private TokenMapper tokenMapper;
     @Resource
     private TestOutputTool testOutputTool;
     @Value("${lazybot.test.identity}")
@@ -44,7 +40,7 @@ public class UpdateBackgroundCommand implements LazybotSlashCommand
     {
         CommandResultHandler.sendMessageToGroupOnebot(bot,event,
                 manageService.updateBeatmapBackground(
-                        setupParameter(event, tokenMapper.selectByQq_code(0L))
+                        setupParameter(event)
                 )
         );
     }
@@ -53,11 +49,10 @@ public class UpdateBackgroundCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         testOutputTool.writeStringToFile(manageService.updateBeatmapBackground(
-                setupParameter(event,
-                        tokenMapper.selectByQq_code(0L))
+                setupParameter(event)
         ));
     }
-    private BeatmapParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private BeatmapParameter setupParameter(LazybotSlashCommandEvent event)
     {
         BeatmapParameter params=BeatmapParameter.analyzeParameter(event.getCommandParameters());
         if(event.getOsuMode()!=null)

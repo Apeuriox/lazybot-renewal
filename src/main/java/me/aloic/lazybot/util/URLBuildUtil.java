@@ -216,7 +216,7 @@ public class URLBuildUtil
     public static String buildURLOfPpRank(Integer mode,Integer pp)
     {
         UrlBuilder builder = UrlBuilder.ofHttp("https://osudaily.net/data/getPPRank.php", CharsetUtil.CHARSET_UTF_8)
-                .addQuery("m", 0)
+                .addQuery("m", mode)
                 .addQuery("t","pp")
                 .addQuery("v", pp);
         return builder.build();
@@ -259,6 +259,15 @@ public class URLBuildUtil
                 .addQuery("id", id);
         return builder.build();
     }
+    public static String buildURLOfReinitPerformancePlus(Integer id)
+    {
+        UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("player")
+                .addPath("reinit")
+                .addQuery("id", id);
+        return builder.build();
+    }
     public static String buildURLOfScorePerformanceDimensionPlus(Integer id, ScorePerformanceDimension dimension)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
@@ -282,6 +291,31 @@ public class URLBuildUtil
                 .addQuery("offset", offset)
                 .addQuery("limit", limit);
         return builder.build();
+    }
+    public static String buildURLOfStatsCount()
+    {
+        return UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("stats")
+                .addPath("count")
+                .build();
+    }
+    public static String buildURLOfStatsUsage()
+    {
+        return UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("stats")
+                .addPath("usage")
+                .build();
+    }
+    public static String buildURLOfStatsPlayerUpdated()
+    {
+        return UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
+                .addPath("lazybot")
+                .addPath("stats")
+                .addPath("player")
+                .addPath("updated")
+                .build();
     }
     public static String buildURLOfSayobotBeatmap(Integer beatmapId)
     {
@@ -331,6 +365,46 @@ public class URLBuildUtil
         UrlBuilder builder = UrlBuilder.ofHttp("https://a.star-moon.link", CharsetUtil.CHARSET_UTF_8)
                 .addPath(playerId);
         return builder.build();
+    }
+
+    /** GD服务器关卡查询API (POST form-encoded) */
+    public static String buildURLOfGdLevelSearch()
+    {
+        return UrlBuilder.ofHttp("http://www.boomlings.com/database", CharsetUtil.CHARSET_UTF_8)
+                .addPath("getGJLevels21.php")
+                .build();
+    }
+
+    /** GDDL (Demon Ladder) 关卡详情API (GET) */
+    public static String buildURLOfGddlLevel(String levelId)
+    {
+        return UrlBuilder.ofHttp("https://gdladder.com", CharsetUtil.CHARSET_UTF_8)
+                .addPath("api")
+                .addPath("level")
+                .addPath(levelId)
+                .build();
+    }
+
+    /** Pointercrate Demonlist 查询API (GET) */
+    public static String buildURLOfDemonListByLevelId(String levelId)
+    {
+        return UrlBuilder.ofHttp("https://pointercrate.com", CharsetUtil.CHARSET_UTF_8)
+                .addPath("api")
+                .addPath("v2")
+                .addPath("demons")
+                .addPath("listed")
+                .addQuery("level_id", levelId)
+                .build();
+    }
+
+    /** Pemonlist Platformer关卡查询API (GET) */
+    public static String buildURLOfPemonListByLevelId(String levelId)
+    {
+        return UrlBuilder.ofHttp("https://pemonlist.com", CharsetUtil.CHARSET_UTF_8)
+                .addPath("api")
+                .addPath("level")
+                .addPath(levelId)
+                .build();
     }
 
     private static String encodeJsonUrl(String playerIdentity, String mode, String subRuleset) throws JsonProcessingException

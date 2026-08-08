@@ -42,7 +42,7 @@ public class PPTestCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.writeStringToFile(manageService.ppTest(ScoreCommand.setupParameter(event,proxy.getAccessToken(event)),identity));
+        testOutputTool.writeStringToFile(manageService.ppTest(ScoreCommand.setupParameter(event,proxy.getUserBinding(event)),identity));
     }
 
 }

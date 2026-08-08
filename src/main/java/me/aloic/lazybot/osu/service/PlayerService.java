@@ -49,6 +49,10 @@ public interface PlayerService
 
     NoChokeListVO noChoke(GeneralParameter params, int type) throws Exception;
 
+    PlayerScoreList noReading(GeneralParameter params) throws Exception;
+
+    PlayerScoreList maxReading(GeneralParameter params) throws Exception;
+
     PlayerInfoVO getPlayerInfoVO(GeneralParameter params) throws Exception;
 
     MoelleuxCard cardMoelleux(CardMoelleuxParameter params) throws Exception;

@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
+import me.aloic.lazybot.util.ArgumentParser;
+import me.aloic.lazybot.util.Parsers;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -43,25 +44,23 @@ public class RecentParameter extends LazybotCommandParameter
         if (params == null || params.isEmpty())
             return new RecentParameter(null,1,0,null);
 
-        String text = String.join(" ", params).trim();
-        if (text.matches("\\d+")) {
-            int indexVal = Integer.parseInt(text);
-            if (indexVal >= 1 && indexVal <= 200)
-                recentParameter.index = indexVal;
-            else
-                recentParameter.setPlayerName(text);
+        ArgumentParser parser = ArgumentParser.of(params);
+        parser.tryPop(Parsers.ALGORITHM_VERSION,
+                matcher -> recentParameter.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
+        parser.tryPop(Parsers.INDEX,
+                matcher -> recentParameter.setIndex(Integer.parseInt(matcher.group(1))));
+        if (recentParameter.getIndex() == null) {
+            parser.tryPopIf(Parsers.DIGITS,
+                    matcher -> Integer.parseInt(matcher.group()) >= 1
+                            && Integer.parseInt(matcher.group()) <= 100,
+                    matcher -> recentParameter.setIndex(Integer.parseInt(matcher.group())));
         }
-        else {
-            Matcher indexMatcher = Pattern.compile("#(\\d+)").matcher(text);
-            if (indexMatcher.find()) {
-                recentParameter.index = Integer.parseInt(indexMatcher.group(1));
-                text = text.replace(indexMatcher.group(), "").trim();
-            }
-            if (!text.isEmpty()) recentParameter.setPlayerName(text);
+        if (!parser.remainder().isEmpty()) {
+            recentParameter.setPlayerName(parser.remainder());
         }
         return recentParameter;
     }
-    public static void setupDefaultValue(RecentParameter recentParameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(RecentParameter recentParameter, UserBindingPO accessTokenPO)
     {
         recentParameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (recentParameter.getMode() == null)

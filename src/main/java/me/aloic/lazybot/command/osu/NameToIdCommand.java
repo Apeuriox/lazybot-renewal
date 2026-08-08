@@ -5,15 +5,13 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.NameToIdParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -31,9 +29,7 @@ public class NameToIdCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
-    private TokenMapper tokenMapper;
+    private CommandDatabaseProxy proxy;
 
     @Resource
     private TestOutputTool testOutputTool;
@@ -42,13 +38,7 @@ public class NameToIdCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
-        if (tokenPO == null) {
-            ErrorResultHandler.createNotBindOsuError(event);
-            return;
-        }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         String playerNameList = OptionMappingTool.getOptionOrDefault(event.getOption("list"), tokenPO.getPlayer_name());
         List<String> playerNames = Arrays.stream(playerNameList.split(","))
                 .distinct()
@@ -62,7 +52,7 @@ public class NameToIdCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO accessToken= tokenMapper.selectByQq_code(0L);
+        UserBindingPO accessToken = proxy.getUserBinding(event);
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
                 MsgUtils.builder().text(
                         playerService.nameToId(
@@ -75,11 +65,11 @@ public class NameToIdCommand implements LazybotSlashCommand
     {
         testOutputTool.writeStringToFile(
                 playerService.nameToId(
-                        setupParameter(event,tokenMapper.selectByQq_code(0L))
+                        setupParameter(event, proxy.getUserBinding(event))
                 )
         );
     }
-    private NameToIdParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private NameToIdParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         NameToIdParameter params=NameToIdParameter.analyzeParameter(event.getCommandParameters());
         NameToIdParameter.setupDefaultValue(params,tokenPO);

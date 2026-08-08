@@ -21,13 +21,13 @@ public class SetmodeCommand implements LazybotSlashCommand
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
-        userService.updateDefaultMode(event);
+        userService.updateDefaultSubset(event);
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
-        userService.updateDefaultMode(bot, event);
+        userService.updateDefaultSubset(bot, event);
     }
 
     @Override

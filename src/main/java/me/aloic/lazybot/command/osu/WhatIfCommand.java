@@ -41,7 +41,7 @@ public class WhatIfCommand implements LazybotSlashCommand
     {
         WhatIfParameter params=WhatIfParameter.analyzeParameter(event.getCommandParameters());
         params.validateParams();
-        WhatIfParameter.setupDefaultValue(params,proxy.getAccessToken(event));
+        WhatIfParameter.setupDefaultValue(params,proxy.getUserBinding(event));
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(funService.whatIfIGotSomePP(params)).build(),false);
     }
 
@@ -50,7 +50,7 @@ public class WhatIfCommand implements LazybotSlashCommand
     {
         WhatIfParameter params= WhatIfParameter.analyzeParameter(event.getCommandParameters());
         params.validateParams();
-        WhatIfParameter.setupDefaultValue(params,proxy.getAccessToken(event));
+        WhatIfParameter.setupDefaultValue(params,proxy.getUserBinding(event));
         testOutputTool.writeStringToFile(funService.whatIfIGotSomePP(params));
     }
     @Override

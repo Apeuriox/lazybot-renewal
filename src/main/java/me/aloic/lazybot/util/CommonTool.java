@@ -474,20 +474,23 @@ public class CommonTool {
 
     public static Double totalPpCalculator(List<ScoreVO> scoreList)
     {
+        AtomicInteger index = new AtomicInteger(0);
         return scoreList.stream()
-                .mapToDouble(score -> Math.pow(0.95, scoreList.indexOf(score)) * score.getPp())
+                .mapToDouble(score -> Math.pow(0.95, index.getAndIncrement()) * score.getPp())
                 .sum();
     }
     public static Double totalPpCalculatorFixed(List<ScoreVO> scoreList)
     {
+        AtomicInteger index = new AtomicInteger(0);
         return scoreList.stream()
-                .mapToDouble(score -> Math.pow(0.95, scoreList.indexOf(score)) * score.getPpDetailsLocal().getIfFc())
+                .mapToDouble(score -> Math.pow(0.95, index.getAndIncrement()) * score.getPpDetailsLocal().getIfFc())
                 .sum();
     }
     public static Double totalPpCalculatorDTO(List<ScoreDTO> scoreList)
     {
+        AtomicInteger index = new AtomicInteger(0);
         return scoreList.stream()
-                .mapToDouble(score -> Math.pow(0.95, scoreList.indexOf(score)) * score.getPp())
+                .mapToDouble(score -> Math.pow(0.95, index.getAndIncrement()) * score.getPp())
                 .sum();
     }
     public static Double totalPpCalculatorList(List<Double> ppList) {
@@ -509,7 +512,7 @@ public class CommonTool {
     }
     public static boolean modsContainsAnyOfStarChanging(String[] array)
     {
-        List<String> elements = Arrays.asList("HR","DT","HT","EZ","FL","NC","TD","BL","DC");
+        List<String> elements = Arrays.asList("HR","DT","HT","EZ","FL","NC","TD","BL","DC","HD","DA");
         return Arrays.stream(array).anyMatch(elements::contains);
     }
     public static boolean modsContainsAnyOfStarChanging(List<Mod> mods)

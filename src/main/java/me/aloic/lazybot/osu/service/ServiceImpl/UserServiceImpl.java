@@ -2,264 +2,245 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.*;
+import me.aloic.lazybot.osu.enums.IdentityPlatform;
 import me.aloic.lazybot.osu.enums.OsuMode;
+import me.aloic.lazybot.osu.enums.OsuServer;
 import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.osu.enums.ScorePanelType;
+import me.aloic.lazybot.osu.service.UserIdentityService;
 import me.aloic.lazybot.osu.service.UserService;
+import me.aloic.lazybot.osu.service.OsuOAuthService;
 import me.aloic.lazybot.parameter.UpdatePanelVersionParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.DataExtractor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-
-//im too lazy to refactor this
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService
 {
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
-    private TokenMapper tokenMapper;
-    @Resource
-    private TokenStarMoonMapper tokenStarMoonMapper;
-    @Resource
-    private CardPointsMapper cardPointsMapper;
-    @Resource
-    private CardPointsLogMapper cardPointsLogMapper;
+    private UserIdentityService identityService;
 
     @Resource
     private DataExtractor dataExtractor;
-
-
+    @Resource
+    private OsuOAuthService oauthService;
 
     @Override
-    public void updateDefaultMode(SlashCommandInteractionEvent event)
+    public void updateDefaultSubset(SlashCommandInteractionEvent event)
     {
         event.deferReply().queue();
-        if(event.getOption("mode")==null) throw new LazybotRuntimeException("请输入模式");
+        if (event.getOption("mode") == null) {
+            throw new LazybotRuntimeException("请输入模式");
+        }
         OsuMode mode = OsuMode.getMode(event.getOption("mode").getAsString());
-        if (mode == OsuMode.Default) throw new LazybotRuntimeException("未知的模式: " + event.getOption("mode").getAsString());
-        BiConsumer<SlashCommandInteractionEvent, UserTokenPO> createBindError =  ErrorResultHandler::createBindError;
-        if(event.getOption("username")==null)
-            ErrorResultHandler.createParameterError(event);
-        Optional.ofNullable(discordTokenMapper.selectByDiscord(event.getUser().getIdLong()))
-                .ifPresentOrElse(
-                        token -> discordTokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getUser().getIdLong()),
-                        this::createNotBindError);
-        event.getHook().sendMessage("[Lazybot] 已成功更改模式为: " +mode.getDescribe()).queue();
+        identityService.updateDefaultMode(
+                IdentityPlatform.DISCORD, event.getUser().getId(), mode);
+        event.getHook().sendMessage(
+                "[Lazybot] 已成功更改模式为: " + mode.getDescribe()).queue();
     }
+
     @Override
-    public void updateDefaultMode(Bot bot, LazybotSlashCommandEvent event)
+    public void updateDefaultSubset(Bot bot, LazybotSlashCommandEvent event)
     {
-        if (event.getCommandParameters()==null || event.getCommandParameters().isEmpty()) throw new LazybotRuntimeException("请输入模式");
+        if (event.getCommandParameters() == null || event.getCommandParameters().isEmpty()) {
+            throw new LazybotRuntimeException("请输入模式");
+        }
         OsuMode mode = OsuMode.getMode(event.getCommandParameters().getFirst());
-        if (mode == OsuMode.Default) throw new LazybotRuntimeException("未知的模式: " + event.getCommandParameters().getFirst());
-        Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
-                .ifPresentOrElse(
-                        token -> tokenMapper.updateDefaultMode(mode.getDescribe().toLowerCase(), event.getMessageEvent().getSender().getUserId()),
-                        this::createNotBindError);
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 已成功更改模式为: " +mode.getDescribe()).build(),false);
+        identityService.updateDefaultMode(
+                IdentityPlatform.QQ,
+                String.valueOf(event.getMessageEvent().getSender().getUserId()),
+                mode);
+        bot.sendGroupMsg(
+                event.getMessageEvent().getGroupId(),
+                MsgUtils.builder().text(
+                        "[Lazybot] 已成功更改模式为: " + mode.getDescribe()).build(),
+                false);
     }
+
     @Override
-    public String updateDefaultMode(OsuSubruleset ruleset, Long qqCode)
+    public String updateDefaultSubset(OsuSubruleset ruleset, Long qqCode)
     {
-        Optional.ofNullable(tokenStarMoonMapper.selectByQq_code(qqCode))
-                .ifPresentOrElse(
-                        token -> tokenStarMoonMapper.updateSubRuleset(ruleset.getDescribe().toLowerCase(), qqCode),
-                        this::createNotBindError);
+        identityService.updateDefaultSubset(
+                IdentityPlatform.QQ,
+                String.valueOf(qqCode),
+                ruleset.getDescribe());
         return "[Lazybot] 成功更新次级Ruleset至: " + ruleset.getDescribe();
     }
-
-
 
     @Override
     public void linkUser(SlashCommandInteractionEvent event)
     {
         event.deferReply().queue();
-        BiConsumer<SlashCommandInteractionEvent, UserTokenPO> createBindError =  ErrorResultHandler::createBindError;
-        if(event.getOption("username")==null)
+        if (event.getOption("username") == null) {
             ErrorResultHandler.createParameterError(event);
-        isValidUsername(event.getOption("username").getAsString());
-        Optional.ofNullable(discordTokenMapper.selectByDiscord(event.getUser().getIdLong()))
-                .ifPresentOrElse(
-                        token -> createBindError.accept(event, token),
-                        () -> insertUserToTable(event, event.getOption("username").getAsString()));
+            return;
+        }
+
+        String username = event.getOption("username").getAsString();
+        if ("oauth".equalsIgnoreCase(username)) {
+            String url = oauthService.createAuthorizationUrl(
+                    IdentityPlatform.DISCORD, event.getUser().getId());
+            event.getHook().sendMessage(
+                    "[Lazybot] 请在 10 分钟内打开此链接并登录 osu! 完成授权：\n" + url)
+                    .setEphemeral(true)
+                    .queue();
+            return;
+        }
+        isValidUsername(username);
+        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username);
+        OsuMode defaultMode = OsuMode.getMode(player.getPlaymode());
+        checkUserBindability(player);
+        identityService.bindManual(
+                IdentityPlatform.DISCORD,
+                event.getUser().getId(),
+                OsuServer.BANCHO,
+                player.getId(),
+                player.getUsername(),
+                defaultMode);
+        event.getHook().sendMessage(
+                "[Lazybot] 成功绑定用户: " + player.getUsername()).queue();
     }
 
     @Override
     public void linkUser(Bot bot, LazybotSlashCommandEvent event)
     {
         String username = String.join(" ", event.getCommandParameters());
-        log.info("正在绑定Bancho用户");
-        processLinkBancho(bot,event,username);
+        if ("oauth".equalsIgnoreCase(username)) {
+            long userId = event.getMessageEvent().getSender().getUserId();
+            String url = oauthService.createAuthorizationUrl(
+                    IdentityPlatform.QQ, String.valueOf(userId));
+            bot.sendPrivateMsg(
+                    userId,
+                    MsgUtils.builder().text(
+                            "[Lazybot] 请在 10 分钟内打开此链接并登录 osu! 完成授权：\n"
+                                    + url).build(),
+                    false);
+            bot.sendGroupMsg(
+                    event.getMessageEvent().getGroupId(),
+                    MsgUtils.builder().text("[Lazybot] OAuth 授权链接已通过私聊发送").build(),
+                    false);
+            return;
+        }
+        isValidUsername(username);
+        log.info("正在手动绑定 Bancho 用户");
+
+        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username);
+        OsuMode defaultMode = OsuMode.getMode(player.getPlaymode());
+        checkUserBindability(player);
+        identityService.bindManual(
+                IdentityPlatform.QQ,
+                String.valueOf(event.getMessageEvent().getSender().getUserId()),
+                OsuServer.BANCHO,
+                player.getId(),
+                player.getUsername(),
+                defaultMode);
+        bot.sendGroupMsg(
+                event.getMessageEvent().getGroupId(),
+                MsgUtils.builder().text(
+                        "[Lazybot] 成功绑定用户: " + player.getUsername()).build(),
+                false);
     }
+
     @Override
     public void linkStarMoon(Bot bot, LazybotSlashCommandEvent event)
     {
-        String username = String.join(" ", event.getCommandParameters()).replaceAll(" ","_");
-        log.info("正在绑定Star Moon用户");
-        processLinkStarMoon(bot, event, username);
-    }
-    private void processLinkBancho(Bot bot, LazybotSlashCommandEvent event, String username)
-    {
-        isValidUsername(username);
-        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
-        checkUserBindability(player);
-        Optional.ofNullable(tokenMapper.selectByPlayerId(player.getId())).ifPresent(this::createAlreadyBindError);
-        Optional.ofNullable(tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
-                .ifPresentOrElse(
-                        this::createBindError,
-                        () -> insertUserToTable(event, player, bot));
-    }
-    private void processLinkStarMoon(Bot bot, LazybotSlashCommandEvent event, String username)
-    {
-        //there can have Chinese character in username so no need to check
+        String username = String.join(" ", event.getCommandParameters())
+                .replace(" ", "_");
+        log.info("正在手动绑定 StarMoon 用户");
+
         UserResponse player = dataExtractor.extractPlayerStarMoon(username);
-        Optional.ofNullable(tokenStarMoonMapper.selectByPlayerId(Integer.valueOf(player.getId()))).ifPresent(this::createAlreadyBindError);
-        Optional.ofNullable(tokenStarMoonMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId()))
-                .ifPresentOrElse(
-                        this::createBindError,
-                        () -> insertUserToTable(event, player, bot));
+        identityService.bindManual(
+                IdentityPlatform.QQ,
+                String.valueOf(event.getMessageEvent().getSender().getUserId()),
+                OsuServer.STAR_MOON,
+                Integer.valueOf(player.getId()),
+                player.getName());
+        bot.sendGroupMsg(
+                event.getMessageEvent().getGroupId(),
+                MsgUtils.builder().text(
+                        "[Lazybot] 成功绑定StarMoon用户: " + player.getName()).build(),
+                false);
     }
 
     @Override
     public void unlinkUser(SlashCommandInteractionEvent event)
     {
         event.deferReply().queue();
-        if(event.getOption("username")==null)
-            ErrorResultHandler.createParameterError(event);
-        Optional.ofNullable(discordTokenMapper.selectByDiscord(event.getUser().getIdLong()))
-                .ifPresentOrElse(token -> discordTokenMapper.deleteByDiscord(event.getUser().getIdLong()),
-                        this::createNotBindError);
-        event.getHook().sendMessage("[Lazybot] 已解除绑定: " +event.getOption("username").getAsString()).queue();
+        identityService.unlink(
+                IdentityPlatform.DISCORD,
+                event.getUser().getId(),
+                OsuServer.BANCHO);
+        event.getHook().sendMessage("[Lazybot] 已解除 osu! 账号绑定").queue();
     }
 
-    @Transactional
     @Override
     public void unlinkUser(Bot bot, LazybotSlashCommandEvent event)
     {
-        AccessTokenPO accessTokenPO = tokenMapper.selectByQq_code(event.getMessageEvent().getSender().getUserId());
-        Optional.ofNullable(accessTokenPO)
-                .ifPresentOrElse(
-                        token -> tokenMapper.deleteByQQ(event.getMessageEvent().getSender().getUserId()),
-                        this::createNotBindError);
-        cardPointsMapper.deleteById(accessTokenPO.getPlayer_id());
-        cardPointsLogMapper.deleteById(accessTokenPO.getPlayer_id());
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功解除绑定").build(),false);
-    }
-    private void insertUserToTable(SlashCommandInteractionEvent event, @Nonnull String username){
-        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username, "osu");
-        checkUserBindability(player);
-        UserTokenPO user = new UserTokenPO(event.getUser().getIdLong(), player.getId(), player.getUsername());
-        Optional.ofNullable(discordTokenMapper.selectByPlayername(player.getUsername()))
-                .ifPresentOrElse(
-                        userToken -> discordTokenMapper.updateByToken(user),
-                        () -> discordTokenMapper.insert(user)
-                );
-        event.getHook().sendMessage("[Lazybot] 成功绑定用户: " +username).queue();
-    }
-    private void insertUserToTable(LazybotSlashCommandEvent event, @Nonnull PlayerInfoDTO player,Bot bot){
-        AccessTokenPO user = new AccessTokenPO();
-        user.setPlayer_id(player.getId());
-        user.setPlayer_name(player.getUsername());
-        user.setDefault_mode("osu");
-        user.setQq_code(event.getMessageEvent().getSender().getUserId());
-        user.setValid(1);
-        user.setAvatar_url(player.getAvatar_url());
-        Optional.ofNullable(tokenMapper.selectByPlayerId(player.getId()))
-                .ifPresentOrElse(
-                        userToken -> tokenMapper.updateByToken(user),
-                        () -> tokenMapper.insert(user)
-                );
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功绑定用户: " + player.getUsername()).build(),false);
+        identityService.unlink(
+                IdentityPlatform.QQ,
+                String.valueOf(event.getMessageEvent().getSender().getUserId()),
+                OsuServer.BANCHO);
+        bot.sendGroupMsg(
+                event.getMessageEvent().getGroupId(),
+                MsgUtils.builder().text("[Lazybot] 成功解除绑定").build(),
+                false);
     }
 
-    private void insertUserToTable(LazybotSlashCommandEvent event, @Nonnull UserResponse player,Bot bot){
-        TokenStarMoon user = new TokenStarMoon();
-        user.setStar_moon_id(Integer.valueOf(player.getId()));
-        user.setStar_moon_name(player.getName());
-        user.setDefault_mode("osu");
-        user.setDefault_ruleset("relax");
-        user.setQq_code(event.getMessageEvent().getSender().getUserId());
-        user.setCreate_time(LocalDateTime.now());
-        tokenStarMoonMapper.insert(user);
-        bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text("[Lazybot] 成功绑定StarMoon用户: " + player.getName()).build(),false);
-    }
-
-
-
-    private void createBindError(AccessTokenPO token){
-        throw new LazybotRuntimeException("您已绑定用户: " +token.getPlayer_name());
-    }
-
-    private void createBindError(TokenStarMoon token){
-        throw new LazybotRuntimeException("您已绑定StarMoon用户: " +token.getStar_moon_name());
-    }
-    private void createAlreadyBindError(AccessTokenPO token){
-        throw new LazybotRuntimeException("该用户已存在，如果你的账户被冒用请联系开发人员");
-    }
-    private void createAlreadyBindError(TokenStarMoon token){
-        throw new LazybotRuntimeException("该用户已绑定StarMoon账户");
-    }
-    private void createNotBindError(){
-        {
-            throw new LazybotRuntimeException("您并未绑定");
+    public static void isValidUsername(String input)
+    {
+        if (input == null || input.trim().isEmpty()) {
+            throw new LazybotRuntimeException("输入用户名为空");
+        }
+        if (input.trim().length() > 15) {
+            throw new LazybotRuntimeException("输入用户名过长");
+        }
+        if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) {
+            throw new LazybotRuntimeException("已输入的用户名含有非法字符");
         }
     }
-    public static void isValidUsername(String input) {
-        if (input==null||input.trim().isEmpty()) throw new LazybotRuntimeException("输入用户名为空");
-        if(input.trim().length()>15) throw new LazybotRuntimeException("输入用户名过长");
-        if (!input.matches("^[A-Za-z0-9_\\-\\[\\] ]+$")) throw new LazybotRuntimeException("已输入的用户名含有非法字符");
-    }
+
     private void checkUserBindability(PlayerInfoDTO player)
     {
-        if (player.getStatistics().getGlobal_rank() == null) {
-            throw new LazybotRuntimeException("用户不活跃，无法实际确定绑定可行性，请在游玩1pc后重试");
+        if (player.getStatistics() == null
+                || player.getStatistics().getGlobal_rank() == null) {
+            throw new LazybotRuntimeException(
+                    "用户不活跃，无法实际确定绑定可行性，请在游玩1pc后重试");
         }
-        if (player.getId()==2)
-            throw new LazybotRuntimeException("操作已终止，只见后台传回一段话：您哪位？");
+        if (player.getId() == 2) {
+            throw new LazybotRuntimeException(
+                    "操作已终止，只见后台传回一段话：您哪位？");
+        }
         if (player.getStatistics().getGlobal_rank() > 1000) {
             return;
         }
-        else {
-            if (player.getCountry_code().equalsIgnoreCase("CN") ||
-                    player.getCountry_code().equalsIgnoreCase("HK") ||
-                    player.getCountry_code().equalsIgnoreCase("TW") ||
-                    player.getCountry_code().equalsIgnoreCase("MO")) {
-                return;
-            }
-            else {
-                throw new LazybotRuntimeException("当前绑定高概率为冒用，已拒绝请求。若确为本人请联系开发人员");
-            }
+        if (player.getCountry_code().equalsIgnoreCase("CN")
+                || player.getCountry_code().equalsIgnoreCase("HK")
+                || player.getCountry_code().equalsIgnoreCase("TW")
+                || player.getCountry_code().equalsIgnoreCase("MO")) {
+            return;
         }
+        throw new LazybotRuntimeException(
+                "当前绑定高概率为冒用，已拒绝请求。若确为本人请使用 OAuth 绑定");
     }
 
     @Override
     public String updatedUserPreferredPanelVersion(UpdatePanelVersionParameter params)
     {
-        //UpdatePanelVersionParameter extends GeneralParameter which stores all parameter into one String as PlayerName
-        ScorePanelType panel= ScorePanelType.getPanelType(String.valueOf(params.getPlayerName()));
-        Optional.ofNullable(tokenMapper.selectByQq_code(params.getQqCode()))
-                .ifPresentOrElse(
-                        token -> tokenMapper.updatePreferredPanel(panel.getInternalVersionCode(),params.getQqCode()),
-                        this::createNotBindError);
+        ScorePanelType panel = ScorePanelType.getPanelType(
+                String.valueOf(params.getPlayerName()));
+        identityService.updatePreferredPanel(
+                IdentityPlatform.QQ,
+                String.valueOf(params.getQqCode()),
+                panel.getInternalVersionCode());
         return "[Lazybot] 成功将默认渲染切换为 " + panel.getFullName();
     }
 }

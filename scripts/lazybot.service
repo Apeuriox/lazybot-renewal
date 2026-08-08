@@ -1,0 +1,23 @@
+[Unit]
+Description=Lazybot osu! Bot
+After=network-online.target mysql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lazybot
+WorkingDirectory=/opt/lazybot
+ExecStart=/usr/bin/java --enable-preview --enable-native-access=ALL-UNNAMED -jar /opt/lazybot/lazybot.jar
+ExecStop=/bin/kill -SIGTERM $MAINPID
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=lazybot
+
+Environment=LAZYBOT_DIR=/home/lazybot/work-dir
+Environment=ROSU_LIB_PATH=/home/lazybot/rosu
+
+[Install]
+WantedBy=multi-user.target
+

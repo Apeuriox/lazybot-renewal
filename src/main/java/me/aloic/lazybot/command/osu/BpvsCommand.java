@@ -11,9 +11,7 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BpvsParameter;
@@ -30,8 +28,6 @@ public class BpvsCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -40,13 +36,11 @@ public class BpvsCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         BpvsParameter params=new BpvsParameter(OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name()),
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrException(event.getOption("target"), "请输入对比对象"));
@@ -59,7 +53,7 @@ public class BpvsCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        BpvsParameter params = setupParameter(event, proxy.getAccessToken(event));
+        BpvsParameter params = setupParameter(event, proxy.getUserBinding(event));
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderComparePlayerBps(playerService.bpvs(params))
         );
@@ -68,12 +62,12 @@ public class BpvsCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        BpvsParameter params = setupParameter(event, proxy.getAccessToken(event));
+        BpvsParameter params = setupParameter(event, proxy.getUserBinding(event));
         testOutputTool.saveImageToLocal(
                 RendererDistributor.renderComparePlayerBps(playerService.bpvs(params))
         );
     }
-    private BpvsParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private BpvsParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         BpvsParameter params=BpvsParameter.analyzeParameter(event.getCommandParameters());
         BpvsParameter.setupDefaultValue(params,tokenPO);

@@ -3,28 +3,22 @@ package me.aloic.lazybot.component;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenStarMoonMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
+import me.aloic.lazybot.osu.dao.mapper.UserBindingMapper;
+import me.aloic.lazybot.osu.enums.IdentityPlatform;
+import me.aloic.lazybot.osu.enums.OsuServer;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.function.Function;
-
 @Component
 public class CommandDatabaseProxy
 {
     @Resource
-    private TokenMapper tokenMapper;
-
-    @Resource
-    private TokenStarMoonMapper tokenStarMoonMapper;
+    private UserBindingMapper userBindingMapper;
 
     @Value("${lazybot.test.identity}")
     private Long testIdentity;
@@ -32,60 +26,86 @@ public class CommandDatabaseProxy
     @Value("${lazybot.test.enabled}")
     private Boolean testEnabled;
 
-
     private static final Logger logger = LoggerFactory.getLogger(CommandDatabaseProxy.class);
 
-    public AccessTokenPO getAccessToken(LazybotSlashCommandEvent event)
+    public UserBindingPO getUserBinding(LazybotSlashCommandEvent event)
     {
-        return getAccessToken(determineIdentity(event),false);
+        return requireBinding(
+                IdentityPlatform.QQ,
+                String.valueOf(determineIdentity(event)),
+                OsuServer.BANCHO,
+                false);
     }
 
-    public TokenStarMoon getStarMoonToken(LazybotSlashCommandEvent event)
+    public UserBindingPO getUserBinding(SlashCommandInteractionEvent event)
     {
-        return getStarMoonToken(determineIdentity(event),false);
+        return requireBinding(
+                IdentityPlatform.DISCORD,
+                event.getUser().getId(),
+                OsuServer.BANCHO,
+                false);
     }
-    public TokenStarMoon getStarMoonTokenIgnoreException(LazybotSlashCommandEvent event)
+
+    public UserBindingPO getUserBinding(
+            IdentityPlatform platform,
+            String platformUserId,
+            OsuServer server,
+            boolean externalQuery)
     {
-        try{
-            return getStarMoonToken(determineIdentity(event),false);
+        return requireBinding(platform, platformUserId, server, externalQuery);
+    }
+
+    public UserBindingPO getQqBinding(Long qqCode, boolean externalQuery)
+    {
+        return requireBinding(
+                IdentityPlatform.QQ,
+                String.valueOf(qqCode),
+                OsuServer.BANCHO,
+                externalQuery);
+    }
+
+    public UserBindingPO getStarMoonBinding(LazybotSlashCommandEvent event)
+    {
+        return getStarMoonBinding(determineIdentity(event), false);
+    }
+
+    public UserBindingPO getStarMoonBindingIgnoreException(
+            LazybotSlashCommandEvent event)
+    {
+        try {
+            return getStarMoonBinding(determineIdentity(event), false);
         }
-        catch (Exception e)
-       {
+        catch (Exception ignored) {
             return null;
         }
     }
 
-    public AccessTokenPO getAccessToken(Long qqCode, Boolean isExternalQuery) {
-        AccessTokenPO token = getToken(qqCode, isExternalQuery, tokenMapper::selectByQq_code);
-        if (token == null) {
-            throw new LazybotRuntimeException("请先使用/link 你的osu用户名 绑定osu账号，请注意不要绑定他人账户，取消绑定会删除相关组件的所有数据");
-        }
-        return token;
-    }
-
-    public TokenStarMoon getStarMoonToken(Long qqCode, Boolean isExternalQuery) {
-        TokenStarMoon token = getToken(qqCode, isExternalQuery, tokenStarMoonMapper::selectByQq_code);
-        if (token == null) {
-            throw new LazybotRuntimeException("请先使用/linksm 你的StarMoon用户名 绑定star moon账号，例/link HD1");
-        }
-        return token;
-    }
-    private Long determineIdentity(LazybotSlashCommandEvent event)
+    public UserBindingPO getStarMoonBinding(Long qqCode, boolean externalQuery)
     {
-        Long identity;
-        if (testEnabled) identity=testIdentity;
-        else identity=event.getMessageEvent().getSender().getUserId();
-        return identity;
+        return requireBinding(
+                IdentityPlatform.QQ,
+                String.valueOf(qqCode),
+                OsuServer.STAR_MOON,
+                externalQuery);
     }
 
-    private  <T> T getToken(Long qqCode, Boolean isExternalQuery,
-                          Function<Long, T> tokenQuery) {
+    private UserBindingPO requireBinding(
+            IdentityPlatform platform,
+            String platformUserId,
+            OsuServer server,
+            boolean externalQuery)
+    {
         try {
-            T token = tokenQuery.apply(qqCode);
-            if (isExternalQuery && token == null) {
-                throw new LazybotRuntimeException("此用户并未绑定");
+            UserBindingPO binding = userBindingMapper.selectByPlatform(
+                    platform.databaseValue(),
+                    platformUserId,
+                    server.databaseValue());
+            if (binding == null && !externalQuery) {
+                String command = server == OsuServer.STAR_MOON ? "/linksm" : "/link";
+                throw new LazybotRuntimeException(
+                        "请先使用 " + command + " 绑定账号");
             }
-            return token;
+            return binding;
         }
         catch (LazybotRuntimeException e) {
             throw e;
@@ -95,10 +115,16 @@ public class CommandDatabaseProxy
             throw new LazybotRuntimeException("数据库查询出错，详情请见log: ", e);
         }
         catch (Exception e) {
-            logger.error("未知错误: ", e);
-            throw new LazybotRuntimeException("出现未知错误 ，详情请见log: ", e);
+            logger.error("身份绑定查询失败", e);
+            throw new LazybotRuntimeException("身份绑定查询失败，详情请见log", e);
         }
     }
 
+    private Long determineIdentity(LazybotSlashCommandEvent event)
+    {
+        return testEnabled
+                ? testIdentity
+                : event.getMessageEvent().getSender().getUserId();
+    }
 
 }

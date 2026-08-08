@@ -527,12 +527,16 @@
         <text class="cls-5" transform="translate(1245.65 328.25)">PP</text>
     </g>
     <g class="cls-29">
-        <text class="cls-26" transform="translate(1461.25 328.25)">SPD</text>
-        <text class="cls-5" transform="translate(1512.98 328.25)">PP</text>
+        <text class="cls-26" transform="translate(1371 328.25)">SPD</text>
+        <text class="cls-5" transform="translate(1423 328.25)">PP</text>
     </g>
     <g class="cls-29">
-        <text class="cls-26" transform="translate(1722.5 328.25)">ACC</text>
-        <text class="cls-5" transform="translate(1780.11 328.25)">PP</text>
+        <text class="cls-26" transform="translate(1552 328.25)">READ</text>
+        <text class="cls-5" transform="translate(1622 328.25)">PP</text>
+    </g>
+    <g class="cls-29">
+        <text class="cls-26" transform="translate(1722 328.25)">ACC</text>
+        <text class="cls-5" transform="translate(1780 328.25)">PP</text>
     </g>
     <g class="cls-29">
         <text class="cls-9" transform="translate(1200 355.75)">
@@ -542,10 +546,17 @@
         </text>
     </g>
     <g class="cls-29">
-        <text class="cls-9" transform="translate(1465 355.75)">
+        <text class="cls-9" transform="translate(1371 355.75)">
             <tspan id="spdPPget">000</tspan>
             <tspan>/</tspan>
             <tspan class="cls-5" id="spdPPtotal">000</tspan>
+        </text>
+    </g>
+    <g class="cls-29">
+        <text class="cls-9" transform="translate(1552 355.75)">
+            <tspan id="readPPget">000</tspan>
+            <tspan>/</tspan>
+            <tspan class="cls-5" id="readPPtotal">000</tspan>
         </text>
     </g>
     <g class="cls-29">

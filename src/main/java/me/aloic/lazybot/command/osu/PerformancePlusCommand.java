@@ -37,7 +37,7 @@ public class PerformancePlusCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        GeneralParameter params =  GeneralParameter.setupParameter(event, proxy.getAccessToken(event));
+        GeneralParameter params =  GeneralParameter.setupParameter(event, proxy.getUserBinding(event));
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderPerformancePlusCard(
                         playerService.getPerformancePlusPlayerInfo(params),params.getVersion())
@@ -47,7 +47,7 @@ public class PerformancePlusCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        GeneralParameter params =  GeneralParameter.setupParameter(event, proxy.getAccessToken(event));
+        GeneralParameter params =  GeneralParameter.setupParameter(event, proxy.getUserBinding(event));
         testOutputTool.saveImageToLocal(
                 RendererDistributor.renderPerformancePlusCard(
                         playerService.getPerformancePlusPlayerInfo(params),params.getVersion())

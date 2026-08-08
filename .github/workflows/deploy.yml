@@ -1,0 +1,51 @@
+name: Deploy to Ubuntu
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Prepare application.yaml from template
+        run: cp src/main/resources/application.yaml.template src/main/resources/application.yaml
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Deploy JAR to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: target/lazybot-*.jar
+          target: /opt/lazybot/
+          strip_components: 1
+
+      - name: Update symlink and restart
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # 更新 lazybot.jar 软链接指向最新 JAR
+            LATEST_JAR=$(ls -t /opt/lazybot/lazybot-*.jar 2>/dev/null | head -1)
+            if [ -n "$LATEST_JAR" ]; then
+              ln -sf "$LATEST_JAR" /opt/lazybot/lazybot.jar
+            fi
+            sudo systemctl restart lazybot
+            sudo systemctl status lazybot --no-pager

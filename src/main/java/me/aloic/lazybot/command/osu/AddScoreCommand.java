@@ -9,7 +9,7 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -39,7 +39,7 @@ public class AddScoreCommand implements LazybotSlashCommand
     {
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderAddScorePanel(
-                playerService.addScoreForPerformancePlus(setupParameter(event, proxy.getAccessToken(event)))
+                playerService.addScoreForPerformancePlus(setupParameter(event, proxy.getUserBinding(event)))
                 )
         );
     }
@@ -49,11 +49,11 @@ public class AddScoreCommand implements LazybotSlashCommand
     {
         testOutputTool.saveImageToLocal(
                 RendererDistributor.renderAddScorePanel(
-                        playerService.addScoreForPerformancePlus(setupParameter(event, proxy.getAccessToken(event)))
+                        playerService.addScoreForPerformancePlus(setupParameter(event, proxy.getUserBinding(event)))
                 )
         );
     }
-    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
         ScoreParameter.setupDefaultValue(params, tokenPO);

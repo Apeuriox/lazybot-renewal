@@ -12,10 +12,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.TokenStarMoon;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.parameter.UpdateParameter;
@@ -33,8 +30,6 @@ public class UpdateCommand implements LazybotSlashCommand
     @Resource
     private ManageService manageService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -43,13 +38,11 @@ public class UpdateCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         UpdateParameter params=new UpdateParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("type"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
@@ -60,11 +53,11 @@ public class UpdateCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO accessToken =  proxy.getAccessToken(event);
-        TokenStarMoon tokenStarMoon = proxy.getStarMoonTokenIgnoreException(event);
+        UserBindingPO accessToken =  proxy.getUserBinding(event);
+        UserBindingPO starMoonBinding = proxy.getStarMoonBindingIgnoreException(event);
         CommandResultHandler.sendMessageToGroupOnebot(bot,event,
                         manageService.update(
-                                setupParameter(event, accessToken.getPlayer_id(), accessToken.getDefault_mode(), tokenStarMoon == null ? null : tokenStarMoon.getStar_moon_id())
+                                setupParameter(event, accessToken.getPlayer_id(), accessToken.getDefault_mode(), starMoonBinding == null ? null : starMoonBinding.getPlayer_id())
                         )
                 );
     }
@@ -72,10 +65,10 @@ public class UpdateCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO accessToken =  proxy.getAccessToken(event);
-        TokenStarMoon tokenStarMoon = proxy.getStarMoonTokenIgnoreException(event);
+        UserBindingPO accessToken =  proxy.getUserBinding(event);
+        UserBindingPO starMoonBinding = proxy.getStarMoonBindingIgnoreException(event);
         testOutputTool.writeStringToFile(manageService.update(
-                        setupParameter(event, accessToken.getPlayer_id(), accessToken.getDefault_mode(), tokenStarMoon == null ? null : tokenStarMoon.getStar_moon_id())
+                        setupParameter(event, accessToken.getPlayer_id(), accessToken.getDefault_mode(), starMoonBinding == null ? null : starMoonBinding.getPlayer_id())
                 )
         );
     }
@@ -101,7 +94,8 @@ public class UpdateCommand implements LazybotSlashCommand
                         .addExample("/Update Avatar Aloic")
                         .addExample("/Update Banner")
                         .addExample("/Update Plus")
-                        .addOption(new CommandParameter("Type","更新的类型", CommandParameter.ParameterType.MUST))
+                        .addExample("/Update PlusRecent Aloic")
+                        .addOption(new CommandParameter("Type","更新的类型: avatar/track/banner/plus/plusRecent", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("PlayerName","指定的用户名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

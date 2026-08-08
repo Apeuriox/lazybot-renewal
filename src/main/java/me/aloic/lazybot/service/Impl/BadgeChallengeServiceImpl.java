@@ -41,7 +41,7 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
     @Resource
     private BadgeDefinitionMapper badgeDefinitionMapper;
     @Resource
-    private TokenMapper tokenMapper;
+    private UserBindingMapper userBindingMapper;
 
     @Transactional
     @Override
@@ -186,6 +186,6 @@ public class BadgeChallengeServiceImpl implements BadgeChallengeService
     {
         BadgeDefinitionPO badgeDefinitionPO = badgeDefinitionMapper.selectById(badgeId);
         if (badgeDefinitionPO==null) throw new LazybotRuntimeException("此Badge ID不存在: " + badgeId);
-        if (tokenMapper.selectById(lazybotId)==null) throw new LazybotRuntimeException("操作失败:用户不存在或未绑定，LazybotID: " + lazybotId);
+        if (userBindingMapper.selectByLazybotUserId(lazybotId, "bancho")==null) throw new LazybotRuntimeException("操作失败:用户不存在或未绑定，LazybotID: " + lazybotId);
     }
 }

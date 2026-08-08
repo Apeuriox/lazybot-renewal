@@ -3,7 +3,6 @@ package me.aloic.lazybot.osu.enums;
 import lombok.Getter;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import org.spring.osu.model.LazerMod;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -180,151 +179,6 @@ public enum OsuMod
             default -> Other;
         };
     }
-    public static org.spring.osu.model.OsuMod getModEnumJNI(String acronym) {
-        String modAcronym = acronym.trim().toUpperCase();
-        switch (modAcronym) {
-            case "NM":
-                return org.spring.osu.model.OsuMod.None;
-            case "NF":
-                return org.spring.osu.model.OsuMod.NoFail;
-            case "EZ":
-                return org.spring.osu.model.OsuMod.Easy;
-            case "TD":
-                return org.spring.osu.model.OsuMod.TouchDevice;
-            case "HD":
-                return org.spring.osu.model.OsuMod.Hidden;
-            case "HR":
-                return org.spring.osu.model.OsuMod.HardRock;
-            case "SD":
-                return org.spring.osu.model.OsuMod.SuddenDeath;
-            case "DT":
-                return org.spring.osu.model.OsuMod.DoubleTime;
-            case "RX":
-                return org.spring.osu.model.OsuMod.Relax;
-            case "HT":
-                return org.spring.osu.model.OsuMod.HalfTime;
-            case "NC":
-                return org.spring.osu.model.OsuMod.Nightcore;
-            case "FL":
-                return org.spring.osu.model.OsuMod.Flashlight;
-            case "AT":
-                return org.spring.osu.model.OsuMod.Autoplay;
-            case "SO":
-                return org.spring.osu.model.OsuMod.SpunOut;
-            case "AP":
-                return org.spring.osu.model.OsuMod.Autopilot;
-            case "PF":
-                return org.spring.osu.model.OsuMod.Perfect;
-            case "4K":
-                return org.spring.osu.model.OsuMod.Key4;
-            case "5K":
-                return org.spring.osu.model.OsuMod.Key5;
-            case "6K":
-                return org.spring.osu.model.OsuMod.Key6;
-            case "7K":
-                return org.spring.osu.model.OsuMod.Key7;
-            case "8K":
-                return org.spring.osu.model.OsuMod.Key8;
-            case "FI":
-                return org.spring.osu.model.OsuMod.FadeIn;
-            case "RD":
-                return org.spring.osu.model.OsuMod.Random;
-            case "CM":
-                return org.spring.osu.model.OsuMod.Cinema;
-            case "TP":
-                return org.spring.osu.model.OsuMod.TargetPractice;
-            case "9K":
-                return org.spring.osu.model.OsuMod.Key9;
-            case "CP":
-                return org.spring.osu.model.OsuMod.KeyCoop;
-            case "1K":
-                return org.spring.osu.model.OsuMod.Key1;
-            case "3K":
-                return org.spring.osu.model.OsuMod.Key3;
-            case "2K":
-                return org.spring.osu.model.OsuMod.Key2;
-            case "V2":
-                return org.spring.osu.model.OsuMod.ScoreV2;
-            case "MR":
-                return org.spring.osu.model.OsuMod.Mirror;
-            case "KEY":
-                return org.spring.osu.model.OsuMod.KeyMod;
-            case "FM":
-                return org.spring.osu.model.OsuMod.FreeMod;
-            case "IM":
-                return org.spring.osu.model.OsuMod.ScoreIncreaseMods;
-            default:
-                return org.spring.osu.model.OsuMod.Other;
-        }
-    }
-    public static LazerMod getModEnumLazer(String acronym) {
-        String modAcronym = acronym.trim().toUpperCase();
-        switch (modAcronym) {
-            case "NF":
-                return new LazerMod.NoFail();
-            case "EZ":
-                return new LazerMod.Easy();
-            case "TD":
-                return new LazerMod.TouchDevice();
-            case "HD":
-                return new LazerMod.Hidden();
-            case "HR":
-                return new LazerMod.HardRock();
-            case "SD":
-                return new LazerMod.SuddenDeath();
-            case "DT":
-                return new LazerMod.DoubleTime();
-            case "RX":
-                return new LazerMod.Relax();
-            case "HT":
-                return new LazerMod.HalfTime();
-            case "NC":
-                return new LazerMod.Nightcore();
-            case "FL":
-                return new LazerMod.Flashlight();
-            case "AT":
-                return new LazerMod.Autoplay();
-            case "SO":
-                return new LazerMod.SpunOut();
-            case "AP":
-                return new LazerMod.Autopilot();
-            case "PF":
-                return new LazerMod.Perfect();
-            case "4K":
-                return new LazerMod.Key4();
-            case "5K":
-                return new LazerMod.Key5();
-            case "6K":
-                return new LazerMod.Key6();
-            case "7K":
-                return new LazerMod.Key7();
-            case "8K":
-                return new LazerMod.Key8();
-            case "FI":
-                return new LazerMod.FadeIn();
-            case "RD":
-                return new LazerMod.Random();
-            case "CM":
-                return new LazerMod.Cinema();
-            case "TP":
-                return new LazerMod.TargetPractice();
-            case "9K":
-                return new LazerMod.Key9();
-            case "1K":
-                return new LazerMod.Key1();
-            case "3K":
-                return new LazerMod.Key3();
-            case "2K":
-                return new LazerMod.Key2();
-            case "V2":
-                return new LazerMod.ScoreV2();
-            case "MR":
-                return new LazerMod.Mirror();
-        }
-        throw new LazybotRuntimeException("No such mods");
-    }
-
-
     public static int getModValue(String acronym) {
         return getModEnum(acronym).getValue();
     }
@@ -343,13 +197,6 @@ public enum OsuMod
                 .collect(Collectors.toList());
         return modStrList;
     }
-    public static List<org.spring.osu.model.OsuMod> getAllModJNI(List<String> acronyms) {
-        return acronyms.stream()
-                .map(OsuMod::getModEnumJNI)
-                .filter(mod -> mod != org.spring.osu.model.OsuMod.Other)
-                .collect(Collectors.toList());
-    }
-
     public static int getAllModValue(List<String> acronyms) {
         return getAllMod(acronyms).stream()
                 .mapToInt(OsuMod::getValue)
@@ -364,15 +211,6 @@ public enum OsuMod
                 .collect(Collectors.toList());
         return getAllMod(modStrList);
     }
-    public static List<org.spring.osu.model.OsuMod> getAllModJNI(String acronyms) {
-        if (acronyms.trim().isEmpty()) return Collections.emptyList();
-        String modsStr = acronyms.toUpperCase(Locale.getDefault()).replaceAll("\\s+", "");
-        if (modsStr.length() % 2 != 0) throw new LazybotRuntimeException("Invalid mods combination input: " + acronyms);
-        List<String> modStrList = Arrays.stream(modsStr.split("(?<=\\G.{2})"))
-                .collect(Collectors.toList());
-        return getAllModJNI(modStrList);
-    }
-
     public static int getAllModValue(String acronyms) {
         return getAllMod(acronyms).stream()
                 .mapToInt(OsuMod::getValue)

@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.enums.HTTPTypeEnum;
 import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.entity.dto.geometry.DemonLadderLevel;
+import me.aloic.lazybot.entity.dto.geometry.DemonListItem;
+import me.aloic.lazybot.entity.dto.geometry.PemonListItem;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotScorePerformance;
@@ -17,24 +20,27 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScoreLazer;
 import me.aloic.lazybot.osu.dao.entity.dto.player.BeatmapUserScores;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.StatsApiUsage;
+import me.aloic.lazybot.osu.dao.entity.dto.plus.StatsCount;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayoData;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayobotBeatmapSet;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.HitScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.UserBindingMapper;
 import me.aloic.lazybot.osu.enums.OsuMod;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
-import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
+import me.aloic.lazybot.osu.service.AvatarCacheService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -43,7 +49,9 @@ public class DataExtractor
     @Resource
     private ApiRequestExecutor apiRequestExecutor;
     @Resource
-    private TokenMapper tokenMapper;
+    private UserBindingMapper userBindingMapper;
+    @Resource
+    private AvatarCacheService avatarCacheService;
 
     /**
      * 根据用户名和模式获取用户信息
@@ -56,7 +64,9 @@ public class DataExtractor
     {
         try{
             PlayerInfoDTO playerInfoDTO = apiRequestExecutor.execute(
-                    URLBuildUtil.buildURLOfPlayerInfo(playerName,mode),
+                    mode == null || mode.isBlank()
+                            ? URLBuildUtil.buildURLOfPlayerInfo(playerName)
+                            : URLBuildUtil.buildURLOfPlayerInfo(playerName, mode),
                     HTTPTypeEnum.GET,
                     TokenMonitor.getToken(),
                     null,
@@ -64,12 +74,20 @@ public class DataExtractor
             if(playerInfoDTO.getId()==null) {
                 throw new LazybotRuntimeException("没这B人: " + playerName);
             }
-            AccessTokenPO tokenPO = tokenMapper.selectByPlayername(playerName);
+            UserBindingPO tokenPO = userBindingMapper.selectByOsuUserId("bancho", playerInfoDTO.getId());
             return checkCachedAvatar(playerInfoDTO, tokenPO);
         }
         catch (LazybotNotFoundException e) {
             throw new LazybotRuntimeException("没这B人: " + playerName);
         }
+    }
+
+    /**
+     * 根据用户名和玩家在 osu! 设置的默认模式获取用户信息。
+     */
+    public PlayerInfoDTO extractPlayerInfoDTO(String playerName)
+    {
+        return extractPlayerInfoDTO(playerName, null);
     }
 
     public UserResponse extractPlayerStarMoon(String playerName)
@@ -95,6 +113,7 @@ public class DataExtractor
             throw new LazybotRuntimeException("获取Star Moon用户时出错" + e.getMessage());
         }
     }
+
     public UserResponse extractPlayerStarMoon(Integer playerId)
     {
         try{
@@ -161,7 +180,7 @@ public class DataExtractor
            if(playerInfoDTO.getId()==null) {
                throw new LazybotRuntimeException("没这B人: " + playerId);
            }
-           AccessTokenPO tokenPO = tokenMapper.selectByPlayerId(playerId);
+           UserBindingPO tokenPO = userBindingMapper.selectByOsuUserId("bancho", playerId);
            return checkCachedAvatar(playerInfoDTO, tokenPO);
        }
        catch (LazybotNotFoundException e) {
@@ -169,14 +188,11 @@ public class DataExtractor
        }
     }
 
-    public PlayerInfoDTO checkCachedAvatar(PlayerInfoDTO playerInfoDTO, AccessTokenPO tokenPO)
+    public PlayerInfoDTO checkCachedAvatar(PlayerInfoDTO playerInfoDTO, UserBindingPO tokenPO)
     {
         if (tokenPO == null)
             return playerInfoDTO;
-        if (tokenPO.getAvatar_url()==null || !playerInfoDTO.getAvatar_url().equals(tokenPO.getAvatar_url())) {
-            AssetDownloadUtil.avatarAbsolutePath(playerInfoDTO,true);
-            tokenMapper.updateAvatar(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId());
-        }
+        playerInfoDTO.setAvatar_url(avatarCacheService.ensureAvatar(playerInfoDTO, tokenPO));
         return playerInfoDTO;
     }
 
@@ -226,6 +242,31 @@ public class DataExtractor
         }
         catch (LazybotNotFoundException e) {
             throw new LazybotRuntimeException("更新" + playerId + "用户pp+失败，可能由于你的最近游玩为空");
+        }
+    }
+
+    /**
+     * 重建玩家全部BP数据 (POST /player/reinit)
+     * 拉取玩家osu! API的BP 200, 下载谱面文件并并行计算所有分数的pp+
+     * @param playerId 用户ID
+     * @return 重建后的PP+玩家信息
+     */
+    public PPPlusPerformance extractPerformancePlusPlayerReinit(Integer playerId)
+    {
+        try{
+            LazybotWebPlayerPerformance performance = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfReinitPerformancePlus(playerId),
+                    HTTPTypeEnum.POST,
+                    TokenMonitor.getLazybotToken(),
+                    null,
+                    LazybotWebPlayerPerformance.class);
+            if(performance.getData()==null) {
+                throw new LazybotRuntimeException("重建" + playerId + "用户最佳成绩pp+数据失败");
+            }
+            return performance.getData().getPerformances();
+        }
+        catch (LazybotNotFoundException e) {
+            throw new LazybotRuntimeException("重建" + playerId + "用户最佳成绩pp+数据失败");
         }
     }
 
@@ -281,7 +322,53 @@ public class DataExtractor
         }
     }
 
+    /**
+     * 查询PP+服务器元数据统计 (GET /stats/count)
+     */
+    public StatsCount extractStatsCount()
+    {
+        LazybotWebResult<StatsCount> result = apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfStatsCount(),
+                HTTPTypeEnum.GET,
+                null,
+                null,
+                new TypeReference<LazybotWebResult<StatsCount>>() {});
+        if (result.getData() == null) {
+            throw new LazybotRuntimeException("获取统计数据失败");
+        }
+        return result.getData();
+    }
 
+    /**
+     * 查询PP+服务器API调用统计 (GET /stats/usage)
+     */
+    public Map<String, StatsApiUsage> extractStatsUsage()
+    {
+        LazybotWebResult<Map<String, StatsApiUsage>> result = apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfStatsUsage(),
+                HTTPTypeEnum.GET,
+                null,
+                null,
+                new TypeReference<LazybotWebResult<Map<String, StatsApiUsage>>>() {});
+        if (result.getData() == null) {
+            throw new LazybotRuntimeException("获取API调用统计失败");
+        }
+        return result.getData();
+    }
+
+    /**
+     * 查询上次批量更新玩家数 (GET /stats/player/updated)
+     */
+    public Integer extractStatsPlayerUpdated()
+    {
+        LazybotWebResult<Integer> result = apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfStatsPlayerUpdated(),
+                HTTPTypeEnum.GET,
+                null,
+                null,
+                new TypeReference<LazybotWebResult<Integer>>() {});
+        return result.getData();
+    }
 
     /**
      * 获取用户的最近游玩成绩列表
@@ -519,7 +606,7 @@ public class DataExtractor
      * @return 玩家信息DTO对象
      */
     public PlayerInfoDTO extractPlayerInfoByUserId(Long userId) {
-        AccessTokenPO accessTokenPO = tokenMapper.selectByQq_code(userId);
+        UserBindingPO accessTokenPO = userBindingMapper.selectByPlatform("qq", String.valueOf(userId), "bancho");
 
         if(accessTokenPO == null) {
             return null;
@@ -532,11 +619,95 @@ public class DataExtractor
      * @param userIds 用户ID列表
      * @return 对应用户的玩家信息列表
      */
-    public List<AccessTokenPO> extractPlayerInfoByUserIdBatch(List<Long> userIds) {
+    public List<UserBindingPO> extractPlayerInfoByUserIdBatch(List<Long> userIds) {
         if(CollectionUtils.isEmpty(userIds)) {
             return new ArrayList<>();
         }
-        return tokenMapper.selectByCodes(userIds);
+        return userBindingMapper.selectByPlatformIds(
+                "qq",
+                "bancho",
+                userIds.stream().map(String::valueOf).toList());
+    }
+
+
+
+    // Geometry Dash Parts
+
+    /**
+     * GD关卡搜索 (POST form-encoded)
+     * @param formBody 表单编码的搜索参数
+     * @return GD服务器原始响应字符串 (will be parsed by GeometryDashService)
+     */
+    public String extractGdSearchLevels(String formBody)
+    {
+        return apiRequestExecutor.executeFormPost(URLBuildUtil.buildURLOfGdLevelSearch(), formBody);
+    }
+
+
+    /**
+     * GDDL (Demon Ladder) 关卡详情获取
+     * @param levelId GD关卡ID
+     * @return DemonLadderLevel, 失败返回null
+     */
+    public DemonLadderLevel extractDemonLadderLevel(String levelId)
+    {
+        try {
+            return apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfGddlLevel(levelId),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null,
+                    DemonLadderLevel.class);
+        } catch (Exception e) {
+            log.debug("GDDL查询失败 levelId={}: {}", levelId, e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Pointercrate Demonlist 排名查询
+     * @param levelId GD关卡ID
+     * @return 排名文本 (e.g. "(#15)"), 未上榜返回null
+     */
+    public List<DemonListItem> extractDemonListItem(String levelId)
+    {
+        try {
+            List<DemonListItem> list = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfDemonListByLevelId(levelId),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null,
+                    new TypeReference<List<DemonListItem>>() {});
+            if (list != null && !list.isEmpty() && list.getFirst().getPosition() != null) {
+                return list;
+            }
+        } catch (Exception e) {
+            log.debug("Demonlist查询失败 levelId={}: {}", levelId, e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Pemonlist Platformer关卡排名查询
+     * @param levelId GD关卡ID
+     * @return 排名文本 (e.g. "(#5)"), 未上榜返回null
+     */
+    public PemonListItem extractPemonListItem(String levelId)
+    {
+        try {
+            PemonListItem item = apiRequestExecutor.execute(
+                    URLBuildUtil.buildURLOfPemonListByLevelId(levelId),
+                    HTTPTypeEnum.GET,
+                    null,
+                    null,
+                    PemonListItem.class);
+            if (item != null && item.getPlacement() != null) {
+                return item;
+            }
+        } catch (Exception e) {
+            log.debug("Pemonlist查询失败 levelId={}: {}", levelId, e.getMessage());
+        }
+        return null;
     }
 
 }

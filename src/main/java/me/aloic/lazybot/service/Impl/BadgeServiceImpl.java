@@ -11,7 +11,7 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.mapper.BadgeDefinitionMapper;
 import me.aloic.lazybot.osu.dao.mapper.BadgeShowcaseMapper;
 import me.aloic.lazybot.osu.dao.mapper.BadgeUserOwnedMapper;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.mapper.UserBindingMapper;
 import me.aloic.lazybot.parameter.*;
 import me.aloic.lazybot.service.BadgeService;
 import me.aloic.lazybot.util.BadgeLoader;
@@ -31,7 +31,7 @@ public class BadgeServiceImpl implements BadgeService
     @Resource
     private BadgeDefinitionMapper badgeDefinitionMapper;
     @Resource
-    private TokenMapper tokenMapper;
+    private UserBindingMapper userBindingMapper;
     @Resource
     private BadgeShowcaseMapper showcaseMapper;
 
@@ -237,7 +237,7 @@ public class BadgeServiceImpl implements BadgeService
     {
         BadgeDefinitionPO badgeDefinitionPO = badgeDefinitionMapper.selectById(badgeId);
         if (badgeDefinitionPO==null) throw new LazybotRuntimeException("此Badge ID不存在: " + badgeId);
-        if (tokenMapper.selectById(lazybotId)==null) throw new LazybotRuntimeException("操作失败:用户不存在或未绑定，LazybotID: " + lazybotId);
+        if (userBindingMapper.selectByLazybotUserId(lazybotId, "bancho")==null) throw new LazybotRuntimeException("操作失败:用户不存在或未绑定，LazybotID: " + lazybotId);
     }
 
     public static String inlineBadgeDescription(BadgeDefinitionPO badge, BadgeUserOwnedPO userOwned)

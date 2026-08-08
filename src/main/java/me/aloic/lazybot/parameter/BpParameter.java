@@ -2,14 +2,11 @@ package me.aloic.lazybot.parameter;
 
 import lombok.*;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.util.CommonTool;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
+import me.aloic.lazybot.util.ArgumentParser;
+import me.aloic.lazybot.util.Parsers;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -47,21 +44,19 @@ public class BpParameter extends LazybotCommandParameter
         if (params == null || params.isEmpty())
             return new BpParameter(null,null,0,1);
 
-        String text = String.join(" ", params).trim();
-        if (text.matches("\\d+")) {
-            int indexVal = Integer.parseInt(text);
-            if (indexVal >= 1 && indexVal <= 200)
-                bpParameter.index = indexVal;
-            else
-                bpParameter.setPlayerName(text);
+        ArgumentParser parser = ArgumentParser.of(params);
+        parser.tryPop(Parsers.ALGORITHM_VERSION,
+                matcher -> bpParameter.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
+        parser.tryPop(Parsers.INDEX,
+                matcher -> bpParameter.setIndex(Integer.parseInt(matcher.group(1))));
+        if (bpParameter.getIndex() == null) {
+            parser.tryPopIf(Parsers.DIGITS,
+                    matcher -> Integer.parseInt(matcher.group()) >= 1
+                            && Integer.parseInt(matcher.group()) <= MAX_INDEXED,
+                    matcher -> bpParameter.setIndex(Integer.parseInt(matcher.group())));
         }
-        else {
-            Matcher indexMatcher = Pattern.compile("#(\\d+)").matcher(text);
-            if (indexMatcher.find()) {
-                bpParameter.index = Integer.parseInt(indexMatcher.group(1));
-                text = text.replace(indexMatcher.group(), "").trim();
-            }
-            if (!text.isEmpty()) bpParameter.setPlayerName(text);
+        if (!parser.remainder().isEmpty()) {
+            bpParameter.setPlayerName(parser.remainder());
         }
         return bpParameter;
     }

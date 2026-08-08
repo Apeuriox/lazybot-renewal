@@ -1,6 +1,9 @@
 package me.aloic.lazybot.graphics.mapping;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
+import me.aloic.rosupp.AlgorithmVersion;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,6 +12,8 @@ import java.util.Locale;
 
 public class SVGElementHelper
 {
+    private static final String SVG_NAMESPACE = "http://www.w3.org/2000/svg";
+
     public static void mapElementAttributes(Document document, String elementId,String attribute, String value) {
         document.getElementById(elementId).setAttribute(attribute, value);
     }
@@ -42,5 +47,30 @@ public class SVGElementHelper
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         return currentDate.format(formatter);
+    }
+
+    public static void appendAlgorithmLabel(Document document, AlgorithmVersion algorithm)
+    {
+        if (document == null || algorithm == null) {
+            return;
+        }
+        Element label = document.createElementNS(SVG_NAMESPACE, "text");
+        label.setAttribute("x", "98%");
+        label.setAttribute("y", "98%");
+        label.setAttribute("text-anchor", "end");
+        label.setAttribute("fill", "#ffffff");
+        label.setAttribute("fill-opacity", "0.6");
+        label.setAttribute("stroke", "#000000");
+        label.setAttribute("stroke-opacity", "0.45");
+        label.setAttribute("stroke-width", "2");
+        label.setAttribute("paint-order", "stroke");
+        label.setAttribute("font-size", "12");
+        label.setAttribute("font-family", "Arial, sans-serif");
+        String text = "PP algo · " + RosuAlgorithmVersionUtil.shortLabel(algorithm);
+        if (algorithm != RosuAlgorithmVersionUtil.LATEST) {
+            text += " · * selected-algorithm PP";
+        }
+        label.setTextContent(text);
+        document.getDocumentElement().appendChild(label);
     }
 }

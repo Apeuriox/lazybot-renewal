@@ -10,8 +10,8 @@ import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.entity.SongGuessWithTime;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotSongGuessData;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.TokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
+import me.aloic.lazybot.osu.dao.mapper.UserBindingMapper;
 import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.osu.utils.AssetDownloader;
 import me.aloic.lazybot.parameter.GeneralParameter;
@@ -41,7 +41,7 @@ public class SongGuessCommand implements LazybotSlashCommand
     @Resource
     private FunService funService;
     @Resource
-    private TokenMapper tokenMapper;
+    private UserBindingMapper userBindingMapper;
     @Resource
     private AssetDownloader assetDownloader;
 
@@ -60,7 +60,7 @@ public class SongGuessCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         Long identity = event.getMessageEvent().getGroupId();
-        AccessTokenPO tokenPO = tokenMapper.selectRandom();
+        UserBindingPO tokenPO = userBindingMapper.selectRandom("qq", "bancho");
         if (existingGameMap.get(identity) == null)
         {
             LazybotSongGuessData songGuessData = funService.songGuessImage(GeneralParameter.setupParameter(event,tokenPO));
@@ -129,7 +129,7 @@ public class SongGuessCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         Long identity = 1524185356L;
-        AccessTokenPO tokenPO = tokenMapper.selectRandom();
+        UserBindingPO tokenPO = userBindingMapper.selectRandom("qq", "bancho");
         if (existingGameMap.get(identity) == null)
         {
             LazybotSongGuessData songGuessData = funService.songGuessImage(GeneralParameter.setupParameter(event,tokenPO));

@@ -9,8 +9,7 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreFilterParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -26,8 +25,6 @@ public class FilterCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -41,7 +38,7 @@ public class FilterCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderPlayerScoreListToCard(
                 playerService.bpScoreFilter(setupParameter(event,tokenPO)),1,4,"Current Command: /Filter, get desired best performances with given statements."));
@@ -50,12 +47,12 @@ public class FilterCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToCard(
                 playerService.bpScoreFilter(setupParameter(event,tokenPO)),1,4,"Current Command: /Filter, get desired best performances with given statements."));
     }
 
-    private ScoreFilterParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    private ScoreFilterParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         ScoreFilterParameter params=ScoreFilterParameter.analyzeParameter(event.getCommandParameters());
         ScoreFilterParameter.setupDefaultValue(params,tokenPO);

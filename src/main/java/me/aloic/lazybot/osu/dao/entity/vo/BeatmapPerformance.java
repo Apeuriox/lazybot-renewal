@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.enums.OsuMode;
-import org.spring.osu.extended.rosu.*;
+import me.aloic.rosupp.DifficultyResult;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -13,7 +13,7 @@ import org.spring.osu.extended.rosu.*;
 @NoArgsConstructor
 public class BeatmapPerformance extends BeatmapVO
 {
-    private JniDifficultyAttributes difficultyAttributes;
+    private DifficultyResult difficultyAttributes;
     private double lengthBonus;
     private Integer playCount;
     private Integer favouriteCount;

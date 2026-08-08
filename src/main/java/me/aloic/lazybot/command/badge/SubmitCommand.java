@@ -8,7 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.parameter.BadgeUserActionParameter;
 import me.aloic.lazybot.parameter.BplistParameter;
 import me.aloic.lazybot.parameter.ChallengeSubmitParameter;
@@ -42,18 +42,18 @@ public class SubmitCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO token = proxy.getAccessToken(event);
+        UserBindingPO token = proxy.getUserBinding(event);
         CommandResultHandler.sendMessageToGroupOnebot(bot,event, badgeChallengeService.checkUserSubmit(setupParameter(event,token)));
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO token = proxy.getAccessToken(event);
+        UserBindingPO token = proxy.getUserBinding(event);
         testOutputTool.writeStringToFile(badgeChallengeService.checkUserSubmit(setupParameter(event,token)));
     }
 
-    private ChallengeSubmitParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    private ChallengeSubmitParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         ChallengeSubmitParameter params = ChallengeSubmitParameter.analyzeParameter(event.getCommandParameters());
         ChallengeSubmitParameter.setupDefaultValue(params,tokenPO);

@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.util.ImageFilterUtil;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.util.CommonTool;
 
 import java.util.List;
@@ -80,7 +80,7 @@ public class PlusListParameter extends LazybotCommandParameter
         return parameter;
     }
 
-    public static void setupDefaultValue(PlusListParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(PlusListParameter parameter, UserBindingPO accessTokenPO)
     {
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
         if (parameter.getMode() == null) parameter.setMode(accessTokenPO.getDefault_mode());

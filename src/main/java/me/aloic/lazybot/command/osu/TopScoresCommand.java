@@ -10,9 +10,7 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.TrackService;
 import me.aloic.lazybot.parameter.TopScoresParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -31,8 +29,6 @@ public class TopScoresCommand implements LazybotSlashCommand
 {
     @Resource
     private TrackService trackService;
-    @Resource
-    private DiscordTokenMapper discordTokenMapper;
     @Resource
     private CommandDatabaseProxy proxy;
     @Autowired
@@ -55,7 +51,7 @@ public class TopScoresCommand implements LazybotSlashCommand
         CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderPlayerScoreListToList(
                         trackService.bestPlaysInGamemode(
-                                setupParameter(event, proxy.getAccessToken(event))
+                                setupParameter(event, proxy.getUserBinding(event))
                         )
                 )
         );
@@ -66,12 +62,12 @@ public class TopScoresCommand implements LazybotSlashCommand
     {
         testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToList(
                         trackService.bestPlaysInGamemode(
-                                setupParameter(event, proxy.getAccessToken(event))
+                                setupParameter(event, proxy.getUserBinding(event))
                         )
                 )
         );
     }
-    private TopScoresParameter setupParameter(LazybotSlashCommandEvent event,AccessTokenPO tokenPO)
+    private TopScoresParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         TopScoresParameter params=TopScoresParameter.analyzeParameter(event.getCommandParameters());
         TopScoresParameter.setupDefaultValue(params,tokenPO);

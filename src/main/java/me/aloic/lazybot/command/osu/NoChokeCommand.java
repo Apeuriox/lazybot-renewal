@@ -13,10 +13,10 @@ import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -33,8 +33,6 @@ public class NoChokeCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -45,16 +43,17 @@ public class NoChokeCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
+        if (event.getOption("algorithm") != null) {
+            params.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(event.getOption("algorithm").getAsString()));
+        }
         params.validateParams();
         if (event.getFullCommandName().equalsIgnoreCase("no1miss"))
             CommandResultHandler.uploadImageToDiscord(event,
@@ -72,11 +71,11 @@ public class NoChokeCommand implements LazybotSlashCommand
         if (event.getCommandType().equalsIgnoreCase("no1miss"))
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderPlayerScoreListToCard(
-                    playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),1),0,2)
+                    playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),1),0,2)
             );
         else  CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderPlayerScoreListToCard(
-                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),0),0,3,
+                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),0),0,3,
                         NOCHOKE_LABEL)
         );
     }
@@ -87,11 +86,11 @@ public class NoChokeCommand implements LazybotSlashCommand
         if (event.getCommandType().equalsIgnoreCase("no1miss"))
             testOutputTool.saveImageToLocal(
                     RendererDistributor.renderPlayerScoreListToCard(
-                            playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),1),0,2)
+                            playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),1),0,2)
             );
         else testOutputTool.saveImageToLocal(
                 RendererDistributor.renderPlayerScoreListToCard(
-                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getAccessToken(event)),0),0,3,
+                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),0),0,3,
                         NOCHOKE_LABEL)
         );
     }
@@ -105,6 +104,8 @@ public class NoChokeCommand implements LazybotSlashCommand
                         .addExample("/NoChoke")
                         .addExample("/NoChoke Aloic")
                         .addExample("/No1Miss Aloic")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addExample("/NoChoke Aloic @202411")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

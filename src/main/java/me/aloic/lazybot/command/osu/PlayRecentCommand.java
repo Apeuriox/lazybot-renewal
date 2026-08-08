@@ -12,11 +12,10 @@ import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.RecentParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.HelpFormatter;
@@ -33,8 +32,6 @@ public class PlayRecentCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -44,17 +41,18 @@ public class PlayRecentCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws IOException, RosuFFI.FFIException
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         RecentParameter params=new RecentParameter(OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe(),
                 OptionMappingTool.getOptionOrDefault(event.getOption("index"), 1),
                 OptionMappingTool.getOptionOrDefault(event.getOption("version"), 1),playerName);
+        if (event.getOption("algorithm") != null) {
+            params.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(event.getOption("algorithm").getAsString()));
+        }
         params.validateParams();
         String commandType = event.getFullCommandName().toLowerCase();
 
@@ -84,7 +82,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws IOException, RosuFFI.FFIException
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         String commandType = event.getCommandType().toLowerCase();
         RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
@@ -106,7 +104,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        AccessTokenPO tokenPO=proxy.getAccessToken(event);
+        UserBindingPO tokenPO=proxy.getUserBinding(event);
         String commandType = event.getCommandType().toLowerCase();
         RecentParameter params=setupParameter(event, tokenPO);
         switch (commandType) {
@@ -150,7 +148,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
                             playerService.getUserRecentScoreList(params, type), params.getVersion()));
         }
     }
-    private RecentParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    private RecentParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         RecentParameter params=RecentParameter.analyzeParameter(event.getCommandParameters());
         RecentParameter.setupDefaultValue(params,tokenPO);
@@ -175,9 +173,11 @@ public class PlayRecentCommand implements LazybotSlashCommand
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
                         .addExample("/Pr #1")
                         .addExample("/Re Aloic #10")
+                        .addExample("/Pr Aloic #10 @202411")
                         .addExample("/Pr Aloic #10 &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Index","指定查询的索引，范围 1-50，默认为1", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
     }
 

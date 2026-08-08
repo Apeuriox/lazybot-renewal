@@ -7,7 +7,6 @@ import me.aloic.lazybot.graphics.mapping.SVGElementHelper;
 import me.aloic.lazybot.graphics.template.SVGTemplateLoader;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.enums.ModColor;
 import me.aloic.lazybot.osu.enums.OsuMode;
@@ -15,6 +14,7 @@ import me.aloic.lazybot.osu.enums.RankColor;
 import me.aloic.lazybot.osu.enums.SupportedSubServer;
 import me.aloic.lazybot.osu.theme.Color.HSL;
 import me.aloic.lazybot.osu.utils.ColorUtil;
+import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.CommonTool;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -73,11 +73,11 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             doc.getElementById("achievedTime").setTextContent(CommonTool.formatJsonDateToString(targetScore.getCreate_at(),"yyyy-MM-dd   HH:mm:ss"));
             if (targetScore.getPp() != null)
             {
-                doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat(" PP"));
+                doc.getElementById("totalPP").setTextContent(formatDisplayedPp(targetScore));
             }
             else if (targetScore.getPpDetailsLocal().getCurrentPP() != null)
             {
-                doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getCurrentPP())).concat(" PP"));
+                doc.getElementById("totalPP").setTextContent(formatDisplayedPp(targetScore));
             }
             else
             {
@@ -88,10 +88,12 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                 doc.getElementById("aimPPtotal").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAimPPMax())));
                 doc.getElementById("spdPPtotal").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getSpdPPMax())));
                 doc.getElementById("accPPtotal").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPMax())));
+                doc.getElementById("readPPtotal").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getReadPPMax())));
 
                 doc.getElementById("aimPPget").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAimPP())));
                 doc.getElementById("accPPget").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPP())));
                 doc.getElementById("spdPPget").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getSpdPP())));
+                doc.getElementById("readPPget").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getReadPP())));
                 doc.getElementById("iffc").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getIfFc())).concat(" PP"));
 
                 doc.getElementById("95%pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getAccPPList().get(95))).concat(" PP"));
@@ -294,10 +296,12 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             }
 
             doc.getElementById("achievedTime").setTextContent(CommonTool.formatJsonDateToString(targetScore.getCreate_at(),"yyyy/MM/dd HH:mm:ss"));
-            if (targetScore.getPp() != null)
+            if (targetScore.getPp() != null
+                    || targetScore.getPpDetailsLocal().getCurrentPP() != null)
             {
-                doc.getElementById("totalPP").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat(" PP"));
-                doc.getElementById("totalPPShadow").setTextContent(CommonTool.toString((int) Math.round(targetScore.getPp())).concat(" PP"));
+                String displayedPp = formatDisplayedPp(targetScore);
+                doc.getElementById("totalPP").setTextContent(displayedPp);
+                doc.getElementById("totalPPShadow").setTextContent(displayedPp);
             }
             else
             {
@@ -329,9 +333,11 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                 String aimPPTotal = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getAimPPMax()));
                 String spdPPTotal = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getSpdPPMax()));
                 String accPPTotal = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getAccPPMax()));
+                String readPPTotal = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getReadPPMax()));
                 aimPPTotal = aimPPTotal.length() > 4 ? "9999" : aimPPTotal;
                 spdPPTotal = spdPPTotal.length() > 4 ? "9999" : spdPPTotal;
                 accPPTotal = accPPTotal.length() > 4 ? "9999" : accPPTotal;
+                readPPTotal = readPPTotal.length() > 4 ? "9999" : readPPTotal;
                 for (int i = 0; i < aimPPTotal.length(); i++)
                 {
                     doc.getElementById("aimPPTotal-" + (4 - i)).setTextContent(aimPPTotal.substring(aimPPTotal.length() - i - 1, aimPPTotal.length() - i));
@@ -353,15 +359,24 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                     doc.getElementById("accPPTotal-" + (4 - i)).setAttribute("opacity", "1");
                     doc.getElementById("accPPTotal-" + (4 - i) + "-Shadow").setAttribute("opacity", "0.4");
                 }
+                for (int i = 0; i < readPPTotal.length(); i++)
+                {
+                    doc.getElementById("readPPTotal-" + (4 - i)).setTextContent(readPPTotal.substring(readPPTotal.length() - i - 1, readPPTotal.length() - i));
+                    doc.getElementById("readPPTotal-" + (4 - i) + "-Shadow").setTextContent(readPPTotal.substring(readPPTotal.length() - i - 1, readPPTotal.length() - i));
+                    doc.getElementById("readPPTotal-" + (4 - i)).setAttribute("opacity", "1");
+                    doc.getElementById("readPPTotal-" + (4 - i) + "-Shadow").setAttribute("opacity", "0.4");
+                }
 
                 if(mode== OsuMode.Osu)
                 {
                     String aimPPGet = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getAimPP()));
                     String accPPGet = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getAccPP()));
                     String spdPPGet = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getSpdPP()));
+                    String readPPGet = String.valueOf(Math.round(targetScore.getPpDetailsLocal().getReadPP()));
                     aimPPGet = aimPPGet.length() > 4 ? "9999" : aimPPGet;
                     spdPPGet = spdPPGet.length() > 4 ? "9999" : spdPPGet;
                     accPPGet = accPPGet.length() > 4 ? "9999" : accPPGet;
+                    readPPGet = readPPGet.length() > 4 ? "9999" : readPPGet;
                     for (int i = 0; i < aimPPGet.length(); i++)
                     {
                         doc.getElementById("aimPPGet-" + (4 - i)).setTextContent(aimPPGet.substring(aimPPGet.length() - i - 1, aimPPGet.length() - i));
@@ -382,6 +397,13 @@ public class ScoreSVGMapper extends LazybotSVGMapper
                         doc.getElementById("accPPGet-" + (4 - i) + "-Shadow").setTextContent(accPPGet.substring(accPPGet.length() - i - 1, accPPGet.length() - i));
                         doc.getElementById("accPPGet-" + (4 - i)).setAttribute("opacity", "1");
                         doc.getElementById("accPPGet-" + (4 - i) + "-Shadow").setAttribute("opacity", "0.4");
+                    }
+                    for (int i = 0; i < readPPGet.length(); i++)
+                    {
+                        doc.getElementById("readPPGet-" + (4 - i)).setTextContent(readPPGet.substring(readPPGet.length() - i - 1, readPPGet.length() - i));
+                        doc.getElementById("readPPGet-" + (4 - i) + "-Shadow").setTextContent(readPPGet.substring(readPPGet.length() - i - 1, readPPGet.length() - i));
+                        doc.getElementById("readPPGet-" + (4 - i)).setAttribute("opacity", "1");
+                        doc.getElementById("readPPGet-" + (4 - i) + "-Shadow").setAttribute("opacity", "0.4");
                     }
                 }
 
@@ -525,7 +547,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
             if (targetScore.getModJSON() != null && targetScore.getModJSON().size() > 0) {
                 if (!targetScore.getIsLazer()) targetScore.setModJSON(targetScore.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList());
                 for(int i=0;i<targetScore.getModJSON().size();i++) {
-                    ModColor color=ModColor.fromString(targetScore.getModJSON().get(i).getAcronym());
+                    ModColor color = ModColor.fromString(targetScore.getModJSON().get(i).getAcronym());
                     wireModIconForDarkScore(doc,
                             i,
                             targetScore.getModJSON().get(i),
@@ -677,7 +699,7 @@ public class ScoreSVGMapper extends LazybotSVGMapper
 
         doc.getElementById("star").setTextContent(CommonTool.toString(targetScore.getBeatmap().getDifficult_rating()));
         doc.getElementById("grade").setTextContent(targetScore.getRank().toLowerCase());
-        doc.getElementById("pp").setTextContent(CommonTool.toString(Math.round(targetScore.getPp())).concat("PP"));
+        doc.getElementById("pp").setTextContent(formatDisplayedPp(targetScore).replace(" ", ""));
         doc.getElementById("iffc").setTextContent(CommonTool.toString(Math.round(targetScore.getPpDetailsLocal().getIfFc())).concat("PP"));
         doc.getElementById("accuracy").setTextContent(CommonTool.toString(targetScore.getAccuracy() * 100).concat("%"));
         if (targetScore.getAccuracy()>0.99999)
@@ -815,6 +837,33 @@ public class ScoreSVGMapper extends LazybotSVGMapper
         else if (version==727)
             doc = mapScoreToScorePanelMarathon(targetScore,targetScore.getRawPlayerData());
         else throw new LazybotRuntimeException("不支持的面板版本: " + version);
+        if (targetScore.getPpDetailsLocal() != null
+                && targetScore.getPpDetailsLocal().getOriginal() != null) {
+            SVGElementHelper.appendAlgorithmLabel(
+                    doc, targetScore.getPpDetailsLocal().getOriginal().algorithmId());
+        }
         return doc;
+    }
+
+    private static String formatDisplayedPp(ScoreVO score)
+    {
+        boolean historical = usesHistoricalAlgorithm(score);
+        Double pp = historical && score.getPpDetailsLocal().getCurrentPP() != null
+                ? score.getPpDetailsLocal().getCurrentPP()
+                : score.getPp();
+        if (pp == null && score.getPpDetailsLocal() != null) {
+            pp = score.getPpDetailsLocal().getCurrentPP();
+        }
+        return pp == null
+                ? "- PP"
+                : CommonTool.toString(Math.round(pp)).concat(historical ? " PP*" : " PP");
+    }
+
+    private static boolean usesHistoricalAlgorithm(ScoreVO score)
+    {
+        return score.getPpDetailsLocal() != null
+                && score.getPpDetailsLocal().getOriginal() != null
+                && score.getPpDetailsLocal().getOriginal().algorithmId()
+                    != RosuAlgorithmVersionUtil.LATEST;
     }
 }

@@ -11,8 +11,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.osu.dao.entity.po.UserTokenPO;
-import me.aloic.lazybot.osu.dao.mapper.DiscordTokenMapper;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.parameter.GeneralParameter;
@@ -28,8 +27,6 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
     @Resource
     private AnalysisService analysisService;
     @Resource
-    private DiscordTokenMapper discordTokenMapper;
-    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -38,13 +35,11 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
-        UserTokenPO accessToken= discordTokenMapper.selectByDiscord(0L);
-        UserTokenPO tokenPO = discordTokenMapper.selectByDiscord(event.getUser().getIdLong());
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
         if (tokenPO == null) {
             ErrorResultHandler.createNotBindOsuError(event);
             return;
         }
-        tokenPO.setAccess_token(accessToken.getAccess_token());
         String playerName = OptionMappingTool.getOptionOrDefault(event.getOption("user"), tokenPO.getPlayer_name());
         GeneralParameter params=new GeneralParameter(playerName,
                 OsuMode.getMode(OptionMappingTool.getOptionOrDefault(event.getOption("mode"), String.valueOf(tokenPO.getDefault_mode()))).getDescribe());
@@ -59,7 +54,7 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
                 MsgUtils.builder().text(
                         analysisService.recommendedDifficulty(
                                 GeneralParameter.setupParameter(event,
-                                        proxy.getAccessToken(event))
+                                        proxy.getUserBinding(event))
                         )
                 ).build(),false);
     }
@@ -68,7 +63,7 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         testOutputTool.writeStringToFile(analysisService.recommendedDifficulty(
-                GeneralParameter.setupParameter(event, proxy.getAccessToken(event))
+                GeneralParameter.setupParameter(event, proxy.getUserBinding(event))
                 )
         );
     }

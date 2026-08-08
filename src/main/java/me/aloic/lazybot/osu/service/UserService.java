@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService
 {
-    void updateDefaultMode(SlashCommandInteractionEvent event);
+    void updateDefaultSubset(SlashCommandInteractionEvent event);
 
-    void updateDefaultMode(Bot bot, LazybotSlashCommandEvent event);
+    void updateDefaultSubset(Bot bot, LazybotSlashCommandEvent event);
 
-    String updateDefaultMode(OsuSubruleset ruleset, Long qqCode);
+    String updateDefaultSubset(OsuSubruleset ruleset, Long qqCode);
 
     void linkUser(SlashCommandInteractionEvent event);
 

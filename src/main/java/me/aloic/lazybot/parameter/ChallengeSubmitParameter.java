@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.dao.entity.po.AccessTokenPO;
+import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class ChallengeSubmitParameter extends LazybotCommandParameter
         }
         return parameter;
     }
-    public static void setupDefaultValue(ChallengeSubmitParameter parameter, AccessTokenPO accessTokenPO)
+    public static void setupDefaultValue(ChallengeSubmitParameter parameter, UserBindingPO accessTokenPO)
     {
 
         parameter.setPlayerId(accessTokenPO.getPlayer_id());
@@ -56,7 +56,7 @@ public class ChallengeSubmitParameter extends LazybotCommandParameter
         parameter.setLazybotId(accessTokenPO.getId());
     }
 
-    public static ChallengeSubmitParameter setupParameter(LazybotSlashCommandEvent event, AccessTokenPO tokenPO)
+    public static ChallengeSubmitParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         ChallengeSubmitParameter params= ChallengeSubmitParameter.analyzeParameter(event.getCommandParameters());
         params.setVersion(event.getScorePanelVersion());

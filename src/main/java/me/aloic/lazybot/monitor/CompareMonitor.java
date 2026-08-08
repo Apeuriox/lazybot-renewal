@@ -16,14 +16,14 @@ public class CompareMonitor
     private static final int MAX_RECENT = 5;
 
     public static void saveRecentBeatmap(long channelId, int beatmapId) {
-        recentBeatmaps.computeIfAbsent(channelId, k -> new ArrayDeque<>());
-        Deque<Integer> deque = recentBeatmaps.get(channelId);
-
-        deque.remove(beatmapId);
-        if (deque.size() >= MAX_RECENT) {
-            deque.removeFirst();
+        Deque<Integer> deque = recentBeatmaps.computeIfAbsent(channelId, k -> new ArrayDeque<>());
+        synchronized (deque) {
+            deque.remove(beatmapId);
+            if (deque.size() >= MAX_RECENT) {
+                deque.removeFirst();
+            }
+            deque.addLast(beatmapId);
         }
-        deque.addLast(beatmapId);
     }
 
     public static Integer getRecentBeatmap(long channelId, int indexFromLast) {
@@ -31,11 +31,13 @@ public class CompareMonitor
         if (deque == null || deque.isEmpty()) {
             throw new LazybotRuntimeException("没有查询到最近的成绩缓存，请先查询一次");
         }
-        int size = deque.size();
-        if (indexFromLast <= 0 || indexFromLast > size) {
-            throw new LazybotRuntimeException("索引超出现缓存上限");
+        synchronized (deque) {
+            int size = deque.size();
+            if (indexFromLast <= 0 || indexFromLast > size) {
+                throw new LazybotRuntimeException("索引超出现缓存上限");
+            }
+            return deque.toArray(new Integer[0])[size - indexFromLast];
         }
-        return deque.toArray(new Integer[0])[size - indexFromLast];
     }
 
     public void clear() {

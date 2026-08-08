@@ -34,8 +34,8 @@ public class TokenMonitor
     private String lazybotClientPassword;
 
     private static final String TOKEN_URL = "https://osu.ppy.sh/oauth/token";
-    private static String lazybotToken;
-    private static String token;
+    private static volatile String lazybotToken;
+    private static volatile String token;
 
     private static final Logger logger = LoggerFactory.getLogger(TokenMonitor.class);
 
@@ -72,7 +72,7 @@ public class TokenMonitor
                     new TypeReference<LazybotWebResult<String>>() {}
             );
             lazybotToken= lazybotTokenJSON.getData();
-            logger.info("Lazybot token created: {}",lazybotTokenJSON.getData());
+            logger.info("Successfully refreshed Lazybot PP+ token");
         }
         catch (Exception e) {
             logger.error("更新PP+验证失败，请检查服务器: {} : {}", e.getClass(), e.getMessage());
