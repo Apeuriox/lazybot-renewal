@@ -199,7 +199,7 @@ public class AssetDownloadUtil
     }
     public static String avatarAbsolutePath(PlayerInfoDTO playerInfoDTO, boolean override)
     {
-        avatarDownload(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId(),override);
+        avatarDownload(playerInfoDTO.getRemoteAvatarLink(), playerInfoDTO.getId(),override);
         return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + playerInfoDTO.getId() +".jpg";
     }
     public static String avatarAbsolutePathStarNoon(String starMoonId, boolean override)

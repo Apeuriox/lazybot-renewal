@@ -52,7 +52,7 @@ public class MessageDeduplicator
         if (!Boolean.TRUE.equals(event.getIstSlashCommand())) {
             return;
         }
-        //for multi bot instance returning same message
+        //for multi bot instances returning same message
         String deliveryKey = deliveryKey(event);
         if (deliveryKey != null && !reserveDelivery(deliveryKey)) {
             logger.info("OneBot 消息 {} 已处理，跳过重复上报", deliveryKey);

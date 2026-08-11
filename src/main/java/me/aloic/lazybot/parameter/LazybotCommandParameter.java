@@ -13,7 +13,7 @@ public abstract class LazybotCommandParameter
     private String mode;
     private List<Long> groupUserIds;
     private OsuSubruleset subRuleset;
-    /** Null means use the application-wide rosu algorithm configured on the service. */
+    // Null means use the application-wide rosu algorithm configured on the service
     private AlgorithmVersion algorithmVersion;
 
     abstract void validateParams();
