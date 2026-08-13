@@ -49,7 +49,6 @@ public class RendererDistributor
         );
     }
 
-
     public static byte[] renderThumbnailClassical(ThumbnailClassicalVO tcData)
     {
         return SVGRenderer.renderSVGDocumentToByteArray(

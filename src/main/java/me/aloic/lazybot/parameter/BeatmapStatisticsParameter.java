@@ -39,7 +39,7 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
     @Override
     public void validateParams() {
         if(beatmapId==null) {
-            throw new IllegalArgumentException("bid输入值为空");
+            throw new IllegalArgumentException("bid输入值为空或存在不合法参数");
         }
         if(beatmapId<=0) {
             throw new IllegalArgumentException("bid输入值不合法: " + beatmapId);
