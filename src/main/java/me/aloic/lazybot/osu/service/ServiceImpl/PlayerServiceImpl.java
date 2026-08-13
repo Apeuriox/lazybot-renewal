@@ -735,6 +735,7 @@ public class PlayerServiceImpl implements PlayerService
             }
             catch (Exception e)
             {
+                e.printStackTrace();
                 throw new LazybotRuntimeException("PP+附属服务离线，请等待其恢复服务后重试");
             }
             return new PerformancePlusProfile(performance,playerInfoVO);
