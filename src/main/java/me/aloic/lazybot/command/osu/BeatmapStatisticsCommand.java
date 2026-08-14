@@ -56,6 +56,7 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
     protected static BeatmapStatisticsParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         BeatmapStatisticsParameter params=BeatmapStatisticsParameter.analyzeParameter(event.getCommandParameters());
+        params.applyAlgorithmVersion(event);
         BeatmapStatisticsParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
@@ -76,9 +77,9 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("BID","查询的地图ID", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Mod","Mod过滤项", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("TargetAccuracy","申请额外重算的Acc", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("AR","覆写AR值(0-11)，格式AR9.5或AR 10", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("AR","覆写AR值(0-11)，格式AR9.5或AR 10，注意会被特定Mod覆盖，如HR，EZ", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("CS","覆写CS值(0-10)，格式CS4或CS 4", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("OD","覆写OD值(0-11)，格式OD9或OD 9", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Algorithm","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用最新算法", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

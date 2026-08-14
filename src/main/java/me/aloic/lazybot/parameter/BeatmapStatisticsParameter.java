@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
-import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
 
@@ -55,14 +54,9 @@ public class BeatmapStatisticsParameter extends LazybotCommandParameter
     {
         BeatmapStatisticsParameter result = new BeatmapStatisticsParameter();
 
-        // The algorithm selector is always the final argument. Consume it first so
-        // split difficulty input such as "AR 10 CS 4 @202502" can be normalized below.
-        ArgumentParser versionParser = ArgumentParser.of(params);
-        versionParser.tryPop(Parsers.ALGORITHM_VERSION,
-                m -> result.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(m.group())));
-
         // Normalize split suffix values ("AR 9.5") into their compact form ("AR9.5").
-        List<String> processed = new ArrayList<>(versionParser.remaining());
+        List<String> processed = new ArrayList<>(
+                params == null ? List.of() : params);
         for (int i = processed.size() - 2; i >= 0; i--) {
             if (Parsers.DIFFICULTY_OVERRIDE_PREFIX.matcher(processed.get(i)).matches()
                     && Parsers.NUMBER.matcher(processed.get(i + 1)).matches()) {

@@ -74,8 +74,7 @@ public class MessageEventFactory
                                    boolean requireRegisteredCommand) {
         String body = commandBody(convertString(command));
         List<String> initialTokens = tokenize(body);
-        String commandName =
-                initialTokens.getFirst().toLowerCase(Locale.ROOT);
+        String commandName = initialTokens.getFirst().toLowerCase(Locale.ROOT);
         if (requireRegisteredCommand
                 && commandRegistry.getCommand(commandName) == null) {
             return false;
@@ -89,17 +88,17 @@ public class MessageEventFactory
             finalTokens = preprocess(event, body);
         }
 
-        event.setCommandType(
-                finalTokens.getFirst().toLowerCase(Locale.ROOT));
-        event.setCommandParameters(
-                List.copyOf(finalTokens.subList(1, finalTokens.size())));
+        event.setCommandType(finalTokens.getFirst().toLowerCase(Locale.ROOT));
+        event.setCommandParameters(finalTokens.subList(1, finalTokens.size()));
         return true;
     }
 
-    private static List<String> preprocess(
-            LazybotSlashCommandEvent event, String commandBody)
+    private static List<String> preprocess(LazybotSlashCommandEvent event, String commandBody)
     {
-        String formatted = formatCommand(commandBody);
+        List<String> rawTokens = tokenize(commandBody);
+        extractAtParameters(event, rawTokens);
+
+        String formatted = formatCommand(String.join(" ", rawTokens));
         event.setScorePanelVersion(countOccurrences(formatted, '&'));
         formatted = formatted.replace("&", "");
 
@@ -118,6 +117,21 @@ public class MessageEventFactory
             break;
         }
         return tokens;
+    }
+
+    // mostly used for target algorithm recalculation. might be useful for future expansion
+    private static void extractAtParameters(LazybotSlashCommandEvent event, List<String> tokens)
+    {
+        List<String> values = new ArrayList<>();
+        for (int index = 1; index < tokens.size(); index++) {
+            String token = tokens.get(index);
+            if (!token.startsWith("@")) {
+                continue;
+            }
+            values.add(token.substring(1));
+            tokens.remove(index--);
+        }
+        event.setAtParameters(List.copyOf(values));
     }
 
     private String commandBody(String command)

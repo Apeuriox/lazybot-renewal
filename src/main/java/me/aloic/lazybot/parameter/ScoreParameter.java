@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
-import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
 
@@ -50,9 +49,6 @@ public class ScoreParameter extends LazybotCommandParameter
     {
         ScoreParameter result = new ScoreParameter();
         ArgumentParser p = ArgumentParser.of(params);
-
-        p.tryPop(Parsers.ALGORITHM_VERSION,
-                matcher -> result.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
 
         p.tryPop(Parsers.BID_PLUS_MOD_NO_SPACE, m -> {
             result.setBeatmapId(Integer.parseInt(m.group(1)));

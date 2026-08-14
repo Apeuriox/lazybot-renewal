@@ -18,6 +18,7 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
+//this command is to request recalculation of pp+
 @LazybotCommandMapping({"addscores","addscore","add"})
 @Component
 public class AddScoreCommand implements LazybotSlashCommand

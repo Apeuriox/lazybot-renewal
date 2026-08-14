@@ -98,6 +98,7 @@ public class BpIfCommand implements LazybotSlashCommand
     private BpifParameter setupParameter(LazybotSlashCommandEvent event,UserBindingPO tokenPO)
     {
         BpifParameter params=BpifParameter.analyzeParameter(event.getCommandParameters());
+        params.applyAlgorithmVersion(event);
         BpifParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
@@ -120,6 +121,6 @@ public class BpIfCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Operator","运算符，与Mod不能有空格；仅指定算法时可以省略", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Mod","运算的Mod；仅指定算法版本时可以省略", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Algorithm","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

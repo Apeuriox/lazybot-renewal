@@ -60,6 +60,7 @@ public class AllScoreCommand implements LazybotSlashCommand
     protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
+        params.applyAlgorithmVersion(event);
         ScoreParameter.setupDefaultValue(params, tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());

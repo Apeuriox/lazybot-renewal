@@ -97,6 +97,7 @@ public class ScoreCommand implements LazybotSlashCommand
     protected static ScoreParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         ScoreParameter params=ScoreParameter.analyzeParameter(event.getCommandParameters());
+        params.applyAlgorithmVersion(event);
         ScoreParameter.setupDefaultValue(params,tokenPO);
         params.setVersion(event.getScorePanelVersion());
         if (tokenPO.getPreferred_panel_version()!=null)
@@ -124,7 +125,7 @@ public class ScoreCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("BID","查询的地图ID", CommandParameter.ParameterType.MUST))
                         .addOption(new CommandParameter("Mod","Mod过滤项", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

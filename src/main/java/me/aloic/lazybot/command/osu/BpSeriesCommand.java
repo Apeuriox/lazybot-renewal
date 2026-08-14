@@ -55,6 +55,7 @@ public class BpSeriesCommand implements LazybotSlashCommand
     {
         UserBindingPO tokenPO=proxy.getUserBinding(event);
         GeneralParameter parameter=GeneralParameter.setupParameter(event,tokenPO);
+        parameter.applyAlgorithmVersion(event);
         BplistParameter params=new BplistParameter(parameter.getPlayerId(),
                 parameter.getMode(),
                 1,21);
@@ -74,11 +75,13 @@ public class BpSeriesCommand implements LazybotSlashCommand
     {
         UserBindingPO tokenPO=proxy.getUserBinding(event);
         SeriesParameter parameter=SeriesParameter.setupParameter(event,tokenPO.getPlayer_id(), tokenPO.getDefault_mode());
+        parameter.applyAlgorithmVersion(event);
         BplistParameter params=new BplistParameter(parameter.getPlayerName(),
                 parameter.getPlayerId(),
                 parameter.getMode(),
                 1, parameter.getMaxIndex());
         if (parameter.getPlayerName()!=null) params.setPlayerName(parameter.getPlayerName());
+        params.setAlgorithmVersion(parameter.getAlgorithmVersion());
         if (event.getScorePanelVersion()==0)
             testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToCard(playerService.bplistCardView(params),params.getFrom(),1));
         else

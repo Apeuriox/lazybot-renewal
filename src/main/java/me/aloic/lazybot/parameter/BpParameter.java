@@ -2,7 +2,6 @@ package me.aloic.lazybot.parameter;
 
 import lombok.*;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
 
@@ -45,8 +44,6 @@ public class BpParameter extends LazybotCommandParameter
             return new BpParameter(null,null,0,1);
 
         ArgumentParser parser = ArgumentParser.of(params);
-        parser.tryPop(Parsers.ALGORITHM_VERSION,
-                matcher -> bpParameter.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
         parser.tryPop(Parsers.INDEX,
                 matcher -> bpParameter.setIndex(Integer.parseInt(matcher.group(1))));
         if (bpParameter.getIndex() == null) {

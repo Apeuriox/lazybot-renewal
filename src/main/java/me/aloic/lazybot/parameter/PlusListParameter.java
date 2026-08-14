@@ -9,6 +9,7 @@ import me.aloic.lazybot.graphics.util.ImageFilterUtil;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.util.CommonTool;
 
+import java.util.Arrays;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
