@@ -766,7 +766,7 @@ public class PlayerServiceImpl implements PlayerService
             );
         }
         catch (LazybotRuntimeException e) {
-            throw new LazybotRuntimeException("Lazybot-PPplus数据获取失败，请稍后再试");
+            throw new LazybotRuntimeException("获取出错，你可能需要先 /ppp 初始化你的个人资料: " + e.getMessage());
 
         }
         PlusScorePerformance playerPerformance=new PlusScorePerformance(scores);

@@ -3,6 +3,8 @@ package me.aloic.lazybot.osu.dao.entity.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.player.GradeCounts;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.player.Statistics;
 
 import java.util.List;
 
@@ -30,6 +32,9 @@ public class PlayerInfoVO
     private Integer primaryColor;
     private String[] previousNames;
     private String bannerUrl;
+
+    private GradeCounts grades;
+    private String joinDate;
 
     private Integer level;
     private Integer levelProgress;

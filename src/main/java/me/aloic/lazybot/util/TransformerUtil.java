@@ -52,9 +52,17 @@ public class TransformerUtil
         catch (Exception e){
             playerInfoVO.setRankHistory(List.of(0,0,0,0,0,0,0,0));
         }
-        playerInfoVO.setCountryRank(playerInfoDTO.getStatistics().getCountry_rank());
+        if (playerInfoDTO.getStatistics().getCountry_rank()!=null)
+            playerInfoVO.setCountryRank(playerInfoDTO.getStatistics().getCountry_rank());
+        else playerInfoVO.setCountryRank(0);
         playerInfoVO.setPlayCount(playerInfoDTO.getStatistics().getPlay_count());
-        playerInfoVO.setGlobalRank(playerInfoDTO.getStatistics().getGlobal_rank());
+
+        if (playerInfoDTO.getStatistics().getGlobal_rank()!=null)
+            playerInfoVO.setGlobalRank(playerInfoDTO.getStatistics().getGlobal_rank());
+        else playerInfoVO.setGlobalRank(0);
+
+        playerInfoVO.setJoinDate(playerInfoDTO.getJoin_date());
+        playerInfoVO.setGrades(playerInfoDTO.getStatistics().getGrade_counts());
         playerInfoVO.setRankTotalScore(playerInfoDTO.getStatistics().getRanked_score());
         playerInfoVO.setTotalHitCount(playerInfoDTO.getStatistics().getTotal_hits());
         playerInfoVO.setPlayerName(playerInfoDTO.getUsername());

@@ -166,6 +166,11 @@
             <artifactId>pinyin4j</artifactId>
             <version>2.5.1</version>
         </dependency>
+        <dependency>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte-spring-boot-starter-4</artifactId>
+            <version>3.2.4</version>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -210,6 +215,24 @@
                     </descriptors>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte-maven-plugin</artifactId>
+                <version>3.2.4</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/resources/templates</sourceDirectory>
+                    <targetDirectory>${project.build.directory}/jte-classes</targetDirectory>
+                    <contentType>Html</contentType>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>precompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
