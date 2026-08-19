@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.service;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapStatistics;
 import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
+import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
 import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
@@ -69,4 +70,6 @@ public interface RosuPerformanceService
     void setupBeatmapStatistics(BeatmapStatistics beatmapStatistics) throws IOException;
 
     void setupBeatmapStatistics(BeatmapStatistics beatmapStatistics, AlgorithmVersion algorithm) throws IOException;
+
+    MapPerformanceAnalysis analyzeBeatmapPerformance(BeatmapStatistics beatmapStatistics);
 }

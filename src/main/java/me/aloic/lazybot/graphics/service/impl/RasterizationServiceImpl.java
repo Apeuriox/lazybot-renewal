@@ -4,12 +4,13 @@ import gg.jte.TemplateEngine;
 import gg.jte.TemplateOutput;
 import gg.jte.output.StringOutput;
 import jakarta.annotation.Resource;
-import lombok.RequiredArgsConstructor;
 
 import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
+import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
+import me.aloic.lazybot.osu.dao.entity.vo.MapPpAnalysisView;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -33,6 +34,15 @@ public class RasterizationServiceImpl implements RasterizationService
         TemplateOutput output = new StringOutput();
         Map<String,Object> params = Map.of("player",player,"hue",hue,"saturationFactor",saturationFactor);
         templateEngine.render("card_info_short_svg.jte", params, output);
+        return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+    }
+
+    @Override
+    public byte[] renderToMapPpAnalysis(MapPerformanceAnalysis analysis) {
+        TemplateOutput output = new StringOutput();
+        Map<String, Object> params = Map.of(
+                "model", MapPpAnalysisView.from(analysis));
+        templateEngine.render("map_pp_analysis_svg.jte", params, output);
         return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
     }
 }

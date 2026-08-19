@@ -19,6 +19,8 @@ public interface PlayerService
 
     BeatmapStatistics getBeatmapStatisticsWithImaginaryParams(BeatmapStatisticsParameter params) throws Exception;
 
+    MapPerformanceAnalysis getMapPpAnalysis(BeatmapStatisticsParameter params) throws Exception;
+
     ThumbnailClassicalVO thumbnailClassicalScore(ThumbnailParameter params);
 
     ThumbnailClassicalVO thumbnailClassicalRecent(ThumbnailParameter params);

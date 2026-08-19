@@ -81,8 +81,7 @@ public class PlayerServiceImpl implements PlayerService
     private void logRecalculationAlgorithm(String command, LazybotCommandParameter params)
     {
         AlgorithmVersion algorithm = selectedAlgorithm(params);
-        logger.info("[PP重算] command={}, mode={}, algorithm={} ({})",
-                command, params.getMode(), algorithm.name(), algorithm.stableKey());
+        logger.info("[PP Recalc] command={}, mode={}, algorithm={} ({})", command, params.getMode(), algorithm.name(), algorithm.stableKey());
     }
 
     private AlgorithmVersion selectedAlgorithm(LazybotCommandParameter params)
@@ -175,6 +174,23 @@ public class PlayerServiceImpl implements PlayerService
     }
     @Override
     public BeatmapStatistics getBeatmapStatisticsWithImaginaryParams(BeatmapStatisticsParameter params) throws Exception {
+        BeatmapStatistics result = prepareBasicBeatmapStatistics(params);
+        rosuPerformanceService.setupBeatmapStatistics(result, params.getAlgorithmVersion());
+
+        double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);
+        double weightSpeed = Math.pow(result.getPerformance().getSpdPP(), 1.1);
+        double weightAccuracy = Math.pow(result.getPerformance().getAccPP(), 1.1);
+        double weightReading = Math.pow(result.getPerformance().getReadPP(), 1.1);
+        double totalWeight = weightAim + weightSpeed + weightAccuracy + weightReading;
+        int ratioAim = (int) Math.round(weightAim * 100.0 / totalWeight);
+        int ratioSpeed = (int) Math.round(weightSpeed * 100.0 / totalWeight);
+        int ratioReading = (int) Math.round(weightReading * 100.0 / totalWeight);
+        result.setPpBreakdownRatioChain(ratioAim +"%-" + ratioSpeed+"%-" + ratioReading+"%-"+ (100-ratioAim-ratioSpeed-ratioReading) +"%");
+        ModCalculatorUtil.afterModMapInfo(result.getBeatmap(), result.getImaginaryMods());
+        return result;
+    }
+
+    private BeatmapStatistics prepareBasicBeatmapStatistics(BeatmapStatisticsParameter params) throws Exception {
         logRecalculationAlgorithm("map", params);
         if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("暂不支持其他模式，请等待更新");
 
@@ -205,19 +221,14 @@ public class PlayerServiceImpl implements PlayerService
             daSetting.setOverall_difficulty(params.getOverallDifficulty());
             result.getImaginaryMods().add(new Mod("DA", daSetting));
         }
-        rosuPerformanceService.setupBeatmapStatistics(result, params.getAlgorithmVersion());
-
-        double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);
-        double weightSpeed = Math.pow(result.getPerformance().getSpdPP(), 1.1);
-        double weightAccuracy = Math.pow(result.getPerformance().getAccPP(), 1.1);
-        double weightReading = Math.pow(result.getPerformance().getReadPP(), 1.1);
-        double totalWeight = weightAim + weightSpeed + weightAccuracy + weightReading;
-        int ratioAim = (int) Math.round(weightAim * 100.0 / totalWeight);
-        int ratioSpeed = (int) Math.round(weightSpeed * 100.0 / totalWeight);
-        int ratioReading = (int) Math.round(weightReading * 100.0 / totalWeight);
-        result.setPpBreakdownRatioChain(ratioAim +"%-" + ratioSpeed+"%-" + ratioReading+"%-"+ (100-ratioAim-ratioSpeed-ratioReading) +"%");
-        ModCalculatorUtil.afterModMapInfo(result.getBeatmap(), result.getImaginaryMods());
         return result;
+    }
+
+    @Override
+    public MapPerformanceAnalysis getMapPpAnalysis(BeatmapStatisticsParameter params) throws Exception {
+        BeatmapStatistics context = prepareBasicBeatmapStatistics(params);
+        ModCalculatorUtil.afterModMapInfo(context.getBeatmap(), context.getImaginaryMods());
+        return rosuPerformanceService.analyzeBeatmapPerformance(context);
     }
 
 

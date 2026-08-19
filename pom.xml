@@ -10,7 +10,7 @@
     </parent>
     <groupId>me.aloic</groupId>
     <artifactId>lazybot</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.8</version>
     <name>lazybot-renewal</name>
     <description>lazybot-renewal</description>
     <url/>
@@ -222,14 +222,14 @@
                 <version>3.2.4</version>
                 <configuration>
                     <sourceDirectory>${project.basedir}/src/main/resources/templates</sourceDirectory>
-                    <targetDirectory>${project.build.directory}/jte-classes</targetDirectory>
                     <contentType>Html</contentType>
+                    <targetDirectory/>
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>process-classes</phase>
+                        <phase>generate-sources</phase>
                         <goals>
-                            <goal>precompile</goal>
+                            <goal>generate</goal>
                         </goals>
                     </execution>
                 </executions>

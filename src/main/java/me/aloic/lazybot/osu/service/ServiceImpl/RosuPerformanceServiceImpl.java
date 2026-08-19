@@ -9,6 +9,7 @@ import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatistic
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapStatistics;
 import me.aloic.lazybot.osu.dao.entity.vo.ImaginaryPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
+import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
 import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -264,6 +266,155 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         });
     }
 
+    @Override
+    public MapPerformanceAnalysis analyzeBeatmapPerformance(BeatmapStatistics beatmapStatistics)
+    {
+        Objects.requireNonNull(beatmapStatistics, "beatmapStatistics");
+        Path beatmapPath = AssetDownloadUtil.beatmapPath(
+                beatmapStatistics.getBeatmap().getBid(), false);
+        String mode = beatmapStatistics.getBeatmap().getMode().getDescribe();
+        double targetAccuracy = beatmapStatistics.getPerformance().getImaginaryAccuracy();
+        List<AlgorithmVersion> algorithms = List.of(
+                AlgorithmVersion.PRECSR_202210,
+                AlgorithmVersion.REWORK_202411,
+                AlgorithmVersion.REWORK_202502,
+                AlgorithmVersion.REWORK_202510,
+                AlgorithmVersion.REWORK_20260706);
+
+        List<MapPerformanceAnalysis.AlgorithmSnapshot> rawHistory = new ArrayList<>();
+        for (AlgorithmVersion algorithm : algorithms) {
+            rawHistory.add(withBeatmap(algorithm, beatmapPath, (calculator, beatmap) -> {
+                DifficultyRequest request = difficultyRequest(
+                        algorithm, beatmapStatistics.getImaginaryMods(), mode, true);
+                PerformanceResult performance = calculator.calculatePerformance(beatmap,
+                        PerformanceRequest.builder(request).accuracy(targetAccuracy).build());
+                return snapshot(algorithm, performance, 0.0, 0.0);
+            }));
+        }
+
+        List<MapPerformanceAnalysis.AlgorithmSnapshot> history = new ArrayList<>();
+        for (int i = 0; i < rawHistory.size(); i++) {
+            MapPerformanceAnalysis.AlgorithmSnapshot current = rawHistory.get(i);
+            double absoluteChange = i == 0 ? 0.0 : current.pp() - rawHistory.get(i - 1).pp();
+            double relativeChange = i == 0 || rawHistory.get(i - 1).pp() == 0.0
+                    ? 0.0
+                    : absoluteChange / rawHistory.get(i - 1).pp() * 100.0;
+            history.add(new MapPerformanceAnalysis.AlgorithmSnapshot(
+                    current.algorithm(), current.pp(), absoluteChange, relativeChange,
+                    current.components()));
+        }
+
+        AlgorithmVersion latest = AlgorithmVersion.REWORK_20260706;
+        CurvePair curves = withBeatmap(latest, beatmapPath, (calculator, beatmap) -> {
+            DifficultyRequest request = difficultyRequest(
+                    latest, beatmapStatistics.getImaginaryMods(), mode, true);
+            double starRating = calculator.calculateDifficulty(beatmap, request).stars();
+            List<RawCurvePoint> missValues = new ArrayList<>();
+            for (int misses = 0; misses <= 20; misses++) {
+                PerformanceResult performance = calculator.calculatePerformance(beatmap,
+                        PerformanceRequest.builder(request)
+                                .accuracy(targetAccuracy)
+                                .misses(misses)
+                                .build());
+                missValues.add(new RawCurvePoint(misses, performance.pp()));
+            }
+
+            List<RawCurvePoint> accuracyValues = new ArrayList<>();
+            for (int step = 0; step <= 20; step++) {
+                double accuracy = 100.0 - step * 0.5;
+                PerformanceResult performance = calculator.calculatePerformance(beatmap,
+                        PerformanceRequest.builder(request)
+                                .accuracy(accuracy)
+                                .misses(0)
+                                .build());
+                accuracyValues.add(new RawCurvePoint(accuracy, performance.pp()));
+            }
+            return new CurvePair(
+                    curveWithLoss(missValues), curveWithLoss(accuracyValues), starRating);
+        });
+
+        return new MapPerformanceAnalysis(
+                beatmapStatistics,
+                targetAccuracy,
+                curves.starRating(),
+                history,
+                curves.missCurve(),
+                curves.accuracyCurve());
+    }
+
+    private static MapPerformanceAnalysis.AlgorithmSnapshot snapshot(
+            AlgorithmVersion algorithm,
+            PerformanceResult performance,
+            double absoluteChange,
+            double relativeChange)
+    {
+        List<ComponentValue> values = new ArrayList<>();
+        values.add(new ComponentValue("Aim", "#B8E9E5", performance.ppAim()));
+        values.add(new ComponentValue("Speed", "#E9B8BF", performance.ppSpeed()));
+        if (performance.hasReadingPerformance()) {
+            values.add(new ComponentValue("Reading", "#B8BFE9",
+                    performance.readingPerformanceOptional().orElse(0.0)));
+        }
+        values.add(new ComponentValue("Accuracy", "#E9DDB8", performance.ppAccuracy()));
+        if (performance.ppFlashlight() > 0.005) {
+            values.add(new ComponentValue("Flashlight", "#CBE9B8", performance.ppFlashlight()));
+        }
+
+        double totalWeight = values.stream()
+                .mapToDouble(value -> Math.pow(Math.max(0.0, value.pp()), 1.1))
+                .sum();
+        List<MapPerformanceAnalysis.PpComponent> components = values.stream()
+                .map(value -> new MapPerformanceAnalysis.PpComponent(
+                        value.name(),
+                        value.color(),
+                        value.pp(),
+                        totalWeight == 0.0
+                                ? 0.0
+                                : Math.pow(Math.max(0.0, value.pp()), 1.1) / totalWeight * 100.0))
+                .toList();
+        return new MapPerformanceAnalysis.AlgorithmSnapshot(
+                shortAlgorithmLabel(algorithm), performance.pp(), absoluteChange,
+                relativeChange, components);
+    }
+
+    private static List<MapPerformanceAnalysis.CurvePoint> curveWithLoss(List<RawCurvePoint> values)
+    {
+        if (values.isEmpty()) {
+            return List.of();
+        }
+        double baseline = values.getFirst().pp();
+        return values.stream()
+                .map(value -> {
+                    double loss = baseline - value.pp();
+                    return new MapPerformanceAnalysis.CurvePoint(
+                            value.input(),
+                            value.pp(),
+                            loss,
+                            baseline == 0.0 ? 0.0 : loss / baseline * 100.0);
+                })
+                .toList();
+    }
+
+    private static String shortAlgorithmLabel(AlgorithmVersion algorithm)
+    {
+        return switch (algorithm) {
+            case PRECSR_202210 -> "202210";
+            case REWORK_202411 -> "202411";
+            case REWORK_202502 -> "202502";
+            case REWORK_202510 -> "202510";
+            case REWORK_20260706 -> "202607";
+        };
+    }
+
+    private record ComponentValue(String name, String color, double pp) {}
+
+    private record RawCurvePoint(double input, double pp) {}
+
+    private record CurvePair(
+            List<MapPerformanceAnalysis.CurvePoint> missCurve,
+            List<MapPerformanceAnalysis.CurvePoint> accuracyCurve,
+            double starRating) {}
+
     private PerformanceVO calculateScore(
             Path beatmapPath,
             AlgorithmVersion algorithm,
@@ -409,6 +560,26 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         DifficultyRequest.Builder builder = DifficultyRequest.builder().mode(mode);
         if (algorithm == AlgorithmVersion.PRECSR_202210) {
             builder.mods(toLegacyMods(mods, lazer));
+            // PRECSR accepts only legacy mod bits, so carry DA overrides through
+            // the dedicated difficulty attributes instead of silently dropping them.
+            if (mods != null) {
+                mods.stream()
+                        .filter(mod -> "DA".equalsIgnoreCase(mod.getAcronym()))
+                        .map(Mod::getSettings)
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                        .ifPresent(settings -> {
+                            if (settings.getApproach_rate() != null) {
+                                builder.ar(settings.getApproach_rate());
+                            }
+                            if (settings.getCircle_size() != null) {
+                                builder.cs(settings.getCircle_size());
+                            }
+                            if (settings.getOverall_difficulty() != null) {
+                                builder.od(settings.getOverall_difficulty());
+                            }
+                        });
+            }
         }
         else {
             if(mode == GameMode.OSU || mode == GameMode.MANIA) {
@@ -436,6 +607,10 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
             // osu! API v2 marks stable scores with CL. PRECSR already uses classic scoring
             // semantics and has no CL bit, so this marker is represented by the omitted ScoreMode.
             if (!lazer && "CL".equalsIgnoreCase(mod.getAcronym())) {
+                continue;
+            }
+            // DA settings are transferred to DifficultyRequest.ar/cs/od above.
+            if ("DA".equalsIgnoreCase(mod.getAcronym()) && mod.getSettings() != null) {
                 continue;
             }
             OsuMod osuMod = OsuMod.getModEnum(mod.getAcronym());
