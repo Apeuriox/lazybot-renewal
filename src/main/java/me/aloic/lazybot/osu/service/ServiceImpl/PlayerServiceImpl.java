@@ -190,7 +190,7 @@ public class PlayerServiceImpl implements PlayerService
         return result;
     }
 
-    private BeatmapStatistics prepareBasicBeatmapStatistics(BeatmapStatisticsParameter params) throws Exception {
+    private BeatmapStatistics prepareBasicBeatmapStatistics(BeatmapStatisticsParameter params){
         logRecalculationAlgorithm("map", params);
         if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("暂不支持其他模式，请等待更新");
 
@@ -225,7 +225,7 @@ public class PlayerServiceImpl implements PlayerService
     }
 
     @Override
-    public MapPerformanceAnalysis getMapPpAnalysis(BeatmapStatisticsParameter params) throws Exception {
+    public MapPerformanceAnalysis getMapPpAnalysis(BeatmapStatisticsParameter params) {
         BeatmapStatistics context = prepareBasicBeatmapStatistics(params);
         ModCalculatorUtil.afterModMapInfo(context.getBeatmap(), context.getImaginaryMods());
         return rosuPerformanceService.analyzeBeatmapPerformance(context);

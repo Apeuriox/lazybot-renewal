@@ -270,8 +270,7 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
     public MapPerformanceAnalysis analyzeBeatmapPerformance(BeatmapStatistics beatmapStatistics)
     {
         Objects.requireNonNull(beatmapStatistics, "beatmapStatistics");
-        Path beatmapPath = AssetDownloadUtil.beatmapPath(
-                beatmapStatistics.getBeatmap().getBid(), false);
+        Path beatmapPath = AssetDownloadUtil.beatmapPath(beatmapStatistics.getBeatmap().getBid(), false);
         String mode = beatmapStatistics.getBeatmap().getMode().getDescribe();
         double targetAccuracy = beatmapStatistics.getPerformance().getImaginaryAccuracy();
         List<AlgorithmVersion> algorithms = List.of(
@@ -284,8 +283,7 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         List<MapPerformanceAnalysis.AlgorithmSnapshot> rawHistory = new ArrayList<>();
         for (AlgorithmVersion algorithm : algorithms) {
             rawHistory.add(withBeatmap(algorithm, beatmapPath, (calculator, beatmap) -> {
-                DifficultyRequest request = difficultyRequest(
-                        algorithm, beatmapStatistics.getImaginaryMods(), mode, true);
+                DifficultyRequest request = difficultyRequest(algorithm, beatmapStatistics.getImaginaryMods(), mode, true);
                 PerformanceResult performance = calculator.calculatePerformance(beatmap,
                         PerformanceRequest.builder(request).accuracy(targetAccuracy).build());
                 return snapshot(algorithm, performance, 0.0, 0.0);
@@ -548,14 +546,12 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         return result;
     }
 
-    private static DifficultyRequest difficultyRequest(
-            AlgorithmVersion algorithm, List<Mod> mods, String mode, boolean lazer)
+    private static DifficultyRequest difficultyRequest(AlgorithmVersion algorithm, List<Mod> mods, String mode, boolean lazer)
     {
         return difficultyRequest(algorithm, mods, toGameMode(mode), lazer);
     }
 
-    private static DifficultyRequest difficultyRequest(
-            AlgorithmVersion algorithm, List<Mod> mods, GameMode mode, boolean lazer)
+    private static DifficultyRequest difficultyRequest(AlgorithmVersion algorithm, List<Mod> mods, GameMode mode, boolean lazer)
     {
         DifficultyRequest.Builder builder = DifficultyRequest.builder().mode(mode);
         if (algorithm == AlgorithmVersion.PRECSR_202210) {
@@ -601,7 +597,7 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         }
         for (Mod mod : mods) {
             if (mod == null || mod.getAcronym() == null || mod.getAcronym().isBlank()) {
-                log.warn("[PP重算] PRECSR_202210 忽略缺少 acronym 的 Mod: {}", mod);
+                log.warn("[PP Recalc] PRECSR_202210 忽略缺少 acronym 的 Mod: {}", mod);
                 continue;
             }
             // osu! API v2 marks stable scores with CL. PRECSR already uses classic scoring
@@ -614,9 +610,9 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
                 continue;
             }
             OsuMod osuMod = OsuMod.getModEnum(mod.getAcronym());
-            if (mod.getSettings() != null || osuMod == OsuMod.Other || osuMod.getValue() < 0) {
-                log.warn("[PP重算] PRECSR_202210 忽略不支持的 Mod: acronym={}, settings={}",
-                        mod.getAcronym(), mod.getSettings());
+            //so i wonder why we match mod settings here, just ignore the settings
+            if (osuMod == OsuMod.Other || osuMod.getValue() < 0) {
+                log.warn("[PP Recalc] 忽略比特位不支持的 Mod: acronym={}, settings={}", mod.getAcronym(), mod.getSettings());
                 continue;
             }
             bits |= Integer.toUnsignedLong(osuMod.getValue());
@@ -628,7 +624,7 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
     {
         return mode == GameMode.OSU
                 && (algorithm == AlgorithmVersion.REWORK_202510
-                    || algorithm == AlgorithmVersion.REWORK_20260706);
+                || algorithm == AlgorithmVersion.REWORK_20260706);
     }
 
     private static GameMode toGameMode(String mode)
@@ -662,10 +658,9 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         throw new IllegalArgumentException("Unsupported rosu-pp algorithm version: " + stableKey);
     }
 
-    private static <T> T withBeatmap(
-            AlgorithmVersion algorithm,
-            Path beatmapPath,
-            BiFunction<RosuPp, Beatmap, T> operation)
+    private static <T> T withBeatmap(AlgorithmVersion algorithm,
+                                     Path beatmapPath,
+                                     BiFunction<RosuPp, Beatmap, T> operation)
     {
         Objects.requireNonNull(algorithm, "algorithm");
         byte[] beatmapBytes;
@@ -679,10 +674,9 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         return withBeatmap(algorithm, beatmapBytes, operation);
     }
 
-    private static <T> T withBeatmap(
-            AlgorithmVersion algorithm,
-            byte[] beatmapBytes,
-            BiFunction<RosuPp, Beatmap, T> operation)
+    private static <T> T withBeatmap(AlgorithmVersion algorithm,
+                                     byte[] beatmapBytes,
+                                     BiFunction<RosuPp, Beatmap, T> operation)
     {
         Objects.requireNonNull(algorithm, "algorithm");
         try (RosuPp calculator = RosuPp.forVersion(algorithm);
