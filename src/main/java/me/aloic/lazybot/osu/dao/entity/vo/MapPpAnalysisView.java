@@ -197,26 +197,39 @@ public record MapPpAnalysisView(
         return String.format(Locale.ROOT, "%02d:%02d", seconds / 60, seconds % 60);
     }
 
-    public record HistoryBar(
-            double x, double y, double width, double height,
-            String algorithm, String pp, String change, boolean latest) {}
+    public record HistoryBar(double x,
+                             double y,
+                             double width,
+                             double height,
+                             String algorithm,
+                             String pp,
+                             String change,
+                             boolean latest) {}
 
-    public record BreakdownRow(
-            String algorithm, String totalPp, List<BreakdownSegment> segments) {
+    public record BreakdownRow(String algorithm,
+                               String totalPp,
+                               List<BreakdownSegment> segments) {
         public BreakdownRow {
             segments = List.copyOf(segments);
         }
     }
 
-    public record BreakdownSegment(
-            double x, double y, double width, double height,
-            String color, String name, double pp, double ratio) {}
+    public record BreakdownSegment(double x,
+                                   double y,
+                                   double width,
+                                   double height,
+                                   String color,
+                                   String name,
+                                   double pp,
+                                   double ratio) {}
 
-    public record LineChart(
-            double x, double y, double width, double height,
-            List<LinePoint> points,
-            List<LineSegment> segments,
-            List<AxisTick> yTicks) {
+    public record LineChart(double x,
+                            double y,
+                            double width,
+                            double height,
+                            List<LinePoint> points,
+                            List<LineSegment> segments,
+                            List<AxisTick> yTicks) {
         public LineChart {
             points = List.copyOf(points);
             segments = List.copyOf(segments);
@@ -224,9 +237,13 @@ public record MapPpAnalysisView(
         }
     }
 
-    public record LinePoint(
-            double x, double y, double input, double pp,
-            double loss, double lossPercent, boolean labelled) {}
+    public record LinePoint(double x,
+                            double y,
+                            double input,
+                            double pp,
+                            double loss,
+                            double lossPercent,
+                            boolean labelled) {}
 
     public record LineSegment(double x1, double y1, double x2, double y2) {}
 

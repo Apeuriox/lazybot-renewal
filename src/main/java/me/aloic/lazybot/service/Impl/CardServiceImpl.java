@@ -1,6 +1,7 @@
 package me.aloic.lazybot.service.Impl;
 
 import jakarta.annotation.Resource;
+import me.aloic.lazybot.entity.command.MoelleuxCard;
 import me.aloic.lazybot.service.CardService;
 import me.aloic.lazybot.entity.po.CardUserPointsLogPO;
 import me.aloic.lazybot.entity.po.CardUserPointsPO;
@@ -9,10 +10,13 @@ import me.aloic.lazybot.entity.vo.RetroGamerCardStats;
 import me.aloic.lazybot.graphics.mapping.documentMapper.CardCheckInSVGMapper;
 import me.aloic.lazybot.graphics.mapping.documentMapper.CardSVGMapper;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
+import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.mapper.CardPointsLogMapper;
 import me.aloic.lazybot.osu.dao.mapper.CardPointsMapper;
+import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
+import me.aloic.lazybot.parameter.CardMoelleuxParameter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +32,8 @@ public class CardServiceImpl implements CardService
     private CardPointsMapper cardPointsMapper;
     @Resource
     private CardPointsLogMapper cardPointsLogMapper;
+    @Resource
+    private PlayerService playerService;
 
     @Transactional
     @Override
@@ -133,5 +139,6 @@ public class CardServiceImpl implements CardService
 
         );
     }
+
 
 }

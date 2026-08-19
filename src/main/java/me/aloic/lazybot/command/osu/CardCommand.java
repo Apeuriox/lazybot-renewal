@@ -74,7 +74,8 @@ public class CardCommand implements LazybotSlashCommand
             testOutputTool.saveImageToLocal(
                     RendererDistributor.renderMoelleuxCard(playerService.cardMoelleux(setupParameter(event, proxy.getUserBinding(event)))));
     }
-    private CardMoelleuxParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
+
+    public static CardMoelleuxParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         CardMoelleuxParameter params=CardMoelleuxParameter.analyzeParameter(event.getCommandParameters());
         CardMoelleuxParameter.setupDefaultValue(params,tokenPO);
@@ -84,6 +85,7 @@ public class CardCommand implements LazybotSlashCommand
         params.validateParams();
         return params;
     }
+
     private GeneralParameter setupParameterGeneral(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());

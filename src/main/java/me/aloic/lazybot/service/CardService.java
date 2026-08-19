@@ -1,6 +1,8 @@
 package me.aloic.lazybot.service;
 
+import me.aloic.lazybot.entity.command.MoelleuxCard;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
+import me.aloic.lazybot.parameter.CardMoelleuxParameter;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface CardService

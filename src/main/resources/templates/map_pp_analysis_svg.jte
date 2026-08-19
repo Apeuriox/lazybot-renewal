@@ -64,7 +64,7 @@
     @endfor
     @for (var bar : model.historyBars())
       <rect x="${bar.x()}" y="${bar.y()}" width="${bar.width()}" height="${bar.height()}"
-            fill="${bar.latest() ? "#B8E9E5" : "#D6D6D6"}"/>
+            fill="${bar.latest() ? "#888888" : "#D6D6D6"}"/>
       <line x1="${bar.x()}" y1="${bar.y()}" x2="${bar.x() + bar.width()}" y2="${bar.y()}" class="rule"/>
       <text x="${bar.x() + bar.width() / 2}" y="${bar.y() - 8}" text-anchor="middle" class="heading" font-size="10">${bar.pp()}</text>
       <text x="${bar.x() + bar.width() / 2}" y="962" text-anchor="middle" class="body" font-size="10">${bar.algorithm()}</text>
@@ -78,11 +78,16 @@
   <g id="composition">
     <text x="732" y="626" class="heading" font-size="28">PP Composition</text>
     <text x="732" y="643" class="micro">Normalized component weight (component PP¹·¹), not an additive total</text>
-    <rect x="1043" y="611" width="9" height="9" fill="#B8E9E5"/><text x="1057" y="619" class="body" font-size="9">Aim</text>
-    <rect x="1091" y="611" width="9" height="9" fill="#E9B8BF"/><text x="1105" y="619" class="body" font-size="9">Speed</text>
-    <rect x="1149" y="611" width="9" height="9" fill="#B8BFE9"/><text x="1163" y="619" class="body" font-size="9">Reading</text>
-    <rect x="1219" y="611" width="9" height="9" fill="#E9DDB8"/><text x="1233" y="619" class="body" font-size="9">Accuracy</text>
-    <rect x="1293" y="611" width="9" height="9" fill="#CBE9B8"/><text x="1307" y="619" class="body" font-size="9">Flashlight</text>
+    <rect x="1043" y="611" width="9" height="9" fill="#888888"/>
+    <text x="1057" y="619" class="body" font-size="9">Aim</text>
+    <rect x="1091" y="611" width="9" height="9" fill="#C9C9C9"/>
+    <text x="1105" y="619" class="body" font-size="9">Speed</text>
+    <rect x="1149" y="611" width="9" height="9" fill="#AFAFAF"/>
+    <text x="1163" y="619" class="body" font-size="9">Reading</text>
+    <rect x="1219" y="611" width="9" height="9" fill="#E0E0E0"/>
+    <text x="1233" y="619" class="body" font-size="9">Accuracy</text>
+    <rect x="1293" y="611" width="9" height="9" fill="#ADADAD"/>
+    <text x="1307" y="619" class="body" font-size="9">Flashlight</text>
 
     @for (var row : model.breakdownRows())
       <text x="734" y="${row.segments().getFirst().y() + 12}" class="heading" font-size="11">${row.algorithm()}</text>

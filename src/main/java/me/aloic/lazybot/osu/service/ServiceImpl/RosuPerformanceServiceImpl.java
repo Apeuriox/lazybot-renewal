@@ -349,15 +349,15 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
             double relativeChange)
     {
         List<ComponentValue> values = new ArrayList<>();
-        values.add(new ComponentValue("Aim", "#B8E9E5", performance.ppAim()));
-        values.add(new ComponentValue("Speed", "#E9B8BF", performance.ppSpeed()));
+        values.add(new ComponentValue("Aim", "#888888", performance.ppAim()));
+        values.add(new ComponentValue("Speed", "#C9C9C9", performance.ppSpeed()));
         if (performance.hasReadingPerformance()) {
-            values.add(new ComponentValue("Reading", "#B8BFE9",
+            values.add(new ComponentValue("Reading", "#AFAFAF",
                     performance.readingPerformanceOptional().orElse(0.0)));
         }
-        values.add(new ComponentValue("Accuracy", "#E9DDB8", performance.ppAccuracy()));
+        values.add(new ComponentValue("Accuracy", "#E0E0E0", performance.ppAccuracy()));
         if (performance.ppFlashlight() > 0.005) {
-            values.add(new ComponentValue("Flashlight", "#CBE9B8", performance.ppFlashlight()));
+            values.add(new ComponentValue("Flashlight", "#ADADAD", performance.ppFlashlight()));
         }
 
         double totalWeight = values.stream()
