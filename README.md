@@ -13,7 +13,7 @@ Static resources are extracted into Lazybot's working directory when the
 application starts. We're migrating rasterization pipeline into new side project but it is not finished at this moment.
 
 
-## Result showcase
+## Partial result showcase
 
 ### Score Panel
 including 5 different variations. Remember, some designs are not original
@@ -40,6 +40,25 @@ including 5 different variations. Remember, some designs are not original
 
 #### Card, the card form of profile, including PP+ statistics; its colors adapt to the user's avatar.
 <img width="1280" height="1204" alt="lazybot-moelleux" src="https://github.com/user-attachments/assets/1894ae81-5774-4428-8c7a-89901af01462" />
+
+#### Plus Card, the card to display detailed PP+ stats, including PP+ statistics; its colors adapt to the user's avatar.
+<img width="510" height="990" alt="lazybot-pluscard" src="https://github.com/user-attachments/assets/ce0d40e9-2dcc-46f3-b505-5b9730305dd5" />
+
+### Score List
+
+#### Score List Card, Designed by Aloic.
+<img width="850" height="920" alt="lazybot-bpcard" src="https://github.com/user-attachments/assets/8a863ef9-0ebc-44d8-bce8-785cf20b1e40" />
+
+#### Score List Card, Designed by Aloic.
+<img width="1000" height="1330" alt="7%_F2YX45T($UA5T@5MEPR9_tmb" src="https://github.com/user-attachments/assets/3f12738a-5fcb-4cda-b883-ec95a794d5dc" />
+
+#### Map Score List, Designed by Aloic.
+<img width="1600" height="3050" alt="lazybot-mapscore" src="https://github.com/user-attachments/assets/3ae0f50d-56be-455e-9552-dccb7cc492f3" />
+
+### Others
+### Command Usage, to see some basic internal command invoke data. Designed by Aloic
+<img width="1280" height="639" alt="lazybot-command-usage" src="https://github.com/user-attachments/assets/11b5a29a-7e24-41ce-8442-d14c71841d30" />
+
 
 ## Prerequisites
 
