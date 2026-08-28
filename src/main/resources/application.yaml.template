@@ -58,6 +58,10 @@ lazybot:
   grant_type: authorization_code
   avatar-cache:
     revalidate-hours: 24
+  render-cache:
+    enabled: true
+    max-weight-mb: 256
+    expire-minutes: 30
   oauth:
     redirect-uri: https://your-domain.example/oauth/osu/callback
     scopes: identify public
@@ -75,6 +79,9 @@ lazybot:
     enabled: true
   command:
     whatif_calc_max_count: 200
+    max-pending-per-user: 16
+    message-dedup-retention-seconds: 30
+    message-dedup-cleanup-ms: 60000
 
 async:
   executor:

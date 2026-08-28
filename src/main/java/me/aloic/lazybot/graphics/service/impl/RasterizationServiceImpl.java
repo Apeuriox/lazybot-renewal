@@ -5,6 +5,8 @@ import gg.jte.TemplateOutput;
 import gg.jte.output.StringOutput;
 import jakarta.annotation.Resource;
 
+import me.aloic.lazybot.graphics.cache.BitmapRenderCache;
+import me.aloic.lazybot.graphics.cache.RenderFingerprint;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
@@ -20,29 +22,43 @@ public class RasterizationServiceImpl implements RasterizationService
 {
     @Resource
     private TemplateEngine templateEngine;
+    @Resource
+    private BitmapRenderCache bitmapRenderCache;
 
     @Override
     public byte[] renderToScoreDark(ScoreVO score, int hue, double saturationFactor) {
-        TemplateOutput output = new StringOutput();
-        Map<String,Object> params = Map.of("score",score,"hue",hue,"saturationFactor",saturationFactor);
-        templateEngine.render("score_dark_v2_svg.jte", params, output);
-        return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+        return bitmapRenderCache.getOrCompute(
+                RenderFingerprint.of("score-dark-jte").addScore(score).key(),
+                () -> {
+                    TemplateOutput output = new StringOutput();
+                    Map<String,Object> params = Map.of("score",score,"hue",hue,"saturationFactor",saturationFactor);
+                    templateEngine.render("score_dark_v2_svg.jte", params, output);
+                    return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+                });
     }
 
     @Override
     public byte[] renderToCardInfo(PlayerInfoVO player, int hue, double saturationFactor) {
-        TemplateOutput output = new StringOutput();
-        Map<String,Object> params = Map.of("player",player,"hue",hue,"saturationFactor",saturationFactor);
-        templateEngine.render("card_info_short_svg.jte", params, output);
-        return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+        return bitmapRenderCache.getOrCompute(
+                RenderFingerprint.of("card-info-jte").addPlayer(player).key(),
+                () -> {
+                    TemplateOutput output = new StringOutput();
+                    Map<String,Object> params = Map.of("player",player,"hue",hue,"saturationFactor",saturationFactor);
+                    templateEngine.render("card_info_short_svg.jte", params, output);
+                    return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+                });
     }
 
     @Override
     public byte[] renderToMapPpAnalysis(MapPerformanceAnalysis analysis) {
-        TemplateOutput output = new StringOutput();
-        Map<String, Object> params = Map.of(
-                "model", MapPpAnalysisView.from(analysis));
-        templateEngine.render("map_pp_analysis_svg.jte", params, output);
-        return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+        return bitmapRenderCache.getOrCompute(
+                RenderFingerprint.of("map-pp-analysis-jte").addMapAnalysis(analysis).key(),
+                () -> {
+                    TemplateOutput output = new StringOutput();
+                    Map<String, Object> params = Map.of(
+                            "model", MapPpAnalysisView.from(analysis));
+                    templateEngine.render("map_pp_analysis_svg.jte", params, output);
+                    return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+                });
     }
 }

@@ -63,7 +63,6 @@ public class AssetDownloadUtil
             return null;
         });
         downloadFuture.get();
-        logger.info("(QUEUE) Download completed for: {}", targetUrl);
     }
     private static void downloadResourceSmallQueue(String targetUrl, String desiredLocalPath) throws InterruptedException, ExecutionException {
         Future<Void> downloadFuture = executor.submit(() -> {
