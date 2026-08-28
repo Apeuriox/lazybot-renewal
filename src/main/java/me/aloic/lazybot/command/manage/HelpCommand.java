@@ -4,6 +4,7 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
+import me.aloic.lazybot.command.CommandReply;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
@@ -43,6 +44,20 @@ public class HelpCommand implements LazybotSlashCommand
             throw new LazybotRuntimeException("读取Help页面失败");
         }
 
+    }
+
+    @Override
+    public void execute(CommandReply reply, LazybotSlashCommandEvent event) throws Exception
+    {
+        Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
+        try {
+            reply.sendTextWithImage(
+                    "[Lazybot] 帮助页面现已合并至细分指令，输入/指令名 *h即可查询，例/card *h。Tencent 通道目前支持 /bp /card /link /unlink /setmode /help",
+                    Files.readAllBytes(Paths.get(filePath.toUri())));
+        }
+        catch (Exception e) {
+            throw new LazybotRuntimeException("读取Help页面失败");
+        }
     }
 
     @Override

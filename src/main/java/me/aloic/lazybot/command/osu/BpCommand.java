@@ -4,6 +4,7 @@ import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
+import me.aloic.lazybot.command.CommandReply;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
@@ -11,6 +12,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.TemplateRenderer;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
@@ -98,6 +100,28 @@ public class BpCommand implements LazybotSlashCommand
             }
         }
 
+    }
+
+    @Override
+    public void execute(CommandReply reply, LazybotSlashCommandEvent event) throws Exception
+    {
+        String commandType = event.getCommandType().toLowerCase();
+        if ("bsm".equals(commandType)) {
+            throw new LazybotRuntimeException("Tencent 通道暂不支持 StarMoon 指令");
+        }
+        UserBindingPO tokenPO = proxy.getUserBinding(event);
+        BpParameter params = setupParameter(
+                event,
+                tokenPO.getDefault_mode(),
+                tokenPO.getPlayer_id(),
+                tokenPO.getPreferred_panel_version());
+        if (params.getVersion() == 3 || commandType.equals("pbp") || commandType.equals("pb")) {
+            reply.sendImage(RendererDistributor.renderPPPlusScoreToQuadraGrid(
+                    playerService.getUserBestPerformanceSinglePlus(params)));
+            return;
+        }
+        reply.sendImage(RendererDistributor.renderScoreVOToImage(
+                playerService.getUserBestPerformanceSingle(params), params.getVersion()));
     }
 
     @Override

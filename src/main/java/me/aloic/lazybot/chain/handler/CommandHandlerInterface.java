@@ -15,4 +15,9 @@ public interface CommandHandlerInterface
     void handle(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception;
     void handle(Bot bot, LazybotSlashCommand command, LazybotSlashCommandEvent event, CommandHandlerChain chain) throws Exception;
 
+    default void handleTencent(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception
+    {
+        chain.doHandleTencent(event, command);
+    }
+
 }

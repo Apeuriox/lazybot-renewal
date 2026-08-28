@@ -30,9 +30,12 @@ public class CommandDatabaseProxy
 
     public UserBindingPO getUserBinding(LazybotSlashCommandEvent event)
     {
+        IdentityPlatform platform = event.getIdentityPlatform() != null
+                ? event.getIdentityPlatform()
+                : IdentityPlatform.QQ;
         return requireBinding(
-                IdentityPlatform.QQ,
-                String.valueOf(determineIdentity(event)),
+                platform,
+                resolvePlatformUserId(event),
                 OsuServer.BANCHO,
                 false);
     }
@@ -125,6 +128,14 @@ public class CommandDatabaseProxy
         return testEnabled
                 ? testIdentity
                 : event.getMessageEvent().getSender().getUserId();
+    }
+
+    private String resolvePlatformUserId(LazybotSlashCommandEvent event)
+    {
+        if (event.getPlatformUserId() != null && !event.getPlatformUserId().isBlank()) {
+            return event.getPlatformUserId();
+        }
+        return String.valueOf(determineIdentity(event));
     }
 
 }

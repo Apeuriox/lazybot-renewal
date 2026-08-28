@@ -20,4 +20,10 @@ public class CommandExecutorHandler implements CommandHandlerInterface {
     {
         command.execute(bot,event);
     }
+
+    @Override
+    public void handleTencent(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception
+    {
+        command.execute(event.getReply(), event);
+    }
 }

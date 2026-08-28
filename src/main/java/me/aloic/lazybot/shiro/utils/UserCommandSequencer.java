@@ -23,6 +23,7 @@ public class UserCommandSequencer
     private static final Logger logger = LoggerFactory.getLogger(UserCommandSequencer.class);
 
     private final ConcurrentHashMap<Long, UserQueue> queues = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, UserQueue> keyedQueues = new ConcurrentHashMap<>();
     private final Executor executor;
     private final int maxPendingPerUser;
 
@@ -67,6 +68,50 @@ public class UserCommandSequencer
                 logger.error("用户命令执行时发生未捕获异常: userId={}", userId, throwable);
             }
             queues.computeIfPresent(userId, (ignoredKey, current) -> {
+                if (current != queue) {
+                    return current;
+                }
+                current.pending--;
+                return current.pending == 0 && current.tail == future
+                        ? null
+                        : current;
+            });
+        });
+        return Optional.of(future);
+    }
+
+    public Optional<CompletableFuture<Void>> submit(String userKey, Runnable command)
+    {
+        Objects.requireNonNull(command, "command should not be null");
+        String key = Objects.requireNonNull(userKey, "userKey should not be null");
+        AtomicReference<UserQueue> selectedQueue = new AtomicReference<>();
+        AtomicReference<CompletableFuture<Void>> selectedFuture = new AtomicReference<>();
+        keyedQueues.compute(key, (ignored, queue) -> {
+            UserQueue current = queue == null ? new UserQueue() : queue;
+            if (current.pending >= maxPendingPerUser) {
+                return current;
+            }
+            CompletableFuture<Void> next = current.tail
+                    .handle((result, throwable) -> null)
+                    .thenRunAsync(command, executor);
+            current.tail = next;
+            current.pending++;
+            selectedQueue.set(current);
+            selectedFuture.set(next);
+            return current;
+        });
+
+        CompletableFuture<Void> future = selectedFuture.get();
+        if (future == null) {
+            return Optional.empty();
+        }
+
+        UserQueue queue = selectedQueue.get();
+        future.whenComplete((ignored, throwable) -> {
+            if (throwable != null) {
+                logger.error("用户命令执行时发生未捕获异常: userKey={}", key, throwable);
+            }
+            keyedQueues.computeIfPresent(key, (ignoredKey, current) -> {
                 if (current != queue) {
                     return current;
                 }

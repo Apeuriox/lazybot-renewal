@@ -21,4 +21,6 @@ public interface PlatformIdentityMapper extends BaseMapper<PlatformIdentityPO>
     int reassignToUser(
             @Param("identityId") Long identityId,
             @Param("userId") Integer userId);
+
+    int countByUserId(@Param("userId") Integer userId);
 }
