@@ -26,6 +26,7 @@ public class LazybotSlashCommandEvent
    private IdentityPlatform identityPlatform;
    private String platformUserId;
    private String platformChannelId;
+   private String sourceMessageId;
    private CommandReply reply;
 
    public LazybotSlashCommandEvent(GroupMessageEvent event) {

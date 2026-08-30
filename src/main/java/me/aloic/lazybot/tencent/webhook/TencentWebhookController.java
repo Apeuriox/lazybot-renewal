@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
-import me.aloic.lazybot.tencent.auth.TencentEd25519;
+import me.aloic.lazybot.tencent.auth.TencentWebHookHelper;
 import me.aloic.lazybot.tencent.command.TencentCommandDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class TencentWebhookController
         KeyPair derived = null;
         if (tokenMonitor.hasTencentCredentials()) {
             try {
-                derived = TencentEd25519.keyPairFromSecret(tokenMonitor.getTencentClientSecret());
+                derived = TencentWebHookHelper.keyPairFromSecret(tokenMonitor.getTencentClientSecret());
             }
             catch (Exception e) {
                 logger.warn("Tencent Webhook Ed25519 密钥初始化失败: {}", e.getMessage());
@@ -78,7 +78,7 @@ public class TencentWebhookController
             return ResponseEntity.status(401).body("{\"message\":\"invalid signature\"}");
         }
         if (op != null && op == OP_DISPATCH) {
-            dispatcher.dispatch(payload);
+            dispatcher.dispatchTencentEvent(payload);
         }
         JSONObject ack = new JSONObject();
         ack.put("op", OP_HTTP_CALLBACK_ACK);
@@ -96,7 +96,7 @@ public class TencentWebhookController
             throw new IllegalStateException("Webhook 验证载荷不完整");
         }
         byte[] message = (eventTs + plainToken).getBytes(StandardCharsets.UTF_8);
-        String signature = TencentEd25519.signHex(keyPair.getPrivate(), message);
+        String signature = TencentWebHookHelper.signHex(keyPair.getPrivate(), message);
         JSONObject response = new JSONObject();
         response.put("plain_token", plainToken);
         response.put("signature", signature);
@@ -120,7 +120,7 @@ public class TencentWebhookController
             byte[] tsBytes = timestamp.getBytes(StandardCharsets.UTF_8);
             System.arraycopy(tsBytes, 0, message, 0, tsBytes.length);
             System.arraycopy(body, 0, message, tsBytes.length, body.length);
-            return TencentEd25519.verify(keyPair.getPublic(), message, signature);
+            return TencentWebHookHelper.verify(keyPair.getPublic(), message, signature);
         }
         catch (Exception e) {
             return false;

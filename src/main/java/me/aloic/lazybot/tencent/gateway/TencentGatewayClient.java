@@ -38,6 +38,11 @@ public class TencentGatewayClient
     private static final int OP_INVALID_SESSION = 9;
     private static final int OP_HELLO = 10;
     private static final int OP_HEARTBEAT_ACK = 11;
+    private static final long HELLO_TIMEOUT_MS = 20_000L;
+    private static final long AUTH_TIMEOUT_MS = 20_000L;
+    private static final long SEND_TIMEOUT_SECONDS = 8L;
+    private static final long MAX_BACKOFF_MS = 60_000L;
+    private static final long SESSION_WINDOW_MS = 5_000L;
 
     private final TencentOpenApiClient apiClient;
     private final TokenMonitor tokenMonitor;
@@ -48,6 +53,7 @@ public class TencentGatewayClient
             .build();
 
     private final AtomicBoolean running = new AtomicBoolean(false);
+    private final AtomicBoolean sessionReady = new AtomicBoolean(false);
     private final AtomicReference<WebSocket> socket = new AtomicReference<>();
     private final AtomicReference<String> sessionId = new AtomicReference<>();
     private final AtomicReference<Integer> lastSequence = new AtomicReference<>();
@@ -59,6 +65,12 @@ public class TencentGatewayClient
         return thread;
     });
     private volatile ScheduledFuture<?> heartbeatFuture;
+    private volatile ScheduledFuture<?> helloTimeoutFuture;
+    private volatile ScheduledFuture<?> authTimeoutFuture;
+    private volatile Listener activeListener;
+    private volatile long heartbeatIntervalMs = 45_000L;
+    private volatile long lastInboundNanos = System.nanoTime();
+    private volatile long lastIdentifyAtNanos;
     private volatile Thread loopThread;
 
     public TencentGatewayClient(
@@ -85,15 +97,7 @@ public class TencentGatewayClient
     public void stop()
     {
         running.set(false);
-        cancelHeartbeat();
-        WebSocket current = socket.getAndSet(null);
-        if (current != null) {
-            try {
-                current.sendClose(WebSocket.NORMAL_CLOSURE, "shutdown");
-            }
-            catch (Exception ignored) {
-            }
-        }
+        closeCurrent("shutdown");
         scheduler.shutdownNow();
         if (loopThread != null) {
             loopThread.interrupt();
@@ -103,33 +107,67 @@ public class TencentGatewayClient
     private void runLoop()
     {
         long backoffMs = 1000L;
+        int attempt = 0;
         while (running.get()) {
+            attempt++;
             CountDownLatch closed = new CountDownLatch(1);
+            Listener listener = new Listener(closed);
+            sessionReady.set(false);
+            activeListener = listener;
             try {
-                String url = apiClient.getGatewayUrl();
+                TencentOpenApiClient.GatewayEndpoint endpoint = apiClient.getGateway();
+                boolean resume = canResume();
+                if (!resume) {
+                    endpoint = waitForSessionQuota(endpoint);
+                }
                 String authorization = "QQBot " + TokenMonitor.getTencentToken();
-                logger.info("正在连接 Tencent Gateway: {}", url);
-                Listener listener = new Listener(closed);
+                logger.info(
+                        "正在连接 Tencent Gateway (第 {} 次, {}, shards={}, remaining={}): {}",
+                        attempt,
+                        resume ? "Resume" : "Identify",
+                        endpoint.shards(),
+                        endpoint.remaining(),
+                        endpoint.url());
                 httpClient.newWebSocketBuilder()
                         .connectTimeout(Duration.ofSeconds(20))
                         .header("Authorization", authorization)
                         .header("X-Union-Appid", tokenMonitor.getTencentAppId())
                         .header("User-Agent", "lazybot")
-                        .buildAsync(URI.create(url), listener)
+                        .buildAsync(URI.create(endpoint.url()), listener)
+                        .orTimeout(30, TimeUnit.SECONDS)
                         .join();
                 closed.await();
-                backoffMs = 1000L;
+                if (sessionReady.get()) {
+                    backoffMs = 1000L;
+                    attempt = 0;
+                }
             }
             catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                break;
+                if (!running.get()) {
+                    break;
+                }
+                logger.warn("Tencent Gateway 等待被中断，将重连");
             }
             catch (Exception e) {
                 logger.error("Tencent Gateway 连接失败: {}", e.getMessage(), e);
             }
             finally {
+                listener.finish();
                 cancelHeartbeat();
-                socket.set(null);
+                cancelHelloTimeout();
+                cancelAuthTimeout();
+                WebSocket leftover = socket.getAndSet(null);
+                if (leftover != null) {
+                    try {
+                        leftover.abort();
+                    }
+                    catch (Exception ignored) {
+                    }
+                }
+                if (activeListener == listener) {
+                    activeListener = null;
+                }
             }
             if (!running.get()) {
                 break;
@@ -140,10 +178,13 @@ public class TencentGatewayClient
             }
             catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                break;
+                if (!running.get()) {
+                    break;
+                }
             }
-            backoffMs = Math.min(backoffMs * 2, 60_000L);
+            backoffMs = Math.min(backoffMs * 2, MAX_BACKOFF_MS);
         }
+        logger.info("Tencent Gateway 重连循环已结束");
     }
 
     private void handlePayload(JSONObject payload)
@@ -152,6 +193,7 @@ public class TencentGatewayClient
         if (op == null) {
             return;
         }
+        lastInboundNanos = System.nanoTime();
         Integer sequence = payload.getInteger("s");
         if (sequence != null) {
             lastSequence.set(sequence);
@@ -165,12 +207,14 @@ public class TencentGatewayClient
             }
             case OP_RECONNECT -> {
                 logger.warn("Tencent Gateway 要求重新连接");
-                closeCurrent("reconnect");
+                closeCurrent("server-reconnect");
             }
             case OP_INVALID_SESSION -> {
-                logger.warn("Tencent Gateway session 无效，将重新 Identify");
-                sessionId.set(null);
-                lastSequence.set(null);
+                boolean resumable = Boolean.TRUE.equals(payload.getBoolean("d"));
+                logger.warn("Tencent Gateway session 无效 (opcode 9), resumable={}", resumable);
+                if (!resumable) {
+                    clearResumeState();
+                }
                 closeCurrent("invalid-session");
             }
             case OP_HEARTBEAT -> sendHeartbeat();
@@ -180,10 +224,11 @@ public class TencentGatewayClient
 
     private void onHello(JSONObject data)
     {
-        long interval = data == null ? 45000L : data.getLongValue("heartbeat_interval", 45000L);
-        logger.info("收到 Hello，heartbeat_interval={} ms", interval);
-        startHeartbeat(interval);
-        if (sessionId.get() != null && lastSequence.get() != null) {
+        cancelHelloTimeout();
+        heartbeatIntervalMs = data == null ? 45000L : Math.max(5000L, data.getLongValue("heartbeat_interval", 45000L));
+        logger.info("收到 Hello，heartbeat_interval={} ms", heartbeatIntervalMs);
+        armAuthTimeout();
+        if (canResume()) {
             sendResume();
         }
         else {
@@ -194,7 +239,7 @@ public class TencentGatewayClient
     private void onDispatch(JSONObject payload)
     {
         String type = payload.getString("t");
-        logger.info("收到 Dispatch 事件 {}", type);
+        logger.trace("收到 Dispatch 事件 {}", type);
         if ("READY".equals(type)) {
             JSONObject data = payload.getJSONObject("d");
             if (data != null) {
@@ -205,22 +250,30 @@ public class TencentGatewayClient
                         user == null ? "?" : user.getString("username"),
                         sessionId.get());
             }
-            heartbeatAcked.set(true);
-            sendHeartbeat();
+            markSessionReady();
+            startHeartbeat(heartbeatIntervalMs);
             return;
         }
         if ("RESUMED".equals(type)) {
             logger.info("Tencent Gateway session 已恢复");
-            heartbeatAcked.set(true);
-            sendHeartbeat();
+            markSessionReady();
+            startHeartbeat(heartbeatIntervalMs);
             return;
         }
         try {
-            dispatcher.dispatch(payload);
+            dispatcher.dispatchTencentEvent(payload);
         }
         catch (Exception e) {
             logger.error("处理 Tencent事件 {} 失败", type, e);
         }
+    }
+
+    private void markSessionReady()
+    {
+        cancelAuthTimeout();
+        sessionReady.set(true);
+        heartbeatAcked.set(true);
+        lastInboundNanos = System.nanoTime();
     }
 
     private void sendIdentify()
@@ -237,6 +290,7 @@ public class TencentGatewayClient
         JSONObject payload = new JSONObject();
         payload.put("op", OP_IDENTIFY);
         payload.put("d", data);
+        lastIdentifyAtNanos = System.nanoTime();
         sendJson(payload);
         logger.info("已发送 Identify，intents={}", intents);
     }
@@ -244,37 +298,49 @@ public class TencentGatewayClient
     private void sendResume()
     {
         JSONObject data = new JSONObject();
+        Integer seq = lastSequence.get();
         data.put("token", "QQBot " + TokenMonitor.getTencentToken());
         data.put("session_id", sessionId.get());
-        data.put("seq", lastSequence.get());
+        data.put("seq", seq == null ? 0 : seq);
         JSONObject payload = new JSONObject();
         payload.put("op", OP_RESUME);
         payload.put("d", data);
         sendJson(payload);
-        logger.info("已发送 Resume, seq={}", lastSequence.get());
+        logger.info("已发送 Resume, session={}, seq={}", sessionId.get(), seq == null ? 0 : seq);
     }
 
     private void startHeartbeat(long intervalMs)
     {
         cancelHeartbeat();
+        heartbeatIntervalMs = Math.max(5000L, intervalMs);
         heartbeatAcked.set(true);
-        long delayMs = Math.max(1000L, (long) (intervalMs * 0.8d));
-        heartbeatFuture = scheduler.scheduleWithFixedDelay(
-                this::beatOrReconnect,
-                delayMs,
-                delayMs,
+        lastInboundNanos = System.nanoTime();
+        Thread.ofVirtual().name("tencent-heartbeat").start(this::sendHeartbeat);
+        heartbeatFuture = scheduler.scheduleAtFixedRate(
+                this::heartbeatTick,
+                heartbeatIntervalMs,
+                heartbeatIntervalMs,
                 TimeUnit.MILLISECONDS);
-        logger.info("Tencent Gateway 心跳间隔 {} ms（按服务端 {} ms 的 80%）", delayMs, intervalMs);
+        logger.info("Tencent Gateway 心跳间隔 {} ms（鉴权成功后按 Hello 周期发送）", heartbeatIntervalMs);
     }
 
-    private void beatOrReconnect()
+    private void heartbeatTick()
     {
+        if (!running.get() || socket.get() == null) {
+            return;
+        }
+        long silentMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - lastInboundNanos);
+        if (silentMs > heartbeatIntervalMs * 2) {
+            logger.warn("Tencent Gateway 已 {} ms 未收到下行，准备重连", silentMs);
+            closeCurrent("inbound-timeout");
+            return;
+        }
         if (!heartbeatAcked.get()) {
             logger.warn("Tencent Gateway 心跳未确认，准备重连");
             closeCurrent("heartbeat-timeout");
             return;
         }
-        sendHeartbeat();
+        Thread.ofVirtual().name("tencent-heartbeat").start(this::sendHeartbeat);
     }
 
     private void sendHeartbeat()
@@ -283,7 +349,7 @@ public class TencentGatewayClient
         JSONObject payload = new JSONObject();
         payload.put("op", OP_HEARTBEAT);
         payload.put("d", lastSequence.get());
-        logger.info("发送 Tencent Gateway 心跳, seq={}", lastSequence.get());
+        logger.trace("发送 Tencent Gateway 心跳, seq={}", lastSequence.get());
         sendJson(payload);
     }
 
@@ -297,7 +363,9 @@ public class TencentGatewayClient
                 return;
             }
             try {
-                socketToUse.sendText(json, true).join();
+                socketToUse.sendText(json, true)
+                        .orTimeout(SEND_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                        .join();
             }
             catch (Exception e) {
                 logger.warn("向 Gateway 发送数据失败: {}", e.getMessage());
@@ -308,27 +376,129 @@ public class TencentGatewayClient
 
     private void closeCurrent(String reason)
     {
+        logger.info("关闭当前 Tencent Gateway 连接: {}", reason);
+        cancelHeartbeat();
+        cancelHelloTimeout();
+        cancelAuthTimeout();
         WebSocket current = socket.getAndSet(null);
         if (current != null) {
-            try {
-                current.sendClose(WebSocket.NORMAL_CLOSURE, reason);
-            }
-            catch (Exception ignored) {
-            }
             try {
                 current.abort();
             }
             catch (Exception ignored) {
             }
         }
+        Listener listener = activeListener;
+        if (listener != null) {
+            listener.finish();
+        }
+    }
+
+    private void applyCloseCode(int statusCode)
+    {
+        if (statusCode == 4914 || statusCode == 4915) {
+            logger.error("Tencent 机器人不可连接 (关闭码 {})，停止重连", statusCode);
+            running.set(false);
+            clearResumeState();
+            return;
+        }
+        if (statusCode == 4008 || statusCode == 4009) {
+            logger.warn("关闭码 {}，将 Resume 重连", statusCode);
+            return;
+        }
+        if (statusCode < 4000) {
+            return;
+        }
+        logger.warn("关闭码 {}，将重新 Identify", statusCode);
+        clearResumeState();
+    }
+
+    private boolean canResume()
+    {
+        String id = sessionId.get();
+        return id != null && !id.isBlank();
+    }
+
+    private TencentOpenApiClient.GatewayEndpoint waitForSessionQuota(TencentOpenApiClient.GatewayEndpoint endpoint)
+            throws InterruptedException
+    {
+        while (running.get() && endpoint.remaining() <= 0) {
+            long waitMs = Math.max(1000L, endpoint.resetAfterMs());
+            logger.warn(
+                    "Tencent session_start_limit.remaining=0，{} ms 后重新获取接入点",
+                    waitMs);
+            TimeUnit.MILLISECONDS.sleep(waitMs);
+            endpoint = apiClient.getGateway();
+        }
+        long minGapMs = Math.max(1000L, SESSION_WINDOW_MS / endpoint.maxConcurrency());
+        if (lastIdentifyAtNanos > 0) {
+            long elapsedMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - lastIdentifyAtNanos);
+            if (elapsedMs < minGapMs) {
+                long waitMs = minGapMs - elapsedMs;
+                logger.info(
+                        "遵守 session_start_limit.max_concurrency={}，等待 {} ms 后再 Identify",
+                        endpoint.maxConcurrency(),
+                        waitMs);
+                TimeUnit.MILLISECONDS.sleep(waitMs);
+            }
+        }
+        return endpoint;
+    }
+
+    private void clearResumeState()
+    {
+        sessionId.set(null);
+        lastSequence.set(null);
+    }
+
+    private void armHelloTimeout()
+    {
+        cancelHelloTimeout();
+        helloTimeoutFuture = scheduler.schedule(
+                () -> {
+                    logger.warn("连接后 {} ms 内未收到 Hello，准备重连", HELLO_TIMEOUT_MS);
+                    closeCurrent("hello-timeout");
+                },
+                HELLO_TIMEOUT_MS,
+                TimeUnit.MILLISECONDS);
     }
 
     private void cancelHeartbeat()
     {
         ScheduledFuture<?> future = heartbeatFuture;
         if (future != null) {
-            future.cancel(true);
+            future.cancel(false);
             heartbeatFuture = null;
+        }
+    }
+
+    private void cancelHelloTimeout()
+    {
+        ScheduledFuture<?> future = helloTimeoutFuture;
+        if (future != null) {
+            future.cancel(false);
+            helloTimeoutFuture = null;
+        }
+    }
+
+    private void armAuthTimeout()
+    {
+        cancelAuthTimeout();
+        authTimeoutFuture = scheduler.schedule(
+                () -> {
+                    logger.warn("Identify/Resume 后 {} ms 内未就绪，准备重连", AUTH_TIMEOUT_MS);
+                    closeCurrent("auth-timeout");
+                },
+                AUTH_TIMEOUT_MS,
+                TimeUnit.MILLISECONDS);
+    }
+
+    private void cancelAuthTimeout()
+    {
+        ScheduledFuture<?> future = authTimeoutFuture;
+        if (future != null) {
+            future.cancel(false);
+            authTimeoutFuture = null;
         }
     }
 
@@ -353,8 +523,18 @@ public class TencentGatewayClient
         @Override
         public void onOpen(WebSocket webSocket)
         {
+            if (finished.get()) {
+                try {
+                    webSocket.abort();
+                }
+                catch (Exception ignored) {
+                }
+                return;
+            }
             socket.set(webSocket);
+            lastInboundNanos = System.nanoTime();
             logger.info("Tencent Gateway WebSocket 已打开");
+            armHelloTimeout();
             webSocket.request(1);
         }
 
@@ -389,6 +569,7 @@ public class TencentGatewayClient
         @Override
         public CompletionStage<?> onPing(WebSocket webSocket, ByteBuffer message)
         {
+            lastInboundNanos = System.nanoTime();
             webSocket.sendPong(message);
             webSocket.request(1);
             return null;
@@ -398,6 +579,7 @@ public class TencentGatewayClient
         public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason)
         {
             logger.warn("Tencent Gateway 已关闭: {} {}", statusCode, reason);
+            applyCloseCode(statusCode);
             finish();
             return null;
         }

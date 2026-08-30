@@ -28,6 +28,9 @@ public class TencentOpenApiClient
     private static final Logger logger = LoggerFactory.getLogger(TencentOpenApiClient.class);
     private static final int IMAGE_FILE_TYPE = 1;
     private static final int MD5_10M_BYTES = 10_002_432;
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(60);
+    private static final Duration FILE_UPLOAD_TIMEOUT = Duration.ofSeconds(180);
+    private static final Duration MEDIA_MESSAGE_TIMEOUT = Duration.ofSeconds(120);
 
     private final TokenMonitor tokenMonitor;
     private final HttpClient httpClient;
@@ -41,13 +44,14 @@ public class TencentOpenApiClient
         this.tokenMonitor = tokenMonitor;
         this.apiBase = resolveApiBase(sandbox, apiBaseOverride);
         this.httpClient = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
                 .connectTimeout(Duration.ofSeconds(20))
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
         logger.info("Tencent OpenAPI 基址: {}", this.apiBase);
     }
 
-    public String getGatewayUrl()
+    public GatewayEndpoint getGateway()
     {
         JSONObject json = requestJson("GET", "/gateway/bot", null, true);
         logger.info("Tencent Gateway 接入点响应: {}", json);
@@ -55,7 +59,71 @@ public class TencentOpenApiClient
         if (url == null || url.isBlank()) {
             throw new LazybotRuntimeException("获取 QQ Gateway 地址失败: " + json);
         }
-        return url;
+        JSONObject limit = json.getJSONObject("session_start_limit");
+        int remaining = Integer.MAX_VALUE;
+        long resetAfterMs = 0L;
+        int maxConcurrency = 1;
+        if (limit != null) {
+            remaining = limit.getIntValue("remaining", Integer.MAX_VALUE);
+            resetAfterMs = limit.getLongValue("reset_after", 0L);
+            maxConcurrency = Math.max(1, limit.getIntValue("max_concurrency", 1));
+        }
+        return new GatewayEndpoint(
+                url,
+                Math.max(1, json.getIntValue("shards", 1)),
+                remaining,
+                resetAfterMs,
+                maxConcurrency);
+    }
+
+    public record GatewayEndpoint(
+            String url,
+            int shards,
+            int remaining,
+            long resetAfterMs,
+            int maxConcurrency)
+    {
+    }
+
+    public JSONArray listCommandPanels(String scope)
+    {
+        JSONArray all = new JSONArray();
+        String cursor = "";
+        for (int page = 0; page < 10; page++) {
+            String path = "/v2/panels?scope=" + scope + "&limit=20";
+            if (!cursor.isBlank()) {
+                path += "&cursor=" + java.net.URLEncoder.encode(cursor, StandardCharsets.UTF_8);
+            }
+            JSONObject json = requestJson("GET", path, null, true);
+            JSONArray records = json.getJSONArray("records");
+            if (records != null) {
+                all.addAll(records);
+            }
+            if (Boolean.TRUE.equals(json.getBoolean("is_end"))) {
+                break;
+            }
+            cursor = json.getString("next_cursor");
+            if (cursor == null || cursor.isBlank()) {
+                break;
+            }
+        }
+        return all;
+    }
+
+    public String createCommandPanel(JSONObject body)
+    {
+        JSONObject json = requestJson("POST", "/v2/panels", body, true);
+        return json.getString("panel_id");
+    }
+
+    public void updateCommandPanel(String panelId, JSONObject body)
+    {
+        requestJson("PUT", "/v2/panels/" + panelId, body, true);
+    }
+
+    public void deleteCommandPanel(String panelId)
+    {
+        requestJson("DELETE", "/v2/panels/" + panelId, null, true);
     }
 
     public void sendText(TencentScene scene, String targetOpenid, String messageId, int msgSeq, String content)
@@ -80,13 +148,26 @@ public class TencentOpenApiClient
         body.put("media", media);
         attachReply(body, messageId, msgSeq);
         try {
-            postMessage(scene, targetOpenid, body);
+            postMessage(scene, targetOpenid, body, MEDIA_MESSAGE_TIMEOUT);
         }
         catch (LazybotRuntimeException first) {
+            if (isTimeout(first)) {
+                logger.warn("发送图片回包超时，消息可能已送达: {}", first.getMessage());
+                return;
+            }
             String message = first.getMessage();
             if (message != null && (message.contains("22006") || message.contains("消息类型"))) {
                 body.put("content", " ");
-                postMessage(scene, targetOpenid, body);
+                try {
+                    postMessage(scene, targetOpenid, body, MEDIA_MESSAGE_TIMEOUT);
+                }
+                catch (LazybotRuntimeException retry) {
+                    if (isTimeout(retry)) {
+                        logger.warn("发送图片回包超时，消息可能已送达: {}", retry.getMessage());
+                        return;
+                    }
+                    throw retry;
+                }
                 return;
             }
             throw first;
@@ -110,11 +191,11 @@ public class TencentOpenApiClient
             return uploadFileData(scene, targetOpenid, fileName, imageBytes);
         }
         catch (Exception e) {
-            logger.warn("file_data 上传失败，改用分片上传: {}", e.getMessage());
+            logger.warn("file_data 上传失败，改用分片上传: {}", e.toString());
             return uploadChunked(scene, targetOpenid, fileName, imageBytes);
         }
     }
-
+// why sending a image become so hard on tencent? who design this api
     private String uploadFileData(TencentScene scene, String targetOpenid, String fileName, byte[] imageBytes)
     {
         JSONObject body = new JSONObject();
@@ -122,7 +203,8 @@ public class TencentOpenApiClient
         body.put("file_name", fileName);
         body.put("srv_send_msg", false);
         body.put("file_data", Base64.getEncoder().encodeToString(imageBytes));
-        JSONObject json = requestJson("POST", filesPath(scene, targetOpenid), body, true);
+        logger.info("Tencent file_data 上传 bytes={} file_name={}", imageBytes.length, fileName);
+        JSONObject json = requestJson("POST", filesPath(scene, targetOpenid), body, true, FILE_UPLOAD_TIMEOUT);
         return requireFileInfo(json);
     }
 
@@ -147,13 +229,19 @@ public class TencentOpenApiClient
                     "POST", uploadPreparePath(scene, targetOpenid), prepareBody, true);
             String uploadId = prepared.getString("upload_id");
             if (uploadId == null || uploadId.isBlank()) {
-                throw new LazybotRuntimeException("分片预上传未返回 upload_id");
+                throw new LazybotRuntimeException("分片预上传未返回 upload_id: " + prepared);
             }
             int blockSize = parsePositive(prepared.get("block_size"), imageBytes.length);
             JSONArray parts = prepared.getJSONArray("parts");
             if (parts == null || parts.isEmpty()) {
-                throw new LazybotRuntimeException("分片预上传未返回 parts");
+                throw new LazybotRuntimeException("分片预上传未返回 parts: " + prepared);
             }
+            logger.info(
+                    "Tencent 分片预上传成功 upload_id={} block_size={} parts={} bytes={}",
+                    uploadId,
+                    blockSize,
+                    parts.size(),
+                    imageBytes.length);
             for (int i = 0; i < parts.size(); i++) {
                 JSONObject part = parts.getJSONObject(i);
                 int index = part.getIntValue("index", i);
@@ -174,12 +262,11 @@ public class TencentOpenApiClient
                 requestJson("POST", uploadPartFinishPath(scene, targetOpenid), finish, true);
             }
 
-            JSONObject merge = new JSONObject();
-            merge.put("file_type", IMAGE_FILE_TYPE);
-            merge.put("srv_send_msg", false);
-            merge.put("file_name", fileName);
-            merge.put("upload_id", uploadId);
-            JSONObject json = requestJson("POST", filesPath(scene, targetOpenid), merge, true);
+            JSONObject json = completeUpload(scene, targetOpenid, uploadId);
+            logger.info(
+                    "Tencent 图片分片上传完成, bytes={}, ttl={}",
+                    imageBytes.length,
+                    json.get("ttl"));
             return requireFileInfo(json);
         }
         catch (LazybotRuntimeException e) {
@@ -196,7 +283,8 @@ public class TencentOpenApiClient
             throw new LazybotRuntimeException("分片预签名 URL 为空");
         }
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-                .timeout(Duration.ofSeconds(60))
+                .version(HttpClient.Version.HTTP_1_1)
+                .timeout(Duration.ofSeconds(120))
                 .PUT(HttpRequest.BodyPublishers.ofByteArray(chunk))
                 .build();
         try {
@@ -215,26 +303,42 @@ public class TencentOpenApiClient
             throw e;
         }
         catch (Exception e) {
-            throw new LazybotRuntimeException("分片 PUT 失败", e);
+            throw new LazybotRuntimeException(
+                    "分片 PUT 失败 (" + e.getClass().getSimpleName() + ": " + e.getMessage() + ")",
+                    e);
         }
     }
 
     private void postMessage(TencentScene scene, String targetOpenid, JSONObject body)
     {
-        requestJson("POST", messagesPath(scene, targetOpenid), body, true);
+        postMessage(scene, targetOpenid, body, DEFAULT_TIMEOUT);
+    }
+
+    private void postMessage(TencentScene scene, String targetOpenid, JSONObject body, Duration timeout)
+    {
+        requestJson("POST", messagesPath(scene, targetOpenid), body, true, timeout);
     }
 
     private JSONObject requestJson(String method, String path, JSONObject body, boolean retryUnauthorized)
     {
+        return requestJson(method, path, body, retryUnauthorized, DEFAULT_TIMEOUT);
+    }
+
+    private JSONObject requestJson(
+            String method, String path, JSONObject body, boolean retryUnauthorized, Duration timeout)
+    {
         HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(apiBase + path))
-                .timeout(Duration.ofSeconds(60))
+                .timeout(timeout)
                 .header("Authorization", "QQBot " + TokenMonitor.getTencentToken())
                 .header("X-Union-Appid", tokenMonitor.getTencentAppId());
         if ("GET".equals(method)) {
             builder.GET();
         }
+        else if ("DELETE".equals(method)) {
+            builder.DELETE();
+        }
         else {
-            builder.header("Content-Type", "application/json; charset=utf-8");
+            builder.header("Content-Type", "application/json");
             builder.method(
                     method,
                     HttpRequest.BodyPublishers.ofString(
@@ -247,11 +351,14 @@ public class TencentOpenApiClient
             int status = response.statusCode();
             if (status == 401 && retryUnauthorized) {
                 tokenMonitor.refreshTencentToken();
-                return requestJson(method, path, body, false);
+                return requestJson(method, path, body, false, timeout);
             }
             JSONObject json = parseObject(response.body());
+            if (status == 204) {
+                return json == null ? new JSONObject() : json;
+            }
             if (status < 200 || status >= 300 || isApiError(json)) {
-                throw new LazybotRuntimeException(formatApiError(status, json, response.body()));
+                throw new LazybotRuntimeException(formatApiError(method, path, status, json, response.body()));
             }
             return json == null ? new JSONObject() : json;
         }
@@ -263,7 +370,26 @@ public class TencentOpenApiClient
             throw e;
         }
         catch (Exception e) {
-            throw new LazybotRuntimeException("调用 QQ OpenAPI 失败: " + path, e);
+            throw new LazybotRuntimeException(
+                    "调用 QQ OpenAPI 失败: " + method + " " + path
+                            + " (" + e.getClass().getSimpleName() + ": " + e.getMessage() + ")",
+                    e);
+        }
+    }
+
+    private JSONObject completeUpload(TencentScene scene, String targetOpenid, String uploadId)
+    {
+        JSONObject merge = new JSONObject();
+        merge.put("file_type", IMAGE_FILE_TYPE);
+        merge.put("upload_id", uploadId);
+        try {
+            return requestJson("POST", filesPath(scene, targetOpenid), merge, true, FILE_UPLOAD_TIMEOUT);
+        }
+        catch (LazybotRuntimeException mergeError) {
+            logger.warn("分片合并 file_type+upload_id 失败，改为只传 upload_id: {}", mergeError.getMessage());
+            JSONObject retry = new JSONObject();
+            retry.put("upload_id", uploadId);
+            return requestJson("POST", filesPath(scene, targetOpenid), retry, true, FILE_UPLOAD_TIMEOUT);
         }
     }
 
@@ -303,6 +429,22 @@ public class TencentOpenApiClient
                 : "/v2/users/" + targetOpenid + "/upload_part_finish";
     }
 
+    private static boolean isTimeout(Throwable throwable)
+    {
+        Throwable current = throwable;
+        while (current != null) {
+            if (current instanceof java.net.http.HttpTimeoutException) {
+                return true;
+            }
+            String message = current.getMessage();
+            if (message != null && message.contains("HttpTimeoutException")) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
+    }
+
     private static String requireFileInfo(JSONObject json)
     {
         String fileInfo = json.getString("file_info");
@@ -326,16 +468,30 @@ public class TencentOpenApiClient
         return false;
     }
 
-    private static String formatApiError(int status, JSONObject json, String raw)
+    private static String formatApiError(String method, String path, int status, JSONObject json, String raw)
     {
+        StringBuilder text = new StringBuilder("QQ OpenAPI 错误 HTTP ")
+                .append(status)
+                .append(' ')
+                .append(method)
+                .append(' ')
+                .append(path);
         if (json != null) {
-            String message = json.getString("message");
             Object err = json.get("err_code") != null ? json.get("err_code") : json.get("code");
-            if (message != null) {
-                return "QQ OpenAPI 错误 HTTP " + status + " code=" + err + " " + message;
+            if (err != null) {
+                text.append(" code=").append(err);
             }
+            String message = json.getString("message");
+            if (message != null && !message.isBlank()) {
+                text.append(' ').append(message);
+            }
+            Object limit = json.get("limit");
+            if (limit != null) {
+                text.append(" limit=").append(limit);
+            }
+            return text.toString();
         }
-        return "QQ OpenAPI 错误 HTTP " + status + ": " + trim(raw);
+        return text.append(": ").append(trim(raw)).toString();
     }
 
     private static JSONObject parseObject(String body)

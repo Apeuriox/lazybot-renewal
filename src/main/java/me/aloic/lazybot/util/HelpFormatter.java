@@ -31,4 +31,30 @@ public class HelpFormatter {
         sb.append("完成时间: ").append(help.getInitialReleaseDate());
         return sb.toString().trim();
     }
+
+    public static String panelDescription(String helpText, int maxChars)
+    {
+        if (helpText == null || helpText.isBlank()) {
+            return "";
+        }
+        String description = null;
+        for (String line : helpText.split("\\R")) {
+            String trimmed = line.trim();
+            if (trimmed.startsWith("描述:")) {
+                description = trimmed.substring("描述:".length()).trim();
+                break;
+            }
+        }
+        if (description == null || description.isBlank()) {
+            description = helpText.replace("[Lazybot]", "").strip();
+            int newline = description.indexOf('\n');
+            if (newline >= 0) {
+                description = description.substring(0, newline).strip();
+            }
+        }
+        if (description.length() <= maxChars) {
+            return description;
+        }
+        return description.substring(0, maxChars);
+    }
 }

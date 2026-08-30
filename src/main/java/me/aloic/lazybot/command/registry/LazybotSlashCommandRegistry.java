@@ -7,7 +7,11 @@ import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -23,10 +27,12 @@ public class LazybotSlashCommandRegistry
             Class<?> commandClass = AopProxyUtils.ultimateTargetClass(command);
             LazybotCommandMapping mapping =
                     commandClass.getAnnotation(LazybotCommandMapping.class);
-            if (mapping != null) {
+            if (mapping != null && mapping.value().length > 0) {
+                String primaryName = normalize(mapping.value()[0]);
                 RegisteredCommand registeredCommand =
                         new RegisteredCommand(command,
-                                commandClass.isAnnotationPresent(SkipLazybotCommandPreprocessing.class)
+                                commandClass.isAnnotationPresent(SkipLazybotCommandPreprocessing.class),
+                                primaryName
                         );
                 for(String commandName : mapping.value()) {
                     commandMap.put(normalize(commandName), registeredCommand);
@@ -41,6 +47,17 @@ public class LazybotSlashCommandRegistry
         return registeredCommand == null
                 ? null
                 : registeredCommand.command();
+    }
+
+    public List<NamedCommand> listUniqueCommands()
+    {
+        Map<LazybotSlashCommand, NamedCommand> unique = new LinkedHashMap<>();
+        commandMap.values().stream()
+                .sorted(Comparator.comparing(RegisteredCommand::primaryName))
+                .forEach(registered -> unique.putIfAbsent(
+                        registered.command(),
+                        new NamedCommand(registered.primaryName(), registered.command())));
+        return new ArrayList<>(unique.values());
     }
 
     public boolean shouldSkipPreprocessing(String commandName)
@@ -60,7 +77,12 @@ public class LazybotSlashCommandRegistry
 
     private record RegisteredCommand(
             LazybotSlashCommand command,
-            boolean skipPreprocessing)
+            boolean skipPreprocessing,
+            String primaryName)
+    {
+    }
+
+    public record NamedCommand(String primaryName, LazybotSlashCommand command)
     {
     }
 }

@@ -15,9 +15,9 @@ import java.util.HexFormat;
  * Tencent webhook signing: seed is the bot secret repeated until at least
  * 32 bytes, then truncated. Matches the Go SDK {@code ed25519.GenerateKey} flow.
  */
-public final class TencentEd25519
+public final class TencentWebHookHelper
 {
-    private TencentEd25519()
+    private TencentWebHookHelper()
     {
     }
 
