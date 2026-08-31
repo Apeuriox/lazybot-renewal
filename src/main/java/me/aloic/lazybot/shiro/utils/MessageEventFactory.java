@@ -69,6 +69,33 @@ public class MessageEventFactory
         }
     }
 
+    /**
+     * Parse a raw chat string (Tencent group @ / C2C) using the same
+     * prefix, mode suffix and panel-version rules as OneBot.
+     */
+    public LazybotSlashCommandEvent parseTextCommand(String command)
+    {
+        LazybotSlashCommandEvent slashCommandEvent = new LazybotSlashCommandEvent();
+        slashCommandEvent.setScorePanelVersion(1);
+        try {
+            String message = convertString(command);
+            if (!isCommandCandidate(message)) {
+                slashCommandEvent.setIstSlashCommand(false);
+                return slashCommandEvent;
+            }
+            slashCommandEvent.setIstSlashCommand(analyzeCommand(slashCommandEvent, message, true));
+            return slashCommandEvent;
+        }
+        catch (IllegalArgumentException iae) {
+            slashCommandEvent.setIstSlashCommand(false);
+            return slashCommandEvent;
+        }
+        catch (Exception e) {
+            logger.error("解析 Tencent 指令时出错", e);
+            throw new LazybotRuntimeException("解析参数时出错", e);
+        }
+    }
+
     private boolean analyzeCommand(LazybotSlashCommandEvent event,
                                    String command,
                                    boolean requireRegisteredCommand) {

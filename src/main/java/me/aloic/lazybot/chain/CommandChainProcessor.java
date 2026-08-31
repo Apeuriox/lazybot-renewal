@@ -25,4 +25,9 @@ public class CommandChainProcessor
         chain.doHandle(bot, event, command);
     }
 
+    public void processTencent(LazybotSlashCommandEvent event, LazybotSlashCommand command) throws Exception {
+        CommandHandlerChain chain = new CommandHandlerChain(handlers);
+        chain.doHandleTencent(event, command);
+    }
+
 }

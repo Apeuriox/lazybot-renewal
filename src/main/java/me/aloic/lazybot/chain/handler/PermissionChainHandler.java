@@ -57,6 +57,16 @@ public class PermissionChainHandler implements CommandHandlerInterface {
             chain.doHandle(bot, event, command);
         }
     }
+
+    @Override
+    public void handleTencent(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception
+    {
+        if (!doCheck("GLOBAL", 0L, command, event.getScorePanelVersion())) {
+            throw new LazybotRuntimeException("此指令已被开发者禁用");
+        }
+        chain.doHandleTencent(event, command);
+    }
+
     private boolean doCheck(String type, Long id, LazybotSlashCommand command, Integer version)
     {
         try{

@@ -1,6 +1,7 @@
 package me.aloic.lazybot.osu.service;
 
 import com.mikuac.shiro.core.Bot;
+import me.aloic.lazybot.command.CommandReply;
 import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.parameter.UpdatePanelVersionParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
@@ -20,11 +21,17 @@ public interface UserService
 
     void linkUser(Bot bot, LazybotSlashCommandEvent event);
 
+    void linkUser(CommandReply reply, LazybotSlashCommandEvent event);
+
     void linkStarMoon(Bot bot, LazybotSlashCommandEvent event);
 
     void unlinkUser(SlashCommandInteractionEvent event);
 
     void unlinkUser(Bot bot, LazybotSlashCommandEvent event);
+
+    void unlinkUser(CommandReply reply, LazybotSlashCommandEvent event);
+
+    void updateDefaultSubset(CommandReply reply, LazybotSlashCommandEvent event);
 
     String updatedUserPreferredPanelVersion(UpdatePanelVersionParameter params);
 }
