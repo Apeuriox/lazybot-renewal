@@ -108,13 +108,13 @@ public class MessageDeduplicator
     private boolean reserveDelivery(String key)
     {
         long now = System.nanoTime();
-        //ok i shall add some comments cuz someone cant understand my code if it is kinda abstract.
-        //this while true loop below is a lock-free CAS loop, for multithread to read and modified the same object without synchronized
+        //ok I shall add some comments cuz someone cant understand my code if it is kinda abstract.
+        //this while true loop below is a lock-free CAS loop, for multithreads to read and modify the same object without 'synchronized'
         //for example there are 2 threads.
         //1. Thread A and B read the same old expired timestamp at the same time.
-        //2. Thread A modified existing object's value to IN_FLIGHT successfully, returning TRUE.
+        //2. Thread A modified the existing object's value to IN_FLIGHT successfully, returning TRUE.
         //3. Thread B failed to modified, cuz the value was already modified by Thread A.
-        //4. Thread B starting the second loop to reread value.
+        //4. Thread B started the second loop to reread the value.
         //5. Thread B read the existing value as IN_FLIGHT, returning FALSE.
         //
         //this works cuz putIfAbsent and replace methods are ATOMIC.
