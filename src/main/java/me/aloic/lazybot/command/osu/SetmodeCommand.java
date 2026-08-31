@@ -3,7 +3,6 @@ package me.aloic.lazybot.command.osu;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
-import me.aloic.lazybot.command.CommandReply;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
@@ -29,12 +28,6 @@ public class SetmodeCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
         userService.updateDefaultSubset(bot, event);
-    }
-
-    @Override
-    public void execute(CommandReply reply, LazybotSlashCommandEvent event)
-    {
-        userService.updateDefaultSubset(reply, event);
     }
 
     @Override

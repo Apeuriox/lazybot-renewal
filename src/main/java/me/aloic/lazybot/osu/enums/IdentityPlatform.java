@@ -5,7 +5,6 @@ import java.util.Locale;
 public enum IdentityPlatform
 {
     QQ("qq"),
-    TENCENT("tencent"),
     DISCORD("discord");
 
     private final String databaseValue;
@@ -27,7 +26,6 @@ public enum IdentityPlatform
         }
         return switch (value.toLowerCase(Locale.ROOT)) {
             case "qq" -> QQ;
-            case "tencent" -> TENCENT;
             case "discord" -> DISCORD;
             default -> throw new IllegalArgumentException("不支持的平台类型: " + value);
         };

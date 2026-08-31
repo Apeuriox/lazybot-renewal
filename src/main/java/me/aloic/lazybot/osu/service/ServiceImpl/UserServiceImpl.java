@@ -4,7 +4,6 @@ import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import me.aloic.lazybot.command.CommandReply;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -152,37 +151,6 @@ public class UserServiceImpl implements UserService
     }
 
     @Override
-    public void linkUser(CommandReply reply, LazybotSlashCommandEvent event)
-    {
-        IdentityPlatform platform = requireTencentPlatform(event);
-        String username = event.getCommandParameters() == null
-                ? ""
-                : String.join(" ", event.getCommandParameters());
-        if ("oauth".equalsIgnoreCase(username.strip())) {
-            if (isGroupScene(event)) {
-                reply.sendText("[Lazybot] 群聊无法发送授权链接，请私聊机器人发送 /link oauth");
-                return;
-            }
-            String url = oauthService.createAuthorizationUrl(platform, event.getPlatformUserId());
-            reply.sendText("[Lazybot] 请在 10 分钟内打开此链接并登录 osu! 完成授权：\n" + url);
-            return;
-        }
-        isValidUsername(username);
-        log.info("正在手动绑定 Bancho 用户 (Tencent OpenID)");
-        PlayerInfoDTO player = dataExtractor.extractPlayerInfoDTO(username);
-        OsuMode defaultMode = OsuMode.getMode(player.getPlaymode());
-        checkUserBindability(player);
-        identityService.bindManual(
-                platform,
-                event.getPlatformUserId(),
-                OsuServer.BANCHO,
-                player.getId(),
-                player.getUsername(),
-                defaultMode);
-        reply.sendText("[Lazybot] 成功绑定用户: " + player.getUsername());
-    }
-
-    @Override
     public void linkStarMoon(Bot bot, LazybotSlashCommandEvent event)
     {
         String username = String.join(" ", event.getCommandParameters())
@@ -225,45 +193,6 @@ public class UserServiceImpl implements UserService
                 event.getMessageEvent().getGroupId(),
                 MsgUtils.builder().text("[Lazybot] 成功解除绑定").build(),
                 false);
-    }
-
-    @Override
-    public void unlinkUser(CommandReply reply, LazybotSlashCommandEvent event)
-    {
-        IdentityPlatform platform = requireTencentPlatform(event);
-        identityService.unlink(platform, event.getPlatformUserId(), OsuServer.BANCHO);
-        reply.sendText("[Lazybot] 成功解除绑定");
-    }
-
-    @Override
-    public void updateDefaultSubset(CommandReply reply, LazybotSlashCommandEvent event)
-    {
-        if (event.getCommandParameters() == null || event.getCommandParameters().isEmpty()) {
-            throw new LazybotRuntimeException("请输入模式");
-        }
-        OsuMode mode = OsuMode.getMode(event.getCommandParameters().getFirst());
-        identityService.updateDefaultMode(
-                requireTencentPlatform(event),
-                event.getPlatformUserId(),
-                mode);
-        reply.sendText("[Lazybot] 已成功更改模式为: " + mode.getDescribe());
-    }
-
-    private static IdentityPlatform requireTencentPlatform(LazybotSlashCommandEvent event)
-    {
-        IdentityPlatform platform = event.getIdentityPlatform();
-        if (platform == null) {
-            platform = IdentityPlatform.TENCENT;
-        }
-        if (event.getPlatformUserId() == null || event.getPlatformUserId().isBlank()) {
-            throw new LazybotRuntimeException("无法识别当前用户身份");
-        }
-        return platform;
-    }
-
-    private static boolean isGroupScene(LazybotSlashCommandEvent event)
-    {
-        return event.getPlatformChannelId() != null && !event.getPlatformChannelId().isBlank();
     }
 
     public static void isValidUsername(String input)

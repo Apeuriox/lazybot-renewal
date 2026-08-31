@@ -3,7 +3,6 @@ package me.aloic.lazybot.command.osu;
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
-import me.aloic.lazybot.command.CommandReply;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
@@ -63,19 +62,6 @@ public class CardCommand implements LazybotSlashCommand
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderMoelleuxCard(playerService.cardMoelleux(setupParameter(event, proxy.getUserBinding(event)))));
         }
-    }
-
-    @Override
-    public void execute(CommandReply reply, LazybotSlashCommandEvent event) throws Exception
-    {
-        UserBindingPO tokenPO = proxy.getUserBinding(event);
-        if (event.getScorePanelVersion() == 1) {
-            reply.sendImage(RendererDistributor.renderPlayerInfoVOToCard(
-                    playerService.getPlayerInfoVO(setupParameterGeneral(event, tokenPO))));
-            return;
-        }
-        reply.sendImage(RendererDistributor.renderMoelleuxCard(
-                playerService.cardMoelleux(setupParameter(event, tokenPO))));
     }
 
     @Override

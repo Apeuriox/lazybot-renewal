@@ -46,18 +46,8 @@ discord:
 tencent:
   bot:
     id: 1611727
-    secret: your_tencent_bot_app_secret
-    token: unused_legacy_token
-    # 独立于 OneBot/Shiro。默认 WebSocket 接入，用户身份用 OpenID。
-    enabled: false
-    mode: websocket
-    sandbox: false
-    webhook-path: /tencent/callback
-    # GROUP_AND_C2C_EVENT = 1 << 25，需在开放平台开通群聊/单聊事件
-    intents: 33554432
-    commands: bp,best,pbp,b,card,link,unlink,setmode,help
-    # token-url: https://bots.qq.com/app/getAppAccessToken
-    # api-base: https://api.sgroup.qq.com
+    secret: your_official_tencent_bot_secret_itIsAbandoned
+    token: above
 
 lazybot:
   prefix: /

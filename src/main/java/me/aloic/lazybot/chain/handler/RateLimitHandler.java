@@ -65,30 +65,4 @@ public class RateLimitHandler implements CommandHandlerInterface {
         }
         chain.doHandle(bot, event, command);
     }
-
-    @Override
-    public void handleTencent(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception
-    {
-        LazybotRateLimit rateLimit = command.getClass().getAnnotation(LazybotRateLimit.class);
-        if (rateLimit == null) {
-            chain.doHandleTencent(event, command);
-            return;
-        }
-
-        String key = buildTencentKey(rateLimit.scope(), event);
-        if (!rateLimitManager.tryConsume(key, rateLimit)) {
-            event.getReply().sendText("[Lazybot] 达到速率限制，请等待50秒");
-            return;
-        }
-        chain.doHandleTencent(event, command);
-    }
-
-    private static String buildTencentKey(LazybotRateLimit.Scope scope, LazybotSlashCommandEvent event)
-    {
-        return switch (scope) {
-            case USER -> "user:" + event.getPlatformUserId() + ":cmd:" + event.getCommandType();
-            case CHANNEL -> "channel:" + event.getPlatformChannelId() + ":cmd:" + event.getCommandType();
-            case GLOBAL -> "global:cmd:" + event.getCommandType();
-        };
-    }
 }

@@ -40,17 +40,4 @@ public class HelpChainHandler implements CommandHandlerInterface {
         }
         chain.doHandle(bot, event, command);
     }
-
-    @Override
-    public void handleTencent(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception
-    {
-        if (event.getCommandParameters() != null && !event.getCommandParameters().isEmpty()) {
-            if ("*help".equalsIgnoreCase(event.getCommandParameters().getFirst())
-                    || "*h".equalsIgnoreCase(event.getCommandParameters().getFirst())) {
-                event.getReply().sendText(command.getHelp());
-                return;
-            }
-        }
-        chain.doHandleTencent(event, command);
-    }
 }

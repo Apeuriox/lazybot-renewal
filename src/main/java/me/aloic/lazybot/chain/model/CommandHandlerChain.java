@@ -28,11 +28,4 @@ public class CommandHandlerChain {
         }
     }
 
-    public void doHandleTencent(LazybotSlashCommandEvent event, LazybotSlashCommand command) throws Exception {
-        if (iterator.hasNext()) {
-            CommandHandlerInterface next = iterator.next();
-            next.handleTencent(event, command, this);
-        }
-    }
-
 }

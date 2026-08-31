@@ -63,20 +63,6 @@ public class SlashCommandProcessor
                                 : "出现预期外的错误，请稍后重试")));
     }
 
-    public void processTencent(LazybotSlashCommandEvent event)
-    {
-        processCommand(new CommandExecution(
-                event.getCommandType(),
-                "Tencent",
-                event.getPlatformUserId(),
-                event.getPlatformChannelId() == null ? "c2c" : event.getPlatformChannelId(),
-                command -> commandChainProcessor.processTencent(event, command),
-                (throwable, expected) -> replyTencent(
-                        event,
-                        expected ? safeMessage(throwable)
-                                : "出现预期外的错误，请稍后重试")));
-    }
-
     @Async("virtualThreadExecutor")
     public CompletableFuture<Void> processTest(LazybotSlashCommandEvent event)
     {
@@ -161,14 +147,6 @@ public class SlashCommandProcessor
                         .text("[Lazybot] " + message)
                         .build(),
                 false);
-    }
-
-    private static void replyTencent(LazybotSlashCommandEvent event, String message)
-    {
-        if (event.getReply() == null) {
-            return;
-        }
-        event.getReply().sendText("[Lazybot] " + message);
     }
 
     private static void replyDiscord(

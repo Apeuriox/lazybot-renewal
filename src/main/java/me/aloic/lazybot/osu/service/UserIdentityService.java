@@ -65,48 +65,49 @@ public class UserIdentityService
                                     String username,
                                     OsuMode defaultMode)
     {
-        OsuAccountPO existingAccount = osuAccountMapper.selectByServerIdentityForUpdate(
-                server.databaseValue(), osuUserId);
-        PlatformIdentityPO platformIdentity = platformIdentityMapper.selectByPlatformIdentity(
-                platform.databaseValue(), platformUserId);
-        if (platformIdentity != null) {
-            platformIdentity = platformIdentityMapper.selectByIdForUpdate(platformIdentity.getId());
+        if (osuAccountMapper.selectByServerIdentity(server.databaseValue(), osuUserId) != null) {
+            throw new LazybotRuntimeException(
+                    "该 " + server.databaseValue() + " 用户已被绑定");
         }
 
-        if (platformIdentity != null) {
+        PlatformIdentityPO platformIdentity = platformIdentityMapper.selectByPlatformIdentity(
+                platform.databaseValue(), platformUserId);
+        Integer lazybotUserId;
+        if (platformIdentity == null) {
+            lazybotUserId = createLazybotUser();
+            platformIdentity = new PlatformIdentityPO();
+            platformIdentity.setLazybot_user_id(lazybotUserId);
+            platformIdentity.setPlatform(platform.databaseValue());
+            platformIdentity.setPlatform_user_id(platformUserId);
+            platformIdentity.setCreated_at(LocalDateTime.now());
+            platformIdentityMapper.insert(platformIdentity);
+        }
+        else {
+            lazybotUserId = platformIdentity.getLazybot_user_id();
             OsuAccountPO current = osuAccountMapper.selectByUserAndServer(
-                    platformIdentity.getLazybot_user_id(), server.databaseValue());
+                    lazybotUserId, server.databaseValue());
             if (current != null) {
-                if (osuUserId.equals(current.getOsu_user_id())) {
-                    return findBinding(platform, platformUserId, server);
-                }
                 throw new LazybotRuntimeException(
                         "您已绑定用户: " + current.getUsername_cache());
             }
-            if (existingAccount != null) {
-                attachIdentityToAccountOwner(platformIdentity, existingAccount);
-                synchronizeDefaultMode(existingAccount.getLazybot_user_id(), defaultMode);
-                return findBinding(platform, platformUserId, server);
-            }
-            insertManualAccount(
-                    platformIdentity.getLazybot_user_id(),
-                    server,
-                    osuUserId,
-                    username);
-            synchronizeDefaultMode(platformIdentity.getLazybot_user_id(), defaultMode);
-            return findBinding(platform, platformUserId, server);
         }
 
-        if (existingAccount != null) {
-            insertPlatformIdentity(
-                    existingAccount.getLazybot_user_id(), platform, platformUserId);
-            synchronizeDefaultMode(existingAccount.getLazybot_user_id(), defaultMode);
-            return findBinding(platform, platformUserId, server);
+        OsuAccountPO account = new OsuAccountPO();
+        account.setLazybot_user_id(lazybotUserId);
+        account.setServer(server.databaseValue());
+        account.setOsu_user_id(osuUserId);
+        account.setUsername_cache(username);
+        account.setLink_method(AccountLinkMethod.MANUAL.databaseValue());
+        account.setCreated_at(LocalDateTime.now());
+        account.setUpdated_at(LocalDateTime.now());
+        try {
+            osuAccountMapper.insert(account);
+        }
+        catch (DuplicateKeyException e) {
+            throw new LazybotRuntimeException(
+                    "该 " + server.databaseValue() + " 用户已被绑定", e);
         }
 
-        Integer lazybotUserId = createLazybotUser();
-        insertPlatformIdentity(lazybotUserId, platform, platformUserId);
-        insertManualAccount(lazybotUserId, server, osuUserId, username);
         synchronizeDefaultMode(lazybotUserId, defaultMode);
         return findBinding(platform, platformUserId, server);
     }
@@ -133,10 +134,10 @@ public class UserIdentityService
     /**
      * Completes a proven OAuth binding.
      *
-     * <p>If the osu! account already belongs to another Lazybot user, this
-     * platform identity is attached to that user so Discord / QQ / Tencent can
-     * share one osu! binding. An OAuth-verified account on the current identity
-     * is never overwritten implicitly.</p>
+     * <p>An OAuth account can replace a manual account owned by the same Lazybot
+     * user. A manually claimed target osu! account can also be transferred to the
+     * authenticated user. An existing OAuth-verified binding is never overwritten
+     * implicitly.</p>
      */
     @Transactional
     public void bindOAuth(
@@ -160,13 +161,24 @@ public class UserIdentityService
 
         if (target != null && !target.getLazybot_user_id().equals(userId))
         {
-            if (current != null && !current.getId().equals(target.getId())) {
-                rejectReplacingVerifiedAccount(current);
-                deleteAccountExplicitly(current);
-            }
+            if (AccountLinkMethod.OAUTH.databaseValue().equals(target.getLink_method()))
+            {
+                if (current != null && !current.getId().equals(target.getId())) {
+                    rejectReplacingVerifiedAccount(current);
+                }
 
-            userId = target.getLazybot_user_id();
-            attachIdentityToAccountOwner(identity, target);
+                userId = target.getLazybot_user_id();
+                platformIdentityMapper.reassignToUser(platformIdentityId, userId);
+            }
+            else
+            {
+                if (current != null && !current.getId().equals(target.getId())) {
+                    rejectReplacingVerifiedAccount(current);
+                    deleteAccountExplicitly(current);
+                }
+
+                target.setLazybot_user_id(userId);
+            }
         }
         else if (target == null)
         {
@@ -219,12 +231,6 @@ public class UserIdentityService
             throw new LazybotRuntimeException("您并未绑定");
         }
 
-        int otherIdentities = platformIdentityMapper.countByUserId(identity.getLazybot_user_id()) - 1;
-        if (otherIdentities > 0) {
-            Integer detachedUserId = createLazybotUser();
-            platformIdentityMapper.reassignToUser(identity.getId(), detachedUserId);
-            return;
-        }
         deleteAccountExplicitly(account);
     }
 
@@ -271,64 +277,6 @@ public class UserIdentityService
         return osuAccountMapper.selectCount(
                 new LambdaQueryWrapper<OsuAccountPO>()
                         .eq(OsuAccountPO::getLazybot_user_id, lazybotUserId)) > 0;
-    }
-
-    private PlatformIdentityPO insertPlatformIdentity(
-            Integer lazybotUserId, IdentityPlatform platform, String platformUserId)
-    {
-        PlatformIdentityPO identity = new PlatformIdentityPO();
-        identity.setLazybot_user_id(lazybotUserId);
-        identity.setPlatform(platform.databaseValue());
-        identity.setPlatform_user_id(platformUserId);
-        identity.setCreated_at(LocalDateTime.now());
-        platformIdentityMapper.insert(identity);
-        return identity;
-    }
-
-    private void insertManualAccount(
-            Integer lazybotUserId, OsuServer server, Integer osuUserId, String username)
-    {
-        OsuAccountPO account = new OsuAccountPO();
-        account.setLazybot_user_id(lazybotUserId);
-        account.setServer(server.databaseValue());
-        account.setOsu_user_id(osuUserId);
-        account.setUsername_cache(username);
-        account.setLink_method(AccountLinkMethod.MANUAL.databaseValue());
-        account.setCreated_at(LocalDateTime.now());
-        account.setUpdated_at(LocalDateTime.now());
-        try {
-            osuAccountMapper.insert(account);
-        }
-        catch (DuplicateKeyException e) {
-            throw new LazybotRuntimeException(
-                    "该 " + server.databaseValue() + " 用户已被绑定", e);
-        }
-    }
-
-    private void attachIdentityToAccountOwner(
-            PlatformIdentityPO identity, OsuAccountPO existingAccount)
-    {
-        Integer oldUserId = identity.getLazybot_user_id();
-        Integer ownerId = existingAccount.getLazybot_user_id();
-        if (oldUserId.equals(ownerId)) {
-            return;
-        }
-        platformIdentityMapper.reassignToUser(identity.getId(), ownerId);
-        deleteOrphanUserIfEmpty(oldUserId);
-    }
-
-    private void deleteOrphanUserIfEmpty(Integer userId)
-    {
-        if (userId == null) {
-            return;
-        }
-        if (platformIdentityMapper.countByUserId(userId) > 0) {
-            return;
-        }
-        if (hasAnyOsuAccount(userId)) {
-            return;
-        }
-        lazybotUserMapper.deleteById(userId);
     }
 
     private Integer createLazybotUser()

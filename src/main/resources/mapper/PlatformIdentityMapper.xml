@@ -42,10 +42,4 @@
         set lazybot_user_id = #{userId}
         where id = #{identityId}
     </update>
-
-    <select id="countByUserId" resultType="int">
-        select count(*)
-        from platform_identity
-        where lazybot_user_id = #{userId}
-    </select>
 </mapper>
