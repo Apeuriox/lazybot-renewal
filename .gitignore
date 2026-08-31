@@ -31,9 +31,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### local scratch ###
-tmp/
-
 ### custom ###
 src/main/resources/application.properties.backup
 /src/main/resources/application.yaml.backup

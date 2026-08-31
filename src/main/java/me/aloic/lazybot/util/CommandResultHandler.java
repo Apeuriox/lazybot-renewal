@@ -25,10 +25,6 @@ public class CommandResultHandler
 
     public static void sendMessageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, String message)
     {
-        if (event.getReply() != null) {
-            event.getReply().sendText(message);
-            return;
-        }
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
                 MsgUtils.builder().text(message).build(),
                 false);
@@ -50,16 +46,6 @@ public class CommandResultHandler
 
 
     public static void uploadImageToOnebot(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray) {
-            if (event.getReply() != null) {
-                try {
-                    event.getReply().sendImage(imageByteArray);
-                }
-                catch (Exception e) {
-                    event.getReply().sendText("发送图片失败");
-                    logger.error(e.getMessage());
-                }
-                return;
-            }
             try  {
                 String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
                 bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().img("base64://"+base64Image).build(), false);
@@ -74,16 +60,6 @@ public class CommandResultHandler
 
 
     public static void sendMessageWithImageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray, String text) {
-        if (event.getReply() != null) {
-            try {
-                event.getReply().sendTextWithImage(text, imageByteArray);
-            }
-            catch (Exception e) {
-                event.getReply().sendText("发送图片和文本失败");
-                logger.error(e.getMessage());
-            }
-            return;
-        }
         try  {
             String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(text).img("base64://"+base64Image).build(), false);
@@ -99,7 +75,7 @@ public class CommandResultHandler
     public static void sendMessageWithImageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, LazybotMessageWithImage result) {
         if (result.getImage()==null)
         {
-            sendMessageToGroupOnebot(bot, event, result.getMessage());
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(result.getMessage()).build(), false);
             return;
         }
         sendMessageWithImageToGroupOnebot(bot,event, result.getImage(),result.getMessage());
@@ -110,12 +86,6 @@ public class CommandResultHandler
 
         if (!CommonTool.isEmpty(result))
         {
-            if (event.getReply() != null) {
-                for (LazybotMessageWithImage message : result) {
-                    sendMessageWithImageToGroupOnebot(bot, event, message);
-                }
-                return;
-            }
             MsgUtils builder = MsgUtils.builder();
 
             for(LazybotMessageWithImage message:result)
