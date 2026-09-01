@@ -514,14 +514,8 @@ public class PlayerServiceImpl implements PlayerService
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
 
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
-        List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestScoreList(
-                String.valueOf(info.getId()),
-                100,0,params.getMode());
-        if (scoreDTOList.size() < 110) {
-            scoreDTOList.addAll(dataExtractor.extractUserBestScoreList(
-                    String.valueOf(info.getId()),
-                    100,101,params.getMode()));
-        }
+        List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestAll(
+                String.valueOf(info.getId()), params.getMode());
         //Why not directly filter scoreDTOs? cuz we need this procedure to set up Indexes
         List<ScoreVO> scoreVOList=TransformerUtil.scoreTransformForList(scoreDTOList);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC+0"));

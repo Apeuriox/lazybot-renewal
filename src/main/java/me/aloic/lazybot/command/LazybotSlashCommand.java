@@ -28,6 +28,6 @@ public interface LazybotSlashCommand
     }
 
     default String getHelp() {
-        return "[Lazybot 暂无帮助文档";
+        return "[Lazybot] 暂无帮助文档";
     }
 }
