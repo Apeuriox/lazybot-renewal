@@ -39,3 +39,8 @@ src/main/resources/application.properties.backup
 /CLAUDE.md
 /misc/
 scripts/deploy.env.cmd
+/AGENTS.md
+/API.md
+/docs/
+/jte-classes/
+/scripts/

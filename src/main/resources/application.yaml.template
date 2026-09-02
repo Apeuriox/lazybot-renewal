@@ -82,6 +82,10 @@ lazybot:
     max-pending-per-user: 16
     message-dedup-retention-seconds: 30
     message-dedup-cleanup-ms: 60000
+  player-stats:
+    snapshot-enabled: true
+    threads: 8
+    requests-per-minute: 400
 
 async:
   executor:

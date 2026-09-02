@@ -151,6 +151,7 @@ public class URLBuildUtil
                 .addPath("@".concat(playerName));
         return builder.build();
     }
+    //the open docs says no mode attribute, i shall investigate this later
     public static String buildURLOfPlayerInfoArray(List<String> playerIds, String mode)
     {
         UrlBuilder builder = UrlBuilder.ofHttp("https://osu.ppy.sh/api/v2/users", CharsetUtil.CHARSET_UTF_8);

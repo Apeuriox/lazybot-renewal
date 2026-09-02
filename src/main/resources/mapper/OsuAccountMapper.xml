@@ -76,4 +76,12 @@
             updated_at = #{updatedAt}
         where id = #{accountId}
     </update>
+
+    <select id="selectEnabledBanchoUserIds" resultType="int">
+        select distinct a.osu_user_id
+        from osu_account a
+        inner join lazybot_user u on u.id = a.lazybot_user_id
+        where a.server = 'bancho'
+          and u.enabled = 1
+    </select>
 </mapper>

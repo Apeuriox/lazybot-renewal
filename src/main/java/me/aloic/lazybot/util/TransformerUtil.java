@@ -7,6 +7,8 @@ import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.ScoreStarMoon;
 import me.aloic.lazybot.osu.dao.entity.dto.starmoon.UserResponse;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
+import me.aloic.lazybot.osu.dao.entity.optionalattributes.player.Statistics;
+import me.aloic.lazybot.osu.dao.entity.po.PlayerStatisticsPO;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.enums.*;
 import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
@@ -19,6 +21,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ import java.util.stream.IntStream;
 public class TransformerUtil
 {
     static TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    private TransformerUtil(){}
 
     public static PlayerInfoVO userTransform(PlayerInfoDTO playerInfoDTO) {
         PlayerInfoVO playerInfoVO = new PlayerInfoVO();
@@ -529,6 +533,33 @@ public class TransformerUtil
         beatmap.setLast_updated(beatmapDTO.getLast_updated());
         beatmap.setUser_rating(CommonTool.calculateAverageRating(beatmapDTO.getBeatmapset().getRatings()));
         return beatmap;
+    }
+    public static PlayerStatisticsPO transformToPlayerStatisticsPO(PlayerInfoDTO player,
+                                                                   int mode,
+                                                                   int subserver,
+                                                                   LocalDateTime recordDateTime)
+    {
+        PlayerStatisticsPO po = new PlayerStatisticsPO();
+        po.setId(player.getId());
+        po.setMode(mode);
+        po.setSubserver(subserver);
+        po.setRecordDateTime(recordDateTime);
+        po.setPlayerName(player.getUsername() == null ? "" : player.getUsername());
+        Statistics stats = player.getStatistics();
+        if (stats == null) {
+            return po;
+        }
+        po.setPerformancePoint(stats.getPp());
+        po.setGlobalRank(stats.getGlobal_rank());
+        po.setCountryRank(stats.getCountry_rank());
+        po.setTotalScore(stats.getTotal_score());
+        po.setRankTotalScore(stats.getRanked_score());
+        po.setAccuracy(stats.getHit_accuracy());
+        po.setPlayCount(stats.getPlay_count());
+        po.setTotalHitCount(stats.getTotal_hits());
+        po.setTotalPlayTime(stats.getPlay_time());
+        po.setGrades(stats.getGrade_counts());
+        return po;
     }
 
 }

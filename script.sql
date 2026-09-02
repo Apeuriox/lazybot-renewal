@@ -302,3 +302,42 @@ create table user_token_discord
     default_mode  int           null
 );
 
+create table player_stats_daily_template
+(
+    id                 int          not null,
+    mode               tinyint      not null,
+    subserver          tinyint      not null,
+    record_date_time   datetime     not null,
+    player_name        varchar(128) not null,
+    performance_point  double       null,
+    global_rank        int          null,
+    country_rank       int          null,
+    total_score        bigint       null,
+    rank_total_score   bigint       null,
+    accuracy           double       null,
+    play_count         int          null,
+    total_hit_count    bigint       null,
+    total_play_time    bigint       null,
+    grades             json         null,
+    primary key (id, mode, subserver, record_date_time),
+    key idx_record_date_time_mode (record_date_time, mode)
+);
+
+create table player_stats_table_meta
+(
+    year       smallint    not null
+        primary key,
+    table_name varchar(64) not null,
+    created_at datetime    not null
+);
+
+create table player_stats_watch
+(
+    id         int         not null,
+    mode       tinyint     not null,
+    subserver  tinyint     not null,
+    active     tinyint(1)  not null,
+    updated_at datetime    not null,
+    primary key (id, mode, subserver)
+);
+

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.PlayerStatsWatchMapper">
+    <resultMap id="TargetResultMap" type="me.aloic.lazybot.osu.dao.entity.po.PlayerStatsSnapshotTarget">
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="mode" jdbcType="TINYINT" property="mode"/>
+    </resultMap>
+
+    <insert id="upsert">
+        INSERT INTO player_stats_watch (id, mode, subserver, active, updated_at)
+        VALUES (#{id}, #{mode}, #{subserver}, #{active}, NOW())
+        AS new
+        ON DUPLICATE KEY UPDATE
+            active = new.active,
+            updated_at = new.updated_at
+    </insert>
+
+    <insert id="upsertBatch">
+        INSERT INTO player_stats_watch (id, mode, subserver, active, updated_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.mode}, #{item.subserver}, #{item.active}, NOW())
+        </foreach>
+        AS new
+        ON DUPLICATE KEY UPDATE
+            active = new.active,
+            updated_at = new.updated_at
+    </insert>
+
+    <select id="selectActiveSnapshotTargets" resultMap="TargetResultMap">
+        SELECT a.osu_user_id AS user_id, m.mode
+        FROM osu_account a
+        INNER JOIN lazybot_user u ON u.id = a.lazybot_user_id
+        INNER JOIN (
+            SELECT 0 AS mode
+            UNION ALL SELECT 1
+            UNION ALL SELECT 2
+            UNION ALL SELECT 3
+        ) m
+        LEFT JOIN player_stats_watch w
+            ON w.id = a.osu_user_id
+           AND w.mode = m.mode
+           AND w.subserver = #{subserver}
+        WHERE a.server = 'bancho'
+          AND u.enabled = 1
+          AND a.osu_user_id IS NOT NULL
+          AND (w.active IS NULL OR w.active = 1)
+    </select>
+</mapper>

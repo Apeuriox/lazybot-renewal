@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.aloic.lazybot.osu.dao.mapper.PlayerStatisticsMapper">
+    <resultMap id="BaseResultMap" type="me.aloic.lazybot.osu.dao.entity.po.PlayerStatisticsPO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="mode" jdbcType="TINYINT" property="mode"/>
+        <result column="subserver" jdbcType="TINYINT" property="subserver"/>
+        <result column="record_date_time" jdbcType="TIMESTAMP" property="recordDateTime"/>
+        <result column="player_name" jdbcType="VARCHAR" property="playerName"/>
+        <result column="performance_point" jdbcType="DOUBLE" property="performancePoint"/>
+        <result column="global_rank" jdbcType="INTEGER" property="globalRank"/>
+        <result column="country_rank" jdbcType="INTEGER" property="countryRank"/>
+        <result column="total_score" jdbcType="BIGINT" property="totalScore"/>
+        <result column="rank_total_score" jdbcType="BIGINT" property="rankTotalScore"/>
+        <result column="accuracy" jdbcType="DOUBLE" property="accuracy"/>
+        <result column="play_count" jdbcType="INTEGER" property="playCount"/>
+        <result column="total_hit_count" jdbcType="BIGINT" property="totalHitCount"/>
+        <result column="total_play_time" jdbcType="BIGINT" property="totalPlayTime"/>
+        <result column="grades" property="grades"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, mode, subserver, record_date_time, player_name, performance_point,
+        global_rank, country_rank, total_score, rank_total_score, accuracy,
+        play_count, total_hit_count, total_play_time, grades
+    </sql>
+
+    <insert id="upsertBatch">
+        INSERT INTO player_stats_daily (
+            id, mode, subserver, record_date_time, player_name, performance_point,
+            global_rank, country_rank, total_score, rank_total_score, accuracy,
+            play_count, total_hit_count, total_play_time, grades
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.id},
+                #{item.mode},
+                #{item.subserver},
+                #{item.recordDateTime},
+                #{item.playerName},
+                #{item.performancePoint},
+                #{item.globalRank},
+                #{item.countryRank},
+                #{item.totalScore},
+                #{item.rankTotalScore},
+                #{item.accuracy},
+                #{item.playCount},
+                #{item.totalHitCount},
+                #{item.totalPlayTime},
+                #{item.grades, typeHandler=com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler}
+            )
+        </foreach>
+        AS new
+        ON DUPLICATE KEY UPDATE
+            player_name = new.player_name,
+            performance_point = new.performance_point,
+            global_rank = new.global_rank,
+            country_rank = new.country_rank,
+            total_score = new.total_score,
+            rank_total_score = new.rank_total_score,
+            accuracy = new.accuracy,
+            play_count = new.play_count,
+            total_hit_count = new.total_hit_count,
+            total_play_time = new.total_play_time,
+            grades = new.grades
+    </insert>
+
+    <select id="selectRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM player_stats_daily
+        WHERE id = #{id}
+          AND mode = #{mode}
+          AND subserver = #{subserver}
+          AND record_date_time <![CDATA[>=]]> #{from}
+          AND record_date_time <![CDATA[<]]> #{to}
+        ORDER BY record_date_time
+    </select>
+</mapper>

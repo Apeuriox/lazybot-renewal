@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface OsuAccountMapper extends BaseMapper<OsuAccountPO>
@@ -36,4 +37,6 @@ public interface OsuAccountMapper extends BaseMapper<OsuAccountPO>
             @Param("accountId") Long accountId,
             @Param("username") String username,
             @Param("updatedAt") LocalDateTime updatedAt);
+
+    List<Integer> selectEnabledBanchoUserIds();
 }
