@@ -4,6 +4,7 @@ import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
 import me.aloic.lazybot.entity.message.LazybotMessageWithImage;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
+import me.aloic.lazybot.shiro.media.OneBotImagePublisher;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
@@ -43,12 +44,55 @@ public class CommandResultHandler
             event.getHook().sendMessage("Failed to render image.").setEphemeral(true).queue();
         }
     }
+    public static void uploadImageToOnebotBase64(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray) {
+        try  {
+            String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().img("base64://"+base64Image).build(), false);
+        }
+        catch (Exception e) {
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
+                    MsgUtils.builder().text("发送图片失败").build(),
+                    false);
+            logger.error(e.getMessage());
+        }
+    }
+    public static void sendMessageWithImageToGroupOnebotBase64(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray, String text) {
+        try  {
+            String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(text).img("base64://"+base64Image).build(), false);
+        }
+        catch (Exception e) {
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
+                    MsgUtils.builder().text("发送图片和文本失败").build(),
+                    false);
+            logger.error(e.getMessage());
+        }
+    }
+    public static void sendMessageWithImageToGroupOnebotBase64(Bot bot, LazybotSlashCommandEvent event, List<LazybotMessageWithImage> result) {
+
+
+        if (!CommonTool.isEmpty(result))
+        {
+            MsgUtils builder = MsgUtils.builder();
+
+            for(LazybotMessageWithImage message:result)
+            {
+                builder.text(message.getMessage());
+                if (message.getImage()!=null)
+                {
+                    builder.img("base64://"+Base64.getEncoder().encodeToString(message.getImage()));
+                }
+            }
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), builder.build(), false);
+        }
+    }
 
 
     public static void uploadImageToOnebot(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray) {
             try  {
-                String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
-                bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().img("base64://"+base64Image).build(), false);
+                bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
+                        MsgUtils.builder().img(OneBotImagePublisher.imageReferenceLink(imageByteArray)).build(),
+                        false);
             }
             catch (Exception e) {
                 bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
@@ -61,8 +105,12 @@ public class CommandResultHandler
 
     public static void sendMessageWithImageToGroupOnebot(Bot bot, LazybotSlashCommandEvent event, byte[] imageByteArray, String text) {
         try  {
-            String base64Image = Base64.getEncoder().encodeToString(imageByteArray);
-            bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(text).img("base64://"+base64Image).build(), false);
+            bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
+                    MsgUtils.builder()
+                            .text(text)
+                            .img(OneBotImagePublisher.imageReferenceLink(imageByteArray))
+                            .build(),
+                    false);
         }
         catch (Exception e) {
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(),
@@ -93,7 +141,7 @@ public class CommandResultHandler
                 builder.text(message.getMessage());
                 if (message.getImage()!=null)
                 {
-                    builder.img("base64://"+Base64.getEncoder().encodeToString(message.getImage()));
+                    builder.img(OneBotImagePublisher.imageReferenceLink(message.getImage()));
                 }
             }
             bot.sendGroupMsg(event.getMessageEvent().getGroupId(), builder.build(), false);

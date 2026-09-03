@@ -22,13 +22,15 @@ server:
   port: 9001
 
 shiro:
+  wait-bot-connect: 30
+  heartbeat-stale-miss-count: 3
   ws:
     server:
       enable: true
       url: /lazybot
-    timeout: 10
+    timeout: 30
     max-binary-message-buffer-size: 5120000
-    max-text-message-buffer-size: 512000
+    max-text-message-buffer-size: 5242880
   limiter:
     enable: true
     rate: 10
@@ -50,6 +52,10 @@ tencent:
     token: above
 
 lazybot:
+  onebot:
+    image-mode: http
+    public-base-url: http://127.0.0.1:9001
+    image-ttl-seconds: 120
   prefix: /
   client_id: $osu_stuff
   response_type: code

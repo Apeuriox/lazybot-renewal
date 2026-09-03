@@ -72,9 +72,7 @@ public class CommandMonitor {
         AtomicInteger indexSource = new AtomicInteger(1);
         List<LazybotUsageSource> sourceList = commandStatMap.values().stream()
                 .flatMap(stat -> stat.getCallRecords().stream())
-                .collect(Collectors.groupingBy(
-                        CommandCallRecord::channelId, Collectors.counting()
-                ))
+                .collect(Collectors.groupingBy(CommandCallRecord::channelId, Collectors.counting()))
                 .entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue(Comparator.reverseOrder()))
                 .map(entry -> new LazybotUsageSource(indexSource.getAndIncrement(), entry.getKey(), entry.getValue().intValue()))

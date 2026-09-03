@@ -51,7 +51,17 @@ public class PlayerStatsTableManager
 
     public void ensureStaticSchema()
     {
-        String script = loadStaticSchemaScript();
+        String script;
+        ClassPathResource resource = new ClassPathResource(STATIC_SCHEMA_RESOURCE);
+        if (!resource.exists()) {
+            throw new LazybotRuntimeException("缺少玩家统计表结构文件: classpath:" + STATIC_SCHEMA_RESOURCE);
+        }
+        try (InputStream inputStream = resource.getInputStream()) {
+            script = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
+        catch (IOException e) {
+            throw new LazybotRuntimeException("读取玩家统计表结构文件失败", e);
+        }
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             for (String sql : script.split(";")) {
@@ -109,17 +119,4 @@ public class PlayerStatsTableManager
         }
     }
 
-    private String loadStaticSchemaScript()
-    {
-        ClassPathResource resource = new ClassPathResource(STATIC_SCHEMA_RESOURCE);
-        if (!resource.exists()) {
-            throw new LazybotRuntimeException("缺少玩家统计表结构文件: classpath:" + STATIC_SCHEMA_RESOURCE);
-        }
-        try (InputStream inputStream = resource.getInputStream()) {
-            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        }
-        catch (IOException e) {
-            throw new LazybotRuntimeException("读取玩家统计表结构文件失败", e);
-        }
-    }
 }
