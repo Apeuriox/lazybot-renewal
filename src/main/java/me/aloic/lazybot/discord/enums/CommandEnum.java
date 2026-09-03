@@ -123,7 +123,24 @@ public enum CommandEnum {
             List.of(new CommandOption(OptionType.STRING, "mode", "指定模式", true, false))),
     VERIFY_MAP(20, "verifymap", "(需要权限) 验证.osu缓存是否过期", true,
             List.of(new CommandOption(OptionType.INTEGER, "bid", "指定bid", true, false))),
-    ;
+    MONITOR(21, "monitor", "监控bot情况", true, null),
+    PROFILE(23, "profile", "查询个人资料", true,
+            List.of(new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
+                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
+    PLAY_RECENT_SERIES(24, "prs", "查询最近pass的21个成绩", true,
+            List.of(new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
+                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
+                    new CommandOption(OptionType.INTEGER, "style", "指定生成图像的风格", false, false))),
+    BP_SERIES(25, "bps", "查询第1到第21的最佳成绩", true,
+            List.of(new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
+                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false))),
+    WHAT_IF(26, "whatif", "假设多刷了这么多pp后的总pp变化", true,
+            List.of(new CommandOption(OptionType.STRING, "pp", "给定的pp列表，例: 300*10 400*5", false, false))),
+    MOD(27, "mod", "查询对应Mod的介绍", true,
+            List.of(new CommandOption(OptionType.STRING, "id", "指定Mod名称", false, false)));
+//     CUSTOMIZE(28, "customize", "自定义profile背景或主题", true,
+//             List.of(new CommandOption(OptionType.STRING, "user", "指定用户", false, false),
+//                     new CommandOption(OptionType.STRING, "type", "指定自定义类型", false, false)));
     private final Integer id;
 
     private final String commandName;
