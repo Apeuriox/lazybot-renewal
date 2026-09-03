@@ -100,9 +100,7 @@ public class PlayerServiceImpl implements PlayerService
     {
         int fromIndex = params.getFrom() - 1;
         if (fromIndex >= scores.size()) {
-            throw new LazybotRuntimeException(
-                    "超出能索引的最大距离，当前范围起点为: " + params.getFrom()
-                            + ", 最大为: " + scores.size());
+            throw new LazybotRuntimeException("超出能索引的最大距离，当前范围起点为: " + params.getFrom() + ", 最大为: " + scores.size());
         }
         int toIndex = Math.min(params.getTo(), scores.size());
         return new ArrayList<>(scores.subList(fromIndex, toIndex));
@@ -317,7 +315,7 @@ public class PlayerServiceImpl implements PlayerService
             scoreVO.setRawPlayerData(player);
             params.setVersion(727);
         }
-        if (params.getChannelId()!=null)
+        if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return scoreVO;
     }
@@ -359,7 +357,8 @@ public class PlayerServiceImpl implements PlayerService
                 false,
                 params.getAlgorithmVersion());
         verifyBeatmapsCache(scoreVO);
-        CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
 
         if(easterTrigger) {
             if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
@@ -393,7 +392,8 @@ public class PlayerServiceImpl implements PlayerService
                 false,
                 params.getAlgorithmVersion());
         verifyBeatmapsCache(scoreVO);
-        CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return scoreVO;
     }
 
