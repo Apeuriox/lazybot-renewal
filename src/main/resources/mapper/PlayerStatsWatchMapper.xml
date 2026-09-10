@@ -11,10 +11,9 @@
     <insert id="upsert">
         INSERT INTO player_stats_watch (id, mode, subserver, active, updated_at)
         VALUES (#{id}, #{mode}, #{subserver}, #{active}, NOW())
-        AS new
         ON DUPLICATE KEY UPDATE
-            active = new.active,
-            updated_at = new.updated_at
+            active = VALUES(active),
+            updated_at = VALUES(updated_at)
     </insert>
 
     <insert id="upsertBatch">
@@ -23,10 +22,9 @@
         <foreach collection="list" item="item" separator=",">
             (#{item.id}, #{item.mode}, #{item.subserver}, #{item.active}, NOW())
         </foreach>
-        AS new
         ON DUPLICATE KEY UPDATE
-            active = new.active,
-            updated_at = new.updated_at
+            active = VALUES(active),
+            updated_at = VALUES(updated_at)
     </insert>
 
     <select id="selectActiveSnapshotTargets" resultMap="TargetResultMap">

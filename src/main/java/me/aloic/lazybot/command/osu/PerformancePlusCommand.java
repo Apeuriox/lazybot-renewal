@@ -38,10 +38,9 @@ public class PerformancePlusCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         GeneralParameter params =  GeneralParameter.setupParameter(event, proxy.getUserBinding(event));
-        CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,
+        CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderPerformancePlusCard(
-                        playerService.getPerformancePlusPlayerInfo(params),params.getVersion()),
-                "PP+服务已迁移回Lazybot主服务器，但是老数据飞了，如有遗漏的数据可以手动使用/add [bid]来添加，使用 /pb 1-6指令可以查看pp+的最佳成绩，谢谢理解"
+                        playerService.getPerformancePlusPlayerInfo(params),params.getVersion())
         );
     }
 

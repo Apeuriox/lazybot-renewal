@@ -53,19 +53,18 @@
                 #{item.grades, typeHandler=com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler}
             )
         </foreach>
-        AS new
         ON DUPLICATE KEY UPDATE
-            player_name = new.player_name,
-            performance_point = new.performance_point,
-            global_rank = new.global_rank,
-            country_rank = new.country_rank,
-            total_score = new.total_score,
-            rank_total_score = new.rank_total_score,
-            accuracy = new.accuracy,
-            play_count = new.play_count,
-            total_hit_count = new.total_hit_count,
-            total_play_time = new.total_play_time,
-            grades = new.grades
+            player_name = VALUES(player_name),
+            performance_point = VALUES(performance_point),
+            global_rank = VALUES(global_rank),
+            country_rank = VALUES(country_rank),
+            total_score = VALUES(total_score),
+            rank_total_score = VALUES(rank_total_score),
+            accuracy = VALUES(accuracy),
+            play_count = VALUES(play_count),
+            total_hit_count = VALUES(total_hit_count),
+            total_play_time = VALUES(total_play_time),
+            grades = VALUES(grades)
     </insert>
 
     <select id="selectRange" resultMap="BaseResultMap">

@@ -201,13 +201,10 @@ public class PlayerStatisticsServiceImpl implements PlayerStatisticsService
             LocalDate yearEnd = LocalDate.of(year, 12, 31);
             LocalDate queryFrom = from.isAfter(yearStart) ? from : yearStart;
             LocalDate queryTo = toInclusive.isBefore(yearEnd) ? toInclusive : yearEnd;
-            List<PlayerStatisticsPO> yearRows = PlayerStatsTableContext.call(year, () ->
-                    playerStatisticsMapper.selectRange(
-                            osuUserId,
-                            mode,
-                            subserver,
-                            queryFrom.atStartOfDay(),
-                            queryTo.plusDays(1).atStartOfDay()));
+            List<PlayerStatisticsPO> yearRows = PlayerStatsTableContext.call(
+                    year,
+                    () -> playerStatisticsMapper.selectRange(osuUserId, mode, subserver, queryFrom.atStartOfDay(), queryTo.plusDays(1).atStartOfDay())
+            );
             result.addAll(yearRows);
         }
         return result;
