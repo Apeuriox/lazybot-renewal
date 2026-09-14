@@ -40,7 +40,11 @@ public class RasterizationServiceImpl implements RasterizationService
     @Override
     public byte[] renderToCardInfo(PlayerInfoVO player, int hue, double saturationFactor) {
         return bitmapRenderCache.getOrCompute(
-                RenderFingerprint.of("card-info-jte").addPlayer(player).key(),
+                RenderFingerprint.of("card-info-jte")
+                        .add("colorSpace", "okhsl")
+                        .add("hue", hue)
+                        .add("saturationFactor", saturationFactor)
+                        .addPlayer(player).key(),
                 () -> {
                     TemplateOutput output = new StringOutput();
                     Map<String,Object> params = Map.of("player",player,"hue",hue,"saturationFactor",saturationFactor);

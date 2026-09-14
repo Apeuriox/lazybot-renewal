@@ -16,12 +16,12 @@ import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
-import me.aloic.lazybot.osu.theme.Color.HSL;
+import me.aloic.lazybot.osu.theme.Color.OKHSL;
 import me.aloic.lazybot.parameter.CardMoelleuxParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.CommonTool;
+import me.aloic.lazybot.util.ColorUtils;
 import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -51,20 +51,27 @@ public class CardInfoCommand implements LazybotSlashCommand
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
         PlayerInfoVO info = playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getUserBinding(event)));
-        HSL mainHue = CommonTool.getDominantHSLColorThief(new File(info.getAvatarUrl()));
-        boolean isTooDarkOrBright = mainHue.getSaturation()<4 || mainHue.getLightness()>94;
+        int[] rgb = ColorUtils.getDominantColorColorThief(new File(info.getAvatarUrl()));
+        OKHSL mainHue = ColorUtils.rgbToOkhsl(rgb);
         CommandResultHandler.uploadImageToOnebot(bot,event,
-                    rasterizationService.renderToCardInfo(info,mainHue.getHue(),isTooDarkOrBright ? 0 : 1));
+                    rasterizationService.renderToCardInfo(info, mainHue.getHue(), saturationFactor(mainHue, rgb)));
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
         PlayerInfoVO info = playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getUserBinding(event)));
-        HSL mainHue = CommonTool.getDominantHSLColorThief(new File(info.getAvatarUrl()));
-        boolean isTooDarkOrBright = mainHue.getSaturation()<4 || mainHue.getLightness()>94;
+        int[] rgb = ColorUtils.getDominantColorColorThief(new File(info.getAvatarUrl()));
+        OKHSL mainHue = ColorUtils.rgbToOkhsl(rgb);
         testOutputTool.saveImageToLocal(
-                rasterizationService.renderToCardInfo(info,mainHue.getHue(),isTooDarkOrBright ? 0 : 1));
+                rasterizationService.renderToCardInfo(info, mainHue.getHue(), saturationFactor(mainHue, rgb)));
+    }
+
+    // OKHSL L of saturated yellow is ~96, so "near white" still uses HSL L.
+    private static double saturationFactor(OKHSL okhsl, int[] rgb)
+    {
+        boolean achromatic = okhsl.getSaturation() < 4 || ColorUtils.rgbToHslDetailed(rgb).getLightness() > 94;
+        return achromatic ? 0 : 1;
     }
 
     private GeneralParameter setupParameterGeneral(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
@@ -83,12 +90,9 @@ public class CardInfoCommand implements LazybotSlashCommand
         return HelpFormatter.format(
                 new CommandHelp("Card Info","i",
                         "查询个人资料, 生成小型卡片样式",
-                        "Aloic", "Aloic", "2024-03-22 (原版) / 2025-08-05 (Moelleux样式)")
-                        .addExample("/Card")
-                        .addExample("/Card Aloic")
-                        .addExample("/Card Aloic hue=340 &&&")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Hue","覆盖默认取色算法的色相值，格式为hue=100，色相为0至360的整数，超出会取余", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","一个&则以原版样式输出，两个&将会禁用BP白色蒙层，三个&将强制以中等对比度输出，四个&以低对比度输出", CommandParameter.ParameterType.OPTIONAL)));
+                        "Aloic", "Aloic", "2026-08-14 (Moelleux样式)")
+                        .addExample("/i")
+                        .addExample("/i Aloic")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

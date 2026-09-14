@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import me.aloic.lazybot.osu.theme.Color.HSL;
+import me.aloic.lazybot.osu.theme.Color.OKHSL;
 
 //I know it's copied code from CommonTool. We're migrating it to there but it takes time.
 public class ColorUtils
@@ -45,6 +46,17 @@ public class ColorUtils
             if (h < 0) h += 360;
         }
         return new HSL((int) h, (int) (s * 100), (int) (l * 100));
+    }
+
+    /** OKHSL(h, s%, l%) as {@code #RRGGBB}. resvg cannot parse {@code okhsl()}/{@code oklch()}. */
+    public static String okhsl(int hue, int saturation, int lightness)
+    {
+        return OKHSL.toHex(hue, saturation, lightness);
+    }
+
+    public static OKHSL rgbToOkhsl(int[] rgb)
+    {
+        return OKHSL.fromRgb(rgb);
     }
 
     private static final double[] DOMAIN_DIFFICULTY = {9.0, 9.9, 10.6, 11.5, 12.4};
