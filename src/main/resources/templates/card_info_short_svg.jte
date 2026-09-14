@@ -9,7 +9,7 @@
 
 <svg width="633" height="1080" viewBox="0 0 633 1080" fill="none" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
 <path d="M633 0H0V1080H633V0Z" fill="#202020"/>
-<path d="M90 0H0V1080H90V0Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,-9), (int) Math.round(98 * saturationFactor), 49)}"/>
+<path d="M90 0H0V1080H90V0Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,-9), (int) Math.round(98 * saturationFactor), 60)}"/>
 <text transform="matrix(0 1 -1 0 68 16)" fill="#EEEEEE" font-family="Marathon Shapiro" font-size="50" font-weight="30" letter-spacing="0em"><tspan x="0" y="49">PLAYER STATISTICS</tspan></text>
 <text transform="matrix(0 1 -1 0 81.8999 20)" fill="#EEEEEE" font-family="KH Interference" font-size="16" letter-spacing="0em"><tspan x="0" y="15.1">Request date</tspan></text>
 <text transform="matrix(0 1 -1 0 81.8999 176)" fill="#EEEEEE" font-family="KH Interference" font-size="16" letter-spacing="0em"><tspan x="0" y="15.1">${SVGElementHelper.dateNowMarathon()}</tspan></text>
@@ -36,7 +36,7 @@
 </g>
 
 
-<path d="M633 539H90V845H633V539Z" fill="${ColorUtils.okhsl(hue, (int) Math.round(63 * saturationFactor), 78)}"/>
+<path d="M633 539H90V845H633V539Z" fill="${ColorUtils.okhsl(hue, (int) Math.round(63 * saturationFactor), 80)}"/>
     <g id="info-bg-decos">
         <path opacity="0.05" d="M433 732H90V845H433V732Z" fill="#111111"/>
         <path opacity="0.05" d="M433 716H596V845H433V716Z" fill="#111111"/>
@@ -111,11 +111,11 @@
     <path d="M90 808V817L66 839V830L90 808Z" fill="#D9D9D9"/>
 </g>
 
-<path d="M633 845H90V1080H633V845Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,1), (int) Math.round(48 * saturationFactor), 65)}"/>
-<path d="M226 1041H90V1080H226V1041Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,1), (int) Math.round(93 * saturationFactor), 22)}"/>
-<path d="M361 1041H226V1080H361V1041Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,-10), (int) Math.round(77 * saturationFactor), 41)}"/>
-<path d="M498 1041H361V1080H498V1041Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,-10), (int) Math.round(85 * saturationFactor), 54)}"/>
-<path d="M633 1041H498V1080H633V1041Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,-10), (int) Math.round(100 * saturationFactor), 67)}"/>
+<path d="M633 845H90V1080H633V845Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,1), (int) Math.round(48 * saturationFactor), 66)}"/>
+<path d="M226 1041H90V1080H226V1041Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,1), (int) Math.round(93 * saturationFactor), 24)}"/>
+<path d="M361 1041H226V1080H361V1041Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,-10), (int) Math.round(77 * saturationFactor), 42)}"/>
+<path d="M498 1041H361V1080H498V1041Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,-10), (int) Math.round(85 * saturationFactor), 56)}"/>
+<path d="M633 1041H498V1080H633V1041Z" fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,-10), (int) Math.round(100 * saturationFactor), 68)}"/>
     <g fill="${ColorUtils.okhsl(ColorUtils.circularHueSubtract(hue,-11), (int) Math.round(28 * saturationFactor), 34)}">
         <path d="M197 925H199V927H197V925Z"/>
         <path d="M197 962H199V964H197V962Z"/>
