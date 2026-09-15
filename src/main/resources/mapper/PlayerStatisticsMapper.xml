@@ -89,4 +89,28 @@
         ORDER BY record_date_time DESC
         LIMIT 1
     </select>
+
+    <select id="selectLatestBefore" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM player_stats_daily
+        WHERE id = #{id}
+          AND mode = #{mode}
+          AND subserver = #{subserver}
+          AND record_date_time <![CDATA[<]]> #{to}
+        ORDER BY record_date_time DESC
+        LIMIT 1
+    </select>
+
+    <select id="selectEarliestFrom" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM player_stats_daily
+        WHERE id = #{id}
+          AND mode = #{mode}
+          AND subserver = #{subserver}
+          AND record_date_time <![CDATA[>=]]> #{from}
+        ORDER BY record_date_time ASC
+        LIMIT 1
+    </select>
 </mapper>

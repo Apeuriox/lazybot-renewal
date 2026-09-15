@@ -60,7 +60,7 @@
     <text transform="matrix(0 1 -1 0 51.0999 898)" fill="#e9ebea" font-family="Marathon Shapiro" font-size="10" font-weight="30" letter-spacing="0em"><tspan x="0" y="9.9">${mode.getValue()}</tspan></text>
     <text transform="matrix(0 1 -1 0 57.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">GENERATED IMAGE BY LAZYBOT</tspan></text>
     <text transform="matrix(0 1 -1 0 39.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">RESULT MAY BE DELAYED OR CACHED</tspan></text>
-    <text opacity="${delta.getDateDifference() !=null ? 1 : 0}" transform="matrix(0 1 -1 0 48.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">COMPARED WITH ${delta.getDateDifference()} days ago</tspan></text>
+    <text opacity="${delta.getDateDifference() !=null ? 1 : 0}" transform="matrix(0 1 -1 0 48.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">COMPARED WITH ${delta.getDateDifference()+1} days ago</tspan></text>
     <text opacity="${delta.getDateDifference() ==null ? 1 : 0}" transform="matrix(0 1 -1 0 48.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">NO DATA TO COMPARE</tspan></text>
 
     <g opacity="${sidebarDecoType >= 0.5 ? 1 : 0}">

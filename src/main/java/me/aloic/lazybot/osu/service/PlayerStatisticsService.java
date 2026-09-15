@@ -20,4 +20,6 @@ public interface PlayerStatisticsService
     PlayerStatisticsPO findLatest(Integer osuUserId, Integer mode, Integer subserver);
 
     PlayerDailyDelta resolveDailyDelta(PlayerInfoVO current);
+
+    PlayerDailyDelta resolveDailyDelta(PlayerInfoVO current, Integer lookbackDays);
 }

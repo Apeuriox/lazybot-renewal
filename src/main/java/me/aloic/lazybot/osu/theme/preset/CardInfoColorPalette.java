@@ -30,7 +30,7 @@ public class CardInfoColorPalette
         int hue = Math.floorMod((int) Math.round(ok[0] * 360.0), 360);
         double s = ok[1];
         double l = ok[2];
-        boolean lowContrast = s < 0.22 || l < 0.12 || l > 0.88;
+        boolean lowContrast = s < 0.21 || l < 0.12 || l > 0.88;
         if (!lowContrast) {
             double lift = 7.0 * clamp01((l - 0.50) / (0.88 - 0.50));
             return vivid(hue, lift);

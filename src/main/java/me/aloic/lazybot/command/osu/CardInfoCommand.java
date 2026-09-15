@@ -9,13 +9,12 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.graphics.service.RasterizationService;
-import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.service.PlayerStatisticsService;
 import me.aloic.lazybot.osu.theme.preset.CardInfoColorPalette;
-import me.aloic.lazybot.parameter.GeneralParameter;
+import me.aloic.lazybot.parameter.CardInfoParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import me.aloic.lazybot.util.ColorUtils;
@@ -60,21 +59,11 @@ public class CardInfoCommand implements LazybotSlashCommand
 
     private byte[] renderCardInfo(LazybotSlashCommandEvent event) throws Exception
     {
-        PlayerInfoVO info = playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getUserBinding(event)));
-        PlayerDailyDelta delta = playerStatisticsService.resolveDailyDelta(info);
+        CardInfoParameter params = CardInfoParameter.setupParameter(event, proxy.getUserBinding(event));
+        PlayerInfoVO info = playerService.getPlayerInfoVO(params);
+        PlayerDailyDelta delta = playerStatisticsService.resolveDailyDelta(info, params.getLookbackDays());
         int[] rgb = ColorUtils.getDominantColorColorThief(new File(info.getAvatarUrl()));
         return rasterizationService.renderToCardInfo(info, delta, CardInfoColorPalette.fromRgb(rgb));
-    }
-
-    private GeneralParameter setupParameterGeneral(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
-    {
-        GeneralParameter params=GeneralParameter.analyzeParameter(event.getCommandParameters());
-        GeneralParameter.setupDefaultValue(params,tokenPO);
-        params.setVersion(event.getScorePanelVersion());
-        if(event.getOsuMode()!=null)
-            params.setMode(event.getOsuMode().getDescribe());
-        params.validateParams();
-        return params;
     }
     @Override
     public String getHelp()
@@ -85,6 +74,9 @@ public class CardInfoCommand implements LazybotSlashCommand
                         "Aloic", "Aloic", "2026-08-14 (Moelleux样式)")
                         .addExample("/i")
                         .addExample("/i Aloic")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addExample("/i #6")
+                        .addExample("/i Aloic #12")
+                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("#days","对比N天前的快照；当天没有则取前后最近一条", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

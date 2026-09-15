@@ -27,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -237,17 +238,88 @@ public class PlayerStatisticsServiceImpl implements PlayerStatisticsService
     @Override
     public PlayerDailyDelta resolveDailyDelta(PlayerInfoVO current)
     {
+        return resolveDailyDelta(current, null);
+    }
+
+    @Override
+    public PlayerDailyDelta resolveDailyDelta(PlayerInfoVO current, Integer lookbackDays)
+    {
         if (current == null || current.getId() == null || current.getMode() == null) {
             return PlayerDailyDelta.empty();
         }
         try {
             OsuMode mode = OsuMode.getMode(current.getMode());
-            PlayerStatisticsPO snapshot = findLatest(current.getId(), mode.getValue(), SupportedSubServer.STABLE.getValue());
+            int subserver = SupportedSubServer.STABLE.getValue();
+            PlayerStatisticsPO snapshot = lookbackDays == null
+                    ? findLatest(current.getId(), mode.getValue(), subserver)
+                    : findNearest(current.getId(), mode.getValue(), subserver,
+                    LocalDate.now(PlayerStatsTableManager.ZONE).minusDays(lookbackDays));
             return PlayerDailyDelta.from(current, snapshot);
         }
         catch (Exception e) {
             log.warn("Daily delta skipped: userId={}, {}", current.getId(), e.getMessage());
             return PlayerDailyDelta.empty();
         }
+    }
+
+    private PlayerStatisticsPO findNearest(Integer osuUserId, Integer mode, Integer subserver, LocalDate target)
+    {
+        if (osuUserId == null || mode == null || subserver == null || target == null) {
+            return null;
+        }
+        PlayerStatisticsPO before = findLatestOnOrBefore(osuUserId, mode, subserver, target.plusDays(1).atStartOfDay());
+        PlayerStatisticsPO after = findEarliestOnOrAfter(osuUserId, mode, subserver, target.atStartOfDay());
+        if (before == null) {
+            return after;
+        }
+        if (after == null || after.getRecordDateTime() == null) {
+            return before;
+        }
+        if (before.getRecordDateTime() == null) {
+            return after;
+        }
+        if (before.getRecordDateTime().equals(after.getRecordDateTime())) {
+            return before;
+        }
+        long daysBefore = Math.abs(ChronoUnit.DAYS.between(before.getRecordDateTime().toLocalDate(), target));
+        long daysAfter = Math.abs(ChronoUnit.DAYS.between(after.getRecordDateTime().toLocalDate(), target));
+        return daysAfter < daysBefore ? after : before;
+    }
+
+    private PlayerStatisticsPO findLatestOnOrBefore(Integer osuUserId, Integer mode, Integer subserver, LocalDateTime exclusiveEnd)
+    {
+        int startYear = exclusiveEnd.toLocalDate().minusDays(1).getYear();
+        int minYear = startYear - 2;
+        for (int year = startYear; year >= minYear; year--) {
+            if (!tableManager.existsYear(year)) {
+                continue;
+            }
+            PlayerStatisticsPO row = PlayerStatsTableContext.call(
+                    year,
+                    () -> playerStatisticsMapper.selectLatestBefore(osuUserId, mode, subserver, exclusiveEnd)
+            );
+            if (row != null) {
+                return row;
+            }
+        }
+        return null;
+    }
+
+    private PlayerStatisticsPO findEarliestOnOrAfter(Integer osuUserId, Integer mode, Integer subserver, LocalDateTime from)
+    {
+        int maxYear = LocalDate.now(PlayerStatsTableManager.ZONE).getYear();
+        for (int year = from.getYear(); year <= maxYear; year++) {
+            if (!tableManager.existsYear(year)) {
+                continue;
+            }
+            PlayerStatisticsPO row = PlayerStatsTableContext.call(
+                    year,
+                    () -> playerStatisticsMapper.selectEarliestFrom(osuUserId, mode, subserver, from)
+            );
+            if (row != null) {
+                return row;
+            }
+        }
+        return null;
     }
 }
