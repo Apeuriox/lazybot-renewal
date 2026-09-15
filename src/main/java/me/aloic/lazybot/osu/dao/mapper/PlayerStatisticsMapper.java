@@ -18,4 +18,8 @@ public interface PlayerStatisticsMapper extends BaseMapper<PlayerStatisticsPO>
                                          @Param("subserver") Integer subserver,
                                          @Param("from") LocalDateTime from,
                                          @Param("to") LocalDateTime to);
+
+    PlayerStatisticsPO selectLatest(@Param("id") Integer id,
+                                    @Param("mode") Integer mode,
+                                    @Param("subserver") Integer subserver);
 }

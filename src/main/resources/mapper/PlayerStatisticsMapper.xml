@@ -78,4 +78,15 @@
           AND record_date_time <![CDATA[<]]> #{to}
         ORDER BY record_date_time
     </select>
+
+    <select id="selectLatest" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM player_stats_daily
+        WHERE id = #{id}
+          AND mode = #{mode}
+          AND subserver = #{subserver}
+        ORDER BY record_date_time DESC
+        LIMIT 1
+    </select>
 </mapper>

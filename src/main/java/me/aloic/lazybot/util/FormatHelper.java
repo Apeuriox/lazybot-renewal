@@ -22,6 +22,16 @@ public class FormatHelper
     {
         return transformNumber(String.valueOf(number));
     }
+    public static String transformNumberWithMark(long number)
+    {
+        String result = transformNumber(String.valueOf(number));
+        return number > 0 ? "+" + result: result;
+    }
+    public static String transformNumberWithMarkInverted(long number)
+    {
+        String result = transformNumber(String.valueOf(number));
+        return number > 0 ? "-" + result: "-" + result.substring(1);
+    }
     public static String transformNumber(String number){
         int length = number.length();
         int offset = length%3;

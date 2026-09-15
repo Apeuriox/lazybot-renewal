@@ -84,8 +84,14 @@ public class SVGRenderer
             logger.error(e.getMessage());
             throw new LazybotRuntimeException("渲染成绩图时出错: "+e.getMessage());
         }
-        logger.info("Render to JPEG cost:{}ms", System.currentTimeMillis() - startingTime);
-
+//        logger.info("Render to JPEG cost:{}ms", System.currentTimeMillis() - startingTime);
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter("X:\\lazybot-output\\test.svg"))) {
+//            writer.write(document);
+//            logger.info("成功写入字符串到{}.", "X:\\lazybot-output\\test.svg");
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         return result;
     }

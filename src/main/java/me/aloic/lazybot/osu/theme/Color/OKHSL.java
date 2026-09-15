@@ -20,6 +20,7 @@ public class OKHSL
         this.lightness = lightness;
     }
 
+    // since most system does not okhsl() format, so returning with raw hex;
     @Override
     public String toString()
     {
@@ -53,6 +54,11 @@ public class OKHSL
         int sat = (int) Math.round(hsl[1] * 100.0);
         int light = (int) Math.round(hsl[2] * 100.0);
         return new OKHSL(hue, clampInt(sat, 0, 100), clampInt(light, 0, 100));
+    }
+
+    public static double[] rawFromRgb(int r, int g, int b)
+    {
+        return srgbToOkhsl(r, g, b);
     }
 
     private static double[] okhslToSrgb(double h, double s, double l)

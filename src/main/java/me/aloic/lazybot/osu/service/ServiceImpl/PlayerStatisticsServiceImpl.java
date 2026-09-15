@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.po.PlayerStatisticsPO;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.po.PlayerStatsSnapshotTarget;
 import me.aloic.lazybot.osu.dao.entity.po.PlayerStatsWatchPO;
 import me.aloic.lazybot.osu.dao.mapper.PlayerStatisticsMapper;
@@ -208,5 +210,44 @@ public class PlayerStatisticsServiceImpl implements PlayerStatisticsService
             result.addAll(yearRows);
         }
         return result;
+    }
+
+    @Override
+    public PlayerStatisticsPO findLatest(Integer osuUserId, Integer mode, Integer subserver)
+    {
+        if (osuUserId == null || mode == null || subserver == null) {
+            return null;
+        }
+        int currentYear = LocalDate.now(PlayerStatsTableManager.ZONE).getYear();
+        for (int year = currentYear; year >= currentYear - 1; year--) {
+            if (!tableManager.existsYear(year)) {
+                continue;
+            }
+            PlayerStatisticsPO row = PlayerStatsTableContext.call(
+                    year,
+                    () -> playerStatisticsMapper.selectLatest(osuUserId, mode, subserver)
+            );
+            if (row != null) {
+                return row;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public PlayerDailyDelta resolveDailyDelta(PlayerInfoVO current)
+    {
+        if (current == null || current.getId() == null || current.getMode() == null) {
+            return PlayerDailyDelta.empty();
+        }
+        try {
+            OsuMode mode = OsuMode.getMode(current.getMode());
+            PlayerStatisticsPO snapshot = findLatest(current.getId(), mode.getValue(), SupportedSubServer.STABLE.getValue());
+            return PlayerDailyDelta.from(current, snapshot);
+        }
+        catch (Exception e) {
+            log.warn("Daily delta skipped: userId={}, {}", current.getId(), e.getMessage());
+            return PlayerDailyDelta.empty();
+        }
     }
 }

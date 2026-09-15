@@ -18,15 +18,12 @@ import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.dto.plus.LazybotScoreStatistics;
 import me.aloic.lazybot.osu.dao.entity.dto.plus.ScorePerformanceDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
-import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.player.GradeCounts;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.player.Level;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.player.Statistics;
 import me.aloic.lazybot.osu.dao.entity.po.CommandUsage;
 import me.aloic.lazybot.osu.dao.entity.po.LazybotUsageCommand;
-import me.aloic.lazybot.osu.dao.entity.po.LazybotUsageSource;
-import me.aloic.lazybot.osu.dao.entity.po.LazybotUsageTimeDistribution;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapAttributeVO;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapStatistics;
@@ -38,12 +35,14 @@ import me.aloic.lazybot.osu.dao.entity.vo.NoChokeListVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.PPPlusScore;
 import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoMoelleux;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.PlusScorePerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.theme.Color.HSL;
+import me.aloic.lazybot.osu.theme.preset.CardInfoColorPalette;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
 
 import java.nio.charset.StandardCharsets;
@@ -162,6 +161,34 @@ public final class RenderFingerprint
         addGrades(info.getGrades());
         add("totalScore", info.getTotalScore());
         add("playStyles", info.getPlayStyles());
+        return this;
+    }
+
+    public RenderFingerprint addDailyDelta(PlayerDailyDelta delta)
+    {
+        if (delta == null)
+            return add("dailyDelta", null);
+        add("dailyDelta.pp", delta.getPp());
+        add("dailyDelta.playCount", delta.getPlayCount());
+        add("dailyDelta.totalHitCount", delta.getTotalHitCount());
+        return this;
+    }
+
+    public RenderFingerprint addCardInfoPalette(CardInfoColorPalette palette)
+    {
+        if (palette == null)
+            return add("palette", null);
+        add("palette.leftBar", palette.getLeftBar());
+        add("palette.nameBlock", palette.getNameBlock());
+        add("palette.statsBlock", palette.getStatsBlock());
+        add("palette.footerJoin", palette.getFooterJoin());
+        add("palette.footerRank", palette.getFooterRank());
+        add("palette.footerLevel", palette.getFooterLevel());
+        add("palette.footerAcc", palette.getFooterAcc());
+        add("palette.deco", palette.getDeco());
+        add("palette.infoText", palette.getInfoText());
+        add("palette.showStripes", palette.isShowStripes());
+        add("palette.lowContrast", palette.isLowContrast());
         return this;
     }
 

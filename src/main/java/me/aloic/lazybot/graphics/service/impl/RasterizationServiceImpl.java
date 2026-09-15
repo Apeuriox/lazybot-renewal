@@ -9,10 +9,12 @@ import me.aloic.lazybot.graphics.cache.BitmapRenderCache;
 import me.aloic.lazybot.graphics.cache.RenderFingerprint;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.graphics.service.RasterizationService;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
 import me.aloic.lazybot.osu.dao.entity.vo.MapPpAnalysisView;
+import me.aloic.lazybot.osu.theme.preset.CardInfoColorPalette;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -38,18 +40,19 @@ public class RasterizationServiceImpl implements RasterizationService
     }
 
     @Override
-    public byte[] renderToCardInfo(PlayerInfoVO player, int hue, double saturationFactor) {
-        return bitmapRenderCache.getOrCompute(
-                RenderFingerprint.of("card-info-jte")
+    public byte[] renderToCardInfo(PlayerInfoVO player, PlayerDailyDelta delta, CardInfoColorPalette palette) {
+        PlayerDailyDelta dailyDelta = delta == null ? PlayerDailyDelta.empty() : delta;
+        CardInfoColorPalette colors = palette == null ? CardInfoColorPalette.fromRgb(null) : palette;
+        return bitmapRenderCache.getOrCompute(RenderFingerprint.of("card-info-jte")
                         .add("colorSpace", "okhsl")
-                        .add("hue", hue)
-                        .add("saturationFactor", saturationFactor)
+                        .addCardInfoPalette(colors)
+                        .addDailyDelta(dailyDelta)
                         .addPlayer(player).key(),
                 () -> {
                     TemplateOutput output = new StringOutput();
-                    Map<String,Object> params = Map.of("player",player,"hue",hue,"saturationFactor",saturationFactor);
+                    Map<String,Object> params = Map.of("player", player, "delta", dailyDelta, "palette", colors);
                     templateEngine.render("card_info_short_svg.jte", params, output);
-                    return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+                    return SVGRenderer.renderSVGDocumentToByteArray(output.toString(),2);
                 });
     }
 

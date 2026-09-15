@@ -54,6 +54,14 @@ public class ColorUtils
         return OKHSL.toHex(hue, saturation, lightness);
     }
 
+    public static String okhsl(int hue, int saturation, int lightness, double lightnessOffset)
+    {
+        int l = (int) Math.round(lightness + lightnessOffset);
+        if (l < 0) l = 0;
+        if (l > 100) l = 100;
+        return OKHSL.toHex(hue, saturation, l);
+    }
+
     public static OKHSL rgbToOkhsl(int[] rgb)
     {
         return OKHSL.fromRgb(rgb);

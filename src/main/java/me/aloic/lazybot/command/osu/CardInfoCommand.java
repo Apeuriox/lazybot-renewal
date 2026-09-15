@@ -6,18 +6,15 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
-import me.aloic.lazybot.discord.util.ErrorResultHandler;
-import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
-import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
+import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
-import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
-import me.aloic.lazybot.osu.theme.Color.OKHSL;
-import me.aloic.lazybot.parameter.CardMoelleuxParameter;
+import me.aloic.lazybot.osu.service.PlayerStatisticsService;
+import me.aloic.lazybot.osu.theme.preset.CardInfoColorPalette;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
@@ -35,6 +32,8 @@ public class CardInfoCommand implements LazybotSlashCommand
     @Resource
     private PlayerService playerService;
     @Resource
+    private PlayerStatisticsService playerStatisticsService;
+    @Resource
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
@@ -50,28 +49,21 @@ public class CardInfoCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        PlayerInfoVO info = playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getUserBinding(event)));
-        int[] rgb = ColorUtils.getDominantColorColorThief(new File(info.getAvatarUrl()));
-        OKHSL mainHue = ColorUtils.rgbToOkhsl(rgb);
-        CommandResultHandler.uploadImageToOnebot(bot,event,
-                    rasterizationService.renderToCardInfo(info, mainHue.getHue(), saturationFactor(mainHue, rgb)));
+        CommandResultHandler.uploadImageToOnebot(bot, event, renderCardInfo(event));
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        PlayerInfoVO info = playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getUserBinding(event)));
-        int[] rgb = ColorUtils.getDominantColorColorThief(new File(info.getAvatarUrl()));
-        OKHSL mainHue = ColorUtils.rgbToOkhsl(rgb);
-        testOutputTool.saveImageToLocal(
-                rasterizationService.renderToCardInfo(info, mainHue.getHue(), saturationFactor(mainHue, rgb)));
+        testOutputTool.saveImageToLocal(renderCardInfo(event));
     }
 
-    // OKHSL L of saturated yellow is ~96, so "near white" still uses HSL L.
-    private static double saturationFactor(OKHSL okhsl, int[] rgb)
+    private byte[] renderCardInfo(LazybotSlashCommandEvent event) throws Exception
     {
-        boolean achromatic = okhsl.getSaturation() < 4 || ColorUtils.rgbToHslDetailed(rgb).getLightness() > 94;
-        return achromatic ? 0 : 1;
+        PlayerInfoVO info = playerService.getPlayerInfoVO(setupParameterGeneral(event, proxy.getUserBinding(event)));
+        PlayerDailyDelta delta = playerStatisticsService.resolveDailyDelta(info);
+        int[] rgb = ColorUtils.getDominantColorColorThief(new File(info.getAvatarUrl()));
+        return rasterizationService.renderToCardInfo(info, delta, CardInfoColorPalette.fromRgb(rgb));
     }
 
     private GeneralParameter setupParameterGeneral(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
