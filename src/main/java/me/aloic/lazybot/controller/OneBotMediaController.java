@@ -30,13 +30,15 @@ public class OneBotMediaController
         if (token == null || !TOKEN.matcher(token).matches())
             return ResponseEntity.notFound().build();
 
+        // find() records first access and enforces 15s post-access TTL (configurable)
         OneBotImagePublisher.StoredImage image = publisher.find(token);
         if (image == null)
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok()
                 .contentType(image.contentType())
-                .cacheControl(CacheControl.maxAge(Duration.ofMinutes(2)).cachePrivate())
+                //so adding a shorter TTL here if the cache was retrieved
+                .cacheControl(CacheControl.maxAge(Duration.ofSeconds(15)).cachePrivate())
                 .body(image.bytes());
     }
 }
