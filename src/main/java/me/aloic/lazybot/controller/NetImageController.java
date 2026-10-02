@@ -4,11 +4,10 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.CardMoelleuxParameter;
+import me.aloic.lazybot.service.CardService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 

@@ -22,13 +22,15 @@ server:
   port: 9001
 
 shiro:
+  wait-bot-connect: 30
+  heartbeat-stale-miss-count: 3
   ws:
     server:
       enable: true
       url: /lazybot
-    timeout: 10
+    timeout: 30
     max-binary-message-buffer-size: 5120000
-    max-text-message-buffer-size: 512000
+    max-text-message-buffer-size: 5242880
   limiter:
     enable: true
     rate: 10
@@ -50,6 +52,10 @@ tencent:
     token: above
 
 lazybot:
+  onebot:
+    image-mode: http
+    public-base-url: http://127.0.0.1:9001
+    image-ttl-seconds: 120
   prefix: /
   client_id: $osu_stuff
   response_type: code
@@ -58,6 +64,10 @@ lazybot:
   grant_type: authorization_code
   avatar-cache:
     revalidate-hours: 24
+  render-cache:
+    enabled: true
+    max-weight-mb: 256
+    expire-minutes: 30
   oauth:
     redirect-uri: https://your-domain.example/oauth/osu/callback
     scopes: identify public
@@ -75,6 +85,13 @@ lazybot:
     enabled: true
   command:
     whatif_calc_max_count: 200
+    max-pending-per-user: 16
+    message-dedup-retention-seconds: 30
+    message-dedup-cleanup-ms: 60000
+  player-stats:
+    snapshot-enabled: true
+    threads: 8
+    requests-per-minute: 400
 
 async:
   executor:

@@ -151,6 +151,7 @@ public class URLBuildUtil
                 .addPath("@".concat(playerName));
         return builder.build();
     }
+    //the open docs says no mode attribute, i shall investigate this later
     public static String buildURLOfPlayerInfoArray(List<String> playerIds, String mode)
     {
         UrlBuilder builder = UrlBuilder.ofHttp("https://osu.ppy.sh/api/v2/users", CharsetUtil.CHARSET_UTF_8);
@@ -224,7 +225,6 @@ public class URLBuildUtil
     public static String buildURLOfPlayerPerformancePlus(Integer id)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("player")
                 .addPath("info")
                 .addQuery("id", id);
@@ -233,7 +233,6 @@ public class URLBuildUtil
     public static String buildURLOfLazybotToken(Integer clientId, String clientSecret)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("auth")
                 .addPath("token")
                 .addQuery("clientId", clientId)
@@ -243,7 +242,6 @@ public class URLBuildUtil
     public static String buildURLOfAddScorePerformancePlus(Integer id,Integer beatmapId)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("player")
                 .addPath("add")
                 .addQuery("id", id)
@@ -253,7 +251,6 @@ public class URLBuildUtil
     public static String buildURLOfUpdatePerformancePlus(Integer id)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("player")
                 .addPath("update")
                 .addQuery("id", id);
@@ -262,7 +259,6 @@ public class URLBuildUtil
     public static String buildURLOfReinitPerformancePlus(Integer id)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("player")
                 .addPath("reinit")
                 .addQuery("id", id);
@@ -271,7 +267,6 @@ public class URLBuildUtil
     public static String buildURLOfScorePerformanceDimensionPlus(Integer id, ScorePerformanceDimension dimension)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("player")
                 .addPath("dimension")
                 .addQuery("id", id)
@@ -283,7 +278,6 @@ public class URLBuildUtil
     public static String buildURLOfScorePerformanceDimensionPlus(Integer id, ScorePerformanceDimension dimension, Integer offset, Integer limit)
     {
         UrlBuilder builder = UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("player")
                 .addPath("dimension")
                 .addQuery("id", id)
@@ -295,7 +289,6 @@ public class URLBuildUtil
     public static String buildURLOfStatsCount()
     {
         return UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("stats")
                 .addPath("count")
                 .build();
@@ -303,7 +296,6 @@ public class URLBuildUtil
     public static String buildURLOfStatsUsage()
     {
         return UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("stats")
                 .addPath("usage")
                 .build();
@@ -311,7 +303,6 @@ public class URLBuildUtil
     public static String buildURLOfStatsPlayerUpdated()
     {
         return UrlBuilder.ofHttp(ContentUtil.DESU_LIFE_BASE_URL, CharsetUtil.CHARSET_UTF_8)
-                .addPath("lazybot")
                 .addPath("stats")
                 .addPath("player")
                 .addPath("updated")

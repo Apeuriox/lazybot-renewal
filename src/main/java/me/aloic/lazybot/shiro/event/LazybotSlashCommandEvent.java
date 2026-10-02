@@ -18,6 +18,7 @@ public class LazybotSlashCommandEvent
    private GroupMessageEvent messageEvent;
    private Integer scorePanelVersion;
    private OsuMode osuMode;
+   private List<String> atParameters;
    //only for test use
    private String commandString;
 
@@ -41,6 +42,7 @@ public class LazybotSlashCommandEvent
               ", messageEvent=" + messageEvent +
               ", scorePanelVersion=" + scorePanelVersion +
               ", osuMode=" + osuMode +
+              ", atParameters=" + atParameters +
               ", commandString='" + commandString + '\'' +
               '}';
    }

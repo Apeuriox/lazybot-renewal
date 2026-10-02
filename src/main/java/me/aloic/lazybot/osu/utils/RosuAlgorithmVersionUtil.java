@@ -9,7 +9,7 @@ import java.util.Locale;
 public final class RosuAlgorithmVersionUtil
 {
     public static final AlgorithmVersion LATEST = AlgorithmVersion.REWORK_20260706;
-    public static final String SUPPORTED_ALIASES = "202210, 202411, 202502, 202510, 202607, latest";
+    public static final String SUPPORTED_ALIASES = "202210, 202411, 202502, 202510, 20260706, latest";
 
     private RosuAlgorithmVersionUtil() {}
 

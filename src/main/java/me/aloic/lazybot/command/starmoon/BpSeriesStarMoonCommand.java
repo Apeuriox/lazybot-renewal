@@ -44,10 +44,12 @@ public class BpSeriesStarMoonCommand implements LazybotSlashCommand
     {
             UserBindingPO starMoonToken= proxy.getStarMoonBinding(event);
             SeriesParameter parameter = SeriesParameter.setupParameter(event,starMoonToken.getPlayer_id(), starMoonToken.getDefault_mode());
+            parameter.applyAlgorithmVersion(event);
             BplistParameter params = new BplistParameter(parameter.getPlayerName(),
                     parameter.getPlayerId(),
                     parameter.getMode(),
                     1, parameter.getMaxIndex());
+            params.setAlgorithmVersion(parameter.getAlgorithmVersion());
             params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_subset()));
             if (event.getScorePanelVersion()==0)
                 CommandResultHandler.uploadImageToOnebot(bot,event,
@@ -64,10 +66,12 @@ public class BpSeriesStarMoonCommand implements LazybotSlashCommand
     {
         UserBindingPO starMoonToken= proxy.getStarMoonBinding(event);
         SeriesParameter parameter = SeriesParameter.setupParameter(event,starMoonToken.getPlayer_id(), starMoonToken.getDefault_mode());
+        parameter.applyAlgorithmVersion(event);
         BplistParameter params = new BplistParameter(parameter.getPlayerName(),
                     parameter.getPlayerId(),
                     parameter.getMode(),
                     1, parameter.getMaxIndex());
+            params.setAlgorithmVersion(parameter.getAlgorithmVersion());
             params.setSubRuleset(OsuSubruleset.getRuleset(starMoonToken.getDefault_subset()));
             if (event.getScorePanelVersion()==0)
                 testOutputTool.saveImageToLocal(RendererDistributor.renderPlayerScoreListToCard(playerService.bplistCardViewStarMoon(params),params.getFrom(),1));

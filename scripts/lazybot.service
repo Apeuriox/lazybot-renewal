@@ -7,7 +7,16 @@ Wants=network-online.target
 Type=simple
 User=lazybot
 WorkingDirectory=/opt/lazybot
-ExecStart=/usr/bin/java --enable-preview --enable-native-access=ALL-UNNAMED -jar /opt/lazybot/lazybot.jar
+
+# Ubuntu amd64 OpenJDK 25. On arm64 use java-25-openjdk-arm64.
+# Temurin: /usr/lib/jvm/temurin-25-jdk-amd64
+Environment=JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
+Environment=LAZYBOT_DIR=/home/lazybot/work-dir
+Environment=ROSU_LIB_PATH=/home/lazybot/rosu
+
+# --enable-native-access is required by the FFM PP calculator (SymbolLookup.libraryLookup).
+# --enable-preview matches the current Maven compiler flags; drop it if you compile without preview.
+ExecStart=/usr/lib/jvm/java-25-openjdk-amd64/bin/java --enable-preview --enable-native-access=ALL-UNNAMED -jar /opt/lazybot/lazybot.jar
 ExecStop=/bin/kill -SIGTERM $MAINPID
 Restart=on-failure
 RestartSec=10
@@ -15,9 +24,5 @@ StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=lazybot
 
-Environment=LAZYBOT_DIR=/home/lazybot/work-dir
-Environment=ROSU_LIB_PATH=/home/lazybot/rosu
-
 [Install]
 WantedBy=multi-user.target
-

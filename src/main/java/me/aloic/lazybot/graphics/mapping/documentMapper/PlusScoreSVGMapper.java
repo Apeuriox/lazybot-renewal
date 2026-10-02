@@ -149,8 +149,7 @@ public class PlusScoreSVGMapper extends LazybotSVGMapper
             if (!score.getIsLazer())
                 score.setModJSON(
                         score.getModJSON().stream()
-                                .filter(mod -> !mod.getAcronym()
-                                        .equalsIgnoreCase("CL"))
+                                .filter(mod -> !mod.getAcronym().equalsIgnoreCase("CL"))
                                 .toList());
         }
         String modStr = null;

@@ -1,30 +1,27 @@
 package me.aloic.lazybot.osu.enums;
 
+import lombok.Getter;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 
+@Getter
 public enum OsuMode
 {
-    Osu(0, "osu"),
-    Taiko(1, "taiko"),
-    Catch(2, "fruits"),
-    Mania(3, "mania"),
-    Default(-1, "");
+    Osu(0, "osu","s"),
+    Taiko(1, "taiko","t"),
+    Catch(2, "fruits","f"),
+    Mania(3, "mania","m"),
+    Default(-1, "","");
 
     private final int value;
     private final String describe;
+    private final String abbr;
 
-    OsuMode(int value, String describe) {
+    OsuMode(int value, String describe, String abbr) {
         this.value = value;
         this.describe = describe;
+        this.abbr = abbr;
     }
 
-    public int getValue() {
-        return value;
-    }
-
-    public String getDescribe() {
-        return describe;
-    }
 
     public static OsuMode getMode(int value) {
         return switch (value)

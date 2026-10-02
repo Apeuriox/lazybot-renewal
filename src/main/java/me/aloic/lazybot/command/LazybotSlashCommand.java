@@ -10,6 +10,6 @@ public interface LazybotSlashCommand
     void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception;
     void execute(LazybotSlashCommandEvent event) throws Exception;
     default String getHelp() {
-        return "[Lazybot 暂无帮助文档";
+        return "[Lazybot] 暂无帮助文档";
     }
 }

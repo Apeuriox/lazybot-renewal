@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
-import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
 import java.util.List;
@@ -45,8 +44,6 @@ public class RecentParameter extends LazybotCommandParameter
             return new RecentParameter(null,1,0,null);
 
         ArgumentParser parser = ArgumentParser.of(params);
-        parser.tryPop(Parsers.ALGORITHM_VERSION,
-                matcher -> recentParameter.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
         parser.tryPop(Parsers.INDEX,
                 matcher -> recentParameter.setIndex(Integer.parseInt(matcher.group(1))));
         if (recentParameter.getIndex() == null) {

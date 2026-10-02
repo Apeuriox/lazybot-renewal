@@ -90,6 +90,13 @@ public class ApiRequestExecutor
                     {
                         throw new LazybotNotFoundException("请求对象不存在");
                     }
+                    if (status == 429)
+                    {
+                        long waitSeconds = parseRetryAfterSeconds(response.header("Retry-After"));
+                        logger.warn("HTTP 429 for {}, waiting {}s", url, waitSeconds);
+                        TimeUnit.SECONDS.sleep(waitSeconds);
+                        continue;
+                    }
                     if (status >= 200 && status < 300)
                     {
                         logger.info("HTTP request successful: {}", url);
@@ -165,6 +172,19 @@ public class ApiRequestExecutor
             }
         }
         return null;
+    }
+
+    private long parseRetryAfterSeconds(String retryAfter)
+    {
+        if (retryAfter == null || retryAfter.isBlank()) {
+            return 5L;
+        }
+        try {
+            return Math.max(1L, Long.parseLong(retryAfter.trim()));
+        }
+        catch (NumberFormatException ignored) {
+            return 5L;
+        }
     }
 
     private HttpRequest createRequest(HTTPTypeEnum type,

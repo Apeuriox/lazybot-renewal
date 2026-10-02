@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -81,8 +82,7 @@ public class PlayerServiceImpl implements PlayerService
     private void logRecalculationAlgorithm(String command, LazybotCommandParameter params)
     {
         AlgorithmVersion algorithm = selectedAlgorithm(params);
-        logger.info("[PP重算] command={}, mode={}, algorithm={} ({})",
-                command, params.getMode(), algorithm.name(), algorithm.stableKey());
+        logger.info("[PP Recalc] command={}, mode={}, algorithm={} ({})", command, params.getMode(), algorithm.name(), algorithm.stableKey());
     }
 
     private AlgorithmVersion selectedAlgorithm(LazybotCommandParameter params)
@@ -101,9 +101,7 @@ public class PlayerServiceImpl implements PlayerService
     {
         int fromIndex = params.getFrom() - 1;
         if (fromIndex >= scores.size()) {
-            throw new LazybotRuntimeException(
-                    "超出能索引的最大距离，当前范围起点为: " + params.getFrom()
-                            + ", 最大为: " + scores.size());
+            throw new LazybotRuntimeException("超出能索引的最大距离，当前范围起点为: " + params.getFrom() + ", 最大为: " + scores.size());
         }
         int toIndex = Math.min(params.getTo(), scores.size());
         return new ArrayList<>(scores.subList(fromIndex, toIndex));
@@ -155,6 +153,42 @@ public class PlayerServiceImpl implements PlayerService
         return setupPlusScore(scoreVO);
     }
 
+    @Override
+    public ScoreVO getUserHighestPpOnMap(ScoreParameter params) throws Exception
+    {
+        logRecalculationAlgorithm("pp", params);
+        PlayerInfoDTO player = getTargetPlayerInfoDTO(params);
+        List<ScoreLazerDTO> scoreList = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), player.getId(), params.getMode());
+        if (scoreList == null || scoreList.isEmpty()) {
+            throw new LazybotRuntimeException("没有找到" + player.getUsername() + "在" + params.getBeatmapId() + "上的成绩");
+        }
+        BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode());
+        boolean shouldRankByLocalPp = params.getAlgorithmVersion() != null && params.getAlgorithmVersion() != RosuAlgorithmVersionUtil.LATEST;
+        Path beatmapPath = AssetDownloadUtil.beatmapPath(beatmapDTO.getId(), false);
+        AlgorithmVersion algorithm = selectedAlgorithm(params);
+        ScoreLazerDTO best = scoreList.stream()
+                .max(Comparator.comparingDouble(score -> rankingPp(score, beatmapPath, shouldRankByLocalPp, algorithm)))
+                .orElseThrow(() -> new LazybotRuntimeException("没有找到可渲染的最高PP成绩"));
+        best.setUser(player);
+        boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if (params.getVersion() == 4) {
+            easterTrigger = true;
+            params.setVersion(1);
+        }
+        if (easterTrigger && !Objects.equals(params.getMode(), "osu")) {
+            easterTrigger = false;
+        }
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(beatmapDTO, best, false, params.getAlgorithmVersion());
+        verifyBeatmapsCache(scoreVO);
+        if (easterTrigger) {
+            scoreVO.setRawPlayerData(player);
+            params.setVersion(727);
+        }
+        if (params.getChannelId() != null && params.getChannelId() != 1919810L) {
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        }
+        return scoreVO;
+    }
 
 
     @Override
@@ -175,6 +209,23 @@ public class PlayerServiceImpl implements PlayerService
     }
     @Override
     public BeatmapStatistics getBeatmapStatisticsWithImaginaryParams(BeatmapStatisticsParameter params) throws Exception {
+        BeatmapStatistics result = prepareBasicBeatmapStatistics(params);
+        rosuPerformanceService.setupBeatmapStatistics(result, params.getAlgorithmVersion());
+
+        double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);
+        double weightSpeed = Math.pow(result.getPerformance().getSpdPP(), 1.1);
+        double weightAccuracy = Math.pow(result.getPerformance().getAccPP(), 1.1);
+        double weightReading = Math.pow(result.getPerformance().getReadPP(), 1.1);
+        double totalWeight = weightAim + weightSpeed + weightAccuracy + weightReading;
+        int ratioAim = (int) Math.round(weightAim * 100.0 / totalWeight);
+        int ratioSpeed = (int) Math.round(weightSpeed * 100.0 / totalWeight);
+        int ratioReading = (int) Math.round(weightReading * 100.0 / totalWeight);
+        result.setPpBreakdownRatioChain(ratioAim +"%-" + ratioSpeed+"%-" + ratioReading+"%-"+ (100-ratioAim-ratioSpeed-ratioReading) +"%");
+        ModCalculatorUtil.afterModMapInfo(result.getBeatmap(), result.getImaginaryMods());
+        return result;
+    }
+
+    private BeatmapStatistics prepareBasicBeatmapStatistics(BeatmapStatisticsParameter params){
         logRecalculationAlgorithm("map", params);
         if (!Objects.equals(params.getMode(), "osu")) throw new LazybotRuntimeException("暂不支持其他模式，请等待更新");
 
@@ -205,19 +256,14 @@ public class PlayerServiceImpl implements PlayerService
             daSetting.setOverall_difficulty(params.getOverallDifficulty());
             result.getImaginaryMods().add(new Mod("DA", daSetting));
         }
-        rosuPerformanceService.setupBeatmapStatistics(result, params.getAlgorithmVersion());
-
-        double weightAim = Math.pow(result.getPerformance().getAimPP(), 1.1);
-        double weightSpeed = Math.pow(result.getPerformance().getSpdPP(), 1.1);
-        double weightAccuracy = Math.pow(result.getPerformance().getAccPP(), 1.1);
-        double weightReading = Math.pow(result.getPerformance().getReadPP(), 1.1);
-        double totalWeight = weightAim + weightSpeed + weightAccuracy + weightReading;
-        int ratioAim = (int) Math.round(weightAim * 100.0 / totalWeight);
-        int ratioSpeed = (int) Math.round(weightSpeed * 100.0 / totalWeight);
-        int ratioReading = (int) Math.round(weightReading * 100.0 / totalWeight);
-        result.setPpBreakdownRatioChain(ratioAim +"%-" + ratioSpeed+"%-" + ratioReading+"%-"+ (100-ratioAim-ratioSpeed-ratioReading) +"%");
-        ModCalculatorUtil.afterModMapInfo(result.getBeatmap(), result.getImaginaryMods());
         return result;
+    }
+
+    @Override
+    public MapPerformanceAnalysis getMapPpAnalysis(BeatmapStatisticsParameter params) {
+        BeatmapStatistics context = prepareBasicBeatmapStatistics(params);
+        ModCalculatorUtil.afterModMapInfo(context.getBeatmap(), context.getImaginaryMods());
+        return rosuPerformanceService.analyzeBeatmapPerformance(context);
     }
 
 
@@ -306,7 +352,7 @@ public class PlayerServiceImpl implements PlayerService
             scoreVO.setRawPlayerData(player);
             params.setVersion(727);
         }
-        if (params.getChannelId()!=null)
+        if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
             CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return scoreVO;
     }
@@ -348,7 +394,8 @@ public class PlayerServiceImpl implements PlayerService
                 false,
                 params.getAlgorithmVersion());
         verifyBeatmapsCache(scoreVO);
-        CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
 
         if(easterTrigger) {
             if (player==null) player=dataExtractor.extractPlayerInfoDTO(params.getPlayerId(),params.getMode());
@@ -382,7 +429,8 @@ public class PlayerServiceImpl implements PlayerService
                 false,
                 params.getAlgorithmVersion());
         verifyBeatmapsCache(scoreVO);
-        CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        if (params.getChannelId()!=null && params.getChannelId()!=1919810L)
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
         return scoreVO;
     }
 
@@ -503,14 +551,8 @@ public class PlayerServiceImpl implements PlayerService
         PlayerInfoDTO playerInfoDTO = getTargetPlayerInfoDTO(params);
 
         PlayerInfoVO info = OsuToolsUtil.setupPlayerInfoVO(playerInfoDTO);
-        List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestScoreList(
-                String.valueOf(info.getId()),
-                100,0,params.getMode());
-        if (scoreDTOList.size() < 110) {
-            scoreDTOList.addAll(dataExtractor.extractUserBestScoreList(
-                    String.valueOf(info.getId()),
-                    100,101,params.getMode()));
-        }
+        List<ScoreLazerDTO> scoreDTOList=dataExtractor.extractUserBestAll(
+                String.valueOf(info.getId()), params.getMode());
         //Why not directly filter scoreDTOs? cuz we need this procedure to set up Indexes
         List<ScoreVO> scoreVOList=TransformerUtil.scoreTransformForList(scoreDTOList);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC+0"));
@@ -735,6 +777,7 @@ public class PlayerServiceImpl implements PlayerService
             }
             catch (Exception e)
             {
+                e.printStackTrace();
                 throw new LazybotRuntimeException("PP+附属服务离线，请等待其恢复服务后重试");
             }
             return new PerformancePlusProfile(performance,playerInfoVO);
@@ -765,7 +808,7 @@ public class PlayerServiceImpl implements PlayerService
             );
         }
         catch (LazybotRuntimeException e) {
-            throw new LazybotRuntimeException("Lazybot-PPplus数据获取失败，请稍后再试");
+            throw new LazybotRuntimeException("获取出错，你可能需要先 /ppp 初始化你的个人资料: " + e.getMessage());
 
         }
         PlusScorePerformance playerPerformance=new PlusScorePerformance(scores);
@@ -1004,7 +1047,14 @@ public class PlayerServiceImpl implements PlayerService
         return scorePlus;
     }
 
-
+    private double rankingPp(ScoreLazerDTO score, Path beatmapPath, boolean forceLocal, AlgorithmVersion algorithm)
+    {
+        if (!forceLocal && score.getPp() != null) {
+            return score.getPp();
+        }
+        Double pp = rosuPerformanceService.calculateCurrentPerformance(beatmapPath, score, algorithm).getCurrentPP();
+        return pp == null ? 0 : pp;
+    }
 
 
 }

@@ -71,11 +71,11 @@ public class NoChokeCommand implements LazybotSlashCommand
         if (event.getCommandType().equalsIgnoreCase("no1miss"))
             CommandResultHandler.uploadImageToOnebot(bot,event,
                     RendererDistributor.renderPlayerScoreListToCard(
-                    playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),1),0,2)
+                    playerService.noChoke(setupParameter(event),1),0,2)
             );
         else  CommandResultHandler.uploadImageToOnebot(bot,event,
                 RendererDistributor.renderPlayerScoreListToCard(
-                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),0),0,3,
+                        playerService.noChoke(setupParameter(event),0),0,3,
                         NOCHOKE_LABEL)
         );
     }
@@ -86,14 +86,23 @@ public class NoChokeCommand implements LazybotSlashCommand
         if (event.getCommandType().equalsIgnoreCase("no1miss"))
             testOutputTool.saveImageToLocal(
                     RendererDistributor.renderPlayerScoreListToCard(
-                            playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),1),0,2)
+                            playerService.noChoke(setupParameter(event),1),0,2)
             );
         else testOutputTool.saveImageToLocal(
                 RendererDistributor.renderPlayerScoreListToCard(
-                        playerService.noChoke(GeneralParameter.setupParameter(event, proxy.getUserBinding(event)),0),0,3,
+                        playerService.noChoke(setupParameter(event),0),0,3,
                         NOCHOKE_LABEL)
         );
     }
+
+    private GeneralParameter setupParameter(LazybotSlashCommandEvent event)
+    {
+        GeneralParameter params = GeneralParameter.setupParameter(
+                event, proxy.getUserBinding(event));
+        params.applyAlgorithmVersion(event);
+        return params;
+    }
+
     @Override
     public String getHelp()
     {
@@ -106,6 +115,6 @@ public class NoChokeCommand implements LazybotSlashCommand
                         .addExample("/No1Miss Aloic")
                         .addExample("/NoChoke Aloic @202411")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Algorithm","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

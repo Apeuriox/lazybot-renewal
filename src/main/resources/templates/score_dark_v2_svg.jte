@@ -1,0 +1,863 @@
+@import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO
+@import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod
+@import me.aloic.lazybot.osu.enums.OsuMode
+@import me.aloic.lazybot.util.FormatHelper
+@import java.util.List
+@import me.aloic.lazybot.osu.enums.ModColor
+@import me.aloic.lazybot.util.ColorUtils
+@import me.aloic.lazybot.osu.enums.RankColor
+@param ScoreVO score
+@param Integer hue
+@param Double saturationFactor
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1920" height="1080">
+  <defs>
+    <style>
+
+      .cls-4 {
+      font-family: RubikItalic-BlackItalic, Rubik;
+      font-size: 305.99px;
+      font-style: italic;
+      font-variation-settings: 'wght' 900;
+      font-weight: 800;
+      letter-spacing: -.03em;
+      }
+
+      .cls-6 {
+      fill: #39b54a;
+      }
+
+
+      .cls-5, .cls-10, .cls-11, .cls-12, .cls-13, .cls-14, .cls-15, .cls-16,.cls-217, .cls-17, .cls-18, .cls-19, .cls-20, .cls-21, .cls-22, .cls-23, .cls-24, .cls-25, .cls-26, .cls-210 {
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      }
+
+      .cls-5, .cls-11, .cls-14, .cls-17 {
+      font-size: 55px;
+      letter-spacing: .08em;
+      }
+
+      .cls-27, .cls-29, .cls-13, .cls-30, .cls-16, .cls-18, .cls-32, .cls-33, .cls-21, .cls-22, .cls-23, .cls-34 {
+      fill: #e6e6e6;
+      }
+
+      .cls-27, .cls-28, .cls-29, .cls-30, .cls-32, .cls-33, .cls-34 {
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      }
+
+      .cls-27, .cls-13, .cls-32 {
+      font-size: 40px;
+      }
+
+      .cls-28, .cls-10,.cls-210, .cls-11, .cls-13, .cls-14, .cls-35, .cls-15, .cls-16, .cls-32, .cls-33, .cls-20, .cls-22, .cls-24, .cls-25, .cls-34 {
+      isolation: isolate;
+      }
+
+      .cls-28, .cls-15 {
+      font-size: 27.5px;
+      }
+
+      .cls-10, .cls-29, .cls-23, .cls-25, .cls-34 {
+      font-size: 30px;
+      }
+
+      .cls-10, .cls-25 {
+      fill: #f2f2f2;
+      }
+
+      .cls-36 {
+      fill: #2a2933;
+      }
+
+      .cls-36, .cls-37, .cls-38, .cls-31, .cls-39, .cls-40, .cls-41, .cls-42, .cls-43, .cls-44, .cls-45, .cls-46, .cls-47, .cls-48, .cls-49, .cls-50, .cls-51, .cls-52, .cls-6, .cls-53, .cls-54, .cls-55, .cls-56 {
+      stroke-width: 0px;
+      }
+
+      .cls-57 {
+      letter-spacing: 0em;
+      }
+
+      .cls-39 {
+      fill: #c3292f;
+      }
+
+      .cls-37 {
+      fill: #898989;
+      }
+
+
+      .cls-38 {
+      fill: #aef0ff;
+      }
+
+
+      .cls-51 {
+      fill: #f3b814;
+      }
+
+      .cls-30, .cls-19 {
+      font-size: 15px;
+      }
+
+
+
+
+      .cls-41 {
+      fill: #29abe2;
+      }
+
+
+      .cls-16 {
+      font-size: 41.25px;
+      }
+
+
+      .cls-71, .cls-25 {
+      letter-spacing: .06em;
+      }
+
+
+      .cls-44 {
+      fill: #ff4200;
+      }
+
+
+      .cls-45 {
+      fill: gray;
+      }
+
+      .cls-46 {
+      fill: #ff88b6;
+      }
+
+      .cls-18 {
+      font-size: 50px;
+      }
+
+      .cls-135 {
+      opacity: .5;
+      }
+
+
+      .cls-47 {
+      fill: #ff4080;
+      }
+
+      .cls-33,.cls-12,.cls-20 {
+      font-size: 20px;
+      }
+
+      .cls-21 {
+      font-size: 75px;
+      }
+
+      .cls-48 {
+      fill: url(#darkGraditent);
+      }
+
+
+      .cls-22 {
+      font-size: 26.67px;
+      }
+
+      .cls-49 {
+      fill: #fff;
+      }
+
+
+      .cls-50 {
+      fill: #ffe8a9;
+      }
+
+
+      .cls-24 {
+      font-size: 20.62px;
+      }
+
+
+      .cls-26 {
+      font-size: 60px;
+      }
+
+
+      .cls-52 {
+      fill: #ff9e80;
+      }
+
+      .cls-55 {
+      fill: #f0ffbb;
+      }
+
+
+      .cls-57{
+      isolation: isolate;
+      font-weight: 700;
+      font-size: 110px;
+      font-family: RubikItalic-BlackItalic, Rubik;
+
+      }
+      .cls-121{
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      font-size:20px;
+      fill: #e6e6e6;
+      }
+      .cls-122{
+      stroke-width: 0px;
+      }
+      .cls-123{
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 30px;
+      }
+      .cls-124{
+      fill:white;
+      font-size:45px;
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      }
+      .cls-125{
+      fill:white;
+      font-size:15px;
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      }
+      .cls-277{
+      font-size: 40px;
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      }
+      .cls-211{
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 75px;
+      }
+      .cls-188{
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 50px;
+      }
+      .cls-133{
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 40px;
+      isolation: isolate;
+      }
+      .cls-322{
+      isolation: isolate;
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      font-size: 40px;
+      }
+      .cls-333{
+      font-family: Rubik-Regular, Rubik;
+      font-variation-settings: 'wght' 400;
+      font-size: 20px;
+      isolation: isolate;
+      }
+      .cls-222{
+      isolation: isolate;
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 26.67px;
+      }
+      .cls-166{
+      isolation: isolate;
+      font-family: Rubik-Bold, Rubik;
+      font-variation-settings: 'wght' 700;
+      font-weight: 700;
+      font-size: 41.25px;
+      }
+      .cls-210{
+      font-size:20px;
+      }
+      .cls-217{
+      letter-spacing: .08em;
+      font-size:35px;
+      }
+    </style>
+    <linearGradient id="darkGraditent"  x1="553.71" y1="1444.87" x2="1798.94" y2="199.64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#000"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+
+    </linearGradient>
+    <linearGradient id="maniaMAXGraditent" x1="600" y1="670" x2="670" y2="700"  gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#702a17"/>
+      <stop offset="0.3" stop-color="#f5c238"/>
+      <stop offset="0.7" stop-color="#6e975f"/>
+      <stop offset="1" stop-color="#429886"/>
+    </linearGradient>
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
+
+    </filter>
+
+    <rect
+            class="cls-45" transform="translate(10 199)" width="60" height="60" rx="5" ry="5"
+            id="avatar-path" />
+
+    <clipPath
+            id="avatarBorder">
+      <use
+              xlink:href="#avatar-path"
+              id="use1" />
+    </clipPath>
+
+  </defs>
+  !{
+    int satLabelBg = (int) Math.round(12 * saturationFactor);
+    int satLabelText = (int) Math.round(37 * saturationFactor);
+    int satLabelMask = (int) Math.round(11 * saturationFactor);
+    int satHeaderBg = (int) Math.round(7 * saturationFactor);
+  }
+  <g id="Background">
+    <image
+            xlink:href="${score.getBeatmap().getBgUrl()}"
+            x="541"
+            y="78"
+            width="1380"
+            height="1000"
+            preserveAspectRatio="xMidYMid slice"
+            filter="url(#blur)"
+            id="mapBg-right"/>
+    <rect class="cls-56" id="label-left-background" fill="hsl(${hue}, ${satLabelBg}%, 22%)" width="540" height="1080"/>
+    <rect class="cls-40" fill="hsl(${hue}, ${satLabelBg}%, 13%)" id="label-left-left-background" width="160" height="1080"/>
+
+    <rect class="cls-54" fill="hsl(${hue}, ${satHeaderBg}%, 10%)" id="label-header-bg" width="1920" height="80"/>
+    @if(score.getMode().equals(OsuMode.Osu))
+      <path id="osu" class="cls-31" transform="translate(0,-189)" fill="hsl(${hue},89%,79%)" d="M1655,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1655,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1655,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15Z"/>
+      <rect fill="#e6e6e6" id="label-osu" transform="translate(1638.5,73)" width="35" height="5" rx="2.5" ry="2.5"/>
+    @else
+      <path id="osu" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1655,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1655,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1655,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15Z"/>
+    @endif
+
+    @if(score.getMode().equals(OsuMode.Taiko))
+      <path id="taiko" class="cls-31" transform="translate(0,-189)" fill="hsl(${hue},89%,79%)" d="M1722.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1722.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1722.5,217.34c6.2,0,11.25,5.05,11.25,11.25s-5.05,11.25-11.25,11.25-11.25-5.05-11.25-11.25,5.05-11.25,11.25-11.25M1722.5,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1724.38,214.34h-3.75v28.5h3.75v-28.5Z"/>
+      <rect fill="#e6e6e6" id="label-taiko" transform="translate(1706,73)" width="35" height="5" rx="2.5" ry="2.5"/>
+    @else
+      <path id="taiko" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1722.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1722.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1722.5,217.34c6.2,0,11.25,5.05,11.25,11.25s-5.05,11.25-11.25,11.25-11.25-5.05-11.25-11.25,5.05-11.25,11.25-11.25M1722.5,213.59c-8.28,0-15,6.72-15,15s6.72,15,15,15,15-6.72,15-15-6.72-15-15-15h0ZM1724.38,214.34h-3.75v28.5h3.75v-28.5Z"/>
+    @endif
+
+    @if(score.getMode().equals(OsuMode.Catch))
+      <path id="ctb" class="cls-31" transform="translate(0,-189)" fill="hsl(${hue},89%,79%)" d="M1790,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1790,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1791.88,221.09c0,2.07-1.68,3.75-3.75,3.75s-3.75-1.68-3.75-3.75,1.68-3.75,3.75-3.75,3.75,1.68,3.75,3.75ZM1788.12,232.34c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75ZM1795.62,224.84c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75Z"/>
+      <rect fill="#e6e6e6" id="label-ctb" transform="translate(1773.5,73)" width="35" height="5" rx="2.5" ry="2.5"/>
+    @else
+      <path id="ctb" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1790,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1790,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1791.88,221.09c0,2.07-1.68,3.75-3.75,3.75s-3.75-1.68-3.75-3.75,1.68-3.75,3.75-3.75,3.75,1.68,3.75,3.75ZM1788.12,232.34c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75ZM1795.62,224.84c-2.07,0-3.75,1.68-3.75,3.75s1.68,3.75,3.75,3.75,3.75-1.68,3.75-3.75-1.68-3.75-3.75-3.75Z"/>
+    @endif
+
+    @if(score.getMode().equals(OsuMode.Mania))
+      <path id="mania" class="cls-31" transform="translate(0,-189)" fill="hsl(${hue},89%,79%)" d="M1857.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1857.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1859.38,243.59v-30c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v30c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1866.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1851.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88Z"/>
+      <rect fill="#e6e6e6" id="label-mania" transform="translate(1841,73)" width="35" height="5" rx="2.5" ry="2.5"/>
+    @else
+      <path id="mania" class="cls-31" transform="translate(0,-189)" fill="#e6e6e6" d="M1857.5,209.84c10.34,0,18.75,8.41,18.75,18.75s-8.41,18.75-18.75,18.75-18.75-8.41-18.75-18.75,8.41-18.75,18.75-18.75M1857.5,206.09c-12.43,0-22.5,10.07-22.5,22.5s10.07,22.5,22.5,22.5,22.5-10.07,22.5-22.5-10.07-22.5-22.5-22.5h0ZM1859.38,243.59v-30c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v30c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1866.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88ZM1851.88,236.09v-15c0-1.04-.84-1.88-1.88-1.88s-1.88.84-1.88,1.88v15c0,1.04.84,1.88,1.88,1.88s1.88-.84,1.88-1.88Z"/>
+    @endif
+
+
+    <rect class="cls-135" fill="hsl(${hue}, ${satLabelMask}%, 18%)" id="label-mask-1" x="0" y="77.89" width="540" height="60"/>
+    <rect class="cls-135" fill="hsl(${hue}, ${satLabelMask}%, 18%)" id="label-mask-2" x="0" y="197.89" width="540" height="60"/>
+    <rect class="cls-135" fill="hsl(${hue}, ${satLabelMask}%, 18%)" id="label-mask-3" x="0" y="317.89" width="540" height="430"/>
+    @if(score.getBeatmap().getDifficult_rating() > 10)
+        <rect id="starRatingBG" class="cls-122" fill="${ColorUtils.getDifficultyBackgroundColor(score.getBeatmap().getDifficult_rating())}" x="180" y="349" width="150" height="40" rx="20" ry="20"/>
+    @else
+        <rect id="starRatingBG" class="cls-122" fill="${ColorUtils.getDifficultyBackgroundColor(score.getBeatmap().getDifficult_rating())}" x="180" y="349" width="130" height="40" rx="20" ry="20"/>
+    @endif
+
+    !{String starFontColor = ColorUtils.getDifficultyColor(score.getBeatmap().getDifficult_rating());}
+
+    <polygon id="starRatingStar" transform="translate(4,-2)"  fill="${starFontColor}" class="cls-123" points="200 355.86 204.16 364.28 213.45 365.63 206.72 372.19 208.31 381.44 200 377.07 191.69 381.44 193.28 372.19 186.55 365.63 195.84 364.28 200 355.86"/>
+
+
+    <rect class="cls-48" x="540" y="79" width="1380" height="1000"/>
+
+
+  </g>
+
+
+  <g id="Text" transform="translate(0,-189)">
+    <text class="cls-12" fill="hsl(${hue}, ${satLabelText}%, 68%)" id="label-artist" transform="translate(30 368.59)">Artist</text>
+    <text class="cls-20" fill="hsl(${hue}, ${satLabelText}%, 68%)" id="label-mapper" transform="translate(30 428.59)">Mapper</text>
+    <text class="cls-20" fill="hsl(${hue}, ${satLabelText}%, 68%)" id="label-mapInfo" transform="translate(30 548.59)">Map Infos</text>
+    <text class="cls-20" fill="hsl(${hue}, ${satLabelText}%, 68%)" id="label-diff" transform="translate(30 488.59)">Difficulty</text>
+    <text class="cls-20" fill="hsl(${hue}, ${satLabelText}%, 68%)" id="label-title" transform="translate(30 308.59)">Title</text>
+    <text id="songTitle" class="cls-23" transform="translate(180 308.59)">${score.getBeatmap().getTitle().length()>20?score.getBeatmap().getTitle().substring(0,19).concat("..."):score.getBeatmap().getTitle()}</text>
+    <text id="artist" class="cls-23" transform="translate(180 368.59)">${score.getBeatmap().getArtist().length()>20?score.getBeatmap().getArtist().substring(0,19).concat("..."):score.getBeatmap().getArtist()}</text>
+    <text id="mapper" class="cls-23" transform="translate(180 428.59)">${score.getBeatmap().getCreator().length()>20?score.getBeatmap().getCreator().substring(0,19).concat("..."):score.getBeatmap().getCreator()}</text>
+    <text id="version" class="cls-23" transform="translate(180 488.59)">${score.getBeatmap().getVersion().length()>20?score.getBeatmap().getVersion().substring(0,19).concat("..."):score.getBeatmap().getVersion()}</text>
+    <text id="bid" class="cls-23" transform="translate(180 668.59)">${score.getBeatmap().getBid()}</text>
+    <text class="cls-121" transform="translate(180 638.59)"><tspan x="0" y="0">Bid</tspan></text>
+    @if(score.getBeatmap().getDifficult_rating() > 10)
+        <text id="starRating" fill="${starFontColor}" class="cls-123" text-anchor="middle" transform="translate(270 568)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getDifficult_rating(), 2)}</text>
+    @else
+        <text id="starRating" fill="${starFontColor}" class="cls-123" transform="translate(225 568)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getDifficult_rating(), 2)}</text>
+    @endif
+    <text class="cls-121" transform="translate(180 738.59)">BPM</text>
+    <text id="bpm" class="cls-23" transform="translate(180 768.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getBpm(), 2)}</text>
+    <text class="cls-121" transform="translate(390 738.59)">Length</text>
+    <text id="length" class="cls-23" transform="translate(390 768.59)">${FormatHelper.formatHitLength(score.getBeatmap().getAttributes().getLength())}</text>
+
+    @if(score.getMode().equals(OsuMode.Osu))
+    <g id="attribute-osu" opacity="1">
+      <text class="cls-121" transform="translate(180 808.59)">AR</text>
+      <text id="AR-osu" class="cls-23" transform="translate(180 838.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getAr(), 2)}</text>
+      <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">OD</tspan></text>
+      <text id="OD-osu" class="cls-23" transform="translate(390 838.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getOd(), 2)}</text>
+      <text class="cls-121" transform="translate(180 878.59)">CS</text>
+      <text id="CS-osu" class="cls-23" transform="translate(180 908.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getCs(), 2)}</text>
+      <text class="cls-121" transform="translate(390 878.59)">HP</text>
+      <text id="HP-osu" class="cls-23" transform="translate(390 908.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getHp(), 2)}</text>
+    </g>
+    @endif
+    @if(score.getMode().equals(OsuMode.Taiko))
+    <g id="attribute-taiko" opacity="1">
+      <text class="cls-121" transform="translate(180 808.59)">OD</text>
+      <text id="OD-taiko" class="cls-23" transform="translate(180 838.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getOd(), 2)}</text>
+      <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">HP</tspan></text>
+      <text id="HP-taiko" class="cls-23" transform="translate(390 838.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getHp(), 2)}</text>
+    </g>
+    @endif
+    @if(score.getMode().equals(OsuMode.Catch))
+    <g id="attribute-catch" opacity="0">
+      <text class="cls-121" transform="translate(180 808.59)">AR</text>
+      <text id="AR-catch" class="cls-23" transform="translate(180 838.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getAr(), 2)}</text>
+      <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">OD</tspan></text>
+      <text id="OD-catch" class="cls-23" transform="translate(390 838.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getOd(), 2)}</text>
+      <text class="cls-121" transform="translate(180 878.59)">CS</text>
+      <text id="CS-catch" class="cls-23" transform="translate(180 908.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getCs(), 2)}</text>
+      <text class="cls-121" transform="translate(390 878.59)">HP</text>
+      <text id="HP-catch" class="cls-23" transform="translate(390 908.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getHp(), 2)}</text>
+    </g>
+    @endif
+    @if(score.getMode().equals(OsuMode.Mania))
+    <g id="attribute-mania" opacity="0">
+      <text class="cls-121" transform="translate(180 808.59)">KEY</text>
+      <text id="Key-mania" class="cls-23" transform="translate(180 838.59)">${Math.round(score.getBeatmap().getAttributes().getCs())}</text>
+      <text class="cls-121" transform="translate(390 808.59)"><tspan x="0" y="0">OD</tspan></text>
+      <text id="OD-mania" class="cls-23" transform="translate(390 838.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getOd(), 2)}</text>
+      <text class="cls-121" transform="translate(180 878.59)">HP</text>
+      <text id="HP-mania" class="cls-23" transform="translate(180 908.59)">${FormatHelper.formatDoubleDecimal(score.getBeatmap().getAttributes().getHp(), 2)}</text>
+    </g>
+    @endif
+
+    <g id="avatarGroup">
+
+      <rect class="cls-45" transform="translate(10 199)" width="60" height="60" rx="5" ry="5"/>
+      <image
+              xlink:href="${score.getAvatarUrl()}"
+              x="10" y="199" width="60" height="60" id="avatar" clip-path="url(#avatarBorder)"
+      />
+    </g>
+    <text id="playerName" class="cls-23" transform="translate(80 248.59)">${score.getUser_name()}</text>
+    <text class="cls-30" transform="translate(80 218.59)">Player Name</text>
+    <text id="achievedTime" class="cls-23" transform="translate(550 248.59)">${FormatHelper.formatJsonDateToString(score.getCreate_at(),"yyyy-MM-dd   HH:mm:ss")}</text>
+    <text class="cls-30" transform="translate(550 218.59)">Achieved Time</text>
+    @if(score.getMode().equals(OsuMode.Osu))
+    <g id="osuStatistics">
+      <rect fill="black" opacity="0.4" x="902" y="700.59" width="67.48" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="700.59" width="116.36" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="820.59" width="85.93" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="902" y="820.59" width="92" height="40" rx="20" ry="20"/>
+      <rect class="cls-6" x="900" y="698.59" width="67.48" height="40" rx="20" ry="20"/>
+      <rect class="cls-41" x="600" y="698.59" width="116.36" height="40" rx="20" ry="20"/>
+      <rect class="cls-51" x="600" y="818.59" width="85.93" height="40" rx="20" ry="20"/>
+      <rect class="cls-39" x="900" y="818.59" width="92" height="40" rx="20" ry="20"/>
+      <text class="cls-10" transform="translate(910 728.59)"><tspan class="cls-71" x="0" y="0">OK</tspan></text>
+      <text id="100Count-Shadow-o" fill="black" opacity="0.4" class="cls-5" transform="translate(903 791.59)">${score.getStatistics().getOk()}</text>
+      <text id="100Count-o" class="cls-5" fill="#39b54a" transform="translate(900 788.59)">${score.getStatistics().getOk()}</text>
+      <text class="cls-10" transform="translate(610 728.59)"><tspan class="cls-71" x="0" y="0">Great</tspan></text>
+      <text id="300Count-Shadow-o" class="cls-17" fill="black" opacity="0.4" transform="translate(603 791.59)">${score.getStatistics().getGreat()}</text>
+      <text id="300Count-o" class="cls-17" fill="#29abe2" transform="translate(600 788.59)">${score.getStatistics().getGreat()}</text>
+      <text class="cls-25" transform="translate(610 848.59)"><tspan x="0" y="0">Meh</tspan></text>
+      <text id="50Count-Shadow-o" fill="black" opacity="0.4"  class="cls-14" transform="translate(603 911.59)">${score.getStatistics().getMeh()}</text>
+      <text id="50Count-o" fill="#f3b814" class="cls-14" transform="translate(600 908.59)">${score.getStatistics().getMeh()}</text>
+      <text class="cls-25" transform="translate(910 848.59)"><tspan x="0" y="0">Miss</tspan></text>
+      <text id="missCount-Shadow-o" fill="black" opacity="0.4"  class="cls-11" transform="translate(903 911.59)">${score.getStatistics().getMiss()}</text>
+      <text id="missCount-o" fill="#c3292f" class="cls-11" transform="translate(900 908.59)">${score.getStatistics().getMiss()}</text>
+    </g>
+    @endif
+    @if(score.getMode().equals(OsuMode.Taiko))
+    <g id="taikoStatistics">
+      <rect fill="black" opacity="0.4" x="902" y="700.59" width="104.48" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="700.59" width="116.36" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="820.59" width="92" height="40" rx="20" ry="20"/>
+      <rect class="cls-6" x="900" y="698.59" width="104.48" height="40" rx="20" ry="20"/>
+      <rect class="cls-41" x="600" y="698.59" width="116.36" height="40" rx="20" ry="20"/>
+      <rect class="cls-39" x="600" y="818.59" width="92" height="40" rx="20" ry="20"/>
+      <text class="cls-10" transform="translate(910 728.59)"><tspan class="cls-71" x="0" y="0">Good</tspan></text>
+      <text id="150Count-Shadow-t" fill="black" opacity="0.4" class="cls-5" transform="translate(903 791.59)">${score.getStatistics().getGood()}</text>
+      <text id="150Count-t" class="cls-5" fill="#39b54a" transform="translate(900 788.59)">${score.getStatistics().getGood()}</text>
+      <text class="cls-10" transform="translate(610 728.59)"><tspan class="cls-71" x="0" y="0">Great</tspan></text>
+      <text id="300Count-Shadow-t" class="cls-17" fill="black" opacity="0.4" transform="translate(603 791.59)">${score.getStatistics().getGreat()}</text>
+      <text id="300Count-t" class="cls-17" fill="#29abe2" transform="translate(600 788.59)">${score.getStatistics().getGreat()}</text>
+      <text class="cls-25" transform="translate(610 848.59)"><tspan x="0" y="0">Miss</tspan></text>
+      <text id="missCount-Shadow-t" fill="black" opacity="0.4"  class="cls-11" transform="translate(603 911.59)">${score.getStatistics().getMiss()}</text>
+      <text id="missCount-t" fill="#c3292f" class="cls-11" transform="translate(600 908.59)">${score.getStatistics().getMiss()}</text>
+    </g>
+    @endif
+    @if(score.getMode().equals(OsuMode.Catch))
+    <g id="fruitsStatistics">
+      <rect fill="black" opacity="0.4" x="902" y="700.59" width="108.48" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="700.59" width="119.36" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="602" y="820.59" width="114.93" height="40" rx="20" ry="20"/>
+      <rect fill="black" opacity="0.4" x="902" y="820.59" width="92" height="40" rx="20" ry="20"/>
+      <rect class="cls-6" x="900" y="698.59" width="108.48" height="40" rx="20" ry="20"/>
+      <rect class="cls-41" x="600" y="698.59" width="119.36" height="40" rx="20" ry="20"/>
+      <rect class="cls-51" x="600" y="818.59" width="114.93" height="40" rx="20" ry="20"/>
+      <rect class="cls-39" x="900" y="818.59" width="92" height="40" rx="20" ry="20"/>
+      <text class="cls-10" transform="translate(910 728.59)"><tspan class="cls-71" x="0" y="0">Ticks</tspan></text>
+      <text id="100Count-Shadow-f" fill="black" opacity="0.4" class="cls-5" transform="translate(903 791.59)">${score.getStatistics().getLarge_tick_hit()}</text>
+      <text id="100Count-f" class="cls-5" fill="#39b54a" transform="translate(900 788.59)">${score.getStatistics().getLarge_tick_hit()}</text>
+      <text class="cls-10" transform="translate(610 728.59)"><tspan class="cls-71" x="0" y="0">Fruits</tspan></text>
+      <text id="300Count-Shadow-f" class="cls-17" fill="black" opacity="0.4" transform="translate(603 791.59)">${score.getStatistics().getGreat()}</text>
+      <text id="300Count-f" class="cls-17" fill="#29abe2" transform="translate(600 788.59)">${score.getStatistics().getGreat()}</text>
+      <text class="cls-25" transform="translate(610 848.59)"><tspan x="0" y="0">Drops</tspan></text>
+      <text id="50Count-Shadow-f" fill="black" opacity="0.4"  class="cls-14" transform="translate(603 911.59)">${score.getStatistics().getSmall_tick_hit()}</text>
+      <text id="50Count-f" fill="#f3b814" class="cls-14" transform="translate(600 908.59)">${score.getStatistics().getSmall_tick_hit()}</text>
+      <text class="cls-25" transform="translate(910 848.59)"><tspan x="0" y="0">Miss</tspan></text>
+      <text id="missCount-Shadow-f" fill="black" opacity="0.4"  class="cls-11" transform="translate(903 911.59)">${score.getStatistics().getMiss()}</text>
+      <text id="missCount-f" fill="#c3292f" class="cls-11" transform="translate(900 908.59)">${score.getStatistics().getMiss()}</text>
+    </g>
+    @endif
+
+    @if(score.getMode().equals(OsuMode.Mania))
+    <g id="maniaStatistics" transform="translate(0,-10)" opacity="0">
+      <rect fill="#000000" opacity="0.4" x="602" y="672" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="902" y="672" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="602" y="772" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="902" y="772" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="602" y="872" width="50" height="30" rx="15" ry="15"/>
+      <rect fill="#000000" opacity="0.4" x="902" y="872" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="url(#maniaMAXGraditent)" x="600" y="670" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#f3b814" x="900" y="670" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#39b54a" x="600" y="770" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#2579e7" x="900" y="770" width="70" height="30" rx="15" ry="15"/>
+      <rect fill="#c6c5c6" x="600" y="870" width="50" height="30" rx="15" ry="15"/>
+      <rect fill="#ca2627" x="900" y="870" width="70" height="30" rx="15" ry="15"/>
+
+
+      <text class="cls-210" fill="#ffffff" stroke="#999999" transform="translate(610 691)"><tspan class="cls-71" x="0" y="0">MAX</tspan></text>
+      <text id="maxCount-Shadow-m" fill="black" opacity="0.4" class="cls-217" transform="translate(608 746)">${score.getStatistics().getPerfect()}</text>
+      <text id="maxCount-m" x="600" y="670" class="cls-217" fill="url(#maniaMAXGraditent)" stroke="#fff" transform="translate(5 73)">${score.getStatistics().getPerfect()}</text>
+
+      <text class="cls-210" fill="#ffffff" transform="translate(913 691.5)"><tspan class="cls-71" x="0" y="0">300</tspan></text>
+      <text id="300Count-Shadow-m" class="cls-217" fill="black" opacity="0.4" transform="translate(908 746)">${score.getStatistics().getGreat()}</text>
+      <text id="300Count-m" class="cls-217" fill="#f3b814" transform="translate(905 743)">${score.getStatistics().getGreat()}</text>
+
+      <text class="cls-210" fill="#ffffff" transform="translate(612.5 792)"><tspan class="cls-71" x="0" y="0">200</tspan></text>
+      <text id="200Count-Shadow-m" fill="black" opacity="0.4" class="cls-217" transform="translate(608 846.5)">${score.getStatistics().getGood()}</text>
+      <text id="200Count-m" class="cls-217" fill="#39b54a" transform="translate(605 843.5)">${score.getStatistics().getGood()}</text>
+
+      <text class="cls-210" fill="#ffffff" transform="translate(914 792)"><tspan class="cls-71" x="0" y="0">100</tspan></text>
+      <text id="100Count-Shadow-m" fill="black" opacity="0.4" class="cls-217" transform="translate(908 846.5)">${score.getStatistics().getOk()}</text>
+      <text id="100Count-m" class="cls-217" fill="#2579e7" transform="translate(905 843.5)">${score.getStatistics().getOk()}</text>
+
+      <text class="cls-210" fill="#333333" transform="translate(611.5 892)"><tspan x="0" y="0">50</tspan></text>
+      <text id="50Count-Shadow-m" fill="black" opacity="0.4"  class="cls-217" transform="translate(608 947)">${score.getStatistics().getMeh()}</text>
+      <text id="50Count-m" fill="#c6c5c6" class="cls-217" transform="translate(605 944)">${score.getStatistics().getMeh()}</text>
+
+      <text class="cls-210" fill="#ffffff" transform="translate(913 891.7)"><tspan x="0" y="0">Miss</tspan></text>
+      <text id="missCount-Shadow-m" fill="black" opacity="0.4"  class="cls-217" transform="translate(908 947)">${score.getStatistics().getMiss()}</text>
+      <text id="missCount-m" fill="#c3292f" class="cls-217" transform="translate(905 944)">${score.getStatistics().getMiss()}</text>
+    </g>
+    @endif
+
+    <text class="cls-277" fill="black" opacity="0.45" transform="translate(603 1011.59)">Accuracy</text>
+    <text class="cls-27" transform="translate(600 1008.59)">Accuracy</text>
+    <text class="cls-277" fill="black" opacity="0.45" transform="translate(603 1151.59)">Combo</text>
+    <text class="cls-27" transform="translate(600 1148.59)"><tspan x="0" y="0">Combo</tspan></text>
+
+      <text id="accuracy-Shadow" fill="black" opacity="0.45" class="cls-211" transform="translate(603 1092.59)">${FormatHelper.formatDoubleDecimal(score.getAccuracy()*100.0, 2)}%</text>
+      <text id="accuracy" class="cls-21" transform="translate(600 1088.59)">${FormatHelper.formatDoubleDecimal(score.getAccuracy()*100.0, 2)}%</text>
+
+      <text id="comboStatus-Shadow" fill="black" opacity="0.45" class="cls-188" transform="translate(602 1212.59)">${score.getMaxCombo()}/${score.getBeatmap().getMax_combo()}x (${FormatHelper.formatDoubleDecimal(((double)score.getMaxCombo()/(double)score.getBeatmap().getMax_combo())*100.0, 2)}%)</text>
+      <text id="comboStatus" class="cls-18" transform="translate(600 1208.59)">${score.getMaxCombo()}/${score.getBeatmap().getMax_combo()}x (${FormatHelper.formatDoubleDecimal(((double)score.getMaxCombo()/(double)score.getBeatmap().getMax_combo())*100.0, 2)}%)</text>
+
+    <text id="grade-Shadow" class="cls-4" fill="black" opacity="0.3" text-anchor="middle" transform="translate(803 561.59)">${score.getRank()}</text>
+    <text id="grade" class="cls-4" fill="${RankColor.fromString(score.getRank()).getDarkRankColorHEX()}" text-anchor="middle" transform="translate(800 558.59)">${score.getRank()}</text>
+
+    <text id="score-Shadow" class="cls-26" opacity="0.5" fill="black" text-anchor="middle" transform="translate(792 630.59)">${FormatHelper.transformNumber(score.getScore())}</text>
+    <text id="score" class="cls-26" fill="#e6e6e6" text-anchor="middle" transform="translate(790 628.59)">${FormatHelper.transformNumber(score.getScore())}</text>
+
+
+    <text id="totalPPShadow" fill="black"  opacity="0.45" class="cls-57" transform="translate(1224 924)">${Math.round(score.getPp())} PP</text>
+    <text id="totalPP" fill="#c80065" class="cls-57" transform="translate(1220 920)">${Math.round(score.getPp())} PP</text>
+
+
+    <g class="cls-35">
+      <text class="cls-133" fill="black" opacity="0.45" transform="translate(1233 1022.59)">If FC</text>
+      <text class="cls-13" transform="translate(1230 1018.59)">If FC</text>
+    </g>
+    <text id="iffc-Shadow" class="cls-322" fill="black" opacity="0.45" transform="translate(1343 1022.59)">${Math.round(score.getPpDetailsLocal().getIfFc())} PP</text>
+    <text id="iffc" class="cls-32" transform="translate(1340 1018.59)">${Math.round(score.getPpDetailsLocal().getIfFc())} PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1232 1047.25)"><tspan x="0" y="0">95.00%</tspan></text>
+      <text class="cls-33" transform="translate(1230 1045.25)"><tspan x="0" y="0">95.00%</tspan></text>
+    </g>
+    <text id="95%pp-Shadow" class="cls-222" fill="black" opacity="0.6" transform="translate(1232 1073.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(95))} PP</text>
+    <text id="95%pp" class="cls-22" transform="translate(1230 1071.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(95))} PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1365.33 1047.25)">97.00%</text>
+      <text class="cls-33" transform="translate(1363.33 1045.25)">97.00%</text>
+    </g>
+    <text id="97%pp-Shadow" fill="black" opacity="0.6" class="cls-222" transform="translate(1365.33 1073.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(97))} PP</text>
+    <text id="97%pp"  class="cls-22" transform="translate(1363.33 1071.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(97))} PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1498.67 1047.25)">98.00%</text>
+      <text class="cls-33" transform="translate(1496.67 1045.25)">98.00%</text>
+    </g>
+    <text id="98%pp-Shadow" class="cls-222" fill="black" opacity="0.6" transform="translate(1498.67 1073.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(98))} PP</text>
+    <text id="98%pp" class="cls-22" transform="translate(1496.67 1071.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(98))} PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1632 1047.25)">99.00%</text>
+      <text class="cls-33" transform="translate(1630 1045.25)">99.00%</text>
+    </g>
+    <text id="99%pp-Shadow" class="cls-222" fill="black" opacity="0.6" transform="translate(1632 1073.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(99))} PP</text>
+    <text id="99%pp" class="cls-22" transform="translate(1630 1071.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(99))} PP</text>
+    <g class="cls-35">
+      <text class="cls-333" fill="black" opacity="0.5" transform="translate(1765.33 1047.25)">100.00%</text>
+      <text class="cls-33" transform="translate(1763.33 1045.25)">100.00%</text>
+    </g>
+    <text id="100%pp-Shadow" class="cls-222" fill="black" opacity="0.6" transform="translate(1765.33 1073.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(100))} PP</text>
+    <text id="100%pp" class="cls-22" transform="translate(1763.33 1071.92)">${Math.round(score.getPpDetailsLocal().getAccPPList().get(100))} PP</text>
+    <g class="cls-35">
+      <text class="cls-166" fill="black" opacity="0.45" transform="translate(1232 1156.58)">PP Details</text>
+      <text class="cls-16" transform="translate(1230 1153.58)">PP Details</text>
+    </g>
+    <g class="cls-35">
+      <text class="cls-28" fill="black" opacity="0.5" transform="translate(1232 1183.08)"><tspan x="0" y="0">AIM</tspan></text>
+      <text class="cls-24" fill="black" opacity="0.5" transform="translate(1284.65 1183.08)">PP</text>
+      <text class="cls-28" fill="#e6e6e6" transform="translate(1230 1181.08)"><tspan x="0" y="0">AIM</tspan></text>
+      <text class="cls-24" fill="#e6e6e6" transform="translate(1282.65 1181.08)">PP</text>
+    </g>
+    <g class="cls-35">
+      <text class="cls-28" fill="black" opacity="0.5" transform="translate(1493.25 1183.08)"><tspan x="0" y="0">SPD</tspan></text>
+      <text class="cls-24" fill="black" opacity="0.5" transform="translate(1552.25 1183.08)">PP</text>
+      <text class="cls-28" fill="#e6e6e6" transform="translate(1491.25 1181.08)"><tspan x="0" y="0">SPD</tspan></text>
+      <text class="cls-24" fill="#e6e6e6" transform="translate(1550.25 1181.08)">PP</text>
+    </g>
+    <g class="cls-35">
+      <text class="cls-28" fill="black" opacity="0.5" transform="translate(1722 1183.08)">ACC</text>
+      <text class="cls-24" fill="black" opacity="0.5" transform="translate(1780 1183.08)">PP</text>
+      <text class="cls-28" fill="#e6e6e6" transform="translate(1720 1181.08)">ACC</text>
+      <text class="cls-24" fill="#e6e6e6" transform="translate(1778 1181.08)">PP</text>
+    </g>
+    @if(score.getMode().equals(OsuMode.Osu))
+      !{
+          // ---- PP values (Get side) ----
+          int aimPPGetVal = Math.toIntExact(Math.round(score.getPpDetailsLocal().getAimPP()));
+          int spdPPGetVal = Math.toIntExact(Math.round(score.getPpDetailsLocal().getSpdPP()));
+          int accPPGetVal = Math.toIntExact(Math.round(score.getPpDetailsLocal().getAccPP()));
+          String aimPPGet = FormatHelper.formatNumberWithMaxLimit(aimPPGetVal, 4);
+          String spdPPGet = FormatHelper.formatNumberWithMaxLimit(spdPPGetVal, 4);
+          String accPPGet = FormatHelper.formatNumberWithMaxLimit(accPPGetVal, 4);
+
+          // ---- PP values (Total side) ----
+          int aimPPTotalVal = Math.toIntExact(Math.round(score.getPpDetailsLocal().getAimPPMax()));
+          int spdPPTotalVal = Math.toIntExact(Math.round(score.getPpDetailsLocal().getSpdPPMax()));
+          int accPPTotalVal = Math.toIntExact(Math.round(score.getPpDetailsLocal().getAccPPMax()));
+          String aimPPTotal = FormatHelper.formatNumberWithMaxLimit(aimPPTotalVal, 4);
+          String spdPPTotal = FormatHelper.formatNumberWithMaxLimit(spdPPTotalVal, 4);
+          String accPPTotal = FormatHelper.formatNumberWithMaxLimit(accPPTotalVal, 4);
+
+          // ---- Helper: compute leading padding zero count ----
+          int padAimGet = FormatHelper.paddingCount(aimPPGetVal, 4);
+          int padSpdGet = FormatHelper.paddingCount(spdPPGetVal, 4);
+          int padAccGet = FormatHelper.paddingCount(accPPGetVal, 4);
+          int padAimTot = FormatHelper.paddingCount(aimPPTotalVal, 4);
+          int padSpdTot = FormatHelper.paddingCount(spdPPTotalVal, 4);
+          int padAccTot = FormatHelper.paddingCount(accPPTotalVal, 4);
+      }
+      <g transform="translate(-30,0)">
+        <g class="cls-35">
+          @for(int i = 0; i < aimPPGet.length(); i++)
+            <text class="cls-15" fill="black" opacity="${i < padAimGet ? 0.35 : 1}" text-anchor="middle" transform="translate(${1272+18.5*i} 1210.58)">${aimPPGet.substring(i, i + 1)}</text>
+            <text class="cls-15" fill="#e6e6e6" opacity="${i < padAimGet ? 0.35 : 1}" text-anchor="middle" transform="translate(${1272+18.5*i} 1208.58)">${aimPPGet.substring(i, i + 1)}</text>
+          @endfor
+          <text class="cls-15" opacity="0.4" fill="black" transform="translate(1336 1210.58)">/</text>
+          <text class="cls-15" fill="#e6e6e6" transform="translate(1335 1208.58)">/</text>
+
+          @for(int i = 0; i < spdPPGet.length(); i++)
+            <text class="cls-15" fill="black" opacity="${i < padSpdGet ? 0.35 : 1}" text-anchor="middle" transform="translate(${1532+18.5*i} 1210.58)">${spdPPGet.substring(i, i + 1)}</text>
+            <text class="cls-15" fill="#e6e6e6" opacity="${i < padSpdGet ? 0.35 : 1}" text-anchor="middle" transform="translate(${1532+18.5*i} 1208.58)">${spdPPGet.substring(i, i + 1)}</text>
+          @endfor
+          <text class="cls-15" opacity="0.4" fill="black" transform="translate(1597 1210.58)">/</text>
+          <text class="cls-15" fill="#e6e6e6" transform="translate(1595 1208.58)">/</text>
+
+          @for(int i = 0; i < accPPGet.length(); i++)
+            <text class="cls-15" fill="black" opacity="${i < padAccGet ? 0.35 : 1}" text-anchor="middle" transform="translate(${1762+18.5*i} 1210.58)">${accPPGet.substring(i, i + 1)}</text>
+            <text class="cls-15" fill="#e6e6e6" opacity="${i < padAccGet ? 0.35 : 1}" text-anchor="middle" transform="translate(${1762+18.5*i} 1208.58)">${accPPGet.substring(i, i + 1)}</text>
+          @endfor
+          <text class="cls-15" opacity="0.4" fill="black" transform="translate(1827 1210.58)">/</text>
+          <text class="cls-15" fill="#e6e6e6" transform="translate(1825 1208.58)">/</text>
+
+          @for(int i = 0; i < aimPPTotal.length(); i++)
+            <text class="cls-24" fill="black" opacity="${i < padAimTot ? 0.35 : 1}" text-anchor="middle" transform="translate(${1357+14*i} 1210.58)">${aimPPTotal.substring(i, i + 1)}</text>
+            <text class="cls-24" fill="#e6e6e6" opacity="${i < padAimTot ? 0.35 : 1}" text-anchor="middle" transform="translate(${1357+14*i} 1208.58)">${aimPPTotal.substring(i, i + 1)}</text>
+          @endfor
+          @for(int i = 0; i < spdPPTotal.length(); i++)
+            <text class="cls-24" fill="black" opacity="${i < padSpdTot ? 0.35 : 1}" text-anchor="middle" transform="translate(${1617+14*i} 1210.58)">${spdPPTotal.substring(i, i + 1)}</text>
+            <text class="cls-24" fill="#e6e6e6" opacity="${i < padSpdTot ? 0.35 : 1}" text-anchor="middle" transform="translate(${1617+14*i} 1208.58)">${spdPPTotal.substring(i, i + 1)}</text>
+          @endfor
+          @for(int i = 0; i < accPPTotal.length(); i++)
+            <text class="cls-24" fill="black" opacity="${i < padAccTot ? 0.35 : 1}" text-anchor="middle" transform="translate(${1845+14*i} 1210.58)">${accPPTotal.substring(i, i + 1)}</text>
+            <text class="cls-24" fill="#e6e6e6" opacity="${i < padAccTot ? 0.35 : 1}" text-anchor="middle" transform="translate(${1845+14*i} 1208.58)">${accPPTotal.substring(i, i + 1)}</text>
+          @endfor
+        </g>
+      </g>
+    @endif
+    @if(!score.getMode().equals(OsuMode.Osu))
+      <g class="cls-35">
+              <text id="aimPPGet-1-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1272 1210.58)">0</text>
+              <text id="aimPPGet-2-Shadow" class="cls-15" opacity="0.1" text-anchor="middle" transform="translate(1290.5 1210.58)">0</text>
+              <text id="aimPPGet-3-Shadow" class="cls-15" opacity="0.1" text-anchor="middle" transform="translate(1309 1210.58)">0</text>
+              <text id="aimPPGet-4-Shadow" class="cls-15" opacity="0.1" text-anchor="middle" transform="translate(1327.5 1210.58)">0</text>
+              <text id="aimPPGet-1" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1270 1208.58)">0</text>
+              <text id="aimPPGet-2" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1288.5 1208.58)">0</text>
+              <text id="aimPPGet-3" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1307 1208.58)">0</text>
+              <text id="aimPPGet-4" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1325.5 1208.58)">0</text>
+              <text class="cls-15" opacity="0.4" fill="black" transform="translate(1336 1210.58)">/</text>
+              <text class="cls-15" fill="#e6e6e6" transform="translate(1335 1208.58)">/</text>
+              <text id="aimPPTotal-1-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1357 1210.58)">0</text>
+              <text id="aimPPTotal-2-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1371 1210.58)">0</text>
+              <text id="aimPPTotal-3-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1385 1210.58)">0</text>
+              <text id="aimPPTotal-4-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1399 1210.58)">0</text>
+              <text id="aimPPTotal-1" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1355 1208.58)">0</text>
+              <text id="aimPPTotal-2" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1369 1208.58)">0</text>
+              <text id="aimPPTotal-3" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1383 1208.58)">0</text>
+              <text id="aimPPTotal-4" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1397 1208.58)">0</text>
+            </g>
+      <g class="cls-35">
+              <text id="spdPPGet-1-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1532 1210.58)">0</text>
+              <text id="spdPPGet-2-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1550.5 1210.58)">0</text>
+              <text id="spdPPGet-3-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1569 1210.58)">0</text>
+              <text id="spdPPGet-4-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1588.5 1210.58)">0</text>
+              <text id="spdPPGet-1" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1530 1208.58)">0</text>
+              <text id="spdPPGet-2" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1548.5 1208.58)">0</text>
+              <text id="spdPPGet-3" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1567 1208.58)">0</text>
+              <text id="spdPPGet-4" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1585.5 1208.58)">0</text>
+              <text class="cls-15" opacity="0.4" fill="black" transform="translate(1597 1210.58)">/</text>
+              <text class="cls-15" fill="#e6e6e6" transform="translate(1595 1208.58)">/</text>
+              <text id="spdPPTotal-1-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1617 1210.58)">0</text>
+              <text id="spdPPTotal-2-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1631 1210.58)">0</text>
+              <text id="spdPPTotal-3-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1645 1210.58)">0</text>
+              <text id="spdPPTotal-4-Shadow" fill="black" opacity="0.1" text-anchor="middle" class="cls-24" transform="translate(1659 1210.58)">0</text>
+              <text id="spdPPTotal-1" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1615 1208.58)">0</text>
+              <text id="spdPPTotal-2" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1629 1208.58)">0</text>
+              <text id="spdPPTotal-3" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1643 1208.58)">0</text>
+              <text id="spdPPTotal-4" fill="#e6e6e6" opacity="0.3" text-anchor="middle" class="cls-24" transform="translate(1657 1208.58)">0</text>
+            </g>
+      <g class="cls-35">
+              <text id="accPPGet-1-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1762 1210.58)">0</text>
+              <text id="accPPGet-2-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1780.5 1210.58)">0</text>
+              <text id="accPPGet-3-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1799 1210.58)">0</text>
+              <text id="accPPGet-4-Shadow" class="cls-15" fill="black" opacity="0.1" text-anchor="middle" transform="translate(1817.5 1210.58)">0</text>
+              <text id="accPPGet-1" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1760 1208.58)">0</text>
+              <text id="accPPGet-2" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1778.5 1208.58)">0</text>
+              <text id="accPPGet-3" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1797 1208.58)">0</text>
+              <text id="accPPGet-4" class="cls-15" fill="#e6e6e6" opacity="0.3" text-anchor="middle" transform="translate(1815.5 1208.58)">0</text>
+              <text class="cls-15" opacity="0.4" fill="black" transform="translate(1827 1210.58)">/</text>
+              <text class="cls-15" fill="#e6e6e6" transform="translate(1825 1208.58)">/</text>
+              <text id="accPPTotal-1-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1847 1210.58)">0</text>
+              <text id="accPPTotal-2-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1861 1210.58)">0</text>
+              <text id="accPPTotal-3-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1875 1210.58)">0</text>
+              <text id="accPPTotal-4-Shadow" opacity="0.1" text-anchor="middle" fill="black" class="cls-24" transform="translate(1889 1210.58)">0</text>
+              <text id="accPPTotal-1" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1845 1208.58)">0</text>
+              <text id="accPPTotal-2" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1859 1208.58)">0</text>
+              <text id="accPPTotal-3" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1873 1208.58)">0</text>
+              <text id="accPPTotal-4" opacity="0.3" text-anchor="middle" fill="#e6e6e6" class="cls-24" transform="translate(1887 1208.58)">0</text>
+            </g>
+    @endif
+
+
+
+
+
+  </g>
+  <g id="Decorative" transform="translate(-54,-159)">
+    <g id="ranked" opacity="${score.getBeatmap().getStatus().equals("ranked")?1:0.1}">
+      <rect id="rankedLine" class="cls-55" x="252.38" y="978.59" width="340" height="20"/>
+      <rect id="rankedRect" class="cls-53" fill="#99db00" x="240" y="978.59" width="72.59" height="20" rx="10" ry="10"/>
+      <text id="rankedText" fill="#302e38" class="cls-19" transform="translate(245 993.59)">RANKED</text>
+    </g>
+
+    <g id="qualified" opacity="${score.getBeatmap().getStatus().equals("qualified")?1:0.1}">
+      <rect id="qualifiedLine" class="cls-38" x="252.38" y="1003.59" width="340" height="20"/>
+      <rect class="cls-41" x="240" y="1003.59" width="91" height="20" rx="10" ry="10"/>
+      <text id="qualifiedText" fill="#302e38" class="cls-19" transform="translate(245 1018.59)">QUALIFIED</text>
+    </g>
+
+    <g id="loved" opacity="${score.getBeatmap().getStatus().equals("loved")?1:0.1}">
+      <rect id="lovedLine"  class="cls-46" x="252.38" y="1028.59" width="340" height="20"/>
+      <rect class="cls-47" x="240" y="1028.59" width="60.67" height="20" rx="10" ry="10"/>
+      <text id="lovedText" fill="#302e38" class="cls-19" transform="translate(245 1043.59)">LOVED</text>
+    </g>
+
+    <g id="pending" opacity="${score.getBeatmap().getStatus().equals("pending")?1:0.1}">
+      <rect id="pendingLine" class="cls-50" x="252.38" y="1053.59" width="340" height="20"/>
+      <rect class="cls-51" x="240" y="1053.59" width="78.35" height="20" rx="10" ry="10"/>
+      <text id="pendingText" fill="#302e38" class="cls-19" transform="translate(245 1068.59)">PENDING</text>
+    </g>
+
+    <g id="wip" opacity="${score.getBeatmap().getStatus().equals("wip")?1:0.1}">
+      <rect id="wipLine"  class="cls-52" x="252.38" y="1078.59" width="340" height="20"/>
+      <rect class="cls-44" x="240" y="1078.59" width="37.47" height="20" rx="10" ry="10"/>
+      <text id="wipText" fill="#302e38" class="cls-19" transform="translate(245 1093.59)">WIP</text>
+    </g>
+    <g id="graveyard" opacity="${score.getBeatmap().getStatus().equals("graveyard")?1:0.1}">
+      <rect class="cls-37" x="252.38" y="1103.59" width="340" height="20"/>
+      <rect class="cls-49" x="240" y="1103.59" width="103.45" height="20" rx="10" ry="10"/>
+      <text id="graveyardText" fill="#302e38" class="cls-19" transform="translate(245 1118.59)">GRAVEYARD</text>
+    </g>
+    <g id="approved" opacity="${score.getBeatmap().getStatus().equals("approved")?1:0.1}">
+      <rect id="approvedLine" class="cls-55" x="252.38" y="1129" width="340" height="20"/>
+      <rect class="cls-53" fill="#99db00" x="240" y="1129" width="97" height="20" rx="10" ry="10"/>
+      <text id="approvedText" fill="#302e38" class="cls-19" transform="translate(246 1144)">APPROVED</text>
+    </g>
+    <path class="cls-31" d="M1825,330.25c1.84,0,3.33,1.5,3.33,3.33s-1.5,3.33-3.33,3.33-3.33-1.5-3.33-3.33,1.5-3.33,3.33-3.33M1825,328.59c-2.76,0-5,2.24-5,5s2.24,5,5,5,5-2.24,5-5-2.24-5-5-5h0ZM1840,328.59c-2.76,0-5,2.24-5,5s2.24,5,5,5,5-2.24,5-5-2.24-5-5-5ZM1855,328.59c-2.76,0-5,2.24-5,5s2.24,5,5,5,5-2.24,5-5-2.24-5-5-5Z"/>
+  </g>
+
+  @if(score.getModJSON()!=null && !score.getModJSON().isEmpty())
+    !{
+      List<Mod> mods =
+         score.getIsLazer() ? score.getModJSON() :
+                              score.getModJSON().stream().filter(mod -> !mod.getAcronym().equals("CL")).toList();
+      }
+    @for(Mod mod : mods)
+      !{ModColor color=ModColor.fromString(mod.getAcronym());}
+      <rect x="1470" y="530" rx="10" ry="10" fill="${color.getDetailedPrimaryColor().toString()}" width="120" height="70"  transform="skewX(-20)" />
+      <rect x="1520" y="550" rx="10" ry="10" fill="${color.getDetailedSecondaryColor().toString()}" width="70" height="50"  transform="skewX(-20)" />
+      <rect x="1470" y="530" rx="10" ry="10" fill="${color.getDetailedSideColor().toString()}" width="50" height="30"  transform="skewX(-20)" />
+      <text  class="cls-124" x="1495" y="580" transform="skewX(-20)">${mod.getAcronym()}</text>
+    @endfor
+  @endif
+
+  <g id="lazer-label" opacity="${score.getIsLazer()?1:0}">
+    <image
+            xlink:href="assets/lazer-label.png"
+            x="20"
+            y="950"
+            width="110"
+            height="110"
+            id="lazer"/>
+  </g>
+  <g id="starmoon-label" opacity="0">
+    <image
+            xlink:href="assets/sm-label.png"
+            x="20"
+            y="950"
+            width="110"
+            height="110"
+            id="star-moon"/>
+  </g>
+
+</svg>

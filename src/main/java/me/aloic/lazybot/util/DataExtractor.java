@@ -35,6 +35,7 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.enums.ScorePerformanceDimension;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
 import me.aloic.lazybot.osu.service.AvatarCacheService;
+import me.aloic.lazybot.osu.utils.PlayerStatsWatchManager;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +49,8 @@ public class DataExtractor
 {
     @Resource
     private ApiRequestExecutor apiRequestExecutor;
+    @Resource
+    private PlayerStatsWatchManager playerStatsWatchManager;
     @Resource
     private UserBindingMapper userBindingMapper;
     @Resource
@@ -75,6 +78,7 @@ public class DataExtractor
                 throw new LazybotRuntimeException("没这B人: " + playerName);
             }
             UserBindingPO tokenPO = userBindingMapper.selectByOsuUserId("bancho", playerInfoDTO.getId());
+            observeBoundPlayerActivity(playerInfoDTO, mode, tokenPO);
             return checkCachedAvatar(playerInfoDTO, tokenPO);
         }
         catch (LazybotNotFoundException e) {
@@ -181,6 +185,7 @@ public class DataExtractor
                throw new LazybotRuntimeException("没这B人: " + playerId);
            }
            UserBindingPO tokenPO = userBindingMapper.selectByOsuUserId("bancho", playerId);
+           observeBoundPlayerActivity(playerInfoDTO, mode, tokenPO);
            return checkCachedAvatar(playerInfoDTO, tokenPO);
        }
        catch (LazybotNotFoundException e) {
@@ -193,6 +198,34 @@ public class DataExtractor
         if (tokenPO == null)
             return playerInfoDTO;
         playerInfoDTO.setAvatar_url(avatarCacheService.ensureAvatar(playerInfoDTO, tokenPO));
+        return playerInfoDTO;
+    }
+
+    // mark if the player was inactive or not, mainly for daily snapshot
+    private void observeBoundPlayerActivity(PlayerInfoDTO playerInfoDTO, String mode, UserBindingPO tokenPO)
+    {
+        if (tokenPO == null) {
+            return;
+        }
+        try {
+            playerStatsWatchManager.activateIfPlayerIsActive(playerInfoDTO, mode);
+        }
+        catch (Exception e) {
+            log.warn("Failed to refresh player stats watch for {}: {}", playerInfoDTO.getId(), e.getMessage());
+        }
+    }
+
+    public PlayerInfoDTO extractPlayerInfoRaw(Integer playerId, String mode)
+    {
+        PlayerInfoDTO playerInfoDTO = apiRequestExecutor.execute(
+                URLBuildUtil.buildURLOfPlayerInfo(playerId, mode),
+                HTTPTypeEnum.GET,
+                TokenMonitor.getToken(),
+                null,
+                PlayerInfoDTO.class);
+        if (playerInfoDTO == null || playerInfoDTO.getId() == null) {
+            throw new LazybotNotFoundException("请求对象不存在");
+        }
         return playerInfoDTO;
     }
 

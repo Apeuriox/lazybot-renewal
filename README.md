@@ -62,7 +62,7 @@ including 5 different variations. Remember, some designs are not original
 
 ## Prerequisites
 
-- JDK 21
+- JRE 25
 - MySQL
 - An osu! OAuth application and API credentials
 
@@ -72,8 +72,8 @@ Some native or project-specific libraries are not published to Maven Central:
 
 | Maven coordinate                                                          | Purpose |
 |---------------------------------------------------------------------------| --- |
-| [`me.aloic:rosu-pp-java:0.0.2`](https://github.com/Apeuriox/rosu-pp-java) | FFM binding for versioned osu! difficulty and performance calculation |
-| [`me.aloic:resvg-jni:0.1.4`](https://github.com/Apeuriox/resvg-jni)                                            | Native SVG rendering |
+| [`me.aloic:rosu-pp-java:0.0.3`](https://github.com/Apeuriox/rosu-pp-java) | FFM binding for versioned osu! difficulty and performance calculation |
+| [`me.aloic:resvg-jni:0.1.4`](https://github.com/Apeuriox/resvg-jni)       | Native SVG rendering |
 | `me.zhjk:rosu-ppplus:0.2.2`                                               | PP+ integration |
 
 These artifacts are already included in [`local-maven-repo`](local-maven-repo)

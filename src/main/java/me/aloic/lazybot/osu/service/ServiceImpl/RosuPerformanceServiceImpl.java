@@ -9,6 +9,7 @@ import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatistic
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapStatistics;
 import me.aloic.lazybot.osu.dao.entity.vo.ImaginaryPerformance;
 import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
+import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
 import me.aloic.lazybot.osu.dao.entity.vo.PerformanceVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreSequence;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -264,6 +266,153 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         });
     }
 
+    @Override
+    public MapPerformanceAnalysis analyzeBeatmapPerformance(BeatmapStatistics beatmapStatistics)
+    {
+        Objects.requireNonNull(beatmapStatistics, "beatmapStatistics");
+        Path beatmapPath = AssetDownloadUtil.beatmapPath(beatmapStatistics.getBeatmap().getBid(), false);
+        String mode = beatmapStatistics.getBeatmap().getMode().getDescribe();
+        double targetAccuracy = beatmapStatistics.getPerformance().getImaginaryAccuracy();
+        List<AlgorithmVersion> algorithms = List.of(
+                AlgorithmVersion.PRECSR_202210,
+                AlgorithmVersion.REWORK_202411,
+                AlgorithmVersion.REWORK_202502,
+                AlgorithmVersion.REWORK_202510,
+                AlgorithmVersion.REWORK_20260706);
+
+        List<MapPerformanceAnalysis.AlgorithmSnapshot> rawHistory = new ArrayList<>();
+        for (AlgorithmVersion algorithm : algorithms) {
+            rawHistory.add(withBeatmap(algorithm, beatmapPath, (calculator, beatmap) -> {
+                DifficultyRequest request = difficultyRequest(algorithm, beatmapStatistics.getImaginaryMods(), mode, true);
+                PerformanceResult performance = calculator.calculatePerformance(beatmap,
+                        PerformanceRequest.builder(request).accuracy(targetAccuracy).build());
+                return snapshot(algorithm, performance, 0.0, 0.0);
+            }));
+        }
+
+        List<MapPerformanceAnalysis.AlgorithmSnapshot> history = new ArrayList<>();
+        for (int i = 0; i < rawHistory.size(); i++) {
+            MapPerformanceAnalysis.AlgorithmSnapshot current = rawHistory.get(i);
+            double absoluteChange = i == 0 ? 0.0 : current.pp() - rawHistory.get(i - 1).pp();
+            double relativeChange = i == 0 || rawHistory.get(i - 1).pp() == 0.0
+                    ? 0.0
+                    : absoluteChange / rawHistory.get(i - 1).pp() * 100.0;
+            history.add(new MapPerformanceAnalysis.AlgorithmSnapshot(
+                    current.algorithm(), current.pp(), absoluteChange, relativeChange,
+                    current.components()));
+        }
+
+        AlgorithmVersion latest = AlgorithmVersion.REWORK_20260706;
+        CurvePair curves = withBeatmap(latest, beatmapPath, (calculator, beatmap) -> {
+            DifficultyRequest request = difficultyRequest(
+                    latest, beatmapStatistics.getImaginaryMods(), mode, true);
+            double starRating = calculator.calculateDifficulty(beatmap, request).stars();
+            List<RawCurvePoint> missValues = new ArrayList<>();
+            for (int misses = 0; misses <= 20; misses++) {
+                PerformanceResult performance = calculator.calculatePerformance(beatmap,
+                        PerformanceRequest.builder(request)
+                                .accuracy(targetAccuracy)
+                                .misses(misses)
+                                .build());
+                missValues.add(new RawCurvePoint(misses, performance.pp()));
+            }
+
+            List<RawCurvePoint> accuracyValues = new ArrayList<>();
+            for (int step = 0; step <= 20; step++) {
+                double accuracy = 100.0 - step * 0.5;
+                PerformanceResult performance = calculator.calculatePerformance(beatmap,
+                        PerformanceRequest.builder(request)
+                                .accuracy(accuracy)
+                                .misses(0)
+                                .build());
+                accuracyValues.add(new RawCurvePoint(accuracy, performance.pp()));
+            }
+            return new CurvePair(
+                    curveWithLoss(missValues), curveWithLoss(accuracyValues), starRating);
+        });
+
+        return new MapPerformanceAnalysis(
+                beatmapStatistics,
+                targetAccuracy,
+                curves.starRating(),
+                history,
+                curves.missCurve(),
+                curves.accuracyCurve());
+    }
+
+    private static MapPerformanceAnalysis.AlgorithmSnapshot snapshot(
+            AlgorithmVersion algorithm,
+            PerformanceResult performance,
+            double absoluteChange,
+            double relativeChange)
+    {
+        List<ComponentValue> values = new ArrayList<>();
+        values.add(new ComponentValue("Aim", "#888888", performance.ppAim()));
+        values.add(new ComponentValue("Speed", "#C9C9C9", performance.ppSpeed()));
+        if (performance.hasReadingPerformance()) {
+            values.add(new ComponentValue("Reading", "#AFAFAF",
+                    performance.readingPerformanceOptional().orElse(0.0)));
+        }
+        values.add(new ComponentValue("Accuracy", "#E0E0E0", performance.ppAccuracy()));
+        if (performance.ppFlashlight() > 0.005) {
+            values.add(new ComponentValue("Flashlight", "#ADADAD", performance.ppFlashlight()));
+        }
+
+        double totalWeight = values.stream()
+                .mapToDouble(value -> Math.pow(Math.max(0.0, value.pp()), 1.1))
+                .sum();
+        List<MapPerformanceAnalysis.PpComponent> components = values.stream()
+                .map(value -> new MapPerformanceAnalysis.PpComponent(
+                        value.name(),
+                        value.color(),
+                        value.pp(),
+                        totalWeight == 0.0
+                                ? 0.0
+                                : Math.pow(Math.max(0.0, value.pp()), 1.1) / totalWeight * 100.0))
+                .toList();
+        return new MapPerformanceAnalysis.AlgorithmSnapshot(
+                shortAlgorithmLabel(algorithm), performance.pp(), absoluteChange,
+                relativeChange, components);
+    }
+
+    private static List<MapPerformanceAnalysis.CurvePoint> curveWithLoss(List<RawCurvePoint> values)
+    {
+        if (values.isEmpty()) {
+            return List.of();
+        }
+        double baseline = values.getFirst().pp();
+        return values.stream()
+                .map(value -> {
+                    double loss = baseline - value.pp();
+                    return new MapPerformanceAnalysis.CurvePoint(
+                            value.input(),
+                            value.pp(),
+                            loss,
+                            baseline == 0.0 ? 0.0 : loss / baseline * 100.0);
+                })
+                .toList();
+    }
+
+    private static String shortAlgorithmLabel(AlgorithmVersion algorithm)
+    {
+        return switch (algorithm) {
+            case PRECSR_202210 -> "202210";
+            case REWORK_202411 -> "202411";
+            case REWORK_202502 -> "202502";
+            case REWORK_202510 -> "202510";
+            case REWORK_20260706 -> "202607";
+        };
+    }
+
+    private record ComponentValue(String name, String color, double pp) {}
+
+    private record RawCurvePoint(double input, double pp) {}
+
+    private record CurvePair(
+            List<MapPerformanceAnalysis.CurvePoint> missCurve,
+            List<MapPerformanceAnalysis.CurvePoint> accuracyCurve,
+            double starRating) {}
+
     private PerformanceVO calculateScore(
             Path beatmapPath,
             AlgorithmVersion algorithm,
@@ -397,18 +546,36 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         return result;
     }
 
-    private static DifficultyRequest difficultyRequest(
-            AlgorithmVersion algorithm, List<Mod> mods, String mode, boolean lazer)
+    private static DifficultyRequest difficultyRequest(AlgorithmVersion algorithm, List<Mod> mods, String mode, boolean lazer)
     {
         return difficultyRequest(algorithm, mods, toGameMode(mode), lazer);
     }
 
-    private static DifficultyRequest difficultyRequest(
-            AlgorithmVersion algorithm, List<Mod> mods, GameMode mode, boolean lazer)
+    private static DifficultyRequest difficultyRequest(AlgorithmVersion algorithm, List<Mod> mods, GameMode mode, boolean lazer)
     {
         DifficultyRequest.Builder builder = DifficultyRequest.builder().mode(mode);
         if (algorithm == AlgorithmVersion.PRECSR_202210) {
             builder.mods(toLegacyMods(mods, lazer));
+            // PRECSR accepts only legacy mod bits, so carry DA overrides through
+            // the dedicated difficulty attributes instead of silently dropping them.
+            if (mods != null) {
+                mods.stream()
+                        .filter(mod -> "DA".equalsIgnoreCase(mod.getAcronym()))
+                        .map(Mod::getSettings)
+                        .filter(Objects::nonNull)
+                        .findFirst()
+                        .ifPresent(settings -> {
+                            if (settings.getApproach_rate() != null) {
+                                builder.ar(settings.getApproach_rate());
+                            }
+                            if (settings.getCircle_size() != null) {
+                                builder.cs(settings.getCircle_size());
+                            }
+                            if (settings.getOverall_difficulty() != null) {
+                                builder.od(settings.getOverall_difficulty());
+                            }
+                        });
+            }
         }
         else {
             if(mode == GameMode.OSU || mode == GameMode.MANIA) {
@@ -430,7 +597,7 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         }
         for (Mod mod : mods) {
             if (mod == null || mod.getAcronym() == null || mod.getAcronym().isBlank()) {
-                log.warn("[PP重算] PRECSR_202210 忽略缺少 acronym 的 Mod: {}", mod);
+                log.warn("[PP Recalc] PRECSR_202210 忽略缺少 acronym 的 Mod: {}", mod);
                 continue;
             }
             // osu! API v2 marks stable scores with CL. PRECSR already uses classic scoring
@@ -438,10 +605,14 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
             if (!lazer && "CL".equalsIgnoreCase(mod.getAcronym())) {
                 continue;
             }
+            // DA settings are transferred to DifficultyRequest.ar/cs/od above.
+            if ("DA".equalsIgnoreCase(mod.getAcronym()) && mod.getSettings() != null) {
+                continue;
+            }
             OsuMod osuMod = OsuMod.getModEnum(mod.getAcronym());
-            if (mod.getSettings() != null || osuMod == OsuMod.Other || osuMod.getValue() < 0) {
-                log.warn("[PP重算] PRECSR_202210 忽略不支持的 Mod: acronym={}, settings={}",
-                        mod.getAcronym(), mod.getSettings());
+            //so i wonder why we match mod settings here, just ignore the settings
+            if (osuMod == OsuMod.Other || osuMod.getValue() < 0) {
+                log.warn("[PP Recalc] 忽略比特位不支持的 Mod: acronym={}, settings={}", mod.getAcronym(), mod.getSettings());
                 continue;
             }
             bits |= Integer.toUnsignedLong(osuMod.getValue());
@@ -453,7 +624,7 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
     {
         return mode == GameMode.OSU
                 && (algorithm == AlgorithmVersion.REWORK_202510
-                    || algorithm == AlgorithmVersion.REWORK_20260706);
+                || algorithm == AlgorithmVersion.REWORK_20260706);
     }
 
     private static GameMode toGameMode(String mode)
@@ -487,10 +658,9 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         throw new IllegalArgumentException("Unsupported rosu-pp algorithm version: " + stableKey);
     }
 
-    private static <T> T withBeatmap(
-            AlgorithmVersion algorithm,
-            Path beatmapPath,
-            BiFunction<RosuPp, Beatmap, T> operation)
+    private static <T> T withBeatmap(AlgorithmVersion algorithm,
+                                     Path beatmapPath,
+                                     BiFunction<RosuPp, Beatmap, T> operation)
     {
         Objects.requireNonNull(algorithm, "algorithm");
         byte[] beatmapBytes;
@@ -504,10 +674,9 @@ public class RosuPerformanceServiceImpl implements RosuPerformanceService
         return withBeatmap(algorithm, beatmapBytes, operation);
     }
 
-    private static <T> T withBeatmap(
-            AlgorithmVersion algorithm,
-            byte[] beatmapBytes,
-            BiFunction<RosuPp, Beatmap, T> operation)
+    private static <T> T withBeatmap(AlgorithmVersion algorithm,
+                                     byte[] beatmapBytes,
+                                     BiFunction<RosuPp, Beatmap, T> operation)
     {
         Objects.requireNonNull(algorithm, "algorithm");
         try (RosuPp calculator = RosuPp.forVersion(algorithm);

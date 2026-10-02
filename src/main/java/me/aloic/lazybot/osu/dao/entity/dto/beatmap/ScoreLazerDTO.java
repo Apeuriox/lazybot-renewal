@@ -61,6 +61,18 @@ public class ScoreLazerDTO implements Serializable
         return mods.stream().map(Mod::getAcronym).toArray(String[]::new);
     }
 
+    public static String toStringWithListIds(List<ScoreLazerDTO> scoreLazerDTOS)
+    {
+        StringBuilder result = new StringBuilder();
+        for (ScoreLazerDTO score:scoreLazerDTOS)
+        {
+            result.append(score.getId());
+            result.append("\n");
+        }
+        return result.toString();
+
+    }
+
 
 
 

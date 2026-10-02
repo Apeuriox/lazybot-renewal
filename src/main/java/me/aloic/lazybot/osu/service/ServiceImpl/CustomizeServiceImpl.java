@@ -7,7 +7,7 @@ import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
 import me.aloic.lazybot.osu.dao.mapper.CustomizationMapper;
 import me.aloic.lazybot.osu.service.CustomizeService;
 import me.aloic.lazybot.osu.theme.preset.ProfileTheme;
-import me.aloic.lazybot.osu.utils.AssetDownloadUtil;
+import me.aloic.lazybot.osu.utils.SafeHttpDownload;
 import me.aloic.lazybot.parameter.CustomizationParameter;
 import me.aloic.lazybot.util.CommonTool;
 import org.slf4j.Logger;
@@ -39,8 +39,9 @@ public class CustomizeServiceImpl implements CustomizeService
         if(params.getType().toLowerCase().trim().equals("profilebg")) {
             try {
                 logger.info("开始处理Profile BG更改请求: {}", params);
-                if(!(params.getTargetUrl().startsWith("http://") || params.getTargetUrl().startsWith("https://")))
-                    throw new LazybotRuntimeException("超链接协议无效");
+                // FIX(finding 4): https-only (no http://)
+                if(!params.getTargetUrl().startsWith("https://"))
+                    throw new LazybotRuntimeException("仅允许 https 超链接");
                 profileBackgroundCustomize(params);
                 insertProfileCustomizeToTable(params);
                 return "[Lazybot] 已提交对"+params.getPlayerId()+"的背景图片修改请求，请等待验证";
@@ -67,7 +68,8 @@ public class CustomizeServiceImpl implements CustomizeService
     {
         try{
             String desiredSavePath = ResourceMonitor.getResourcePath().toAbsolutePath()+ PROFILE_RELATIVE_PATH + params.getPlayerId()  +".jpg";
-            AssetDownloadUtil.downloadResourceQueue(params.getTargetUrl(), desiredSavePath);
+            // FIX(finding 4): safe download instead of AssetDownloadUtil.downloadResourceQueue
+            SafeHttpDownload.downloadHttpsToFile(params.getTargetUrl(), desiredSavePath);
             CommonTool.cropAndResize(desiredSavePath,1900,1000);
         }
         catch (Exception e) {
@@ -83,8 +85,13 @@ public class CustomizeServiceImpl implements CustomizeService
             if (saveFilePath.exists()) {
                 return;
             }
-            logger.info("尝试重新获取图片缓存: {}", custom.getOriginal_url());
-            AssetDownloadUtil.downloadResourceQueue(custom.getOriginal_url(), desiredSavePath);
+            // FIX(finding 4): only re-fetch when already verified; unverified URLs must not be a repeat SSRF trigger
+            if (custom.getVerified() == null || custom.getVerified() <= 0) {
+                logger.info("本地缓存缺失且未验证，跳过重拉: playerId={}", custom.getPlayer_id());
+                return;
+            }
+            logger.info("尝试重新获取已验证图片缓存: {}", custom.getOriginal_url());
+            SafeHttpDownload.downloadHttpsToFile(custom.getOriginal_url(), desiredSavePath);
             CommonTool.cropAndResize(desiredSavePath,1900,1000);
         }
         catch (Exception e) {

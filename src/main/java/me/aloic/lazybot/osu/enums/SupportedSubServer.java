@@ -1,7 +1,9 @@
 package me.aloic.lazybot.osu.enums;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public enum SupportedSubServer
 {
@@ -9,6 +11,6 @@ public enum SupportedSubServer
     LAZER(1,"Bancho Lazer"),
     STAR_MOON(2,"Star Moon");
 
-    private int value;
-    private String name;
+    private final int value;
+    private final String name;
 }

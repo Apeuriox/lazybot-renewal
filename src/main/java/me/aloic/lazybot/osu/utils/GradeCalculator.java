@@ -9,6 +9,7 @@ public class GradeCalculator {
     //why did not I just store this shit in database? oh come on
     public static String calculateGrade(LazybotScoreStatistics stats, List<String> mods) {
         boolean isSilver = mods != null && (mods.contains("HD") || mods.contains("FL"));
+        stats.reInitialize();
         return calculateGrade(stats.getCount300(),stats.getCount100(),stats.getCount50(),stats.getCount0(),isSilver);
     }
     public static String calculateGrade(int count300,int count100,int count50,int count0 ,boolean isSilver) {

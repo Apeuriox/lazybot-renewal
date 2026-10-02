@@ -23,10 +23,6 @@ public final class Parsers
     /** "1-100" → group(1)=from, group(2)=to */
     public static final Pattern RANGE = Pattern.compile("^(\\d+)-(\\d+)$");
 
-    /** Explicit PP algorithm selector, e.g. "@202502", "v202502" or "algo=202502". */
-    public static final Pattern ALGORITHM_VERSION = Pattern.compile(
-            "(?i)^(?:@|v|(?:--?)?algorithm=|(?:--?)?algo=).+$");
-
     /** BpIf mod operation, e.g. +HDHR, -HD, or !HDDT. */
     public static final Pattern BPIF_MOD_OPERATION = Pattern.compile("^[+\\-!！][a-zA-Z]*!?$");
 

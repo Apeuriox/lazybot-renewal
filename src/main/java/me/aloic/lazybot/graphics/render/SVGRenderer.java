@@ -64,6 +64,53 @@ public class SVGRenderer
 
         return result;
     }
+    public static byte[] renderSVGDocumentToByteArray(String document)
+    {
+        return renderSVGDocumentToByteArray(document,1f);
+    }
+    public static byte[] renderSVGDocumentToByteArrayPNG(String document)
+    {
+        return renderSVGDocumentToByteArrayPNG(document,1f);
+    }
+
+    public static byte[] renderSVGDocumentToByteArray(String document, float scale)
+    {
+        long startingTime = System.currentTimeMillis();
+        byte[] result;
+        try{
+            result = renderer.RenderJpg(document,scale);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("渲染成绩图时出错: "+e.getMessage());
+        }
+//        logger.info("Render to JPEG cost:{}ms", System.currentTimeMillis() - startingTime);
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter("X:\\lazybot-output\\test.svg"))) {
+//            writer.write(document);
+//            logger.info("成功写入字符串到{}.", "X:\\lazybot-output\\test.svg");
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+        return result;
+    }
+    public static byte[] renderSVGDocumentToByteArrayPNG(String document, float scale)
+    {
+        long startingTime = System.currentTimeMillis();
+        byte[] result;
+        try{
+            result = renderer.RenderPng(document,scale);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage());
+            throw new LazybotRuntimeException("渲染成绩图时出错: "+e.getMessage());
+        }
+        logger.info("Render to JPEG cost:{}ms", System.currentTimeMillis() - startingTime);
+
+
+        return result;
+    }
     public static byte[] renderSVGDocumentToByteArrayPNG(Document document, float scale)
     {
         long startingTime = System.currentTimeMillis();

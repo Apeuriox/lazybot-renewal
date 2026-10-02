@@ -31,4 +31,9 @@ public class PlayerInfoDTO extends UserCompactDTO
     private String twitter;
     private String website;
     private TeamDTO team;
+
+    public String getRemoteAvatarLink()
+    {
+        return getId() == null ? null : "https://a.ppy.sh/" + getId();
+    }
 }

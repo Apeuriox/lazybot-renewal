@@ -74,6 +74,7 @@ public class BpListCommand implements LazybotSlashCommand
     private BplistParameter setupParameter(LazybotSlashCommandEvent event, UserBindingPO tokenPO)
     {
         BplistParameter params=BplistParameter.analyzeParameter(event.getCommandParameters());
+        params.applyAlgorithmVersion(event);
         BplistParameter.setupDefaultValue(params,tokenPO);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
@@ -92,6 +93,6 @@ public class BpListCommand implements LazybotSlashCommand
                         .addExample("/Bplist Aloic 1-21 @202502")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Range","查询的范围，[num]-[num]", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Algorithm","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

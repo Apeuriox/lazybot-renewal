@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
-import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.util.ArgumentParser;
 import me.aloic.lazybot.util.Parsers;
 
@@ -57,12 +56,10 @@ public class BpifParameter extends LazybotCommandParameter
     {
         BpifParameter parameter = new BpifParameter();
         if (params == null || params.isEmpty()) {
-            throw new LazybotRuntimeException("参数呢?");
+            return parameter;
         }
 
         ArgumentParser parser = ArgumentParser.of(params);
-        parser.tryPop(Parsers.ALGORITHM_VERSION,
-                matcher -> parameter.setAlgorithmVersion(RosuAlgorithmVersionUtil.parse(matcher.group())));
         parser.tryPop(Parsers.BPIF_MOD_OPERATION,
                 matcher -> handleBpIf(parameter, matcher.group()));
         if (!parser.remainder().isEmpty()) {

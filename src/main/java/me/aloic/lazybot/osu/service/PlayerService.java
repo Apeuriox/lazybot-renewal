@@ -13,11 +13,15 @@ public interface PlayerService
 
     ScoreVO getUserHighestScoreOnMap(ScoreParameter params) throws Exception;
 
+    ScoreVO getUserHighestPpOnMap(ScoreParameter params) throws Exception;
+
     PPPlusScore getUserHighestScoreOnMapPlus(ScoreParameter params) throws Exception;
 
     UserAllScore getUserAllScoresOnMap(ScoreParameter params) throws Exception;
 
     BeatmapStatistics getBeatmapStatisticsWithImaginaryParams(BeatmapStatisticsParameter params) throws Exception;
+
+    MapPerformanceAnalysis getMapPpAnalysis(BeatmapStatisticsParameter params) throws Exception;
 
     ThumbnailClassicalVO thumbnailClassicalScore(ThumbnailParameter params);
 

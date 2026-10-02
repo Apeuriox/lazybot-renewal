@@ -132,6 +132,7 @@ public class BpCommand implements LazybotSlashCommand
     private BpParameter setupParameter(LazybotSlashCommandEvent event, @Nonnull String mode, @Nonnull Integer playerId, Integer version)
     {
         BpParameter params=BpParameter.analyzeParameter(event.getCommandParameters());
+        params.applyAlgorithmVersion(event);
         BpParameter.setupDefaultValue(params,mode);
         if(event.getOsuMode()!=null)
             params.setMode(event.getOsuMode().getDescribe());
@@ -162,7 +163,7 @@ public class BpCommand implements LazybotSlashCommand
                         .addExample("/Bp Aloic #10 &")
                         .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Index","指定查询的索引，范围 1-200，默认为1", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Algorithm","尾部传入 @202210/@202411/@202502/@202510/@20260706；省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
     }
 

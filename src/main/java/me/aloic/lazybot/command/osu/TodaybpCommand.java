@@ -21,7 +21,7 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-@LazybotCommandMapping({"todaybp","tbp"})
+@LazybotCommandMapping({"todaybp","tbp","t"})
 @Component
 public class TodaybpCommand implements LazybotSlashCommand
 {

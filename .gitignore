@@ -37,3 +37,10 @@ src/main/resources/application.properties.backup
 /src/main/resources/application*.yaml
 /src/main/resources/application-test.yaml.backup
 /CLAUDE.md
+/misc/
+scripts/deploy.env.cmd
+/AGENTS.md
+/API.md
+/docs/
+/jte-classes/
+/scripts/

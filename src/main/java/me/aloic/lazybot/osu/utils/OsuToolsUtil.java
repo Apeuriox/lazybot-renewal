@@ -180,8 +180,7 @@ public class OsuToolsUtil
         return recalculateScoreList(scoreVOList, algorithm, false);
     }
 
-    private List<ScoreVO> recalculateScoreList(
-            List<ScoreVO> scoreVOList, AlgorithmVersion algorithm, boolean setupBackground)
+    private List<ScoreVO> recalculateScoreList(List<ScoreVO> scoreVOList, AlgorithmVersion algorithm, boolean setupBackground)
     {
         List<CompletableFuture<ScoreVO>> futureList = scoreVOList.stream()
                 .map(scoreVO -> CompletableFuture.supplyAsync(() -> {

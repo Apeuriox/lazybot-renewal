@@ -63,7 +63,6 @@ public class AssetDownloadUtil
             return null;
         });
         downloadFuture.get();
-        logger.info("(QUEUE) Download completed for: {}", targetUrl);
     }
     private static void downloadResourceSmallQueue(String targetUrl, String desiredLocalPath) throws InterruptedException, ExecutionException {
         Future<Void> downloadFuture = executor.submit(() -> {
@@ -199,7 +198,7 @@ public class AssetDownloadUtil
     }
     public static String avatarAbsolutePath(PlayerInfoDTO playerInfoDTO, boolean override)
     {
-        avatarDownload(playerInfoDTO.getAvatar_url(), playerInfoDTO.getId(),override);
+        avatarDownload(playerInfoDTO.getRemoteAvatarLink(), playerInfoDTO.getId(),override);
         return ResourceMonitor.getResourcePath().toAbsolutePath()+ "/osuFiles/playerAvatar/" + playerInfoDTO.getId() +".jpg";
     }
     public static String avatarAbsolutePathStarNoon(String starMoonId, boolean override)

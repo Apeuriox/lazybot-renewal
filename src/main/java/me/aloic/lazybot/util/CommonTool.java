@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class CommonTool {
@@ -199,12 +200,11 @@ public class CommonTool {
     }
     public static String modArrayToString(List<Mod> modArray)
     {
-        if(modArray!=null && !modArray.isEmpty())
-        {
-            return modArray.stream().map(Mod::getAcronym).reduce((a,b)->a.concat(" ").concat(b)).get();
-        }
-        else
-            return "NoMod";
+        return modArray == null || modArray.isEmpty()
+                ? "NoMod"
+                : modArray.stream()
+                  .map(Mod::getAcronym)
+                  .collect(Collectors.joining(" "));
     }
     public static String modArrayToStringNoSpace(List<Mod> modArray)
     {

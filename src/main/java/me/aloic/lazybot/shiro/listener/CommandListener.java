@@ -45,8 +45,4 @@ public class CommandListener
         }
         messageDeduplicator.replicateCheck(bot, commandEvent);
     }
-
-
 }
-
-

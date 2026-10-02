@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ScoreStatisticsLazer;
 
 
+import java.lang.reflect.Field;
 import java.util.Optional;
 
 @Data
@@ -34,6 +36,14 @@ public class LazybotScoreStatistics
         this.count0=Optional.ofNullable(statisticsLazer.getMiss()).orElse(0);
         this.countTick= Optional.ofNullable(statisticsLazer.getLarge_tick_hit()).orElse(0);
         this.countEnd= Optional.ofNullable(statisticsLazer.getSlider_tail_hit()).orElse(0);
+    }
+    public void reInitialize() {
+        this.count300=Optional.ofNullable(this.count300).orElse(0);
+        this.count100=Optional.ofNullable(this.count100).orElse(0);
+        this.count50=Optional.ofNullable(this.count50).orElse(0);
+        this.count0=Optional.ofNullable(this.count0).orElse(0);
+        this.countTick= Optional.ofNullable(this.countTick).orElse(0);
+        this.countEnd= Optional.ofNullable(this.countEnd).orElse(0);
     }
 
     @Override
