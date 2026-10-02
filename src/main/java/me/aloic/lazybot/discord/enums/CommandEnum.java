@@ -137,7 +137,13 @@ public enum CommandEnum {
     WHAT_IF(26, "whatif", "假设多刷了这么多pp后的总pp变化", true,
             List.of(new CommandOption(OptionType.STRING, "pp", "给定的pp列表，例: 300*10 400*5", false, false))),
     MOD(27, "mod", "查询对应Mod的介绍", true,
-            List.of(new CommandOption(OptionType.STRING, "id", "指定Mod名称", false, false)));
+            List.of(new CommandOption(OptionType.STRING, "id", "指定Mod名称", false, false))),
+    PP(28, "pp", "查询指定地图上PP最高的成绩", true,
+            List.of(new CommandOption(OptionType.INTEGER, "bid", "指定查询的Bid", true, false),
+                    new CommandOption(OptionType.STRING, "user", "指定查询的用户", false, false),
+                    new CommandOption(OptionType.STRING, "mode", "指定查询的模式", false, false),
+                    new CommandOption(OptionType.STRING, "algorithm", "PP算法: 202210/202411/202502/202510/20260706", false, false),
+                    new CommandOption(OptionType.INTEGER, "version", "指定生成图像的风格", false, false)));
 //     CUSTOMIZE(28, "customize", "自定义profile背景或主题", true,
 //             List.of(new CommandOption(OptionType.STRING, "user", "指定用户", false, false),
 //                     new CommandOption(OptionType.STRING, "type", "指定自定义类型", false, false)));

@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -152,6 +153,42 @@ public class PlayerServiceImpl implements PlayerService
         return setupPlusScore(scoreVO);
     }
 
+    @Override
+    public ScoreVO getUserHighestPpOnMap(ScoreParameter params) throws Exception
+    {
+        logRecalculationAlgorithm("pp", params);
+        PlayerInfoDTO player = getTargetPlayerInfoDTO(params);
+        List<ScoreLazerDTO> scoreList = dataExtractor.extractBeatmapUserScoreAll(params.getBeatmapId(), player.getId(), params.getMode());
+        if (scoreList == null || scoreList.isEmpty()) {
+            throw new LazybotRuntimeException("没有找到" + player.getUsername() + "在" + params.getBeatmapId() + "上的成绩");
+        }
+        BeatmapDTO beatmapDTO = dataExtractor.extractBeatmap(String.valueOf(params.getBeatmapId()), params.getMode());
+        boolean shouldRankByLocalPp = params.getAlgorithmVersion() != null && params.getAlgorithmVersion() != RosuAlgorithmVersionUtil.LATEST;
+        Path beatmapPath = AssetDownloadUtil.beatmapPath(beatmapDTO.getId(), false);
+        AlgorithmVersion algorithm = selectedAlgorithm(params);
+        ScoreLazerDTO best = scoreList.stream()
+                .max(Comparator.comparingDouble(score -> rankingPp(score, beatmapPath, shouldRankByLocalPp, algorithm)))
+                .orElseThrow(() -> new LazybotRuntimeException("没有找到可渲染的最高PP成绩"));
+        best.setUser(player);
+        boolean easterTrigger = CommonTool.shouldTriggerEaster();
+        if (params.getVersion() == 4) {
+            easterTrigger = true;
+            params.setVersion(1);
+        }
+        if (easterTrigger && !Objects.equals(params.getMode(), "osu")) {
+            easterTrigger = false;
+        }
+        ScoreVO scoreVO = osuToolsUtil.setupScoreVO(beatmapDTO, best, false, params.getAlgorithmVersion());
+        verifyBeatmapsCache(scoreVO);
+        if (easterTrigger) {
+            scoreVO.setRawPlayerData(player);
+            params.setVersion(727);
+        }
+        if (params.getChannelId() != null && params.getChannelId() != 1919810L) {
+            CompareMonitor.saveRecentBeatmap(params.getChannelId(), scoreVO.getBeatmap().getBid());
+        }
+        return scoreVO;
+    }
 
 
     @Override
@@ -1010,7 +1047,14 @@ public class PlayerServiceImpl implements PlayerService
         return scorePlus;
     }
 
-
+    private double rankingPp(ScoreLazerDTO score, Path beatmapPath, boolean forceLocal, AlgorithmVersion algorithm)
+    {
+        if (!forceLocal && score.getPp() != null) {
+            return score.getPp();
+        }
+        Double pp = rosuPerformanceService.calculateCurrentPerformance(beatmapPath, score, algorithm).getCurrentPP();
+        return pp == null ? 0 : pp;
+    }
 
 
 }

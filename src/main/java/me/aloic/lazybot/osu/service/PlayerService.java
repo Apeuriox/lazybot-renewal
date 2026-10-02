@@ -13,6 +13,8 @@ public interface PlayerService
 
     ScoreVO getUserHighestScoreOnMap(ScoreParameter params) throws Exception;
 
+    ScoreVO getUserHighestPpOnMap(ScoreParameter params) throws Exception;
+
     PPPlusScore getUserHighestScoreOnMapPlus(ScoreParameter params) throws Exception;
 
     UserAllScore getUserAllScoresOnMap(ScoreParameter params) throws Exception;
