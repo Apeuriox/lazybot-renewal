@@ -10,10 +10,14 @@ import java.util.Locale;
 
 /**
  * Text positions for {@code single_command_help_svg.jte}.
- * The 1500×2100 poster keeps the Figma anchors. Description, credits and
- * parameters stack downward; examples stay pinned above the footer.
+ * Description, credits and parameters stack downward. Examples and invoke
+ * names are anchored above the footer and grow upward.
  */
-public record CommandHelpPoster(List<PlacedText> underHalftone, List<PlacedText> overHalftone)
+public record CommandHelpPoster(
+        List<PlacedText> underHalftone,
+        List<PlacedText> overHalftone,
+        String footerColor,
+        String availability)
 {
     public record PlacedText(
             String x,
@@ -22,7 +26,8 @@ public record CommandHelpPoster(List<PlacedText> underHalftone, List<PlacedText>
             String fill,
             String fontFamily,
             String fontSize,
-            String letterSpacing)
+            String letterSpacing,
+            String anchor)
     {
     }
 
@@ -30,6 +35,13 @@ public record CommandHelpPoster(List<PlacedText> underHalftone, List<PlacedText>
     private static final double DESCRIPTION_WIDTH = 196;
     private static final double PARAMETER_WIDTH = 380;
     private static final double EXAMPLE_WIDTH = 560;
+    private static final double EXAMPLE_BOTTOM = 1912.09;
+    private static final double EXAMPLE_STEP = 41;
+    private static final double EXAMPLE_LABEL_GAP = 64;
+    private static final String FOOTER_READY = "#5E693E";
+    private static final String FOOTER_INCOMPLETE = "#693E3E";
+    private static final double RIGHT_EDGE = 1436;
+    private static final String CJK_FONT = "Noto Sans SC";
 
     public static CommandHelpPoster from(CommandHelp help)
     {
@@ -37,15 +49,30 @@ public record CommandHelpPoster(List<PlacedText> underHalftone, List<PlacedText>
         List<PlacedText> over = new ArrayList<>();
         placeTitle(under, help);
         double ruleY = placeDescription(under, help.getDescription());
-        ruleY = placePeople(under, ruleY, 159, "\u201cCREATOR\u201d", splitCsv(help.getCreator()));
-        placePeople(under, ruleY, 147, "\u201cGRAPHIC_DESIGNER\u201d", splitCsv(help.getDesigner()));
+        ruleY = placePeople(under, ruleY, 159, "\"CREATOR\"", splitCsv(help.getCreator()));
+        placePeople(under, ruleY, 147, "\"GRAPHIC_DESIGNER\"", splitCsv(help.getDesigner()));
         placeParameters(over, help.getOptions());
         placeExamples(over, help);
-        return new CommandHelpPoster(List.copyOf(under), List.copyOf(over));
+        String availability = help.getAvailability() == null ? "" : help.getAvailability().trim();
+        if (!availability.isEmpty()) {
+            over.add(text(RIGHT_EDGE, 2043.09, availability, "black", fontFor(availability), BODY, "0em", "end"));
+        }
+        String footerColor = CommandHelp.INCOMPLETE.equalsIgnoreCase(availability)
+                ? FOOTER_INCOMPLETE
+                : FOOTER_READY;
+        return new CommandHelpPoster(List.copyOf(under), List.copyOf(over), footerColor, availability);
     }
 
     private static void placeTitle(List<PlacedText> lines, CommandHelp help)
     {
+        String code = help.getCode() == null ? "" : help.getCode().trim();
+        if (!code.isEmpty()) {
+            lines.add(text(102, 95.535, code, "#3A3C2E", "Rubik", 22, "0em"));
+        }
+        String headline = help.getHeadline() == null ? "" : help.getHeadline().trim().toUpperCase();
+        if (!headline.isEmpty()) {
+            lines.add(text(439, 94.535, headline, "#3A3C2E", "Rubik", 22, "0em"));
+        }
         String command = help.getCommand() == null ? "" : help.getCommand().trim();
         if (!command.isEmpty()) {
             String title = command.toLowerCase(Locale.ROOT);
@@ -63,7 +90,7 @@ public record CommandHelpPoster(List<PlacedText> underHalftone, List<PlacedText>
         if (wrapped.isEmpty()) {
             return 384.09 - 159;
         }
-        lines.add(body(101, 384.09, "\u201cDESCRIPTION\u201d"));
+        lines.add(body(101, 384.09, "\"DESCRIPTION\""));
         double y = 450.09;
         for (String line : wrapped) {
             lines.add(body(101, y, line));
@@ -107,7 +134,7 @@ public record CommandHelpPoster(List<PlacedText> underHalftone, List<PlacedText>
             String name = option.name() == null ? "" : option.name();
             String valueType = option.type() == null || option.type().isBlank() ? "" : " :" + option.type();
             lines.add(body(525, y, "%02d  %s%s".formatted(index, name, valueType)));
-            lines.add(body(1316, y, flag(option.optional())));
+            lines.add(endAligned(RIGHT_EDGE, y, flag(option.optional())));
             List<String> wrapped = wrap(option.description(), PARAMETER_WIDTH, BODY);
             double lineY = y + 40;
             for (String line : wrapped) {
@@ -128,24 +155,32 @@ public record CommandHelpPoster(List<PlacedText> underHalftone, List<PlacedText>
         List<String> aliases = splitCsv(help.getAlias()).stream()
                 .map(alias -> alias.toUpperCase(Locale.ROOT))
                 .toList();
-        if (!examples.isEmpty()) {
-            lines.add(body(356, 1766.09, "(EXAMPLE)"));
-            double y = 1830.09;
-            for (String example : examples) {
-                for (String line : wrap(example, EXAMPLE_WIDTH, BODY)) {
-                    lines.add(body(356, y, line));
-                    y += 41;
-                }
-            }
+        List<String> exampleLines = new ArrayList<>();
+        for (String example : examples) {
+            exampleLines.addAll(wrap(example, EXAMPLE_WIDTH, BODY));
         }
-        if (!aliases.isEmpty()) {
-            lines.add(body(954, 1755.09, "\u201cINVOKE\u201d"));
-            double y = 1824.09;
-            for (int i = 0; i < aliases.size(); i++) {
-                lines.add(body(959, y, "%02d  %s".formatted(i + 1, aliases.get(i))));
-                y += 41;
-            }
+        placeUpward(lines, 356, exampleLines, 356, "(EXAMPLE)");
+
+        List<String> aliasLines = new ArrayList<>();
+        for (int i = 0; i < aliases.size(); i++) {
+            aliasLines.add("%02d  %s".formatted(i + 1, aliases.get(i)));
         }
+        placeUpward(lines, 959, aliasLines, 954, "\"INVOKE\"");
+    }
+
+    private static void placeUpward(List<PlacedText> lines, double textX, List<String> rows,
+                                    double labelX, String label)
+    {
+        if (rows.isEmpty()) {
+            return;
+        }
+        int count = rows.size();
+        for (int i = 0; i < count; i++) {
+            double y = EXAMPLE_BOTTOM - (count - 1L - i) * EXAMPLE_STEP;
+            lines.add(body(textX, y, rows.get(i)));
+        }
+        double top = EXAMPLE_BOTTOM - (count - 1L) * EXAMPLE_STEP;
+        lines.add(body(labelX, top - EXAMPLE_LABEL_GAP, label));
     }
 
     private static String flag(CommandParameter.ParameterType type)
@@ -220,18 +255,46 @@ public record CommandHelpPoster(List<PlacedText> underHalftone, List<PlacedText>
 
     private static PlacedText body(double x, double y, String content)
     {
-        return text(x, y, content, "#3A3C2E", "Rubik", BODY, "0em");
+        return text(x, y, content, "#3A3C2E", fontFor(content), BODY, "0em", "start");
+    }
+
+    private static PlacedText endAligned(double x, double y, String content)
+    {
+        return text(x, y, content, "#3A3C2E", fontFor(content), BODY, "0em", "end");
     }
 
     private static PlacedText rule(double x, double y)
     {
-        return text(x, y, "_", "#3A3C2E", "Rubik", BODY, "-0.02em");
+        return text(x, y, "_", "#3A3C2E", "Rubik", BODY, "-0.02em", "start");
     }
 
     private static PlacedText text(double x, double y, String content, String fill,
                                    String family, double size, String spacing)
     {
-        return new PlacedText(num(x), num(y), content, fill, family, num(size), spacing);
+        return text(x, y, content, fill, family, size, spacing, "start");
+    }
+
+    private static PlacedText text(double x, double y, String content, String fill,
+                                   String family, double size, String spacing, String anchor)
+    {
+        return new PlacedText(num(x), num(y), content, fill, family, num(size), spacing, anchor);
+    }
+
+    private static String fontFor(String content)
+    {
+        if (content == null) {
+            return "Rubik";
+        }
+        return content.codePoints().anyMatch(CommandHelpPoster::isCjk) ? CJK_FONT : "Rubik";
+    }
+
+    private static boolean isCjk(int codePoint)
+    {
+        Character.UnicodeScript script = Character.UnicodeScript.of(codePoint);
+        return script == Character.UnicodeScript.HAN
+                || script == Character.UnicodeScript.HIRAGANA
+                || script == Character.UnicodeScript.KATAKANA
+                || script == Character.UnicodeScript.HANGUL;
     }
 
     private static String num(double value)

@@ -16,7 +16,6 @@ import me.aloic.lazybot.parameter.CardMoelleuxParameter;
 import me.aloic.lazybot.service.CardService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.springframework.stereotype.Component;
@@ -62,10 +61,9 @@ public class TrimmedCardCommand implements LazybotSlashCommand
 
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Trimmed Card", "Tc",
+        return new CommandHelp("Trimmed Card", "Tc",
                         "生成适合单独展示的裁剪版玩家卡片",
                         "Aloic", "Aloic", "2025-09-23")
                         .addExample("/tc")
@@ -76,7 +74,7 @@ public class TrimmedCardCommand implements LazybotSlashCommand
                                 CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter(
                                 "Hue", "Custom", "覆盖卡片色相，格式为hue=100",
-                                CommandParameter.ParameterType.OPTIONAL)));
+                                CommandParameter.ParameterType.OPTIONAL));
     }
 
 }

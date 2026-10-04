@@ -8,7 +8,6 @@ import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -36,10 +35,9 @@ public class LinkCommand implements LazybotSlashCommand
         //do not implement
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Link","Link",
+        return new CommandHelp("Link","Link",
                         "用户绑定",
                         "Aloic", null, "2023-04-04")
                         .addExample("/Link Aloic")
@@ -48,6 +46,6 @@ public class LinkCommand implements LazybotSlashCommand
                                 "PlayerName / oauth",
                                 "String",
                                 "输入用户名为手动绑定；输入 oauth 验证本人身份",
-                                CommandParameter.ParameterType.REQUIRED)));
+                                CommandParameter.ParameterType.REQUIRED));
     }
 }

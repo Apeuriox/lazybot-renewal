@@ -17,7 +17,6 @@ import me.aloic.lazybot.osu.dao.entity.vo.MapScore;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -72,15 +71,14 @@ public class AllScoreCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("All Score","AllScore, AllScores, As, Ass",
+        return new CommandHelp("All Score","AllScore, AllScores, As, Ass",
                         "查询对应玩家在对应地图下的全部成绩，以及查询部分pp计算中间值",
                         "Aloic", "Aloic", "2025-06-03")
                         .addExample("/Allscore 4889657")
                         .addExample("/As Aloic 4889657")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("BeatmapID","Integer","地图ID", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("BeatmapID","Integer","地图ID", CommandParameter.ParameterType.REQUIRED));
     }
 }

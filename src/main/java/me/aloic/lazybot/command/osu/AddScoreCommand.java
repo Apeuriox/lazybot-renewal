@@ -13,7 +13,6 @@ import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -64,15 +63,14 @@ public class AddScoreCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Add Score","AddScore, AddScores, Add",
+        return new CommandHelp("Add Score","AddScore, AddScores, Add",
                         "以BID申请pp+重算，取最大结果",
                         "Aloic", "Aloic", "2025-07-22")
                         .addExample("/Addscore 4889657")
                         .addExample("/Add Aloic 4889657")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("BeatmapID","Integer","地图ID，仅支持STD模式", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("BeatmapID","Integer","地图ID，仅支持STD模式", CommandParameter.ParameterType.REQUIRED));
     }
 }

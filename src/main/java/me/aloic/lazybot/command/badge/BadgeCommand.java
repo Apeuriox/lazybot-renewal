@@ -13,7 +13,6 @@ import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.parameter.BadgeParameter;
 import me.aloic.lazybot.service.BadgeService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -67,10 +66,9 @@ public class BadgeCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Badge","Badge",
+        return new CommandHelp("Badge","Badge",
                         "查询自己拥有的Badge，以及查询Badge详情",
                         "Aloic", null, "2025-10-22")
                         .addExample("/Badge list")
@@ -79,7 +77,7 @@ public class BadgeCommand implements LazybotSlashCommand
                         .addExample("/Badge Clear")
                         .addOption(new CommandParameter("Type","String","二级命令类型，List查看列表，View查看指定Badge详情，Set设置展示Badge，上限四个，Clear清除设置的展示Badge", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("Index","Integer","仅限View，索引值", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Indexes","Custom","仅限Set，索引值，格式为1,2,3", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Indexes","Custom","仅限Set，索引值，格式为1,2,3", CommandParameter.ParameterType.OPTIONAL));
     }
 
 }

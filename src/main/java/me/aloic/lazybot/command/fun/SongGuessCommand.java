@@ -16,7 +16,6 @@ import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.osu.utils.AssetDownloader;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
@@ -227,14 +226,14 @@ public class SongGuessCommand implements LazybotSlashCommand
         return baos.toByteArray();
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(new CommandHelp("Song Title Guess","song",
+        return new CommandHelp("Song Title Guess","song",
                 "从绑定Lazybot的用户中随机查询一位玩家的的随机bp背景用于游戏，输入/song &以获取提示，输入/song &&以提前结束，一个群同时只能存在一场游戏，只保留最后的结果",
                 "Aloic", null, "2025-07-30")
                 .addExample("/song example")
                 .addExample("/song &")
-                .addOption(new CommandParameter("输入内容","String","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL)));
+                .addOption(new CommandParameter("输入内容","String","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL));
     }
 }
 

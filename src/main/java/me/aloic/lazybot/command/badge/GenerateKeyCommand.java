@@ -16,7 +16,6 @@ import me.aloic.lazybot.service.BadgeService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.AuthorityVerifier;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -63,17 +62,16 @@ public class GenerateKeyCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Generate Keys","Genkey",
+        return new CommandHelp("Generate Keys","Genkey",
                         "为指定Badge生成Key",
                         "Aloic", null, "2025-10-23")
                         .addExample("/Genkey 3 10 864000 true")
                         .addOption(new CommandParameter("BadgeId","Integer","Badge的ID", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("MaxUses","Integer","Key的最大使用次数，如果GenMultiKey为True则会生成此数量的Key", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("ExpireTime","Integer","过期时间，单位秒", CommandParameter.ParameterType.REQUIRED))
-                        .addOption(new CommandParameter("GenMultiKey","Boolean","是否生成多个Key", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("GenMultiKey","Boolean","是否生成多个Key", CommandParameter.ParameterType.REQUIRED));
     }
 
 }

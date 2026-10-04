@@ -10,7 +10,6 @@ import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -43,14 +42,13 @@ public class SetRulesetCommand implements LazybotSlashCommand
         //not implemented
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Set Default Subruleset","Setruleset, Setrule",
+        return new CommandHelp("Set Default Subruleset","Setruleset, Setrule",
                         "仅限Star Moon，更改默认次级模式",
                         "Aloic", null, "2025-11-13")
                         .addExample("/Setrule relax")
                         .addExample("/Setrule standard")
-                        .addOption(new CommandParameter("Subruleset","String","指定的次级模式", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("Subruleset","String","指定的次级模式", CommandParameter.ParameterType.REQUIRED));
     }
 }

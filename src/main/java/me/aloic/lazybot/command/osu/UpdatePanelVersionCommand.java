@@ -16,7 +16,6 @@ import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.parameter.UpdatePanelVersionParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -66,15 +65,14 @@ public class UpdatePanelVersionCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Set Score Panel Version","SetPanel, Sp",
+        return new CommandHelp("Set Score Panel Version","SetPanel, Sp",
                         "设置用户的默认成绩面板",
                         "Aloic", null, "2026-04-20")
                         .addExample("/SetPanel 1")
                         .addExample("/Sp 2")
                         .addExample("/Sp marathon")
-                        .addOption(new CommandParameter("PanelVersion","Custom","面板的类型，支持数字和名称", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("PanelVersion","Custom","面板的类型，支持数字和名称", CommandParameter.ParameterType.REQUIRED));
     }
 }

@@ -16,7 +16,6 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BpvsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -77,14 +76,16 @@ public class BpvsCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Bp Versus","Bpvs",
+        return new CommandHelp("Bp Versus","Bpvs",
                         "与指定用户的BP进行对比，仅限Bp 1-100",
                         "Aloic", "Slayemus", "2024-04-25")
+                .code("CM-006")
+                .headline("Versus another user")
+                .availability("ALL MODE")
                         .addExample("/Bpvs Aloic")
                         .addExample("/Bpvs Aloic#Apeuriox")
-                        .addOption(new CommandParameter("Compare PlayerName","Custom","对比的玩家名称，可以以#分割输入两者", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("Compare PlayerName","Custom","对比的玩家名称，可以以#分割输入两者", CommandParameter.ParameterType.REQUIRED));
     }
 }

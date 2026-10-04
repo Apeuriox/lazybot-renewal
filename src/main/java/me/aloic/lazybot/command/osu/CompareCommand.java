@@ -14,7 +14,6 @@ import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -83,16 +82,14 @@ public class CompareCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Compare","c, compare",
+        return new CommandHelp("Compare","c, compare",
                         "以最近的玩家查询成绩的同BID查询自己的成绩，输入数字以往前查询，最大为5",
                         "Aloic", "Slayemus, Aloic", "2025-08-31")
                         .addExample("/Compare")
                         .addExample("/Compare 2")
                         .addExample("/C 3")
-                        .addOption(new CommandParameter("Index","Integer","查询的索引", CommandParameter.ParameterType.OPTIONAL))
-        );
+                        .addOption(new CommandParameter("Index","Integer","查询的索引", CommandParameter.ParameterType.OPTIONAL));
     }
 }

@@ -12,7 +12,6 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -66,12 +65,11 @@ public class ModCommand implements LazybotSlashCommand
 
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Mod Info","Mod, modInfo, mi", "查看Osu!下指定Mod的信息","Aloic", "Aloic", "2025-05-09")
+        return new CommandHelp("Mod Info","Mod, modInfo, mi", "查看Osu!下指定Mod的信息","Aloic", "Aloic", "2025-05-09")
                 .addExample("/mod Hidden")
                 .addExample("/mod HD")
-                .addOption(new CommandParameter("Mod名称","String","Mod的名称，支持全称及缩写", CommandParameter.ParameterType.REQUIRED)));
+                .addOption(new CommandParameter("Mod名称","String","Mod的名称，支持全称及缩写", CommandParameter.ParameterType.REQUIRED));
     }
 }

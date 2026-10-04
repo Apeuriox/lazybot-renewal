@@ -12,7 +12,6 @@ import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.mapper.UserBindingMapper;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -243,14 +242,13 @@ public class NameGuessCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Player Name Guess旧版","nl",
+        return new CommandHelp("Player Name Guess旧版","nl",
                 "从绑定Lazybot的用户中随机查询一位玩家的名字用于游戏，仅限初次绑定时缓存，输入/name &以提前结束，一个群同时只能存在一场游戏",
                 "Aloic", null, "2025-07-30")
                 .addExample("/nl")
                 .addExample("/nl &")
-                .addOption(new CommandParameter("输入内容","String","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL)));
+                .addOption(new CommandParameter("输入内容","String","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL));
     }
 }

@@ -19,7 +19,6 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -112,12 +111,14 @@ public class ScoreCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Score","Score, S, Pscore",
+        return new CommandHelp("Score","Score, S, Pscore",
                         "按照指定用户查询指定地图下的指定Mod组合中分数最高的成绩, Pscore会以PP+数据返回",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
+                .code("CM-002")
+                .headline("Highest Score on Map")
+                .availability("ALL MODE")
                         .addExample("/Score 4889657+HDHR")
                         .addExample("/s Aloic 4889657")
                         .addExample("/s Aloic 4889657+HD @202210")
@@ -126,6 +127,6 @@ public class ScoreCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("BID","Integer","查询的地图ID", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("Mod","String","Mod过滤项", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","Custom","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Version","Custom","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL));
     }
 }

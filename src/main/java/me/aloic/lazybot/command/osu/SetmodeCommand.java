@@ -8,7 +8,6 @@ import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -36,13 +35,12 @@ public class SetmodeCommand implements LazybotSlashCommand
         //not implemented
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Set Default Mode","Setmode",
+        return new CommandHelp("Set Default Mode","Setmode",
                         "更改默认模式",
                         "Aloic", null, "2023-06-29")
                         .addExample("/Setmode 1")
-                        .addOption(new CommandParameter("Mode","String","指定的模式", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("Mode","String","指定的模式", CommandParameter.ParameterType.REQUIRED));
     }
 }

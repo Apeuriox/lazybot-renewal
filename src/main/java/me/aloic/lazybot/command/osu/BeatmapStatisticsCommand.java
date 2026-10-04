@@ -15,7 +15,6 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BeatmapStatisticsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -64,10 +63,9 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Beatmap Statistics","Map, M",
+        return new CommandHelp("Beatmap Statistics","Map, M",
                         "查询指定地图在指定Mod组合下的参数，支持AR、CS、OD覆写",
                         "Aloic", "Slayemus, Aloic", "2026-04-13")
                         .addExample("/Map 4889657+HDHR 98.5 AR9.5 CS4 OD8")
@@ -80,6 +78,6 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("AR","Float","覆写AR值(0-11)，格式AR9.5或AR 10，注意会被特定Mod覆盖，如HR，EZ", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("CS","Float","覆写CS值(0-10)，格式CS4或CS 4", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("OD","Float","覆写OD值(0-11)，格式OD9或OD 9", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用最新算法", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用最新算法", CommandParameter.ParameterType.OPTIONAL));
     }
 }

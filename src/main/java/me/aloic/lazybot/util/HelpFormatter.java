@@ -8,6 +8,12 @@ public class HelpFormatter {
         StringBuilder sb = new StringBuilder();
 
         sb.append("[Lazybot] 命令: ").append(help.getCommand()).append("\n");
+        if (help.getCode() != null && !help.getCode().isBlank()) {
+            sb.append("编号: ").append(help.getCode()).append("\n");
+        }
+        if (help.getHeadline() != null && !help.getHeadline().isBlank()) {
+            sb.append(help.getHeadline()).append("\n");
+        }
         sb.append("调用名: ").append(help.getAlias()).append("\n");
         sb.append("描述: ").append(help.getDescription()).append("\n\n");
 
@@ -29,6 +35,9 @@ public class HelpFormatter {
         sb.append("作者: ").append(help.getCreator()).append("\n");
         if (help.getDesigner()!=null) sb.append("图形设计: ").append(help.getDesigner()).append("\n");
         sb.append("完成时间: ").append(help.getInitialReleaseDate());
+        if (help.getAvailability() != null && !help.getAvailability().isBlank()) {
+            sb.append("\n状态: ").append(help.getAvailability());
+        }
         return sb.toString().trim();
     }
 }

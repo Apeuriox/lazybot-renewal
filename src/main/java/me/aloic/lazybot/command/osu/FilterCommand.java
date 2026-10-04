@@ -13,7 +13,6 @@ import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreFilterParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -62,10 +61,9 @@ public class FilterCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Filter","Filter, F",
+        return new CommandHelp("Filter","Filter, F",
                         "【测试阶段】以指定的条件过滤用户的BP 200成绩，大小写不敏感，参数结构为 [字段][运算符][预期值]，分隔符号为半角逗号，最大渲染数量为51",
                         "Aloic", "Aloic", "2025-08-31")
                         .addExample("/Filter Star>7")
@@ -111,9 +109,7 @@ public class FilterCommand implements LazybotSlashCommand
                                      !=  不相等
                                 模组: =  包含
                                      == 完全相等""", CommandParameter.ParameterType.REQUIRED))
-                        .addOption(new CommandParameter("Value","Custom","过滤的值", CommandParameter.ParameterType.REQUIRED))
-
-        );
+                        .addOption(new CommandParameter("Value","Custom","过滤的值", CommandParameter.ParameterType.REQUIRED));
     }
 
 }

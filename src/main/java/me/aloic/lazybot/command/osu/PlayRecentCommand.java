@@ -18,7 +18,6 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.RecentParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -166,12 +165,14 @@ public class PlayRecentCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Play Recently","Pr, Rp, Playrecent, Re, Recent, P, R, Ppr, Pre",
+        return new CommandHelp("Play Recently","Pr, Rp, Playrecent, Re, Recent, P, R, Ppr, Pre",
                         "查询指定用户的最近游玩成绩中的指定的第几个,Ppr即Pre会包含PP+数据",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
+                .code("CM-003")
+                .headline("Recent Play of a User")
+                .availability("ALL MODE")
                         .addExample("/Pr #1")
                         .addExample("/Re Aloic #10")
                         .addExample("/Pr Aloic #10 @202411")
@@ -179,7 +180,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Index","Integer","指定查询的索引，范围 1-50，默认为1", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","Custom","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Version","Custom","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL));
     }
 
 

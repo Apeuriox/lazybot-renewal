@@ -20,7 +20,6 @@ import me.aloic.lazybot.osu.service.AnalysisService;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.BpifParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -107,10 +106,9 @@ public class BpIfCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Bp If Mods","Bpif",
+        return new CommandHelp("Bp If Mods","Bpif",
                         "按照指定算法和Mod规则重算、排序全部BP并推演总PP；+添加，-删除，!替换Mod",
                         "Aloic", "Aloic", "2024-12-07")
                         .addExample("/Bpif +HD")
@@ -121,6 +119,6 @@ public class BpIfCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Operator","String","运算符，与Mod不能有空格；仅指定算法时可以省略", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Mod","String","运算的Mod；仅指定算法版本时可以省略", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL));
     }
 }

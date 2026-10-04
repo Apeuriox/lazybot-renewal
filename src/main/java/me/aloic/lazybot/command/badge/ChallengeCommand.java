@@ -11,7 +11,6 @@ import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.service.BadgeChallengeService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -45,13 +44,12 @@ public class ChallengeCommand implements LazybotSlashCommand
 
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Challenge","Challenge, Cl",
+        return new CommandHelp("Challenge","Challenge, Cl",
                         "查看当前所有可用的Challenge信息",
                         "Aloic", null, "2025-11-01")
-                        .addExample("/Challenge"));
+                        .addExample("/Challenge");
     }
 
 }

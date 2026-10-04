@@ -14,7 +14,6 @@ import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import me.aloic.lazybot.util.RateLimiterHolder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -73,16 +72,15 @@ public class ScoreRankCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Score Rank","Rank, Sr, Scorerank",
+        return new CommandHelp("Score Rank","Rank, Sr, Scorerank",
                         "查询本群绑定的玩家在一张地图上的成绩",
                         "LazyChildren", "Aloic", "2025-10-22")
                         .addExample("/Sr 4889657")
                         .addExample("/Rank 4889657+HDDT")
                         .addOption(new CommandParameter("Bid","Integer","查询的地图Id", CommandParameter.ParameterType.REQUIRED))
-                        .addOption(new CommandParameter("Mods","String","过滤的Mod", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Mods","String","过滤的Mod", CommandParameter.ParameterType.OPTIONAL));
     }
 
 }

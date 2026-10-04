@@ -10,7 +10,6 @@ import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -64,13 +63,12 @@ public class AnnualSummaryCommand implements LazybotSlashCommand
         }
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Annual Command Usage Summary","年度总结",
+        return new CommandHelp("Annual Command Usage Summary","年度总结",
                         "查看Lazybot的年度指令使用总结",
                         "Aloic", null, "2025-12-18")
-                        .addExample("/年度总结"));
+                        .addExample("/年度总结");
     }
 
     private boolean isInTimeRange()

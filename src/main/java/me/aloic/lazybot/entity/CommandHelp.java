@@ -14,6 +14,14 @@ public class CommandHelp
     private final String creator;
     private final String designer;
     private final String initialReleaseDate;
+    /** Chronological command number, for example CM-001. */
+    private String code;
+    /** Short English line shown in the header. */
+    private String headline;
+    /** Footer label. Use {@link #INCOMPLETE} for an unfinished command. */
+    private String availability;
+
+    public static final String INCOMPLETE = "INCOMPLETE";
 
     public CommandHelp(String command,String alias, String description, String creator, String designer, String initialReleaseDate) {
         this.command = command;
@@ -33,6 +41,21 @@ public class CommandHelp
 
     public CommandHelp addOption(CommandParameter parameter) {
         options.add(parameter);
+        return this;
+    }
+
+    public CommandHelp code(String code) {
+        this.code = code;
+        return this;
+    }
+
+    public CommandHelp headline(String headline) {
+        this.headline = headline;
+        return this;
+    }
+
+    public CommandHelp availability(String availability) {
+        this.availability = availability;
         return this;
     }
 

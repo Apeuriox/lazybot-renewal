@@ -18,7 +18,6 @@ import me.aloic.lazybot.parameter.CardInfoParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import me.aloic.lazybot.util.ColorUtils;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -66,17 +65,19 @@ public class CardInfoCommand implements LazybotSlashCommand
         return rasterizationService.renderToCardInfo(info, delta, CardInfoColorPalette.fromRgb(rgb));
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Card Info","i",
+        return new CommandHelp("Card Info","i",
                         "查询个人资料, 生成小型卡片样式",
                         "Aloic", "Aloic", "2026-08-14 (Moelleux样式)")
-                        .addExample("/i")
-                        .addExample("/i Aloic")
-                        .addExample("/i #6")
-                        .addExample("/i Aloic #12")
+                .code("CM-001")
+                .headline("Small Profile Card")
+                .availability("ALL MODE")
+                        .addExample("/I")
+                        .addExample("/I Aloic")
+                        .addExample("/I #6")
+                        .addExample("/I Aloic #12")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("#days","Integer","对比N天前的快照；当天没有则取前后最近一条", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("#Days","Integer","对比N天前的快照；当天没有则取前后最近一条", CommandParameter.ParameterType.OPTIONAL));
     }
 }

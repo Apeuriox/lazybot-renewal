@@ -16,7 +16,6 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -74,14 +73,13 @@ public class MaxReadingCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Max Reading", "MaxReading, mr",
+        return new CommandHelp("Max Reading", "MaxReading, mr",
                         "以最大化Reading奖励（AR读图加成）来计算用户的全部Bp。无变速mod→DA:AR11，DT/NC→DA:AR10，HT/DC→DA:AR0，HD保留",
                         "Aloic", "Aloic", "2026-06-18")
                         .addExample("/MaxReading")
                         .addExample("/Mr Aloic")
-                        .addOption(new CommandParameter("PlayerName", "String", "查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName", "String", "查询的玩家名称", CommandParameter.ParameterType.OPTIONAL));
     }
 }

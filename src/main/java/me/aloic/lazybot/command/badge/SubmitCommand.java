@@ -17,7 +17,6 @@ import me.aloic.lazybot.service.BadgeKeyService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.AuthorityVerifier;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -64,15 +63,14 @@ public class SubmitCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Submit","Submit",
+        return new CommandHelp("Submit","Submit",
                         "提交成绩到指定的Challenge",
                         "Aloic", null, "2025-11-01")
                         .addExample("/Submit 1 114514")
                         .addOption(new CommandParameter("ChallengeId","Integer","Challenge的ID，用于识别Challenge", CommandParameter.ParameterType.REQUIRED))
-                        .addOption(new CommandParameter("BeatmapId","Integer","地图的ID", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("BeatmapId","Integer","地图的ID", CommandParameter.ParameterType.REQUIRED));
     }
 
 }

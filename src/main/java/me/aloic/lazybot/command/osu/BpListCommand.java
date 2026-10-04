@@ -17,7 +17,6 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.BplistParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -82,17 +81,19 @@ public class BpListCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Bp List List View","Bplist",
+        return new CommandHelp("Bp List List View","Bplist",
                         "以指定范围查询用户的最佳成绩，以List列表形式返回",
                         "Aloic", "Aloic", "2024-04-27")
+                .code("CM-005")
+                .headline("Series of User Bests")
+                .availability("ALL MODE")
                         .addExample("/Bplist 1-21")
                         .addExample("/Bplist Aloic 1-21")
                         .addExample("/Bplist Aloic 1-21 @202502")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Range","Custom","查询的范围，[num]-[num]", CommandParameter.ParameterType.REQUIRED))
-                        .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，默认使用最新算法", CommandParameter.ParameterType.OPTIONAL));
     }
 }

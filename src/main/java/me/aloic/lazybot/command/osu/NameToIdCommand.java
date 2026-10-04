@@ -15,7 +15,6 @@ import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.NameToIdParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -77,13 +76,12 @@ public class NameToIdCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Name to ID","n2d, nametoid",
+        return new CommandHelp("Name to ID","n2d, nametoid",
                         "接受一段连续的用户名输入，返回对应的osu id，分割符为,",
                         "Aloic", null, "2025-01-07")
                         .addExample("/n2d Aloic,Pager,Hidden is fun,Zh_jk")
-                        .addOption(new CommandParameter("PlayerNameList","Custom","查询的玩家名称列表", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("PlayerNameList","Custom","查询的玩家名称列表", CommandParameter.ParameterType.REQUIRED));
     }
 }

@@ -14,7 +14,6 @@ import me.aloic.lazybot.parameter.DeviationFittingParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -54,14 +53,12 @@ public class UnstableRateFittingCommand implements LazybotSlashCommand
 
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Unstable Rate Fitting","ur, accuracy", "以理论计算当前UR在指定OD下的最佳acc表现","Aloic", null, "2026-03-07")
+        return new CommandHelp("Unstable Rate Fitting","ur, accuracy", "以理论计算当前UR在指定OD下的最佳acc表现","Aloic", null, "2026-03-07")
                 .addExample("/ur od9 100ur")
                 .addExample("/accuracy 70")
                 .addOption(new CommandParameter("OD","Float","OD值，最高13.33", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("UR","Float","UR值", CommandParameter.ParameterType.REQUIRED))
-                );
+                        .addOption(new CommandParameter("UR","Float","UR值", CommandParameter.ParameterType.REQUIRED));
     }
 }

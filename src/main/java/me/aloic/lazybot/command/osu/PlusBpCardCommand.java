@@ -14,7 +14,6 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.PlusListParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -68,10 +67,9 @@ public class PlusBpCardCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Plus Bp List Card View","Pbpcard, Pb",
+        return new CommandHelp("Plus Bp List Card View","Pbpcard, Pb",
                         "以指定范围查询用户的PP+最佳成绩，以Card列表形式返回",
                         "Aloic", "Aloic", "2026-03-24")
                         .addExample("/Pb 1-21")
@@ -79,6 +77,6 @@ public class PlusBpCardCommand implements LazybotSlashCommand
                         .addExample("/Pb Aloic 1-21 flow")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Range","Custom","查询的范围，[num]-[num]", CommandParameter.ParameterType.REQUIRED))
-                        .addOption(new CommandParameter("Dimension","String","查询的维度", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Dimension","String","查询的维度", CommandParameter.ParameterType.OPTIONAL));
     }
 }

@@ -19,7 +19,6 @@ import me.aloic.lazybot.parameter.BplistParameter;
 import me.aloic.lazybot.parameter.SeriesParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -81,10 +80,9 @@ public class BpSeriesStarMoonCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Bp Series Star Moon","Bssm",
+        return new CommandHelp("Bp Series Star Moon","Bssm",
                         "等效/Bpcard 1-[index]，用于快速查询，输入&以List形式返回，默认为21",
                         "Aloic", "Aloic", "2025-11-13")
                         .addExample("/Bssm")
@@ -92,7 +90,7 @@ public class BpSeriesStarMoonCommand implements LazybotSlashCommand
                         .addExample("/Bssm Aloic 31 &")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Index","Integer","最大查询范围，默认21", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","Custom","存在&则以List形式输出", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Version","Custom","存在&则以List形式输出", CommandParameter.ParameterType.OPTIONAL));
     }
 
 

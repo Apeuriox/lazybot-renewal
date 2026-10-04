@@ -18,7 +18,6 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -76,14 +75,13 @@ public class NoReadingCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("No Reading", "NoReading, nr",
+        return new CommandHelp("No Reading", "NoReading, nr",
                         "以去除Reading奖励（AR读图加成）来计算用户的全部Bp。DT/NC会设置DA:AR8.5，HT/DC会设置DA:AR10，HD会被移除",
                         "Aloic", "Aloic", "2026-06-18")
                         .addExample("/NoReading")
                         .addExample("/Nr Aloic")
-                        .addOption(new CommandParameter("PlayerName", "String", "查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName", "String", "查询的玩家名称", CommandParameter.ParameterType.OPTIONAL));
     }
 }

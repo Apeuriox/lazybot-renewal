@@ -16,7 +16,6 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -76,16 +75,15 @@ public class OsuAvatarCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Osu Avatar","oa, avatar",
+        return new CommandHelp("Osu Avatar","oa, avatar",
                         "查看自己或他人的osu头像, 使用/update avatar即可更新，输入&将会包含pp和rank信息",
                         "Aloic", "Aloic", "2025-09-09")
                         .addExample("/oa")
                         .addExample("/oa Aloic")
                         .addExample("/oa &")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","Custom","存在&则会额外渲染pp和rank", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Version","Custom","存在&则会额外渲染pp和rank", CommandParameter.ParameterType.OPTIONAL));
     }
 }

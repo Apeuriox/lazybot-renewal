@@ -17,7 +17,6 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.CustomizeService;
 import me.aloic.lazybot.parameter.CustomizationParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -79,17 +78,16 @@ public class CustomizeCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Customize","Customize",
+        return new CommandHelp("Customize","Customize",
                         "自定义命令，用于修改/Info中的背景和主题",
                         "Aloic", null, "2025-02-19")
                         .addExample("/Customize profileBG https://this.is.link")
                         .addExample("/Customize profileTheme Light")
                         .addOption(new CommandParameter("Type","String","二级命令类型，profileBG修改地图背景，profileTheme修改主题", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("BGLink","String","仅限profileBG，背景的链接，接受输入1900x1000，多余部分会被裁剪", CommandParameter.ParameterType.REQUIRED))
-                        .addOption(new CommandParameter("Theme","String","仅限profileTheme，更改其的颜色预设，支持输入Light, Lighter, Dark", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("Theme","String","仅限profileTheme，更改其的颜色预设，支持输入Light, Lighter, Dark", CommandParameter.ParameterType.REQUIRED));
     }
 
 }

@@ -15,7 +15,6 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.TrackService;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -77,14 +76,16 @@ public class PpmapCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Time-PP Scatter Chart","ppmap",
+        return new CommandHelp("Time-PP Scatter Chart","ppmap",
                         "以Osu Track数据绘制指定用户的历史BP散点图，使用/update track可更新数据",
                         "Aloic", null, "2024-06-14")
+                .code("CM-008")
+                .headline("Scatter Map of History Bps")
+                .availability("ALL MODE")
                         .addExample("/ppmap")
                         .addExample("/ppmap Aloic")
-                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL));
     }
 }

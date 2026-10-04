@@ -16,7 +16,6 @@ import me.aloic.lazybot.osu.enums.OsuMode;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.TodaybpParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -76,16 +75,15 @@ public class TodaybpCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Today new bp","Todaybp, Tbp",
+        return new CommandHelp("Today new bp","Todaybp, Tbp",
                         "查询指定用户的指定天内的新增Bp ",
                         "Aloic", "Aloic", "2025-12-11")
                         .addExample("/Tbp")
                         .addExample("/Tbp Aloic")
                         .addExample("/Tbp Aloic #10")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Index","Integer","查询的天数范围，默认为1", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Index","Integer","查询的天数范围，默认为1", CommandParameter.ParameterType.OPTIONAL));
     }
 }

@@ -19,7 +19,6 @@ import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.ScoreParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -76,10 +75,9 @@ public class PpCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("PP", "pp",
+        return new CommandHelp("PP", "pp",
                         "查询指定玩家在指定地图上PP最高的成绩，并使用成绩面板渲染",
                         "Aloic", "Aloic", "2026-09-14")
                         .addExample("/pp 4889657")
@@ -88,6 +86,6 @@ public class PpCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("PlayerName","String" ,"查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("BeatmapID","Integer", "查询的地图ID", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("Algorithm","Custom", "以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","Custom", "&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Version","Custom", "&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL));
     }
 }

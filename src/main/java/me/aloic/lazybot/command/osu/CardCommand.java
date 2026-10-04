@@ -17,7 +17,6 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.CardMoelleuxParameter;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -97,17 +96,20 @@ public class CardCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Card","Card",
+        //2024-03-22 (原版) / 2025-08-05 (Moelleux样式)
+        return new CommandHelp("Card","Card",
                         "查询个人资料, 生成小型卡片样式",
-                        "Aloic", "Aloic", "2024-03-22 (原版) / 2025-08-05 (Moelleux样式)")
+                        "Aloic", "Aloic", "2024-03-22")
+                .code("CM-001")
+                .headline("Small Profile Card")
+                .availability("STD ONLY")
                         .addExample("/Card")
                         .addExample("/Card Aloic")
                         .addExample("/Card Aloic hue=340 &&&")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Hue","Custom","覆盖默认取色算法的色相值，格式为hue=100，色相为0至360的整数，超出会取余", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","Custom","一个&则以原版样式输出，两个&将会禁用BP白色蒙层，三个&将强制以中等对比度输出，四个&以低对比度输出", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Version","Custom","一个&则以原版样式输出，两个&将会禁用BP白色蒙层，三个&将强制以中等对比度输出，四个&以低对比度输出", CommandParameter.ParameterType.OPTIONAL));
     }
 }

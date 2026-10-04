@@ -13,7 +13,6 @@ import me.aloic.lazybot.service.BadgeService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.AuthorityVerifier;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -97,16 +96,15 @@ public class BadgeManageCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Badge Manage","Bma, Bmr, Bm",
+        return new CommandHelp("Badge Manage","Bma, Bmr, Bm",
                         "[管理员] 管理Badge",
                         "Aloic", null, "2025-10-22")
                         .addExample("/Bma {name=Test Badge} {desc=这是测试} {alt=Test} {type=0}")
                         .addExample("/Bmr 6")
                         .addExample("/Bm 2 https://this.is.link")
-                        .addOption(new CommandParameter("Content","String","命令内容", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("Content","String","命令内容", CommandParameter.ParameterType.REQUIRED));
     }
 
 }

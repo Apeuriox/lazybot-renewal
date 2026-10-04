@@ -13,7 +13,6 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.BeatmapStatisticsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.springframework.stereotype.Component;
@@ -72,9 +71,8 @@ public class MapPerformanceAnalysisCommand implements LazybotSlashCommand {
 
 
     @Override
-    public String getHelp() {
-        return HelpFormatter.format(
-                new CommandHelp("Map PP Analysis", "Mp, Mpp",
+    public CommandHelp commandHelp() {
+        return new CommandHelp("Map PP Analysis", "Mp, Mpp",
                         "比较同一地图设置下进阶对比内容",
                         "Aloic", "Aloic", "2026-08-19")
                         .addExample("/mp 4889657")
@@ -83,6 +81,6 @@ public class MapPerformanceAnalysisCommand implements LazybotSlashCommand {
                         .addOption(new CommandParameter("BID", "Integer", "查询的地图ID", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("Mod", "String", "应用于全部计算的Mod组合", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("TargetAccuracy", "Float", "历史对比与Miss曲线的目标Accuracy", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("AR/CS/OD", "Custom", "应用于全部计算的DA难度覆写", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("AR/CS/OD", "Custom", "应用于全部计算的DA难度覆写", CommandParameter.ParameterType.OPTIONAL));
     }
 }

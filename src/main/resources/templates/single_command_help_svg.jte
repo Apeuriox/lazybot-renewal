@@ -28,10 +28,10 @@
 <line x1="1199" y1="2100" x2="1199" stroke="black" stroke-opacity="0.06" stroke-width="2"/>
 <line x1="1349" y1="2100" x2="1349" stroke="black" stroke-opacity="0.06" stroke-width="2"/>
 @for(var line : poster.underHalftone())
-<text fill="${line.fill()}" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="${line.fontSize()}" letter-spacing="${line.letterSpacing()}"><tspan x="${line.x()}" y="${line.y()}">${line.text()}</tspan></text>
+<text fill="${line.fill()}" text-anchor="${line.anchor()}" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="${line.fontSize()}" letter-spacing="${line.letterSpacing()}"><tspan x="${line.x()}" y="${line.y()}">${line.text()}</tspan></text>
 @endfor
 
-<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="22" letter-spacing="0em"><tspan x="1335" y="95.535">@@LAZYBOT</tspan></text>
+<text fill="#3A3C2E" text-anchor="end" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="22" letter-spacing="0em"><tspan x="1436" y="95.535">@LAZYBOT</tspan></text>
 <mask id="mask0_2594_2342" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="1500" height="2100">
 <rect width="1500" height="2100" fill="#E7E8E3"/>
 </mask>
@@ -822,7 +822,7 @@
 <rect x="300" y="1200" width="150" height="150" fill="black" fill-opacity="0.03"/>
 <rect y="900" width="150" height="150" fill="black" fill-opacity="0.03"/>
 </g>
-<rect y="2086" width="1500" height="14" fill="#5E693E"/>
+<rect y="2086" width="1500" height="14" fill="${poster.footerColor()}"/>
 <rect x="336" y="1650" width="444" height="293" fill="white"/>
 <rect x="114" y="1888" width="835" height="50" fill="white"/>
 <rect x="219" y="1841" width="769" height="67" fill="white"/>
@@ -840,9 +840,8 @@
 <rect x="854" y="1294" width="196" height="187" fill="white"/>
 <rect x="64" y="1908" width="749" height="48" fill="white"/>
 <text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="64" y="2043.09">LAZYBOT   COMMAND   HELP   PAGE   VERSION 1.2</tspan></text>
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="1293" y="2043.09">COMPLETE</tspan></text>
 @for(var line : poster.overHalftone())
-<text fill="${line.fill()}" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="${line.fontSize()}" letter-spacing="${line.letterSpacing()}"><tspan x="${line.x()}" y="${line.y()}">${line.text()}</tspan></text>
+<text fill="${line.fill()}" text-anchor="${line.anchor()}" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="${line.fontSize()}" letter-spacing="${line.letterSpacing()}"><tspan x="${line.x()}" y="${line.y()}">${line.text()}</tspan></text>
 @endfor
 <defs>
 <filter id="filter0_n_2594_2342" x="0" y="0" width="1500" height="2100" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">

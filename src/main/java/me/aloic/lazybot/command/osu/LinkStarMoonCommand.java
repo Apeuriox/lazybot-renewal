@@ -8,7 +8,6 @@ import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -36,13 +35,12 @@ public class LinkStarMoonCommand implements LazybotSlashCommand
         //do not implement
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Link Star Moon","Linksm",
+        return new CommandHelp("Link Star Moon","Linksm",
                         "用户绑定Star Moon",
                         "Aloic", null, "2025-11-12")
                         .addExample("/Linksm Aloic")
-                        .addOption(new CommandParameter("PlayerName","String","指定的用户名称", CommandParameter.ParameterType.REQUIRED)));
+                        .addOption(new CommandParameter("PlayerName","String","指定的用户名称", CommandParameter.ParameterType.REQUIRED));
     }
 }

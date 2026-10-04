@@ -10,7 +10,6 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -53,11 +52,10 @@ public class CheckInCommand implements LazybotSlashCommand
         else testOutputTool.writeStringToFile(cardService.checkIn(token.getPlayer_id()));
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Check In","CheckIn, Check, CI", "签到获取LazyCoin","Aloic", "Aloic", "2025-08-21")
+        return new CommandHelp("Check In","CheckIn, Check, CI", "签到获取LazyCoin","Aloic", "Aloic", "2025-08-21")
                 .addExample("/checkin")
-                .addExample("/ci"));
+                .addExample("/ci");
     }
 }

@@ -14,7 +14,6 @@ import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.ThumbnailParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -98,10 +97,9 @@ public class ThumbnailCommand implements LazybotSlashCommand
         return params;
     }
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Thumbnail","Tns, Tnp",
+        return new CommandHelp("Thumbnail","Tns, Tnp",
                         "快捷生成视频封面,TNS以score形式选取，TNP以最近游玩形式选取，注意此指令的参数需要填写在{}中，具体请看示例",
                         "Aloic", "Alivemaster", "2025-09-26")
                         .addExample("/Tns {id=2570594} {u=Aloic} {i=1} {p=123} {attr=ar od cs} {c=Comment Test}")
@@ -113,7 +111,7 @@ public class ThumbnailCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("u","String","用户名，默认为自己", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("i","Integer","查询成绩的索引，由1开始，默认为1", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("c","String","评论文本，默认为空", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("attr","Custom","需要展示的地图参数，间隔符为空格，可选项为ar od cs hp length bpm，默认为cs和ar", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("attr","Custom","需要展示的地图参数，间隔符为空格，可选项为ar od cs hp length bpm，默认为cs和ar", CommandParameter.ParameterType.OPTIONAL));
     }
 
 }

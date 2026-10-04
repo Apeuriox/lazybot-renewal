@@ -11,7 +11,6 @@ import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.parameter.StatsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -47,14 +46,13 @@ public class PlusPerformanceStatsCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("PP+ Stats", "pstats",
+        return new CommandHelp("PP+ Stats", "pstats",
                         "查询PP+服务器统计数据",
                         "Aloic", null, "2026-05-21")
-                        .addExample("/pstats count")
-                        .addExample("/pstats updated")
-                        .addOption(new CommandParameter("Type", "String", "统计类型: count/updated", CommandParameter.ParameterType.REQUIRED)));
+                        .addExample("/Pstats count")
+                        .addExample("/Pstats updated")
+                        .addOption(new CommandParameter("Type", "String", "统计类型: count/updated", CommandParameter.ParameterType.REQUIRED));
     }
 }

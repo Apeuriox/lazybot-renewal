@@ -13,7 +13,6 @@ import me.aloic.lazybot.entity.CommandParameter;
 import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -53,13 +52,13 @@ public class TipsCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(new CommandHelp("Tips","tips",
+        return new CommandHelp("Tips","tips",
                 "返回一个随机的Aloic小提示，输入ID可明确指定，ID输入为空或者不合法会随机返回一个结果",
                 "Aloic", null, "2025-01-20")
                 .addExample("/tips 38")
                 .addExample("/tips")
-                .addOption(new CommandParameter("ID","Integer","指定查询Tips的ID", CommandParameter.ParameterType.OPTIONAL)));
+                .addOption(new CommandParameter("ID","Integer","指定查询Tips的ID", CommandParameter.ParameterType.OPTIONAL));
     }
 }

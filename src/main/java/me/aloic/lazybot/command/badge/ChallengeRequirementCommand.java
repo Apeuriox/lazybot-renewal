@@ -10,7 +10,6 @@ import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.service.BadgeChallengeService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
-import me.aloic.lazybot.util.HelpFormatter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
@@ -52,13 +51,12 @@ public class ChallengeRequirementCommand implements LazybotSlashCommand
 
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("Challenge Requirement","Cr, Cd",
+        return new CommandHelp("Challenge Requirement","Cr, Cd",
                         "查看指定Challenge需要完成的目标",
                         "Aloic", null, "2025-11-01")
-                        .addExample("/Cr 1"));
+                        .addExample("/Cr 1");
     }
 
 }

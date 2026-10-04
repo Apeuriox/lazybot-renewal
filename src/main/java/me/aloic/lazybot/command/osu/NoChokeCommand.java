@@ -19,7 +19,6 @@ import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.osu.utils.RosuAlgorithmVersionUtil;
 import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
-import me.aloic.lazybot.util.HelpFormatter;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
@@ -104,17 +103,19 @@ public class NoChokeCommand implements LazybotSlashCommand
     }
 
     @Override
-    public String getHelp()
+    public CommandHelp commandHelp()
     {
-        return HelpFormatter.format(
-                new CommandHelp("No Choke","NoChoke, nc, no1miss",
+        return new CommandHelp("No Choke","NoChoke, nc, no1miss",
                         "以FC计算用户的全部Bp，使用no1miss仅计算<=1miss的成绩",
                         "Aloic", "Aloic", "2024-05-20")
+                .code("CM-007")
+                .headline("RECALC WITH FC")
+                .availability("ALL MODE")
                         .addExample("/NoChoke")
                         .addExample("/NoChoke Aloic")
                         .addExample("/No1Miss Aloic")
                         .addExample("/NoChoke Aloic @202411")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL));
     }
 }
