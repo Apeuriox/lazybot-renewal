@@ -116,7 +116,7 @@ public class ScoreCommand implements LazybotSlashCommand
         return new CommandHelp("Score","Score, S, Pscore",
                         "按照指定用户查询指定地图下的指定Mod组合中分数最高的成绩, Pscore会以PP+数据返回",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
-                .code("CM-002")
+                .code("CM-007")
                 .headline("Highest Score on Map")
                 .availability("ALL MODE")
                         .addExample("/Score 4889657+HDHR")

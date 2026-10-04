@@ -80,9 +80,12 @@ public class OsuAvatarCommand implements LazybotSlashCommand
         return new CommandHelp("Osu Avatar","oa, avatar",
                         "查看自己或他人的osu头像, 使用/update avatar即可更新，输入&将会包含pp和rank信息",
                         "Aloic", "Aloic", "2025-09-09")
-                        .addExample("/oa")
-                        .addExample("/oa Aloic")
-                        .addExample("/oa &")
+                .code("CM-034")
+                .headline("Link Your Osu! Account")
+                .availability("ALL MODE")
+                        .addExample("/Oa")
+                        .addExample("/Oa Aloic")
+                        .addExample("/Oa &")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","Custom","存在&则会额外渲染pp和rank", CommandParameter.ParameterType.OPTIONAL));
     }

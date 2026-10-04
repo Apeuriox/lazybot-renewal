@@ -247,8 +247,11 @@ public class NameGuessCommand implements LazybotSlashCommand
         return new CommandHelp("Player Name Guess旧版","nl",
                 "从绑定Lazybot的用户中随机查询一位玩家的名字用于游戏，仅限初次绑定时缓存，输入/name &以提前结束，一个群同时只能存在一场游戏",
                 "Aloic", null, "2025-07-30")
-                .addExample("/nl")
-                .addExample("/nl &")
+                .code("CM-029")
+                .headline("Small Username Guess Game")
+                .availability("ALL MODE")
+                .addExample("/Nl")
+                .addExample("/Nl &")
                 .addOption(new CommandParameter("输入内容","String","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL));
     }
 }

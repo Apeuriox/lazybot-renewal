@@ -70,6 +70,9 @@ public class UpdatePanelVersionCommand implements LazybotSlashCommand
         return new CommandHelp("Set Score Panel Version","SetPanel, Sp",
                         "设置用户的默认成绩面板",
                         "Aloic", null, "2026-04-20")
+                .code("CM-055")
+                .headline("Set Default Panel Version")
+                .availability("ALL MODE")
                         .addExample("/SetPanel 1")
                         .addExample("/Sp 2")
                         .addExample("/Sp marathon")

@@ -839,7 +839,7 @@
 <rect x="767" y="1348" width="196" height="187" fill="white"/>
 <rect x="854" y="1294" width="196" height="187" fill="white"/>
 <rect x="64" y="1908" width="749" height="48" fill="white"/>
-<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="64" y="2043.09">LAZYBOT   COMMAND   HELP   PAGE   VERSION 1.2</tspan></text>
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="64" y="2043.09">LAZYBOT   COMMAND   HELP   PAGE   VERSION  1.2</tspan></text>
 @for(var line : poster.overHalftone())
 <text fill="${line.fill()}" text-anchor="${line.anchor()}" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="${line.fontSize()}" letter-spacing="${line.letterSpacing()}"><tspan x="${line.x()}" y="${line.y()}">${line.text()}</tspan></text>
 @endfor

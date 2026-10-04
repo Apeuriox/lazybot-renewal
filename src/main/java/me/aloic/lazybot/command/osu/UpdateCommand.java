@@ -88,6 +88,9 @@ public class UpdateCommand implements LazybotSlashCommand
         return new CommandHelp("Update Cache","Update",
                         "更新用户缓存",
                         "Aloic", null, "2025-01-20")
+                .code("CM-020")
+                .headline("Update Certain Cache")
+                .availability("ALL MODE")
                         .addExample("/Update Track Aloic")
                         .addExample("/Update Avatar Aloic")
                         .addExample("/Update Banner")

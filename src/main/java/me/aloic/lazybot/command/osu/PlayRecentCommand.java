@@ -170,7 +170,7 @@ public class PlayRecentCommand implements LazybotSlashCommand
         return new CommandHelp("Play Recently","Pr, Rp, Playrecent, Re, Recent, P, R, Ppr, Pre",
                         "查询指定用户的最近游玩成绩中的指定的第几个,Ppr即Pre会包含PP+数据",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
-                .code("CM-003")
+                .code("CM-006")
                 .headline("Recent Play of a User")
                 .availability("ALL MODE")
                         .addExample("/Pr #1")

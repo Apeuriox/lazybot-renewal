@@ -75,6 +75,9 @@ public class MapPerformanceAnalysisCommand implements LazybotSlashCommand {
         return new CommandHelp("Map PP Analysis", "Mp, Mpp",
                         "比较同一地图设置下进阶对比内容",
                         "Aloic", "Aloic", "2026-08-19")
+                .code("CM-060")
+                .headline("Even More Detailed")
+                .availability("ALL MODE")
                         .addExample("/mp 4889657")
                         .addExample("/mpp 4889657+HDHR 98.5")
                         .addExample("/mp 4889657+DT 99 AR9.5 CS4 OD8")

@@ -71,6 +71,7 @@ public class BadgeCommand implements LazybotSlashCommand
         return new CommandHelp("Badge","Badge",
                         "查询自己拥有的Badge，以及查询Badge详情",
                         "Aloic", null, "2025-10-22")
+                        .code("CM-037")
                         .addExample("/Badge list")
                         .addExample("/Badge view 1")
                         .addExample("/Badge Set 1,2,3")

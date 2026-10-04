@@ -68,6 +68,9 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
         return new CommandHelp("Beatmap Statistics","Map, M",
                         "查询指定地图在指定Mod组合下的参数，支持AR、CS、OD覆写",
                         "Aloic", "Slayemus, Aloic", "2026-04-13")
+                .code("CM-054")
+                .headline("Detailed PP Statistics")
+                .availability("ALL MODE")
                         .addExample("/Map 4889657+HDHR 98.5 AR9.5 CS4 OD8")
                         .addExample("/M 4889657 AR 10 CS 4")
                         .addExample("/Map 4889657+HD 98.5 OD9 AR9.5 @202502")

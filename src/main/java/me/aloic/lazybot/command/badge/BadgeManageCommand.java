@@ -101,6 +101,7 @@ public class BadgeManageCommand implements LazybotSlashCommand
         return new CommandHelp("Badge Manage","Bma, Bmr, Bm",
                         "[管理员] 管理Badge",
                         "Aloic", null, "2025-10-22")
+                        .code("CM-038")
                         .addExample("/Bma {name=Test Badge} {desc=这是测试} {alt=Test} {type=0}")
                         .addExample("/Bmr 6")
                         .addExample("/Bm 2 https://this.is.link")

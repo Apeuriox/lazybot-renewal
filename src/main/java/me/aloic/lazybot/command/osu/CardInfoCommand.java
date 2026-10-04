@@ -69,10 +69,10 @@ public class CardInfoCommand implements LazybotSlashCommand
     {
         return new CommandHelp("Card Info","i",
                         "查询个人资料, 生成小型卡片样式",
-                        "Aloic", "Aloic", "2026-08-14 (Moelleux样式)")
-                .code("CM-001")
+                        "Aloic", "Aloic", "2026-08-14")
+                .code("CM-059")
                 .headline("Small Profile Card")
-                .availability("ALL MODE")
+                .availability("INCOMPLETE")
                         .addExample("/I")
                         .addExample("/I Aloic")
                         .addExample("/I #6")

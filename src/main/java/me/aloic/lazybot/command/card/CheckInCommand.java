@@ -55,6 +55,9 @@ public class CheckInCommand implements LazybotSlashCommand
     public CommandHelp commandHelp()
     {
         return new CommandHelp("Check In","CheckIn, Check, CI", "签到获取LazyCoin","Aloic", "Aloic", "2025-08-21")
+                .code("CM-031")
+                .headline("Check In")
+                .availability("NOT OSU")
                 .addExample("/checkin")
                 .addExample("/ci");
     }

@@ -78,6 +78,7 @@ public class RedeemCommand implements LazybotSlashCommand
         return new CommandHelp("Redeem","Redeem",
                         "使用Key兑换Badge",
                         "Aloic", null, "2025-10-23")
+                        .code("CM-042")
                         .addExample("/Redeem AAAA-BBBB-CCCC-DDDD-EEEE")
                         .addOption(new CommandParameter("Key","String","Key，格式为AAAA-BBBB-CCCC-DDDD-EEEE", CommandParameter.ParameterType.REQUIRED));
     }

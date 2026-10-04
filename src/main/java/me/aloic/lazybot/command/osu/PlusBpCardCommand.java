@@ -72,6 +72,9 @@ public class PlusBpCardCommand implements LazybotSlashCommand
         return new CommandHelp("Plus Bp List Card View","Pbpcard, Pb",
                         "以指定范围查询用户的PP+最佳成绩，以Card列表形式返回",
                         "Aloic", "Aloic", "2026-03-24")
+                .code("CM-053")
+                .headline("BP With PP+ Statistics")
+                .availability("ALL MODE")
                         .addExample("/Pb 1-21")
                         .addExample("/Pb Aloic 1-21")
                         .addExample("/Pb Aloic 1-21 flow")

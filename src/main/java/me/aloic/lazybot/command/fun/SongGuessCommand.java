@@ -231,8 +231,11 @@ public class SongGuessCommand implements LazybotSlashCommand
         return new CommandHelp("Song Title Guess","song",
                 "从绑定Lazybot的用户中随机查询一位玩家的的随机bp背景用于游戏，输入/song &以获取提示，输入/song &&以提前结束，一个群同时只能存在一场游戏，只保留最后的结果",
                 "Aloic", null, "2025-07-30")
-                .addExample("/song example")
-                .addExample("/song &")
+                .code("CM-030")
+                .headline("Small Title Guess Game")
+                .availability("ALL MODE")
+                .addExample("/Song example")
+                .addExample("/Song &")
                 .addOption(new CommandParameter("输入内容","String","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL));
     }
 }

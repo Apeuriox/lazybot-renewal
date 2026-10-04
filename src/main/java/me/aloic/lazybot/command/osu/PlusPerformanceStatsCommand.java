@@ -51,6 +51,9 @@ public class PlusPerformanceStatsCommand implements LazybotSlashCommand
         return new CommandHelp("PP+ Stats", "pstats",
                         "查询PP+服务器统计数据",
                         "Aloic", null, "2026-05-21")
+                .code("CM-056")
+                .headline("PP+ Server Metadata")
+                .availability("ALL MODE")
                         .addExample("/Pstats count")
                         .addExample("/Pstats updated")
                         .addOption(new CommandParameter("Type", "String", "统计类型: count/updated", CommandParameter.ParameterType.REQUIRED));

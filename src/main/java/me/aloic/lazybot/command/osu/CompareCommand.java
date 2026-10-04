@@ -87,6 +87,9 @@ public class CompareCommand implements LazybotSlashCommand
         return new CommandHelp("Compare","c, compare",
                         "以最近的玩家查询成绩的同BID查询自己的成绩，输入数字以往前查询，最大为5",
                         "Aloic", "Slayemus, Aloic", "2025-08-31")
+                .code("CM-032")
+                .headline("Quick Comparison")
+                .availability("ALL MODE")
                         .addExample("/Compare")
                         .addExample("/Compare 2")
                         .addExample("/C 3")

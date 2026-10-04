@@ -1,4 +1,4 @@
-package me.aloic.lazybot.command.osu;
+package me.aloic.lazybot.command.manage;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
@@ -83,6 +83,9 @@ public class CustomizeCommand implements LazybotSlashCommand
         return new CommandHelp("Customize","Customize",
                         "自定义命令，用于修改/Info中的背景和主题",
                         "Aloic", null, "2025-02-19")
+                .code("CM-022")
+                .headline("Customize Your Profile Banner")
+                .availability("NOT OSU")
                         .addExample("/Customize profileBG https://this.is.link")
                         .addExample("/Customize profileTheme Light")
                         .addOption(new CommandParameter("Type","String","二级命令类型，profileBG修改地图背景，profileTheme修改主题", CommandParameter.ParameterType.REQUIRED))

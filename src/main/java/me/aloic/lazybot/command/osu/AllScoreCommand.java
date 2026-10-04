@@ -76,6 +76,9 @@ public class AllScoreCommand implements LazybotSlashCommand
         return new CommandHelp("All Score","AllScore, AllScores, As, Ass",
                         "查询对应玩家在对应地图下的全部成绩，以及查询部分pp计算中间值",
                         "Aloic", "Aloic", "2025-06-03")
+                .code("CM-025")
+                .headline("Show All Scores on Map")
+                .availability("ALL MODE")
                         .addExample("/Allscore 4889657")
                         .addExample("/As Aloic 4889657")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))

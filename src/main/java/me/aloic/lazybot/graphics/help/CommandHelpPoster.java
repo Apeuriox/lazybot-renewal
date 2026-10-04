@@ -75,7 +75,7 @@ public record CommandHelpPoster(
         }
         String command = help.getCommand() == null ? "" : help.getCommand().trim();
         if (!command.isEmpty()) {
-            String title = command.toLowerCase(Locale.ROOT);
+            String title = command.toUpperCase(Locale.ROOT);
             lines.add(text(81, 300.406, title, "#0C0F00", "Monorama", titleSize(title), "-0.02em"));
         }
         String date = formatDate(help.getInitialReleaseDate());
@@ -191,10 +191,10 @@ public record CommandHelpPoster(
     private static double titleSize(String title)
     {
         int count = Math.max(title.codePointCount(0, title.length()), 1);
-        if (count <= 8) {
+        if (count <= 12) {
             return 200;
         }
-        return Math.max(72, 200.0 * 8 / count);
+        return Math.max(72, 200.0 * 12.0 / count);
     }
 
     private static String formatDate(String raw)

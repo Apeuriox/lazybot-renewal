@@ -94,6 +94,9 @@ public class BpSeriesCommand implements LazybotSlashCommand
         return new CommandHelp("Bp Series","Bs, Bps",
                         "等效/Bpcard [start]-[index]，用于快速查询，输入&以List形式返回，默认为21",
                         "Aloic", "Aloic", "2024-07-23")
+                .code("CM-012")
+                .headline("Quick search of 21 Bps")
+                .availability("ALL MODE")
                         .addExample("/Bs")
                         .addExample("/Bs Aloic")
                         .addExample("/Bs Aloic 31 &")

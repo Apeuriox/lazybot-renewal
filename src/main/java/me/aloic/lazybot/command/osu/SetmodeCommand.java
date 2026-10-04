@@ -40,6 +40,9 @@ public class SetmodeCommand implements LazybotSlashCommand
         return new CommandHelp("Set Default Mode","Setmode",
                         "更改默认模式",
                         "Aloic", null, "2023-06-29")
+                .code("CM-003")
+                .headline("Set Your Default Mode")
+                .availability("ALL MODE")
                         .addExample("/Setmode 1")
                         .addOption(new CommandParameter("Mode","String","指定的模式", CommandParameter.ParameterType.REQUIRED));
     }

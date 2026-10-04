@@ -40,6 +40,9 @@ public class UnLinkCommand implements LazybotSlashCommand
         return new CommandHelp("Cancel Link","Unlink",
                         "解除用户绑定，不要问我为什么Link不能直接覆盖，我就想问你乱绑别人有什么意义",
                         "Aloic", null, "2023-04-04")
+                .code("CM-001")
+                .headline("Goodbye")
+                .availability("ALL MODE")
                         .addExample("/unlink");
     }
 }

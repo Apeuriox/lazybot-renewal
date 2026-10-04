@@ -81,7 +81,7 @@ public class BpvsCommand implements LazybotSlashCommand
         return new CommandHelp("Bp Versus","Bpvs",
                         "与指定用户的BP进行对比，仅限Bp 1-100",
                         "Aloic", "Slayemus", "2024-04-25")
-                .code("CM-006")
+                .code("CM-008")
                 .headline("Versus another user")
                 .availability("ALL MODE")
                         .addExample("/Bpvs Aloic")

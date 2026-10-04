@@ -80,6 +80,9 @@ public class TodaybpCommand implements LazybotSlashCommand
         return new CommandHelp("Today new bp","Todaybp, Tbp",
                         "查询指定用户的指定天内的新增Bp ",
                         "Aloic", "Aloic", "2025-12-11")
+                .code("CM-050")
+                .headline("New Bps in days")
+                .availability("ALL MODE")
                         .addExample("/Tbp")
                         .addExample("/Tbp Aloic")
                         .addExample("/Tbp Aloic #10")

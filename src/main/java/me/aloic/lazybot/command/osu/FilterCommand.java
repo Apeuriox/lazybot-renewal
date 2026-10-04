@@ -66,6 +66,9 @@ public class FilterCommand implements LazybotSlashCommand
         return new CommandHelp("Filter","Filter, F",
                         "【测试阶段】以指定的条件过滤用户的BP 200成绩，大小写不敏感，参数结构为 [字段][运算符][预期值]，分隔符号为半角逗号，最大渲染数量为51",
                         "Aloic", "Aloic", "2025-08-31")
+                .code("CM-033")
+                .headline("Filter Your Bps")
+                .availability("ALL MODE")
                         .addExample("/Filter Star>7")
                         .addExample("/F Star>7, Bpm<230, Title^=I")
                         .addOption(new CommandParameter("Statement", "String", """

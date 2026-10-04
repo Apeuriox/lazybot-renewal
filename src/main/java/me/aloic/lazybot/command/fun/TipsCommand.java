@@ -57,8 +57,11 @@ public class TipsCommand implements LazybotSlashCommand
         return new CommandHelp("Tips","tips",
                 "返回一个随机的Aloic小提示，输入ID可明确指定，ID输入为空或者不合法会随机返回一个结果",
                 "Aloic", null, "2025-01-20")
-                .addExample("/tips 38")
-                .addExample("/tips")
+                .code("CM-019")
+                .headline("Random Bullshit")
+                .availability("ALL MODE")
+                .addExample("/Tips 38")
+                .addExample("/Tips")
                 .addOption(new CommandParameter("ID","Integer","指定查询Tips的ID", CommandParameter.ParameterType.OPTIONAL));
     }
 }

@@ -93,6 +93,9 @@ public class BpCardCommand implements LazybotSlashCommand
         return new CommandHelp("Bp List Card View","Bpcard",
                         "以指定范围查询用户的最佳成绩，以Card列表形式返回",
                         "Aloic", "Aloic", "2024-11-30")
+                .code("CM-014")
+                .headline("Series BP with Card View")
+                .availability("ALL MODE")
                         .addExample("/Bpcard 1-21")
                         .addExample("/Bpcard Aloic 1-21")
                         .addExample("/Bpcard Aloic 1-21 @202502")

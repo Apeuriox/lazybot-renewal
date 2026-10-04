@@ -66,6 +66,9 @@ public class TrimmedCardCommand implements LazybotSlashCommand
         return new CommandHelp("Trimmed Card", "Tc",
                         "生成适合单独展示的裁剪版玩家卡片",
                         "Aloic", "Aloic", "2025-09-23")
+                .code("CM-035")
+                .headline("Trimmed Version of Small Card")
+                .availability("STD ONLY")
                         .addExample("/tc")
                         .addExample("/tc Aloic")
                         .addExample("/tc Aloic hue=340")

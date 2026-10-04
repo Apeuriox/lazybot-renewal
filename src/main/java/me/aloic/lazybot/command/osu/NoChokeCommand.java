@@ -108,7 +108,7 @@ public class NoChokeCommand implements LazybotSlashCommand
         return new CommandHelp("No Choke","NoChoke, nc, no1miss",
                         "以FC计算用户的全部Bp，使用no1miss仅计算<=1miss的成绩",
                         "Aloic", "Aloic", "2024-05-20")
-                .code("CM-007")
+                .code("CM-010")
                 .headline("RECALC WITH FC")
                 .availability("ALL MODE")
                         .addExample("/NoChoke")

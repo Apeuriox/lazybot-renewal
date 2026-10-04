@@ -85,6 +85,9 @@ public class BpSeriesStarMoonCommand implements LazybotSlashCommand
         return new CommandHelp("Bp Series Star Moon","Bssm",
                         "等效/Bpcard 1-[index]，用于快速查询，输入&以List形式返回，默认为21",
                         "Aloic", "Aloic", "2025-11-13")
+                .code("CM-048")
+                .headline("Starmoon Best Performance")
+                .availability("ALL MODE")
                         .addExample("/Bssm")
                         .addExample("/Bssm Aloic")
                         .addExample("/Bssm Aloic 31 &")

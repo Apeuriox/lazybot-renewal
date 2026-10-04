@@ -102,7 +102,7 @@ public class CardCommand implements LazybotSlashCommand
         return new CommandHelp("Card","Card",
                         "查询个人资料, 生成小型卡片样式",
                         "Aloic", "Aloic", "2024-03-22")
-                .code("CM-001")
+                .code("CM-004")
                 .headline("Small Profile Card")
                 .availability("STD ONLY")
                         .addExample("/Card")

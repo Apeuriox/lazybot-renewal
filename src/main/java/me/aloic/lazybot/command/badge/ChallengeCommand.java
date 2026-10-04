@@ -49,6 +49,7 @@ public class ChallengeCommand implements LazybotSlashCommand
         return new CommandHelp("Challenge","Challenge, Cl",
                         "查看当前所有可用的Challenge信息",
                         "Aloic", null, "2025-11-01")
+                        .code("CM-044")
                         .addExample("/Challenge");
     }
 

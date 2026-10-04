@@ -83,6 +83,9 @@ public class ProfileCommand implements LazybotSlashCommand
         return new CommandHelp("Player Info","Info, Profile",
                         "查询玩家的个人资料，背景可自定义",
                         "Aloic", "Slayemus, Aloic", "2025-02-12")
+                .code("CM-021")
+                .headline("User Profile")
+                .availability("ALL MODE")
                         .addExample("/Profile")
                         .addExample("/Info Aloic")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL));

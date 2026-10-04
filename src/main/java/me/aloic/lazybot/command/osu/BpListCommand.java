@@ -86,7 +86,7 @@ public class BpListCommand implements LazybotSlashCommand
         return new CommandHelp("Bp List List View","Bplist",
                         "以指定范围查询用户的最佳成绩，以List列表形式返回",
                         "Aloic", "Aloic", "2024-04-27")
-                .code("CM-005")
+                .code("CM-009")
                 .headline("Series of User Bests")
                 .availability("ALL MODE")
                         .addExample("/Bplist 1-21")

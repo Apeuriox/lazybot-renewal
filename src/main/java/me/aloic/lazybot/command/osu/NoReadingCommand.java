@@ -80,6 +80,9 @@ public class NoReadingCommand implements LazybotSlashCommand
         return new CommandHelp("No Reading", "NoReading, nr",
                         "以去除Reading奖励（AR读图加成）来计算用户的全部Bp。DT/NC会设置DA:AR8.5，HT/DC会设置DA:AR10，HD会被移除",
                         "Aloic", "Aloic", "2026-06-18")
+                .code("CM-058")
+                .headline("Minimize Your Reading PP")
+                .availability("INCOMPLETE")
                         .addExample("/NoReading")
                         .addExample("/Nr Aloic")
                         .addOption(new CommandParameter("PlayerName", "String", "查询的玩家名称", CommandParameter.ParameterType.OPTIONAL));

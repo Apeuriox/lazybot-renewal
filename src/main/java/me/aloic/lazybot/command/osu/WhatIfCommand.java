@@ -58,6 +58,9 @@ public class WhatIfCommand implements LazybotSlashCommand
         return new CommandHelp("What if I got some pp","Whatif",
                         "假设你多刷了这么多pp后的总pp变化",
                         "Aloic", null, "2025-05-17")
+                .code("CM-024")
+                .headline("Daydreaming")
+                .availability("ALL MODE")
                         .addExample("/Whatif 300*10 400*5")
                         .addOption(new CommandParameter("PP Series","Custom","给定的pp列表", CommandParameter.ParameterType.REQUIRED));
     }

@@ -81,6 +81,9 @@ public class TopScoresCommand implements LazybotSlashCommand
         return new CommandHelp("Top scores in mode","Ts, Topscores",
                         "查询一个模式下最高pp的成绩列表，数据来源Osu Track，不一定准确",
                         "Aloic", "Aloic", "2025-01-11")
+                .code("CM-018")
+                .headline("Top PP Scores in Mode")
+                .availability("ALL MODE")
                         .addExample("/Ts")
                         .addExample("/Ts 20")
                         .addOption(new CommandParameter("Index","Integer","最大索引范围，我会做一层过滤所以最终结果<=此内容", CommandParameter.ParameterType.OPTIONAL));

@@ -40,6 +40,9 @@ public class LinkStarMoonCommand implements LazybotSlashCommand
         return new CommandHelp("Link Star Moon","Linksm",
                         "用户绑定Star Moon",
                         "Aloic", null, "2025-11-12")
+                .code("CM-047")
+                .headline("Link Your StarMoon Account")
+                .availability("ALL MODE")
                         .addExample("/Linksm Aloic")
                         .addOption(new CommandParameter("PlayerName","String","指定的用户名称", CommandParameter.ParameterType.REQUIRED));
     }

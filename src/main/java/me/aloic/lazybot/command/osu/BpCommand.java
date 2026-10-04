@@ -155,7 +155,7 @@ public class BpCommand implements LazybotSlashCommand
         return new CommandHelp("Best Performance","Bp, Best, Pbp",
                         "查询指定用户的最佳成绩中的指定的第几个，Pbp即Pb会包含PP+数据",
                         "Aloic", "Slayemus, Aloic", "2024-04-06")
-                .code("CM-004")
+                .code("CM-005")
                 .headline("Best Performance of a User")
                 .availability("ALL MODE")
                         .addExample("/Bp #1")

@@ -40,6 +40,9 @@ public class LinkCommand implements LazybotSlashCommand
         return new CommandHelp("Link","Link",
                         "用户绑定",
                         "Aloic", null, "2023-04-04")
+                .code("CM-002")
+                .headline("Link Your Osu! Account")
+                .availability("ALL MODE")
                         .addExample("/Link Aloic")
                         .addExample("/Link oauth")
                         .addOption(new CommandParameter(

@@ -68,6 +68,9 @@ public class AddScoreCommand implements LazybotSlashCommand
         return new CommandHelp("Add Score","AddScore, AddScores, Add",
                         "以BID申请pp+重算，取最大结果",
                         "Aloic", "Aloic", "2025-07-22")
+                .code("CM-027")
+                .headline("Add Score to PP+ Server")
+                .availability("STD ONLY")
                         .addExample("/Addscore 4889657")
                         .addExample("/Add Aloic 4889657")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))

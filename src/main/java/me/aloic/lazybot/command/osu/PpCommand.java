@@ -80,6 +80,9 @@ public class PpCommand implements LazybotSlashCommand
         return new CommandHelp("PP", "pp",
                         "查询指定玩家在指定地图上PP最高的成绩，并使用成绩面板渲染",
                         "Aloic", "Aloic", "2026-09-14")
+                .code("CM-061")
+                .headline("Highest PP on Map")
+                .availability("ALL MODE")
                         .addExample("/pp 4889657")
                         .addExample("/pp Aloic 4889657")
                         .addExample("/pp Aloic 4889657 @202510")

@@ -47,6 +47,9 @@ public class SetRulesetCommand implements LazybotSlashCommand
         return new CommandHelp("Set Default Subruleset","Setruleset, Setrule",
                         "仅限Star Moon，更改默认次级模式",
                         "Aloic", null, "2025-11-13")
+                .code("CM-049")
+                .headline("Set Your Default Subruleset")
+                .availability("ALL MODE")
                         .addExample("/Setrule relax")
                         .addExample("/Setrule standard")
                         .addOption(new CommandParameter("Subruleset","String","指定的次级模式", CommandParameter.ParameterType.REQUIRED));

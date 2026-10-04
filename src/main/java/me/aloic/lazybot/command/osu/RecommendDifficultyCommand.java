@@ -72,6 +72,9 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
         return new CommandHelp("Recommend Difficulty","rd, recommenddifficulty",
                         "查询指定用户的推荐星级，上为ppy算法，下为改进版",
                         "Aloic", null, "2025-01-07")
+                .code("CM-017")
+                .headline("Recommend Difficulty")
+                .availability("ALL MODE")
                         .addExample("/Rd")
                         .addExample("/Rd Aloic")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL));

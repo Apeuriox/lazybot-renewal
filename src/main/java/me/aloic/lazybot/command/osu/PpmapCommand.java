@@ -81,7 +81,7 @@ public class PpmapCommand implements LazybotSlashCommand
         return new CommandHelp("Time-PP Scatter Chart","ppmap",
                         "以Osu Track数据绘制指定用户的历史BP散点图，使用/update track可更新数据",
                         "Aloic", null, "2024-06-14")
-                .code("CM-008")
+                .code("CM-011")
                 .headline("Scatter Map of History Bps")
                 .availability("ALL MODE")
                         .addExample("/ppmap")

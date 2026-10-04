@@ -58,6 +58,9 @@ public class PerformancePlusCommand implements LazybotSlashCommand
         return new CommandHelp("Performance Plus Card","Ppp, Plus",
                         "查询对应玩家的重算版pp+，输入&以最初版样式输出结果，主色调跟随玩家主页",
                         "Aloic", "Aloic", "2025-06-09")
+                .code("CM-026")
+                .headline("Performance Plus Profile")
+                .availability("STD ONLY")
                         .addExample("/Plus")
                         .addExample("/Plus Aloic &")
                         .addExample("/Ppp &")

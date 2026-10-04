@@ -67,6 +67,7 @@ public class GenerateKeyCommand implements LazybotSlashCommand
         return new CommandHelp("Generate Keys","Genkey",
                         "为指定Badge生成Key",
                         "Aloic", null, "2025-10-23")
+                        .code("CM-041")
                         .addExample("/Genkey 3 10 864000 true")
                         .addOption(new CommandParameter("BadgeId","Integer","Badge的ID", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("MaxUses","Integer","Key的最大使用次数，如果GenMultiKey为True则会生成此数量的Key", CommandParameter.ParameterType.REQUIRED))

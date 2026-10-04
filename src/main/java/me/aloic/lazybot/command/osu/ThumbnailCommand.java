@@ -102,6 +102,9 @@ public class ThumbnailCommand implements LazybotSlashCommand
         return new CommandHelp("Thumbnail","Tns, Tnp",
                         "快捷生成视频封面,TNS以score形式选取，TNP以最近游玩形式选取，注意此指令的参数需要填写在{}中，具体请看示例",
                         "Aloic", "Alivemaster", "2025-09-26")
+                .code("CM-036")
+                .headline("Generate Video Thumbnail")
+                .availability("ALL MODE")
                         .addExample("/Tns {id=2570594} {u=Aloic} {i=1} {p=123} {attr=ar od cs} {c=Comment Test}")
                         .addExample("/Tns {id=2570594}")
                         .addExample("/Tnp")

@@ -68,6 +68,9 @@ public class AnnualSummaryCommand implements LazybotSlashCommand
         return new CommandHelp("Annual Command Usage Summary","年度总结",
                         "查看Lazybot的年度指令使用总结",
                         "Aloic", null, "2025-12-18")
+                .code("CM-051")
+                .headline("Lazybot Annual Summary")
+                .availability("NOT OSU")
                         .addExample("/年度总结");
     }
 

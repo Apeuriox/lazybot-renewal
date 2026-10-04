@@ -57,6 +57,9 @@ public class MonitorCommand implements LazybotSlashCommand
         return new CommandHelp("Command Usage Monitor","Monitor",
                         "查看Lazybot的指令使用情况",
                         "Aloic", "Aloic", "2025-07-29")
+                .code("CM-028")
+                .headline("Lazybot Command Usage")
+                .availability("NOT OSU")
                         .addExample("/Monitor");
     }
 

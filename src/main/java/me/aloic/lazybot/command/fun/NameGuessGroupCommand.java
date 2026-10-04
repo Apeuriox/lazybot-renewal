@@ -96,8 +96,11 @@ public class NameGuessGroupCommand extends NameGuessCommand implements LazybotSl
         return new CommandHelp("Player Name Guess","name, n",
                 "从群聊中绑定Lazybot的用户中随机查询一位玩家的名字用于游戏，输入/name &以提前结束，一个群同时只能存在一场游戏",
                 "Aloic", null, "2025-10-27")
-                .addExample("/name")
-                .addExample("/name &")
+                .code("CM-043")
+                .headline("Small Username Guess Game in Group")
+                .availability("ALL MODE")
+                .addExample("/Name")
+                .addExample("/Name &")
                 .addOption(new CommandParameter("输入内容","String","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL));
     }
 }

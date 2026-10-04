@@ -81,6 +81,9 @@ public class NameToIdCommand implements LazybotSlashCommand
         return new CommandHelp("Name to ID","n2d, nametoid",
                         "接受一段连续的用户名输入，返回对应的osu id，分割符为,",
                         "Aloic", null, "2025-01-07")
+                .code("CM-016")
+                .headline("Transform to IDs")
+                .availability("ALL MODE")
                         .addExample("/n2d Aloic,Pager,Hidden is fun,Zh_jk")
                         .addOption(new CommandParameter("PlayerNameList","Custom","查询的玩家名称列表", CommandParameter.ParameterType.REQUIRED));
     }

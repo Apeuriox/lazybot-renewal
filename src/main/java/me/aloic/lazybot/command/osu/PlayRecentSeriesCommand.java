@@ -108,6 +108,9 @@ public class PlayRecentSeriesCommand implements LazybotSlashCommand
         return new CommandHelp("Play Recently Series","ps, rs, prs, rps, res",
                         "用于快速查询最近游玩中的1-21项，输入&以List形式返回",
                         "Aloic", "Aloic", "2024-07-23")
+                .code("CM-013")
+                .headline("Quick search of 21 Recent Plays")
+                .availability("ALL MODE")
                         .addExample("/Ps")
                         .addExample("/Rs Aloic")
                         .addExample("/Ps &")

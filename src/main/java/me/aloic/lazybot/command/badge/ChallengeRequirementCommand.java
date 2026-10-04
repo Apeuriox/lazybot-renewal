@@ -56,6 +56,7 @@ public class ChallengeRequirementCommand implements LazybotSlashCommand
         return new CommandHelp("Challenge Requirement","Cr, Cd",
                         "查看指定Challenge需要完成的目标",
                         "Aloic", null, "2025-11-01")
+                        .code("CM-045")
                         .addExample("/Cr 1");
     }
 

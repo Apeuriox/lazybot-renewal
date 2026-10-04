@@ -77,6 +77,9 @@ public class ScoreRankCommand implements LazybotSlashCommand
         return new CommandHelp("Score Rank","Rank, Sr, Scorerank",
                         "查询本群绑定的玩家在一张地图上的成绩",
                         "LazyChildren", "Aloic", "2025-10-22")
+                .code("CM-040")
+                .headline("Scores in Entire Group")
+                .availability("ALL MODE")
                         .addExample("/Sr 4889657")
                         .addExample("/Rank 4889657+HDDT")
                         .addOption(new CommandParameter("Bid","Integer","查询的地图Id", CommandParameter.ParameterType.REQUIRED))

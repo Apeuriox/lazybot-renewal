@@ -111,6 +111,9 @@ public class BpIfCommand implements LazybotSlashCommand
         return new CommandHelp("Bp If Mods","Bpif",
                         "按照指定算法和Mod规则重算、排序全部BP并推演总PP；+添加，-删除，!替换Mod",
                         "Aloic", "Aloic", "2024-12-07")
+                .code("CM-015")
+                .headline("What if Im the god")
+                .availability("ALL MODE")
                         .addExample("/Bpif +HD")
                         .addExample("/Bpif Aloic -HDHR")
                         .addExample("/Bpif !HDDT")
