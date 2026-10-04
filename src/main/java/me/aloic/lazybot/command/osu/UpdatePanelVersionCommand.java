@@ -75,6 +75,6 @@ public class UpdatePanelVersionCommand implements LazybotSlashCommand
                         .addExample("/SetPanel 1")
                         .addExample("/Sp 2")
                         .addExample("/Sp marathon")
-                        .addOption(new CommandParameter("PanelVersion","面板的类型，支持数字和名称", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("PanelVersion","Custom","面板的类型，支持数字和名称", CommandParameter.ParameterType.REQUIRED)));
     }
 }

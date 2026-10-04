@@ -100,6 +100,6 @@ public class NameGuessGroupCommand extends NameGuessCommand implements LazybotSl
                 "Aloic", null, "2025-10-27")
                 .addExample("/name")
                 .addExample("/name &")
-                .addOption(new CommandParameter("输入内容","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL)));
+                .addOption(new CommandParameter("输入内容","String","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

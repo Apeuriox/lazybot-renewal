@@ -70,7 +70,7 @@ public class FilterCommand implements LazybotSlashCommand
                         "Aloic", "Aloic", "2025-08-31")
                         .addExample("/Filter Star>7")
                         .addExample("/F Star>7, Bpm<230, Title^=I")
-                        .addOption(new CommandParameter("Statement", """
+                        .addOption(new CommandParameter("Statement", "String", """
                                 过滤的条件，支持的条件为：
                                 Accuracy, acc: 准确率
                                 Artist: 曲师
@@ -94,8 +94,8 @@ public class FilterCommand implements LazybotSlashCommand
                                 Slider： 谱面的滑条数量
                                 Spinner： 谱面的转盘数量
                                 Star： 谱面的难度星级
-                                Title, Name： 谱面标题""", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Operator", """
+                                Title, Name： 谱面标题""", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("Operator", "String", """
                                 过滤的运算符，支持的运算符号为：
                                 数字: >  大于
                                      >=  大于等于
@@ -110,8 +110,8 @@ public class FilterCommand implements LazybotSlashCommand
                                      =  包含
                                      !=  不相等
                                 模组: =  包含
-                                     == 完全相等""", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Value","过滤的值", CommandParameter.ParameterType.MUST))
+                                     == 完全相等""", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("Value","Custom","过滤的值", CommandParameter.ParameterType.REQUIRED))
 
         );
     }

@@ -251,6 +251,6 @@ public class NameGuessCommand implements LazybotSlashCommand
                 "Aloic", null, "2025-07-30")
                 .addExample("/nl")
                 .addExample("/nl &")
-                .addOption(new CommandParameter("输入内容","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL)));
+                .addOption(new CommandParameter("输入内容","String","开启游戏后答题的内容", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

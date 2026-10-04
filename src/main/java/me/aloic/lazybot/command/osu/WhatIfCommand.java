@@ -61,6 +61,6 @@ public class WhatIfCommand implements LazybotSlashCommand
                         "假设你多刷了这么多pp后的总pp变化",
                         "Aloic", null, "2025-05-17")
                         .addExample("/Whatif 300*10 400*5")
-                        .addOption(new CommandParameter("PP Series","给定的pp列表", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("PP Series","Custom","给定的pp列表", CommandParameter.ParameterType.REQUIRED)));
     }
 }

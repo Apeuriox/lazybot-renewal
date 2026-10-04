@@ -46,7 +46,8 @@ public class LinkCommand implements LazybotSlashCommand
                         .addExample("/Link oauth")
                         .addOption(new CommandParameter(
                                 "PlayerName / oauth",
+                                "String",
                                 "输入用户名为手动绑定；输入 oauth 验证本人身份",
-                                CommandParameter.ParameterType.MUST)));
+                                CommandParameter.ParameterType.REQUIRED)));
     }
 }

@@ -113,8 +113,8 @@ public class PlayRecentSeriesCommand implements LazybotSlashCommand
                         .addExample("/Ps")
                         .addExample("/Rs Aloic")
                         .addExample("/Ps &")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","存在&则以List形式输出", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Version","Custom","存在&则以List形式输出", CommandParameter.ParameterType.OPTIONAL)));
     }
 
 

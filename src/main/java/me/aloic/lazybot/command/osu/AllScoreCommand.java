@@ -80,7 +80,7 @@ public class AllScoreCommand implements LazybotSlashCommand
                         "Aloic", "Aloic", "2025-06-03")
                         .addExample("/Allscore 4889657")
                         .addExample("/As Aloic 4889657")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Bid","地图ID", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("BeatmapID","Integer","地图ID", CommandParameter.ParameterType.REQUIRED)));
     }
 }

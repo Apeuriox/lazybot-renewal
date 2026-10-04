@@ -87,9 +87,9 @@ public class CustomizeCommand implements LazybotSlashCommand
                         "Aloic", null, "2025-02-19")
                         .addExample("/Customize profileBG https://this.is.link")
                         .addExample("/Customize profileTheme Light")
-                        .addOption(new CommandParameter("Type","二级命令类型，profileBG修改地图背景，profileTheme修改主题", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("BGLink","仅限profileBG，背景的链接，接受输入1900x1000，多余部分会被裁剪", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Theme","仅限profileTheme，更改其的颜色预设，支持输入Light, Lighter, Dark", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("Type","String","二级命令类型，profileBG修改地图背景，profileTheme修改主题", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("BGLink","String","仅限profileBG，背景的链接，接受输入1900x1000，多余部分会被裁剪", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("Theme","String","仅限profileTheme，更改其的颜色预设，支持输入Light, Lighter, Dark", CommandParameter.ParameterType.REQUIRED)));
     }
 
 }

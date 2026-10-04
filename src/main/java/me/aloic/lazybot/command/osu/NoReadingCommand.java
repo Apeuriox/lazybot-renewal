@@ -84,6 +84,6 @@ public class NoReadingCommand implements LazybotSlashCommand
                         "Aloic", "Aloic", "2026-06-18")
                         .addExample("/NoReading")
                         .addExample("/Nr Aloic")
-                        .addOption(new CommandParameter("PlayerName", "查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName", "String", "查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

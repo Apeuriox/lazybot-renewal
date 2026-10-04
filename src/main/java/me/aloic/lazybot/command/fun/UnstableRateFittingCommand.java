@@ -60,8 +60,8 @@ public class UnstableRateFittingCommand implements LazybotSlashCommand
                 new CommandHelp("Unstable Rate Fitting","ur, accuracy", "以理论计算当前UR在指定OD下的最佳acc表现","Aloic", null, "2026-03-07")
                 .addExample("/ur od9 100ur")
                 .addExample("/accuracy 70")
-                .addOption(new CommandParameter("OD","OD值，最高13.33", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("UR","UR值", CommandParameter.ParameterType.MUST))
+                .addOption(new CommandParameter("OD","Float","OD值，最高13.33", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("UR","Float","UR值", CommandParameter.ParameterType.REQUIRED))
                 );
     }
 }

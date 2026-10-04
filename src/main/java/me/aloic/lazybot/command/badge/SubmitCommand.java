@@ -71,8 +71,8 @@ public class SubmitCommand implements LazybotSlashCommand
                         "提交成绩到指定的Challenge",
                         "Aloic", null, "2025-11-01")
                         .addExample("/Submit 1 114514")
-                        .addOption(new CommandParameter("ChallengeId","Challenge的ID，用于识别Challenge", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("BeatmapId","地图的ID", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("ChallengeId","Integer","Challenge的ID，用于识别Challenge", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("BeatmapId","Integer","地图的ID", CommandParameter.ParameterType.REQUIRED)));
     }
 
 }

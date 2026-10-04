@@ -1,5 +1,6 @@
 package me.aloic.lazybot.graphics.service;
 
+import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
@@ -13,4 +14,6 @@ public interface RasterizationService
     byte[] renderToCardInfo(PlayerInfoVO player, PlayerDailyDelta delta, CardInfoColorPalette palette);
 
     byte[] renderToMapPpAnalysis(MapPerformanceAnalysis analysis);
+
+    byte[] renderCommandHelp(CommandHelp help);
 }

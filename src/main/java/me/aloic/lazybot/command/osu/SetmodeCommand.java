@@ -43,6 +43,6 @@ public class SetmodeCommand implements LazybotSlashCommand
                         "更改默认模式",
                         "Aloic", null, "2023-06-29")
                         .addExample("/Setmode 1")
-                        .addOption(new CommandParameter("Mode","指定的模式", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("Mode","String","指定的模式", CommandParameter.ParameterType.REQUIRED)));
     }
 }

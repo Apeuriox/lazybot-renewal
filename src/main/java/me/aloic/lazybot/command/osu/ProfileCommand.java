@@ -87,6 +87,6 @@ public class ProfileCommand implements LazybotSlashCommand
                         "Aloic", "Slayemus, Aloic", "2025-02-12")
                         .addExample("/Profile")
                         .addExample("/Info Aloic")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

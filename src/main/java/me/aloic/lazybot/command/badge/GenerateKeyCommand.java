@@ -70,10 +70,10 @@ public class GenerateKeyCommand implements LazybotSlashCommand
                         "为指定Badge生成Key",
                         "Aloic", null, "2025-10-23")
                         .addExample("/Genkey 3 10 864000 true")
-                        .addOption(new CommandParameter("BadgeId","Badge的ID", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("MaxUses","Key的最大使用次数，如果GenMultiKey为True则会生成此数量的Key", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("ExpireTime","过期时间，单位秒", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("GenMultiKey","Boolean: 是否生成多个Key", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("BadgeId","Integer","Badge的ID", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("MaxUses","Integer","Key的最大使用次数，如果GenMultiKey为True则会生成此数量的Key", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("ExpireTime","Integer","过期时间，单位秒", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("GenMultiKey","Boolean","是否生成多个Key", CommandParameter.ParameterType.REQUIRED)));
     }
 
 }

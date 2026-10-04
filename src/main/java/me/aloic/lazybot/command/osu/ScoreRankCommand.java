@@ -81,8 +81,8 @@ public class ScoreRankCommand implements LazybotSlashCommand
                         "LazyChildren", "Aloic", "2025-10-22")
                         .addExample("/Sr 4889657")
                         .addExample("/Rank 4889657+HDDT")
-                        .addOption(new CommandParameter("Bid","查询的地图Id", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Mods","过滤的Mod", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Bid","Integer","查询的地图Id", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("Mods","String","过滤的Mod", CommandParameter.ParameterType.OPTIONAL)));
     }
 
 }

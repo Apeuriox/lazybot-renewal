@@ -72,10 +72,10 @@ public class TrimmedCardCommand implements LazybotSlashCommand
                         .addExample("/tc Aloic")
                         .addExample("/tc Aloic hue=340")
                         .addOption(new CommandParameter(
-                                "PlayerName", "查询的玩家名称，留空使用已绑定账号",
+                                "PlayerName", "String", "查询的玩家名称，留空使用已绑定账号",
                                 CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter(
-                                "Hue", "覆盖卡片色相，格式为hue=100",
+                                "Hue", "Custom", "覆盖卡片色相，格式为hue=100",
                                 CommandParameter.ParameterType.OPTIONAL)));
     }
 

@@ -43,6 +43,6 @@ public class LinkStarMoonCommand implements LazybotSlashCommand
                         "用户绑定Star Moon",
                         "Aloic", null, "2025-11-12")
                         .addExample("/Linksm Aloic")
-                        .addOption(new CommandParameter("PlayerName","指定的用户名称", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("PlayerName","String","指定的用户名称", CommandParameter.ParameterType.REQUIRED)));
     }
 }

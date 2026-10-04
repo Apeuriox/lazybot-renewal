@@ -77,8 +77,8 @@ public class PlusBpCardCommand implements LazybotSlashCommand
                         .addExample("/Pb 1-21")
                         .addExample("/Pb Aloic 1-21")
                         .addExample("/Pb Aloic 1-21 flow")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Range","查询的范围，[num]-[num]", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Dimension","查询的维度", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Range","Custom","查询的范围，[num]-[num]", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("Dimension","String","查询的维度", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

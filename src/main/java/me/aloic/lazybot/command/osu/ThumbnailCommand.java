@@ -108,12 +108,12 @@ public class ThumbnailCommand implements LazybotSlashCommand
                         .addExample("/Tns {id=2570594}")
                         .addExample("/Tnp")
                         .addExample("/Tnp {u=Aloic} {i=2}")
-                        .addOption(new CommandParameter("id","地图IO，仅限TNS", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("p","成绩的位次，默认为空", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("u","用户名，默认为自己", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("i","查询成绩的索引，由1开始，默认为1", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("c","评论文本，默认为空", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("attr","需要展示的地图参数，间隔符为空格，可选项为ar od cs hp length bpm，默认为cs和ar", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("id","Integer","地图IO，仅限TNS", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("p","Integer","成绩的位次，默认为空", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("u","String","用户名，默认为自己", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("i","Integer","查询成绩的索引，由1开始，默认为1", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("c","String","评论文本，默认为空", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("attr","Custom","需要展示的地图参数，间隔符为空格，可选项为ar od cs hp length bpm，默认为cs和ar", CommandParameter.ParameterType.OPTIONAL)));
     }
 
 }

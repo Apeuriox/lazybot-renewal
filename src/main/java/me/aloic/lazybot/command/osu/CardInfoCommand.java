@@ -76,7 +76,7 @@ public class CardInfoCommand implements LazybotSlashCommand
                         .addExample("/i Aloic")
                         .addExample("/i #6")
                         .addExample("/i Aloic #12")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("#days","对比N天前的快照；当天没有则取前后最近一条", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("#days","Integer","对比N天前的快照；当天没有则取前后最近一条", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

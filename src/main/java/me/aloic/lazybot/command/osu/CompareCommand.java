@@ -92,7 +92,7 @@ public class CompareCommand implements LazybotSlashCommand
                         .addExample("/Compare")
                         .addExample("/Compare 2")
                         .addExample("/C 3")
-                        .addOption(new CommandParameter("Index","查询的索引", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Index","Integer","查询的索引", CommandParameter.ParameterType.OPTIONAL))
         );
     }
 }

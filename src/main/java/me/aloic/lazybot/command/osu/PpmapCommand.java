@@ -85,6 +85,6 @@ public class PpmapCommand implements LazybotSlashCommand
                         "Aloic", null, "2024-06-14")
                         .addExample("/ppmap")
                         .addExample("/ppmap Aloic")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

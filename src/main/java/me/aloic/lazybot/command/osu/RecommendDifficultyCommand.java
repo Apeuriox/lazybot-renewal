@@ -76,6 +76,6 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
                         "Aloic", null, "2025-01-07")
                         .addExample("/Rd")
                         .addExample("/Rd Aloic")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

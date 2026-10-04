@@ -80,9 +80,9 @@ public class MapPerformanceAnalysisCommand implements LazybotSlashCommand {
                         .addExample("/mp 4889657")
                         .addExample("/mpp 4889657+HDHR 98.5")
                         .addExample("/mp 4889657+DT 99 AR9.5 CS4 OD8")
-                        .addOption(new CommandParameter("BID", "查询的地图ID", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Mod", "应用于全部计算的Mod组合", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("TargetAccuracy", "历史对比与Miss曲线的目标Accuracy", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("AR/CS/OD", "应用于全部计算的DA难度覆写", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("BID", "Integer", "查询的地图ID", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("Mod", "String", "应用于全部计算的Mod组合", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("TargetAccuracy", "Float", "历史对比与Miss曲线的目标Accuracy", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("AR/CS/OD", "Custom", "应用于全部计算的DA难度覆写", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

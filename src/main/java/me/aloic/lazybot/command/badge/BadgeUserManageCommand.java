@@ -80,8 +80,8 @@ public class BadgeUserManageCommand implements LazybotSlashCommand
                         "Aloic", null, "2025-10-22")
                         .addExample("/Bum add 11:2")
                         .addExample("/Bum rm 11:2")
-                        .addOption(new CommandParameter("Type","二级命令类型", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Content","添加内容，格式为<playerId>:<badgeId>", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("Type","String","二级命令类型", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("Content","Custom","添加内容，格式为<playerId>:<badgeId>", CommandParameter.ParameterType.REQUIRED)));
     }
 
 }

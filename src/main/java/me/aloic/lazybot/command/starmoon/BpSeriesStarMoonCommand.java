@@ -90,9 +90,9 @@ public class BpSeriesStarMoonCommand implements LazybotSlashCommand
                         .addExample("/Bssm")
                         .addExample("/Bssm Aloic")
                         .addExample("/Bssm Aloic 31 &")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Index","最大查询范围，默认21", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","存在&则以List形式输出", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Index","Integer","最大查询范围，默认21", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Version","Custom","存在&则以List形式输出", CommandParameter.ParameterType.OPTIONAL)));
     }
 
 

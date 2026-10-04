@@ -51,6 +51,6 @@ public class SetRulesetCommand implements LazybotSlashCommand
                         "Aloic", null, "2025-11-13")
                         .addExample("/Setrule relax")
                         .addExample("/Setrule standard")
-                        .addOption(new CommandParameter("Subruleset","指定的次级模式", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("Subruleset","String","指定的次级模式", CommandParameter.ParameterType.REQUIRED)));
     }
 }

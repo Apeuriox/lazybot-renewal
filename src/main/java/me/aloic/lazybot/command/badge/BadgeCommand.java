@@ -77,9 +77,9 @@ public class BadgeCommand implements LazybotSlashCommand
                         .addExample("/Badge view 1")
                         .addExample("/Badge Set 1,2,3")
                         .addExample("/Badge Clear")
-                        .addOption(new CommandParameter("Type","二级命令类型，List查看列表，View查看指定Badge详情，Set设置展示Badge，上限四个，Clear清除设置的展示Badge", CommandParameter.ParameterType.MUST))
-                        .addOption(new CommandParameter("Index","仅限View，索引值", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Indexes","仅限Set，索引值，格式为1,2,3", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Type","String","二级命令类型，List查看列表，View查看指定Badge详情，Set设置展示Badge，上限四个，Clear清除设置的展示Badge", CommandParameter.ParameterType.REQUIRED))
+                        .addOption(new CommandParameter("Index","Integer","仅限View，索引值", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Indexes","Custom","仅限Set，索引值，格式为1,2,3", CommandParameter.ParameterType.OPTIONAL)));
     }
 
 }

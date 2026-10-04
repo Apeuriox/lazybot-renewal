@@ -5,8 +5,10 @@ import gg.jte.TemplateOutput;
 import gg.jte.output.StringOutput;
 import jakarta.annotation.Resource;
 
+import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.graphics.cache.BitmapRenderCache;
 import me.aloic.lazybot.graphics.cache.RenderFingerprint;
+import me.aloic.lazybot.graphics.help.CommandHelpPoster;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
 import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
@@ -67,5 +69,14 @@ public class RasterizationServiceImpl implements RasterizationService
                     templateEngine.render("map_pp_analysis_svg.jte", params, output);
                     return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
                 });
+    }
+
+    @Override
+    public byte[] renderCommandHelp(CommandHelp help)
+    {
+        TemplateOutput output = new StringOutput();
+        templateEngine.render("single_command_help_svg.jte",
+                Map.of("poster", CommandHelpPoster.from(help)), output);
+        return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
     }
 }

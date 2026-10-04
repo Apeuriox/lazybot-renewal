@@ -85,6 +85,6 @@ public class TopScoresCommand implements LazybotSlashCommand
                         "Aloic", "Aloic", "2025-01-11")
                         .addExample("/Ts")
                         .addExample("/Ts 20")
-                        .addOption(new CommandParameter("Index","最大索引范围，我会做一层过滤所以最终结果<=此内容", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("Index","Integer","最大索引范围，我会做一层过滤所以最终结果<=此内容", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

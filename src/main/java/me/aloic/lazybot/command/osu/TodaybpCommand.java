@@ -85,7 +85,7 @@ public class TodaybpCommand implements LazybotSlashCommand
                         .addExample("/Tbp")
                         .addExample("/Tbp Aloic")
                         .addExample("/Tbp Aloic #10")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Index","查询的天数范围，默认为1", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Index","Integer","查询的天数范围，默认为1", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

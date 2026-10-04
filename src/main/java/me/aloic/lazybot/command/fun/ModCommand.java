@@ -72,6 +72,6 @@ public class ModCommand implements LazybotSlashCommand
                 new CommandHelp("Mod Info","Mod, modInfo, mi", "查看Osu!下指定Mod的信息","Aloic", "Aloic", "2025-05-09")
                 .addExample("/mod Hidden")
                 .addExample("/mod HD")
-                .addOption(new CommandParameter("Mod名称","Mod的名称，支持全称及缩写", CommandParameter.ParameterType.MUST)));
+                .addOption(new CommandParameter("Mod名称","String","Mod的名称，支持全称及缩写", CommandParameter.ParameterType.REQUIRED)));
     }
 }

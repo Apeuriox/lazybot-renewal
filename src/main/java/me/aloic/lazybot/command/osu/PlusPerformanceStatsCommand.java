@@ -55,6 +55,6 @@ public class PlusPerformanceStatsCommand implements LazybotSlashCommand
                         "Aloic", null, "2026-05-21")
                         .addExample("/pstats count")
                         .addExample("/pstats updated")
-                        .addOption(new CommandParameter("Type", "统计类型: count/updated", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("Type", "String", "统计类型: count/updated", CommandParameter.ParameterType.REQUIRED)));
     }
 }

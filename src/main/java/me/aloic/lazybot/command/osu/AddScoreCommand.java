@@ -72,7 +72,7 @@ public class AddScoreCommand implements LazybotSlashCommand
                         "Aloic", "Aloic", "2025-07-22")
                         .addExample("/Addscore 4889657")
                         .addExample("/Add Aloic 4889657")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Bid","地图ID，仅支持STD模式", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("BeatmapID","Integer","地图ID，仅支持STD模式", CommandParameter.ParameterType.REQUIRED)));
     }
 }

@@ -106,7 +106,7 @@ public class BadgeManageCommand implements LazybotSlashCommand
                         .addExample("/Bma {name=Test Badge} {desc=这是测试} {alt=Test} {type=0}")
                         .addExample("/Bmr 6")
                         .addExample("/Bm 2 https://this.is.link")
-                        .addOption(new CommandParameter("Content","命令内容", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("Content","String","命令内容", CommandParameter.ParameterType.REQUIRED)));
     }
 
 }

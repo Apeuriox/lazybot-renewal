@@ -138,11 +138,11 @@
 //                        .addExample("/gdsearch bloodbath")
 //                        .addExample("/gdsearch --all -d 5 bloodbath  (搜索所有Extreme Demon)")
 //                        .addExample("/gdsearch -u 5 -l 3 cataclysm  (搜索Insane难度Long长度)")
-//                        .addOption(new CommandParameter("SearchString", "搜索的关卡名称 (仅英文/数字)", CommandParameter.ParameterType.MUST))
-//                        .addOption(new CommandParameter("--all, -a", "关闭rated only过滤器，搜索所有关卡", CommandParameter.ParameterType.OPTIONAL))
-//                        .addOption(new CommandParameter("--demon, -d <N>", "Demon难度过滤: 1=EzD, 2=Med, 3=Hdd, 4=Insd, 5=Exd", CommandParameter.ParameterType.OPTIONAL))
-//                        .addOption(new CommandParameter("--diff, -u <N>", "非Demon难度过滤: 1=Easy ~ 5=Insane", CommandParameter.ParameterType.OPTIONAL))
-//                        .addOption(new CommandParameter("--length, -l <N>", "长度过滤: 0=Tiny ~ 4=XL, 5=Plat", CommandParameter.ParameterType.OPTIONAL))
+//                        .addOption(new CommandParameter("SearchString", "String", "搜索的关卡名称 (仅英文/数字)", CommandParameter.ParameterType.REQUIRED))
+//                        .addOption(new CommandParameter("--all, -a", "Boolean", "关闭rated only过滤器，搜索所有关卡", CommandParameter.ParameterType.OPTIONAL))
+//                        .addOption(new CommandParameter("--demon, -d <N>", "Integer", "Demon难度过滤: 1=EzD, 2=Med, 3=Hdd, 4=Insd, 5=Exd", CommandParameter.ParameterType.OPTIONAL))
+//                        .addOption(new CommandParameter("--diff, -u <N>", "Integer", "非Demon难度过滤: 1=Easy ~ 5=Insane", CommandParameter.ParameterType.OPTIONAL))
+//                        .addOption(new CommandParameter("--length, -l <N>", "Integer", "长度过滤: 0=Tiny ~ 4=XL, 5=Plat", CommandParameter.ParameterType.OPTIONAL))
 //        );
 //    }
 //

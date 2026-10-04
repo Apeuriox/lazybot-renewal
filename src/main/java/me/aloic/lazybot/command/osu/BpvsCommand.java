@@ -85,6 +85,6 @@ public class BpvsCommand implements LazybotSlashCommand
                         "Aloic", "Slayemus", "2024-04-25")
                         .addExample("/Bpvs Aloic")
                         .addExample("/Bpvs Aloic#Apeuriox")
-                        .addOption(new CommandParameter("Compare PlayerName","对比的玩家名称，可以以#分割输入两者", CommandParameter.ParameterType.MUST)));
+                        .addOption(new CommandParameter("Compare PlayerName","Custom","对比的玩家名称，可以以#分割输入两者", CommandParameter.ParameterType.REQUIRED)));
     }
 }

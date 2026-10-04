@@ -1,11 +1,11 @@
 package me.aloic.lazybot.entity;
 
-public record CommandParameter(String name, String description,
-                               me.aloic.lazybot.entity.CommandParameter.ParameterType type)
+public record CommandParameter(String name, String type, String description,
+                               me.aloic.lazybot.entity.CommandParameter.ParameterType optional)
 {
     public enum ParameterType
     {
-        MUST, OPTIONAL;
+        REQUIRED, OPTIONAL;
     }
 
     @Override
@@ -13,7 +13,7 @@ public record CommandParameter(String name, String description,
     {
         StringBuilder sb = new StringBuilder();
         sb.append(name).append("(");
-        if (type == ParameterType.MUST)
+        if (optional == ParameterType.REQUIRED)
             sb.append("必选");
         else
             sb.append("可选");

@@ -60,6 +60,6 @@ public class TipsCommand implements LazybotSlashCommand
                 "Aloic", null, "2025-01-20")
                 .addExample("/tips 38")
                 .addExample("/tips")
-                .addOption(new CommandParameter("ID","指定查询Tips的ID", CommandParameter.ParameterType.OPTIONAL)));
+                .addOption(new CommandParameter("ID","Integer","指定查询Tips的ID", CommandParameter.ParameterType.OPTIONAL)));
     }
 }

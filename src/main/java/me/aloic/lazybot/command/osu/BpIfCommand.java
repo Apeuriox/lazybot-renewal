@@ -118,9 +118,9 @@ public class BpIfCommand implements LazybotSlashCommand
                         .addExample("/Bpif !HDDT")
                         .addExample("/Bpif @202502")
                         .addExample("/Bpif +HD @202411")
-                        .addOption(new CommandParameter("PlayerName","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Operator","运算符，与Mod不能有空格；仅指定算法时可以省略", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Mod","运算的Mod；仅指定算法版本时可以省略", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Algorithm","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
+                        .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Operator","String","运算符，与Mod不能有空格；仅指定算法时可以省略", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Mod","String","运算的Mod；仅指定算法版本时可以省略", CommandParameter.ParameterType.OPTIONAL))
+                        .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL)));
     }
 }
