@@ -60,8 +60,9 @@
     <text transform="matrix(0 1 -1 0 51.0999 898)" fill="#e9ebea" font-family="Marathon Shapiro" font-size="10" font-weight="30" letter-spacing="0em"><tspan x="0" y="9.9">${mode.getValue()}</tspan></text>
     <text transform="matrix(0 1 -1 0 57.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">GENERATED IMAGE BY LAZYBOT</tspan></text>
     <text transform="matrix(0 1 -1 0 39.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">RESULT MAY BE DELAYED OR CACHED</tspan></text>
-    <text opacity="${delta.getDateDifference() !=null ? 1 : 0}" transform="matrix(0 1 -1 0 48.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">COMPARED WITH ${delta.getDateDifference()+1} days ago</tspan></text>
-    <text opacity="${delta.getDateDifference() ==null ? 1 : 0}" transform="matrix(0 1 -1 0 48.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">NO DATA TO COMPARE</tspan></text>
+    @if(delta.getDateDifference() != null)
+       <text transform="matrix(0 1 -1 0 48.3999 949)" fill="#e9ebea" font-family="KH Interference" font-size="6" letter-spacing="0em"><tspan x="0" y="5.6">NO DATA TO COMPARE</tspan></text>
+    @endif
 
     <g opacity="${sidebarDecoType >= 0.5 ? 1 : 0}">
         <path d="M57 917H45V929H57V917Z" fill="#e9ebea"/>
@@ -165,8 +166,12 @@
         <text font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="148" y="905.36">TTH</tspan></text>
         <text font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="203" y="905.36">${FormatHelper.transformNumber(player.getTotalHitCount() == null ? 0 : player.getTotalHitCount())}</tspan></text>
         <text font-family="Marathon Shapiro" font-size="11" font-weight="30" letter-spacing="0em"><tspan x="148" y="942.36">ACC</tspan></text>
-        <text opacity="${delta.getAccuracy()!=null && delta.getAccuracy()!=0d ? 1 : 0}" font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="540" y="942.36">${FormatHelper.formatDouble(delta.getAccuracy(),2)}%</tspan></text>
-        <text opacity="${delta.getTotalHitCount()!=null && delta.getTotalHitCount() > 0 ? 1 : 0}" font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="426" y="905.36">+${FormatHelper.transformNumber(delta.getTotalHitCount())}</tspan></text>
+        @if(delta.getAccuracy()!=null && delta.getAccuracy()!=0d)
+            <text font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="540" y="942.36">${FormatHelper.formatDouble(delta.getAccuracy(),2)}%</tspan></text>
+        @endif
+        @if(delta.getTotalHitCount()!=null && delta.getTotalHitCount() > 0)
+            <text font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="426" y="905.36">+${FormatHelper.transformNumber(delta.getTotalHitCount())}</tspan></text>
+        @endif
 
         <text font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="203" y="942.36">${FormatHelper.formatDouble(player.getAccuracy(),2)}%</tspan></text>
         <text font-family="Marathon Shapiro" font-size="12" font-weight="30" letter-spacing="0em"><tspan x="157" y="979.36">S</tspan></text>
