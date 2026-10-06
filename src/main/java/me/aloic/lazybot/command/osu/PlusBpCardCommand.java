@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
@@ -16,6 +17,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @LazybotCommandMapping({"pbpcard","pb","pbplist"})
 @Component
@@ -27,6 +30,16 @@ public class PlusBpCardCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "PBPCard",
+            List.of("pb"),
+            "{*num-*num} [dimension]",
+            "/pb 1-100 flow",
+            "查询用户PP+最佳成绩中的第 *num 到 *num 个",
+            "");
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

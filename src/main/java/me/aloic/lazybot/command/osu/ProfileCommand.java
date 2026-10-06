@@ -20,6 +20,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @Component
 @LazybotCommandMapping({"profile","info"})
@@ -34,6 +36,14 @@ public class ProfileCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Profile",
+            List.of("info"),
+            "[userName]",
+            "/profile Aloic",
+            "查询个人资料",
+            "背景可使用 /customize 自定义");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

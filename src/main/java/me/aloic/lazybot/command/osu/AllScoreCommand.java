@@ -22,6 +22,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import me.aloic.lazybot.entity.CommandSummary;
 
 @LazybotCommandMapping({"allscore","as","allscores","ass"})
 @Component
@@ -33,6 +34,15 @@ public class AllScoreCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "allScores",
+            List.of("as"),
+            "[userName] {bid}",
+            "/AllScores Aloic 668662",
+            "查询对应玩家在对应地图下的全部成绩",
+            "最大渲染 30 个");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
@@ -84,4 +94,5 @@ public class AllScoreCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("BeatmapID","Integer","地图ID", CommandParameter.ParameterType.REQUIRED));
     }
+
 }

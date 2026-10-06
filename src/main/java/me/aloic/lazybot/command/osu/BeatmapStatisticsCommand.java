@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.BeatmapStatistics;
@@ -17,6 +18,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @LazybotCommandMapping({"m","map"})
@@ -29,6 +32,15 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Map",
+            List.of("m"),
+            "`{bid}+[mods] [acc] [CS/OD/AR]`",
+            "/m 3970329+DT 98.5 AR10.8",
+            "查看指定Bid的地图的一些PP数据",
+            "进阶查询请用/Mp");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {

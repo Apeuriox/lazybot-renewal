@@ -5,17 +5,15 @@ import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
+import me.aloic.lazybot.command.registry.LazybotSlashCommandRegistry;
 import me.aloic.lazybot.component.TestOutputTool;
-import me.aloic.lazybot.exception.LazybotRuntimeException;
-import me.aloic.lazybot.monitor.ResourceMonitor;
+import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Objects;
 
 @LazybotCommandMapping({"help"})
 @SkipLazybotCommandPreprocessing
@@ -24,32 +22,36 @@ public class HelpCommand implements LazybotSlashCommand
 {
     @Resource
     private TestOutputTool testOutputTool;
+    @Resource
+    private LazybotSlashCommandRegistry commandRegistry;
+    @Resource
+    private RasterizationService rasterizationService;
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
         event.deferReply().queue();
-        Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
-        CommandResultHandler.uploadImageToDiscord(event,Files.readAllBytes(Paths.get(filePath.toUri())));
+        CommandResultHandler.uploadImageToDiscord(event, render());
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
-        Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
-        try{
-            CommandResultHandler.sendMessageWithImageToGroupOnebot(bot,event,Files.readAllBytes(Paths.get(filePath.toUri())),"[Lazybot] 帮助页面现已合并至细分指令，输入/指令名 *h即可查询，例/card *h，进入官方群以获取更多信息，具体请看下面图片");
-        }
-        catch (Exception e) {
-            throw new LazybotRuntimeException("读取Help页面失败");
-        }
-
+        CommandResultHandler.sendMessageWithImageToGroupOnebot(bot, event, render(),
+                "[Lazybot] 输入 /指令名 *h 查看单条帮助，例如 /card *h");
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        Path filePath = ResourceMonitor.getResourcePath().resolve("static/Help.jpg");
-        testOutputTool.saveImageToLocal(Files.readAllBytes(Paths.get(filePath.toUri())));
+        testOutputTool.saveImageToLocal(render());
+    }
+
+    private byte[] render()
+    {
+        return rasterizationService.renderHelpIndex(commandRegistry.commands().stream()
+                .flatMap(command -> command.getCommandSummaries().stream())
+                .filter(Objects::nonNull)
+                .toList());
     }
     @Override
     public String getHelp()

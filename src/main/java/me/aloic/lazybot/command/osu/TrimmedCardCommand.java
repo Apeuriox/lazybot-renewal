@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.entity.command.MoelleuxCard;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
@@ -35,6 +36,14 @@ public class TrimmedCardCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "TrimmedCard",
+            List.of("tc"),
+            "[userName]",
+            "/tc Aloic",
+            "查询个人资料, 生成缩小版卡片样式，用于 bbcode 内嵌",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

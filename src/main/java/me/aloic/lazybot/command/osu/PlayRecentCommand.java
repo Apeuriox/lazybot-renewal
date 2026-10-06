@@ -23,6 +23,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"pr","rp","playrecent","re","recent","p","r","ppr","pre"})
 @Component
@@ -35,6 +37,22 @@ public class PlayRecentCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary RECENT_PASS = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "RecentPass",
+            List.of("rp", "pr"),
+            "[userName] [#*num] [&]",
+            "/pr Aloic #1 &",
+            "查询指定用户的最近 Pass 成绩中的第 *num 个",
+            "不填索引则默认为 #1，若存在 & 则会使用旧设计面板");
+    private static final CommandSummary RECENT = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Recent",
+            List.of("re"),
+            "[userName] [#*num] [&]",
+            "/re Aloic",
+            "查询指定用户的最近游玩成绩中的第 *num 个",
+            "不填索引则默认为 #1，若存在 & 则会使用旧设计面板");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws IOException, RosuFFI.FFIException
@@ -182,7 +200,10 @@ public class PlayRecentCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","Custom","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL));
     }
-
-
+    @Override
+    public java.util.List<CommandSummary> getCommandSummaries()
+    {
+        return java.util.List.of(RECENT_PASS, RECENT);
+    }
 
 }

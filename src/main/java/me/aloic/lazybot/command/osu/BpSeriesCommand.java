@@ -21,6 +21,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"bps","bs","bssm"})
 @Component
@@ -32,6 +34,14 @@ public class BpSeriesCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Bps",
+            List.of("bs"),
+            "[playerName] [&]",
+            "/bps Aloic",
+            "查询指定用户的第 1 到第 21 的最佳成绩",
+            "若存在 & 则会使用旧设计面板");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -104,6 +114,4 @@ public class BpSeriesCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("Index","Integer","最大查询范围，默认21", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","Custom","存在&则以List形式输出", CommandParameter.ParameterType.OPTIONAL));
     }
-
-
 }

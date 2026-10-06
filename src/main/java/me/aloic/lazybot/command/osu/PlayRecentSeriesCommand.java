@@ -20,6 +20,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"prs","rps","rs","res","ps"})
 @Component
@@ -32,6 +34,23 @@ public class PlayRecentSeriesCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary PRS = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Prs",
+            List.of("rps", "ps"),
+            "[userName] [&]",
+            "/prs Aloic #1 &",
+            "查询指定用户的最近 Pass 的 21 个成绩",
+            "输入 & 采用 List 形式返回");
+
+    private static final CommandSummary RES = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Res",
+            List.of("rs"),
+            "[userName] [&]",
+            "/res Aloic",
+            "查询指定用户的最近游玩的 21 个成绩",
+            "输入 & 采用 List 形式返回");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -118,5 +137,11 @@ public class PlayRecentSeriesCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("Version","Custom","存在&则以List形式输出", CommandParameter.ParameterType.OPTIONAL));
     }
 
+
+    @Override
+    public java.util.List<CommandSummary> getCommandSummaries()
+    {
+        return java.util.List.of(PRS, RES);
+    }
 
 }

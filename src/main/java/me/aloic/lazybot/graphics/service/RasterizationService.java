@@ -1,6 +1,9 @@
 package me.aloic.lazybot.graphics.service;
 
 import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandSummary;
+
+import java.util.List;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
@@ -16,4 +19,6 @@ public interface RasterizationService
     byte[] renderToMapPpAnalysis(MapPerformanceAnalysis analysis);
 
     byte[] renderCommandHelp(CommandHelp help);
+
+    byte[] renderHelpIndex(List<CommandSummary> summaries);
 }

@@ -30,6 +30,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"song"})
 @Component
@@ -48,6 +50,14 @@ public class SongGuessCommand implements LazybotSlashCommand
 
     private static final Duration TIMEOUT = Duration.ofMinutes(5);
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.FUN,
+            "Song",
+            List.of(),
+            "{title}",
+            "/song",
+            "猜猜地图，数据来源为所有绑定此用户的玩家的随机一个的 BP，限时 5 分钟，输入 /song &以获取提示，输入 /song && 以提前结束",
+            "一个群同时只能有一个");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

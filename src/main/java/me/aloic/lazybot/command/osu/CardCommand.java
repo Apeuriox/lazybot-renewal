@@ -20,6 +20,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @Component
 @LazybotCommandMapping({"card"})
@@ -31,6 +33,15 @@ public class CardCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Card",
+            List.of(),
+            "[userName]",
+            "/card Aloic",
+            "查询个人资料, 生成小型卡片样式",
+            "");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

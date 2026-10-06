@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
@@ -22,6 +23,8 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @LazybotCommandMapping({"noreading","nr"})
 @Component
 public class NoReadingCommand implements LazybotSlashCommand
@@ -32,6 +35,15 @@ public class NoReadingCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "NoReading",
+            List.of("mr"),
+            "[userName]",
+            "/nr Aloic",
+            "以 AR 10 计算pp，主要给 2026 年 4 月更新前使用",
+            "");
 
     private static final String NOREADING_LABEL = "/NoReading: Recalc Bps without read bonus. HD removed.";
 

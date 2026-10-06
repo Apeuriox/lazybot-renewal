@@ -14,6 +14,8 @@ import me.aloic.lazybot.parameter.WhatIfParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"whatif"})
 @Component
@@ -26,6 +28,14 @@ public class WhatIfCommand implements LazybotSlashCommand
     @Resource
     private CommandDatabaseProxy proxy;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "WhatIf",
+            List.of(),
+            "{pp}[*][count]",
+            "/whatif 300*10 400*5",
+            "假设你多刷了这么多 pp 后的总 pp 变化",
+            "支持多项添加，数值不允许大于 5000");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

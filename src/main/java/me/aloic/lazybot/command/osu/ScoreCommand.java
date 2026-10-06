@@ -24,6 +24,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"score","s","pscore"})
 @Component
@@ -35,6 +37,24 @@ public class ScoreCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SCORE = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Score",
+            List.of("s"),
+            "[userName] {bid}+[mods] [&]",
+            "/score Aloic 3970329+HT",
+            "按照指定用户查询指定地图下的指定 Mod 组合的成绩",
+            "若存在 & 则会按其次数决定版本");
+
+    private static final CommandSummary P_SCORE = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Pscore",
+            List.of(),
+            "[userName] {bid}+[mods]",
+            "/Pscore Aloic 3970329+HT",
+            "按照指定用户查询指定地图下的指定 Mod 组合的成绩，附带 PP+ 数据",
+            "");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -129,4 +149,10 @@ public class ScoreCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Version","Custom","&的出现次数，用于以其他样式的成绩面板返回结果", CommandParameter.ParameterType.OPTIONAL));
     }
+    @Override
+    public java.util.List<CommandSummary> getCommandSummaries()
+    {
+        return java.util.List.of(SCORE, P_SCORE);
+    }
+
 }

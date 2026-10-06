@@ -15,6 +15,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @Component
 @LazybotCommandMapping({"ppp","plus"})
@@ -26,6 +28,15 @@ public class PerformancePlusCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Plus",
+            List.of("ppp"),
+            "[userName] [&]",
+            "/plus Aloic &",
+            "查询对应玩家的重算版 pp+，输入 & 以老样式输出结果",
+            "颜色会跟随玩家主页颜色，默认为色域 208 的蓝色");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
@@ -65,7 +76,6 @@ public class PerformancePlusCommand implements LazybotSlashCommand
                         .addExample("/Plus Aloic &")
                         .addExample("/Ppp &")
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
-                        .addOption(new CommandParameter("Version","Custom","存在&则以Corsace形式输出", CommandParameter.ParameterType.OPTIONAL));
+                        .addOption(new CommandParameter("Version","Custom","存在 & 则以老形式输出", CommandParameter.ParameterType.OPTIONAL));
     }
-
 }

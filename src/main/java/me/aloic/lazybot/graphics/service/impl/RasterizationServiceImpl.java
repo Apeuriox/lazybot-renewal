@@ -6,10 +6,14 @@ import gg.jte.output.StringOutput;
 import jakarta.annotation.Resource;
 
 import me.aloic.lazybot.entity.CommandHelp;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.cache.BitmapRenderCache;
 import me.aloic.lazybot.graphics.cache.RenderFingerprint;
 import me.aloic.lazybot.graphics.help.CommandHelpPoster;
+import me.aloic.lazybot.graphics.help.HelpIndexPoster;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
+
+import java.util.List;
 import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
@@ -77,6 +81,15 @@ public class RasterizationServiceImpl implements RasterizationService
         TemplateOutput output = new StringOutput();
         templateEngine.render("single_command_help_svg.jte",
                 Map.of("poster", CommandHelpPoster.from(help)), output);
+        return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+    }
+
+    @Override
+    public byte[] renderHelpIndex(List<CommandSummary> summaries)
+    {
+        TemplateOutput output = new StringOutput();
+        templateEngine.render("help_index_svg.jte",
+                Map.of("poster", HelpIndexPoster.from(summaries)), output);
         return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
     }
 }

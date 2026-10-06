@@ -10,6 +10,8 @@ import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"unlink"})
 @Component
@@ -17,6 +19,15 @@ public class UnLinkCommand implements LazybotSlashCommand
 {
     @Resource
     private UserService userService;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Unlink",
+            List.of(),
+            "",
+            "/unlink",
+            "取消绑定",
+            "多余参数会被忽略");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {

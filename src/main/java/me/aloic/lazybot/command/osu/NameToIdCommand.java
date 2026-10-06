@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import me.aloic.lazybot.entity.CommandSummary;
 @Component
 @LazybotCommandMapping({"nametoid","n2d"})
 public class NameToIdCommand implements LazybotSlashCommand
@@ -29,9 +30,17 @@ public class NameToIdCommand implements LazybotSlashCommand
     private PlayerService playerService;
     @Resource
     private CommandDatabaseProxy proxy;
-
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "NameToId",
+            List.of("n2d"),
+            "{userNameArray}",
+            "/nameToId Aloic,ATRI1024,Zh_Jk",
+            "将指定的用户名序列转化为 UID",
+            "间隔符为`,`，与其他指令不同");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

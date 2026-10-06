@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.monitor.CompareMonitor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
@@ -17,6 +18,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @LazybotCommandMapping({"c","compare"})
@@ -29,6 +32,15 @@ public class CompareCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Compare",
+            List.of("c"),
+            "[index]",
+            "/c 2",
+            "以一样的 bid 对比你自己的成绩",
+            "范围 1 到 5");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
@@ -85,7 +97,7 @@ public class CompareCommand implements LazybotSlashCommand
     public CommandHelp commandHelp()
     {
         return new CommandHelp("Compare","c, compare",
-                        "以最近的玩家查询成绩的同BID查询自己的成绩，输入数字以往前查询，最大为5",
+                        "以最近的玩家查询成绩的同 BID 查询自己的成绩，输入数字以往前查询，最大为 5",
                         "Aloic", "Slayemus, Aloic", "2025-08-31")
                 .code("CM-032")
                 .headline("Quick Comparison")

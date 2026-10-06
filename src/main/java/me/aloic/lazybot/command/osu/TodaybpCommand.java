@@ -19,6 +19,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"todaybp","tbp","t"})
 @Component
@@ -30,6 +32,15 @@ public class TodaybpCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "TodayBP",
+            List.of("tbp"),
+            "[userName] [#*num]",
+            "/todaybp Aloic #10",
+            "查询指定用户的 *num 天内的新增 Bp",
+            "不填索引则默认为 #1");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

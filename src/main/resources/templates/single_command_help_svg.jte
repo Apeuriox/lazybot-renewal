@@ -57,7 +57,7 @@
 <text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="-0.02em"><tspan x="101" y="${poster.designers().ruleY()}">_</tspan></text>
 @endif
 
-<text fill="#3A3C2E" text-anchor="end" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="22" letter-spacing="0em"><tspan x="1436" y="95.535">@@LAZYBOT</tspan></text>
+<text fill="#3A3C2E" text-anchor="end" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="22" letter-spacing="0em"><tspan x="1436" y="95.535">@LAZYBOT</tspan></text>
 <mask id="mask0_2594_2342" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="1500" height="${poster.height()}">
 <rect width="1500" height="${poster.height()}" fill="#E7E8E3"/>
 </mask>

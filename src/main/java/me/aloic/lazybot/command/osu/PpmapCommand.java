@@ -18,6 +18,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @Component
 @LazybotCommandMapping({"ppmap"})
@@ -30,6 +32,14 @@ public class PpmapCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "PPmap",
+            List.of(),
+            "[userName]",
+            "/ppmap Aloic",
+            "绘制指定用户的历史BP",
+            "数据来源为 OsuTrack，此功能并不是绘制你 BP 100");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

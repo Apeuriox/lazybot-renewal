@@ -10,6 +10,8 @@ import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"setmode"})
 @Component
@@ -17,6 +19,15 @@ public class SetmodeCommand implements LazybotSlashCommand
 {
     @Resource
     private UserService userService;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.PREFERENCE,
+            "Setmode",
+            List.of(),
+            "{*num}",
+            "/setmode 1",
+            "设置 osu 默认查询模式",
+            "0=std, 1=taiko, 2=fruits, 3=mania");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {

@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.enums.OsuMode;
@@ -19,6 +20,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @LazybotCommandMapping({"maxreading","mr"})
 @Component
@@ -30,6 +33,14 @@ public class MaxReadingCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "MaxReading",
+            List.of("mr"),
+            "[userName]",
+            "/mr Aloic",
+            "以 AR 11 计算pp，主要给 2026 年 4 月更新前使用",
+            "");
 
     private static final String MAXREADING_LABEL = "/MaxReading: Recalc Bps with max reading bonus. HD kept.";
 

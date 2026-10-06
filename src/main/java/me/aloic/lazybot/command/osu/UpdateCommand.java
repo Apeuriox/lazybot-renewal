@@ -21,6 +21,8 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"update"})
 @Component
@@ -33,6 +35,14 @@ public class UpdateCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Update",
+            List.of(),
+            "{Avatar或Track或者Plus或Banner} [userName]",
+            "/update avatar Aloic",
+            "更新指定用户的头像或 ppmap 数据",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

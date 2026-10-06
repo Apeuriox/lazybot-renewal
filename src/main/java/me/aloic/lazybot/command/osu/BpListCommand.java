@@ -20,6 +20,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"bplist"})
 @Component
@@ -31,7 +33,14 @@ public class BpListCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
-
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Bplist",
+            List.of(),
+            "{*num-*num}",
+            "/bplist 1-100",
+            "查询用户最佳成绩中的第 *num 到 *num 个",
+            "暂不支持查询他人");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

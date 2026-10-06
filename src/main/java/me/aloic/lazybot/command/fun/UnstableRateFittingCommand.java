@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.service.FunService;
 import me.aloic.lazybot.parameter.DeviationFittingParameter;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 @LazybotCommandMapping({"ur","accuracy"})
 @Component
@@ -29,6 +31,14 @@ public class UnstableRateFittingCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "UR",
+            List.of(),
+            "[od] {ur}",
+            "/ur od9 100ur",
+            "以理论计算当前UR在指定OD下的最佳acc表现",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

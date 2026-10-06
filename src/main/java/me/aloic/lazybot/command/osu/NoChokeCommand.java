@@ -24,6 +24,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"nochoke","nc","no1miss"})
 @Component
@@ -35,6 +37,24 @@ public class NoChokeCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary NO_CHOKE = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "NoChoke",
+            List.of("nc"),
+            "[userName]",
+            "/noChoke Aloic",
+            "将指定用户的 BP 100 按照 FC 重新计算，俗称幻想时刻",
+            "渲染出的图形暂时只有 Fix 后的 BP");
+
+    private static final CommandSummary NO_1_MISS = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "No1Miss",
+            List.of(),
+            "[userName]",
+            "/no1MIss Aloic",
+            "将指定用户的 BP 中 <=1miss 的成绩按照 FC 重新计算",
+            "此为 /noChoke 的限制版");
 
     private static final String NOCHOKE_LABEL = "All scores are recalculated with FC. Plz keep in mind that this may not reflect your skill correctly.";
 
@@ -118,4 +138,11 @@ public class NoChokeCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL));
     }
+
+    @Override
+    public java.util.List<CommandSummary> getCommandSummaries()
+    {
+        return java.util.List.of(NO_CHOKE, NO_1_MISS);
+    }
+
 }

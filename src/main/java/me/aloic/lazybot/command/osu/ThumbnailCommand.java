@@ -9,6 +9,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
@@ -19,6 +20,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @LazybotCommandMapping({"tns","tnp","thumbnail"})
 @SkipLazybotCommandPreprocessing
@@ -31,7 +33,14 @@ public class ThumbnailCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
-
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Thumbnail",
+            List.of("tns","tnp"),
+            "{key=value}",
+            "/tns {id=2570594}",
+            "快捷生成视频封面",
+            "详情看 /tns *h");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws IOException

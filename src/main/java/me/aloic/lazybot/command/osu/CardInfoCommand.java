@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
@@ -22,9 +23,10 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.List;
 
 @Component
-@LazybotCommandMapping({"i"})
+@LazybotCommandMapping({"i","cardinfo"})
 public class CardInfoCommand implements LazybotSlashCommand
 {
     @Resource
@@ -38,6 +40,14 @@ public class CardInfoCommand implements LazybotSlashCommand
     @Resource
     private RasterizationService rasterizationService;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "CardInfo",
+            List.of("i"),
+            "[userName]",
+            "/i Aloic",
+            "查询个人资料，有历史资料对比",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

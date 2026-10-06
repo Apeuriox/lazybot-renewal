@@ -6,12 +6,15 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.osu.enums.OsuSubruleset;
 import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @LazybotCommandMapping({"setruleset","setrule",})
 @Component
@@ -20,6 +23,14 @@ public class SetRulesetCommand implements LazybotSlashCommand
     @Resource
     private UserService userService;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.PREFERENCE,
+            "Setrule",
+            List.of(),
+            "{subRuleset}",
+            "/setrule relax",
+            "仅限Star Moon，更改默认次级模式",
+            "relax 或 standard");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
         userService.updateDefaultSubset(event);

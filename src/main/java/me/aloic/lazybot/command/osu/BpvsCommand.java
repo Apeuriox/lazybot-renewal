@@ -19,6 +19,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"bpvs"})
 @Component
@@ -30,6 +32,14 @@ public class BpvsCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Bpvs",
+            List.of(),
+            "{userName}",
+            "/bpvs Aloic",
+            "与指定用户的 BP 进行对比",
+            "生成的图形为旧设计");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

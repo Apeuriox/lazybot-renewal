@@ -19,6 +19,8 @@ import me.aloic.lazybot.parameter.CustomizationParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"customize"})
 @SkipLazybotCommandPreprocessing
@@ -32,6 +34,25 @@ public class CustomizeCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary PROFILE_BG = new CommandSummary(
+            CommandSummary.Category.CUSTOMIZE,
+            "Customize",
+            List.of(),
+            "{URL}",
+            "/customize profilebg https://this.is.link",
+            "更改 /profile 的背景图片，URL为图片链接，提交后需要等待验证",
+            "图片需要为 1900x1000，超出的部分会被裁剪",
+            "profileBG");
+
+    private static final CommandSummary PROFILE_THEME = new CommandSummary(
+            CommandSummary.Category.CUSTOMIZE,
+            "Customize",
+            List.of(),
+            "{Light 或 Dark 或 Lighter}",
+            "/customize profileTheme Light",
+            "更改 /profile 的颜色预设",
+            "",
+            "profileTheme");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -91,6 +112,12 @@ public class CustomizeCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("Type","String","二级命令类型，profileBG修改地图背景，profileTheme修改主题", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("BGLink","String","仅限profileBG，背景的链接，接受输入1900x1000，多余部分会被裁剪", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("Theme","String","仅限profileTheme，更改其的颜色预设，支持输入Light, Lighter, Dark", CommandParameter.ParameterType.REQUIRED));
+    }
+
+    @Override
+    public java.util.List<CommandSummary> getCommandSummaries()
+    {
+        return java.util.List.of(PROFILE_BG, PROFILE_THEME);
     }
 
 }

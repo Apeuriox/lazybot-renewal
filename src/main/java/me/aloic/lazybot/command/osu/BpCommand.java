@@ -24,6 +24,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"bp","best","pbp","b","bsm"})
 @Component
@@ -38,6 +40,14 @@ public class BpCommand implements LazybotSlashCommand
     @Resource
     private TemplateRenderer templateRenderer;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "bp",
+            List.of(),
+            "[playerName] [[#]num] [&]",
+            "/bp Aloic #10",
+            "查询指定用户的最佳成绩中的第*num个",
+            "不填索引则默认为#1，若存在&则会使用旧设计面板");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

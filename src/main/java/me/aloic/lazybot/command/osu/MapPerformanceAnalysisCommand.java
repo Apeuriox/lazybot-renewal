@@ -7,6 +7,7 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
 import me.aloic.lazybot.osu.service.PlayerService;
@@ -17,9 +18,10 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
-@LazybotCommandMapping({"mp", "mpp"})
+@LazybotCommandMapping({"mp", "mpp", "mapplus"})
 @Component
 public class MapPerformanceAnalysisCommand implements LazybotSlashCommand {
     @Resource
@@ -28,7 +30,14 @@ public class MapPerformanceAnalysisCommand implements LazybotSlashCommand {
     private RasterizationService rasterizationService;
     @Resource
     private TestOutputTool testOutputTool;
-
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "MapPlus",
+            List.of("mp"),
+            "{bid}+[mods] [acc] [CS/OD/AR]",
+            "/mp 4889657",
+            "比较同一地图设置下进阶对比内容",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
 //        event.deferReply().queue();

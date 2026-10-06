@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.io.IOException;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"topscores","ts"})
 @Component
@@ -30,8 +32,17 @@ public class TopScoresCommand implements LazybotSlashCommand
     private TrackService trackService;
     @Resource
     private CommandDatabaseProxy proxy;
-    @Autowired
+    @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "TopScores",
+            List.of("ts"),
+            "[max]",
+            "/ts 20 :1",
+            "查询指定模式的最高 Pp 成绩列表",
+            "bancho 查询不到的成绩会被跳过，请注意数据来源为 osu track，除了 std 模式，均已过时");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

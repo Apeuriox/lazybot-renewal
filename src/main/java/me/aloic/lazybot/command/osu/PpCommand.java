@@ -10,6 +10,7 @@ import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.discord.util.OptionMappingTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
@@ -22,6 +23,7 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @LazybotCommandMapping({"pp"})
@@ -35,6 +37,14 @@ public class PpCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "PP",
+            List.of(),
+            "[userName] {bid}+[mods] [&]",
+            "/score Aloic 3970329+HT",
+            "按照指定用户查询指定地图下的指定 Mod 组合的 PP 最高的成绩",
+            "若存在 & 则会按其次数决定版本");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

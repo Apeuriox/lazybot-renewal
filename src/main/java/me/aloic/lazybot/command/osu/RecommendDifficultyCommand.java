@@ -18,6 +18,8 @@ import me.aloic.lazybot.parameter.GeneralParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @Component
 @LazybotCommandMapping({"rd","recommenddifficulty"})
@@ -30,6 +32,14 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "RecommendDifficulty",
+            List.of("rd"),
+            "[userName]",
+            "/rd Aloic",
+            "查询指定用户的推荐星级",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

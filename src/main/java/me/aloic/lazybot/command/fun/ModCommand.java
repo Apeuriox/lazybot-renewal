@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"mod","modinfo","mi"})
 @Component
@@ -27,7 +29,14 @@ public class ModCommand implements LazybotSlashCommand
     private FunService funService;
     @Resource
     private TestOutputTool testOutputTool;
-
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "ModInfo",
+            List.of("mod"),
+            "{modName}",
+            "/mod HR",
+            "查询对应 Mod 的介绍",
+            "还没做完");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

@@ -9,6 +9,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.UserService;
@@ -18,6 +19,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @LazybotCommandMapping({"setpanel","sp"})
 @Component
@@ -30,6 +33,14 @@ public class UpdatePanelVersionCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.PREFERENCE,
+            "SetPanel",
+            List.of("sp"),
+            "{*num或名称}",
+            "/sp 2",
+            "设置用户的默认成绩面板",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

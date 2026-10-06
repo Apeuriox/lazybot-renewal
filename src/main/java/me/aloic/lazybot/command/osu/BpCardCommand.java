@@ -21,6 +21,8 @@ import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"bpcard"})
 @Component
@@ -32,6 +34,16 @@ public class BpCardCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Bpcard",
+            List.of(),
+            "{*num-*num}",
+            "/bpcard 1-100",
+            "查询用户最佳成绩中的第 *num 到 *num 个，但是以 Card 列表形式返回",
+            "暂不支持查询他人");
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -103,4 +115,5 @@ public class BpCardCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("Range","Custom","查询的范围，[num]-[num]", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("Algorithm","Custom","以独立参数传入 @202210/@202411/@202502/@202510/@20260706；位置不限，省略时使用服务配置", CommandParameter.ParameterType.OPTIONAL));
     }
+
 }

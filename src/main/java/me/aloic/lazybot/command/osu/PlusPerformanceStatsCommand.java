@@ -7,12 +7,15 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.osu.service.ManageService;
 import me.aloic.lazybot.parameter.StatsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @LazybotCommandMapping({"pstats"})
 @Component
@@ -22,6 +25,15 @@ public class PlusPerformanceStatsCommand implements LazybotSlashCommand
     private ManageService manageService;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Pstats",
+            List.of("{type}"),
+            "",
+            "/pstats",
+            "查询 PP+ 服务器统计数据",
+            "统计类型: count/updated");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

@@ -12,6 +12,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 
 @LazybotCommandMapping({"monitor"})
@@ -22,7 +24,14 @@ public class MonitorCommand implements LazybotSlashCommand
     private ManageService manageService;
     @Resource
     private TestOutputTool testOutputTool;
-
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.FUN,
+            "Monitor",
+            List.of(),
+            "",
+            "/monitor",
+            "查询 bot 的指令使用情况",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

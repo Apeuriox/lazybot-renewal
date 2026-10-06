@@ -16,6 +16,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 //this command is to request recalculation of pp+
 @LazybotCommandMapping({"addscores","addscore","add"})
@@ -28,6 +30,15 @@ public class AddScoreCommand implements LazybotSlashCommand
     private CommandDatabaseProxy proxy;
     @Resource
     private TestOutputTool testOutputTool;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "add",
+            List.of("addScore"),
+            "[username] {bid}",
+            "/addscore Aloic 668662",
+            "以bid申请pp+重算，取最大结果",
+            "仅支持standard");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
@@ -76,4 +87,5 @@ public class AddScoreCommand implements LazybotSlashCommand
                         .addOption(new CommandParameter("PlayerName","String","查询的玩家名称", CommandParameter.ParameterType.OPTIONAL))
                         .addOption(new CommandParameter("BeatmapID","Integer","地图ID，仅支持STD模式", CommandParameter.ParameterType.REQUIRED));
     }
+
 }

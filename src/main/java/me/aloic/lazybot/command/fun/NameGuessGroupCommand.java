@@ -19,6 +19,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"name","n"})
 @Component
@@ -31,6 +33,14 @@ public class NameGuessGroupCommand extends NameGuessCommand implements LazybotSl
 
     private static final Duration TIMEOUT = Duration.ofMinutes(3);
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.FUN,
+            "Name",
+            List.of("n"),
+            "{userName}",
+            "/name Aloic",
+            "猜猜别人的 ID，数据来源为绑定此 Bot 的人，限时三分钟，输入 /name & 以提前结束",
+            "");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

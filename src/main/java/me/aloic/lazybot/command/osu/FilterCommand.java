@@ -8,6 +8,7 @@ import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.component.TestOutputTool;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.service.PlayerService;
@@ -16,6 +17,8 @@ import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @LazybotCommandMapping({"f","filter"})
 @Component
@@ -28,6 +31,14 @@ public class FilterCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Filter",
+            List.of("f"),
+            "{statement}",
+            "/f star>9",
+            "以指定的条件过滤用户的BP",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
@@ -114,5 +125,4 @@ public class FilterCommand implements LazybotSlashCommand
                                      == 完全相等""", CommandParameter.ParameterType.REQUIRED))
                         .addOption(new CommandParameter("Value","Custom","过滤的值", CommandParameter.ParameterType.REQUIRED));
     }
-
 }

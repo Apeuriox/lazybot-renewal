@@ -15,6 +15,8 @@ import me.aloic.lazybot.parameter.TipsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"tips"})
 @SkipLazybotCommandPreprocessing
@@ -26,6 +28,14 @@ public class TipsCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Tips",
+            List.of(),
+            "[id]",
+            "/tips 38",
+            "返回一个随机的 Aloic 小提示，输入 ID 可明确指定",
+            "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

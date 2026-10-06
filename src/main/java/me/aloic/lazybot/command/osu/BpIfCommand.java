@@ -26,6 +26,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"bpif"})
 @Component
@@ -38,6 +40,14 @@ public class BpIfCommand implements LazybotSlashCommand
     @Resource
     private TestOutputTool testOutputTool;
 
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Bpif",
+            List.of(),
+            "[userName] {operator}{mods}",
+            "/bpif Aloic +HDHR",
+            "按照指定的规则和 mod 重算用户的全部成绩，使用详情请看渲染结果提示",
+            "只渲染重算完成后的前 30 个成绩");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

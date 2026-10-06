@@ -9,6 +9,7 @@ import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;
+import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.entity.command.UserAllScore;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.service.PlayerService;
@@ -33,6 +34,15 @@ public class ScoreRankCommand implements LazybotSlashCommand
     private PlayerService playerService;
     @Resource
     private CommandDatabaseProxy proxy;
+
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "ScoreRank",
+            List.of("sr"),
+            "{bid}+[mods]",
+            "/sr 4889657+HDDT",
+            "查询本群绑定的玩家在一张地图上的成绩",
+            "最大渲染 30 个");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {

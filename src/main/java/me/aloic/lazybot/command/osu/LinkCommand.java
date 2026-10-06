@@ -10,6 +10,8 @@ import me.aloic.lazybot.osu.service.UserService;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.stereotype.Component;
+import me.aloic.lazybot.entity.CommandSummary;
+import java.util.List;
 
 @LazybotCommandMapping({"link"})
 @Component
@@ -17,7 +19,14 @@ public class LinkCommand implements LazybotSlashCommand
 {
     @Resource
     private UserService userService;
-
+    private static final CommandSummary SUMMARY = new CommandSummary(
+            CommandSummary.Category.OSU,
+            "Link",
+            List.of(),
+            "{userName}",
+            "/Link Aloic",
+            "绑定用户名",
+            "解绑请用 /unlink");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
         userService.linkUser(event);

@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -33,6 +34,14 @@ public class LazybotSlashCommandRegistry
                 }
             }
         }
+    }
+
+    public List<LazybotSlashCommand> commands()
+    {
+        return commandMap.values().stream()
+                .map(RegisteredCommand::command)
+                .distinct()
+                .toList();
     }
 
     public LazybotSlashCommand getCommand(String commandName) {
