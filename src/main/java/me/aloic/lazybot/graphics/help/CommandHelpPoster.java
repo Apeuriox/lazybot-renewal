@@ -17,7 +17,9 @@ public record CommandHelpPoster(
         List<PlacedText> underHalftone,
         List<PlacedText> overHalftone,
         String footerColor,
-        String availability)
+        String availability,
+        int height,
+        int shift)
 {
     public record PlacedText(
             String x,
@@ -35,9 +37,12 @@ public record CommandHelpPoster(
     private static final double DESCRIPTION_WIDTH = 196;
     private static final double PARAMETER_WIDTH = 380;
     private static final double EXAMPLE_WIDTH = 560;
+    private static final int BASE_HEIGHT = 2100;
     private static final double EXAMPLE_BOTTOM = 1912.09;
+    private static final double FOOTER_TEXT_Y = 2043.09;
     private static final double EXAMPLE_STEP = 41;
     private static final double EXAMPLE_LABEL_GAP = 64;
+    private static final double CONTENT_GAP = 48;
     private static final String FOOTER_READY = "#5E693E";
     private static final String FOOTER_INCOMPLETE = "#693E3E";
     private static final double RIGHT_EDGE = 1436;
@@ -50,17 +55,24 @@ public record CommandHelpPoster(
         placeTitle(under, help);
         double ruleY = placeDescription(under, help.getDescription());
         ruleY = placePeople(under, ruleY, 159, "\"CREATOR\"", splitCsv(help.getCreator()));
-        placePeople(under, ruleY, 147, "\"GRAPHIC_DESIGNER\"", splitCsv(help.getDesigner()));
-        placeParameters(over, help.getOptions());
-        placeExamples(over, help);
+        ruleY = placePeople(under, ruleY, 147, "\"GRAPHIC_DESIGNER\"", splitCsv(help.getDesigner()));
+        double parameterEnd = placeParameters(over, help.getOptions());
+        List<String> exampleLines = exampleLines(help);
+        List<String> aliasLines = aliasLines(help);
+        double exampleTop = Math.min(columnTop(exampleLines.size()), columnTop(aliasLines.size()));
+        double contentBottom = Math.max(parameterEnd, ruleY + 36);
+        double overflow = Math.max(0, contentBottom + CONTENT_GAP - exampleTop);
+        int shift = (int) (Math.ceil(overflow / 150.0) * 150);
+        placeExamples(over, exampleLines, aliasLines, EXAMPLE_BOTTOM + shift);
         String availability = help.getAvailability() == null ? "" : help.getAvailability().trim();
         if (!availability.isEmpty()) {
-            over.add(text(RIGHT_EDGE, 2043.09, availability, "black", fontFor(availability), BODY, "0em", "end"));
+            over.add(text(RIGHT_EDGE, FOOTER_TEXT_Y + shift, availability, "black", fontFor(availability), BODY, "0em", "end"));
         }
         String footerColor = CommandHelp.INCOMPLETE.equalsIgnoreCase(availability)
                 ? FOOTER_INCOMPLETE
                 : FOOTER_READY;
-        return new CommandHelpPoster(List.copyOf(under), List.copyOf(over), footerColor, availability);
+        return new CommandHelpPoster(List.copyOf(under), List.copyOf(over), footerColor, availability,
+                BASE_HEIGHT + shift, shift);
     }
 
     private static void placeTitle(List<PlacedText> lines, CommandHelp help)
@@ -119,10 +131,10 @@ public record CommandHelpPoster(
         return ruleY;
     }
 
-    private static void placeParameters(List<PlacedText> lines, List<CommandParameter> options)
+    private static double placeParameters(List<PlacedText> lines, List<CommandParameter> options)
     {
         if (options == null || options.isEmpty()) {
-            return;
+            return 0;
         }
         lines.add(body(525, 384.09, "(PARAMETERS)"));
         double y = 450.09;
@@ -147,39 +159,58 @@ public record CommandHelpPoster(
             y = ruleY + 94;
             index++;
         }
+        return y;
     }
 
-    private static void placeExamples(List<PlacedText> lines, CommandHelp help)
+    private static List<String> exampleLines(CommandHelp help)
     {
+        List<String> lines = new ArrayList<>();
         List<String> examples = help.getUsageExamples() == null ? List.of() : help.getUsageExamples();
+        for (String example : examples) {
+            lines.addAll(wrap(example, EXAMPLE_WIDTH, BODY));
+        }
+        return lines;
+    }
+
+    private static List<String> aliasLines(CommandHelp help)
+    {
         List<String> aliases = splitCsv(help.getAlias()).stream()
                 .map(alias -> alias.toUpperCase(Locale.ROOT))
                 .toList();
-        List<String> exampleLines = new ArrayList<>();
-        for (String example : examples) {
-            exampleLines.addAll(wrap(example, EXAMPLE_WIDTH, BODY));
-        }
-        placeUpward(lines, 356, exampleLines, 356, "(EXAMPLE)");
-
-        List<String> aliasLines = new ArrayList<>();
+        List<String> lines = new ArrayList<>();
         for (int i = 0; i < aliases.size(); i++) {
-            aliasLines.add("%02d  %s".formatted(i + 1, aliases.get(i)));
+            lines.add("%02d  %s".formatted(i + 1, aliases.get(i)));
         }
-        placeUpward(lines, 959, aliasLines, 954, "\"INVOKE\"");
+        return lines;
+    }
+
+    private static double columnTop(int rows)
+    {
+        if (rows <= 0) {
+            return FOOTER_TEXT_Y - 36;
+        }
+        return EXAMPLE_BOTTOM - (rows - 1L) * EXAMPLE_STEP - EXAMPLE_LABEL_GAP;
+    }
+
+    private static void placeExamples(List<PlacedText> lines, List<String> exampleLines,
+                                      List<String> aliasLines, double bottom)
+    {
+        placeUpward(lines, 356, exampleLines, 356, "(EXAMPLE)", bottom);
+        placeUpward(lines, 959, aliasLines, 954, "\"INVOKE\"", bottom);
     }
 
     private static void placeUpward(List<PlacedText> lines, double textX, List<String> rows,
-                                    double labelX, String label)
+                                    double labelX, String label, double bottom)
     {
         if (rows.isEmpty()) {
             return;
         }
         int count = rows.size();
         for (int i = 0; i < count; i++) {
-            double y = EXAMPLE_BOTTOM - (count - 1L - i) * EXAMPLE_STEP;
+            double y = bottom - (count - 1L - i) * EXAMPLE_STEP;
             lines.add(body(textX, y, rows.get(i)));
         }
-        double top = EXAMPLE_BOTTOM - (count - 1L) * EXAMPLE_STEP;
+        double top = bottom - (count - 1L) * EXAMPLE_STEP;
         lines.add(body(labelX, top - EXAMPLE_LABEL_GAP, label));
     }
 
