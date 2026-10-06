@@ -23,9 +23,39 @@
         <line x1="1349" y1="${poster.height()}" x2="1349" stroke="black" stroke-opacity="0.06" stroke-width="2"/>
     </g>
 
-@for(var line : poster.underHalftone())
-<text fill="${line.fill()}" text-anchor="${line.anchor()}" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="${line.fontSize()}" letter-spacing="${line.letterSpacing()}"><tspan x="${line.x()}" y="${line.y()}">${line.text()}</tspan></text>
+@if(!poster.code().isBlank())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="22" letter-spacing="0em"><tspan x="102" y="95.535">${poster.code()}</tspan></text>
+@endif
+@if(!poster.headline().isBlank())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="22" letter-spacing="0em"><tspan x="439" y="94.535">${poster.headline()}</tspan></text>
+@endif
+@if(!poster.date().isBlank())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="22" letter-spacing="0em"><tspan x="936" y="95.535">${poster.date()}</tspan></text>
+@endif
+@if(!poster.title().isBlank())
+<text fill="#0C0F00" style="white-space: pre" xml:space="preserve" font-family="Monorama" font-size="${poster.titleSize()}" letter-spacing="-0.02em"><tspan x="81" y="300.406">${poster.title()}</tspan></text>
+@endif
+@if(!poster.descriptionLines().isEmpty())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="101" y="384.09">"DESCRIPTION"</tspan></text>
+@for(var line : poster.descriptionLines())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="28" letter-spacing="0em"><tspan x="101" y="${line.y()}">${line.text()}</tspan></text>
 @endfor
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="-0.02em"><tspan x="101" y="${poster.descriptionRuleY()}">_</tspan></text>
+@endif
+@if(poster.creators().present())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="101" y="${poster.creators().labelY()}">"CREATOR"</tspan></text>
+@for(var line : poster.creators().lines())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="28" letter-spacing="0em"><tspan x="101" y="${line.y()}">${line.text()}</tspan></text>
+@endfor
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="-0.02em"><tspan x="101" y="${poster.creators().ruleY()}">_</tspan></text>
+@endif
+@if(poster.designers().present())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="101" y="${poster.designers().labelY()}">"GRAPHIC_DESIGNER"</tspan></text>
+@for(var line : poster.designers().lines())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="28" letter-spacing="0em"><tspan x="101" y="${line.y()}">${line.text()}</tspan></text>
+@endfor
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="-0.02em"><tspan x="101" y="${poster.designers().ruleY()}">_</tspan></text>
+@endif
 
 <text fill="#3A3C2E" text-anchor="end" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="22" letter-spacing="0em"><tspan x="1436" y="95.535">@@LAZYBOT</tspan></text>
 <mask id="mask0_2594_2342" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="1500" height="${poster.height()}">
@@ -842,9 +872,32 @@
     </g>
 
 <text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="64" y="${2043.09 + poster.shift()}">LAZYBOT   COMMAND   HELP   PAGE   VERSION  1.2</tspan></text>
-@for(var line : poster.overHalftone())
-<text fill="${line.fill()}" text-anchor="${line.anchor()}" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="${line.fontSize()}" letter-spacing="${line.letterSpacing()}"><tspan x="${line.x()}" y="${line.y()}">${line.text()}</tspan></text>
+@if(!poster.parameters().isEmpty())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="525" y="384.09">(PARAMETERS)</tspan></text>
+@for(var param : poster.parameters())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="${param.headingFont()}" font-size="28" letter-spacing="0em"><tspan x="525" y="${param.y()}">${param.heading()}</tspan></text>
+<text fill="#3A3C2E" text-anchor="end" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="1436" y="${param.y()}">${param.flag()}</tspan></text>
+@for(var line : param.lines())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="28" letter-spacing="0em"><tspan x="525" y="${line.y()}">${line.text()}</tspan></text>
 @endfor
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="-0.02em"><tspan x="525" y="${param.ruleY()}">_</tspan></text>
+@endfor
+@endif
+@if(poster.examples().present())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="356" y="${poster.examples().labelY()}">(EXAMPLE)</tspan></text>
+@for(var line : poster.examples().lines())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="28" letter-spacing="0em"><tspan x="356" y="${line.y()}">${line.text()}</tspan></text>
+@endfor
+@endif
+@if(poster.aliases().present())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="28" letter-spacing="0em"><tspan x="954" y="${poster.aliases().labelY()}">"INVOKE"</tspan></text>
+@for(var line : poster.aliases().lines())
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="${line.fontFamily()}" font-size="28" letter-spacing="0em"><tspan x="959" y="${line.y()}">${line.text()}</tspan></text>
+@endfor
+@endif
+@if(!poster.availability().isBlank())
+<text fill="black" text-anchor="end" style="white-space: pre" xml:space="preserve" font-family="${poster.availabilityFont()}" font-size="28" letter-spacing="0em"><tspan x="1436" y="${2043.09 + poster.shift()}">${poster.availability()}</tspan></text>
+@endif
 <defs>
 <filter id="filter0_n_2594_2342" x="0" y="0" width="1500" height="${poster.height()}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
