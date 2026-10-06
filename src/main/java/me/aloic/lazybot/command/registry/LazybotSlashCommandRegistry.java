@@ -4,6 +4,7 @@ import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +14,18 @@ import java.util.Locale;
 import java.util.Map;
 
 @Component
-public class LazybotSlashCommandRegistry
+public class LazybotSlashCommandRegistry implements SmartInitializingSingleton
 {
+    private final ApplicationContext context;
     private final Map<String, RegisteredCommand> commandMap = new HashMap<>();
 
     public LazybotSlashCommandRegistry(ApplicationContext context)
+    {
+        this.context = context;
+    }
+
+    @Override
+    public void afterSingletonsInstantiated()
     {
         Map<String, LazybotSlashCommand> beans = context.getBeansOfType(LazybotSlashCommand.class);
         for (LazybotSlashCommand command : beans.values()) {
@@ -29,7 +37,7 @@ public class LazybotSlashCommandRegistry
                         new RegisteredCommand(command,
                                 commandClass.isAnnotationPresent(SkipLazybotCommandPreprocessing.class)
                         );
-                for(String commandName : mapping.value()) {
+                for (String commandName : mapping.value()) {
                     commandMap.put(normalize(commandName), registeredCommand);
                 }
             }

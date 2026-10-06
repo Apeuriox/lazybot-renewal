@@ -33,11 +33,11 @@ public class AddScoreCommand implements LazybotSlashCommand
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,
-            "add",
+            "Add",
             List.of("addScore"),
-            "[username] {bid}",
-            "/addscore Aloic 668662",
-            "以bid申请pp+重算，取最大结果",
+            "[userName] {bid}",
+            "/add Aloic 668662",
+            "以 bid 申请 pp+ 重算，取最大结果",
             "仅支持standard");
 
     @Override

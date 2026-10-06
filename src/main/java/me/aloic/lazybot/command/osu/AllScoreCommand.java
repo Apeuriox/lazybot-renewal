@@ -37,10 +37,10 @@ public class AllScoreCommand implements LazybotSlashCommand
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,
-            "allScores",
+            "AllScores",
             List.of("as"),
             "[userName] {bid}",
-            "/AllScores Aloic 668662",
+            "/as Aloic 668662",
             "查询对应玩家在对应地图下的全部成绩",
             "最大渲染 30 个");
 

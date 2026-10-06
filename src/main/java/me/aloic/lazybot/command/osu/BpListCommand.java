@@ -39,7 +39,7 @@ public class BpListCommand implements LazybotSlashCommand
             List.of(),
             "{*num-*num}",
             "/bplist 1-100",
-            "查询用户最佳成绩中的第 *num 到 *num 个",
+            "查询用户最佳成绩中的范围",
             "暂不支持查询他人");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

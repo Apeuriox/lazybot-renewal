@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component
-@LazybotCommandMapping({"tc","trimmedcard"})
+@LazybotCommandMapping({"tc","trim"})
 public class TrimmedCardCommand implements LazybotSlashCommand
 {
     @Resource
@@ -38,11 +38,11 @@ public class TrimmedCardCommand implements LazybotSlashCommand
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,
-            "TrimmedCard",
+            "Trim",
             List.of("tc"),
             "[userName]",
             "/tc Aloic",
-            "查询个人资料, 生成缩小版卡片样式，用于 bbcode 内嵌",
+            "查询个人资料, 缩小版卡片样式",
             "");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

@@ -43,7 +43,7 @@ public class PpCommand implements LazybotSlashCommand
             List.of(),
             "[userName] {bid}+[mods] [&]",
             "/score Aloic 3970329+HT",
-            "按照指定用户查询指定地图下的指定 Mod 组合的 PP 最高的成绩",
+            "查询地图下的 Mod 组合 PP 最高成绩",
             "若存在 & 则会按其次数决定版本");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

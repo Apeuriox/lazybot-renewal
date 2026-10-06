@@ -46,8 +46,8 @@ public class BpIfCommand implements LazybotSlashCommand
             List.of(),
             "[userName] {operator}{mods}",
             "/bpif Aloic +HDHR",
-            "按照指定的规则和 mod 重算用户的全部成绩，使用详情请看渲染结果提示",
-            "只渲染重算完成后的前 30 个成绩");
+            "按照指定的规则重算用户的全部成绩",
+            "只渲染计算后的前 30 个成绩");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

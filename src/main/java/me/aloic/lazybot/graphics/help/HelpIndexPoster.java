@@ -26,12 +26,12 @@ public record HelpIndexPoster(
     {
     }
 
-    private static final int BASE_HEIGHT = 4601;
+    private static final int BASE_HEIGHT = 4600;
     private static final int GRID = 200;
     private static final double OSU_START = 1191.41;
     private static final double OSU_LIMIT = 2240;
     private static final double MIDDLE_LIMIT = 4001;
-    private static final double BODY = 26;
+    private static final double BODY = 24;
     private static final double LINE = 31;
     private static final double ROW_GAP = 42;
     private static final String CJK_FONT = "Noto Sans SC";
@@ -73,12 +73,12 @@ public record HelpIndexPoster(
     {
         double y = start;
         for (CommandSummary row : rows) {
-            List<String> command = wrap(shown(row.command(), "\\"), wide ? 180 : 210);
-            List<String> alias = wide ? wrap(aliases(row), 220) : List.of();
-            List<String> parameter = wrap(shown(row.parameter(), "\\"), wide ? 310 : 280);
-            List<String> example = wrap(shown(row.example(), "\\"), wide ? 300 : 280);
-            List<String> description = wrap(shown(row.description(), ""), wide ? 280 : 760);
-            List<String> caution = wide ? wrap(shown(row.caution(), "\\"), 270) : List.of();
+            List<String> command = wrap(shown(row.command(), "\\"), wide ? 126 : 210);
+            List<String> alias = wide ? wrap(aliases(row), 130) : List.of();
+            List<String> parameter = wrap(shown(row.parameter(), "\\"), wide ? 250 : 280);
+            List<String> example = wrap(shown(row.example(), "\\"), wide ? 210 : 280);
+            List<String> description = wrap(shown(row.description(), ""), wide ? 226 : 760);
+            List<String> caution = wide ? wrap(shown(row.caution(), "\\"), 200) : List.of();
             int lines = Math.max(command.size(), Math.max(parameter.size(),
                     Math.max(example.size(), Math.max(description.size(), Math.max(alias.size(), caution.size())))));
             addColumn(out, command, wide ? 214 : 212, y);

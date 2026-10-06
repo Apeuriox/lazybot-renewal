@@ -43,8 +43,8 @@ public class ScoreCommand implements LazybotSlashCommand
             "Score",
             List.of("s"),
             "[userName] {bid}+[mods] [&]",
-            "/score Aloic 3970329+HT",
-            "按照指定用户查询指定地图下的指定 Mod 组合的成绩",
+            "/score 3970329",
+            "查询地图下的 Mod 组合的成绩",
             "若存在 & 则会按其次数决定版本");
 
     private static final CommandSummary P_SCORE = new CommandSummary(
@@ -52,8 +52,8 @@ public class ScoreCommand implements LazybotSlashCommand
             "Pscore",
             List.of(),
             "[userName] {bid}+[mods]",
-            "/Pscore Aloic 3970329+HT",
-            "按照指定用户查询指定地图下的指定 Mod 组合的成绩，附带 PP+ 数据",
+            "/Pscore 3970329+HT",
+            "以 PP+ 查询地图下的 Mod 组合的成绩",
             "");
 
     @Override

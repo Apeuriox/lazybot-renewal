@@ -42,7 +42,7 @@ public class TopScoresCommand implements LazybotSlashCommand
             "[max]",
             "/ts 20 :1",
             "查询指定模式的最高 Pp 成绩列表",
-            "bancho 查询不到的成绩会被跳过，请注意数据来源为 osu track，除了 std 模式，均已过时");
+            "数据来源为 osu track");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

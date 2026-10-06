@@ -37,9 +37,9 @@ public class BeatmapStatisticsCommand implements LazybotSlashCommand
             CommandSummary.Category.OSU,
             "Map",
             List.of("m"),
-            "`{bid}+[mods] [acc] [CS/OD/AR]`",
-            "/m 3970329+DT 98.5 AR10.8",
-            "查看指定Bid的地图的一些PP数据",
+            "`{bid}+[mods] [acc] [CS/OD/AR]",
+            "/m 3970329+DT",
+            "查看指定地图的一些 PP 数据",
             "进阶查询请用/Mp");
 
     @Override

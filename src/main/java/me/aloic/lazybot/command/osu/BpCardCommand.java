@@ -41,7 +41,7 @@ public class BpCardCommand implements LazybotSlashCommand
             List.of(),
             "{*num-*num}",
             "/bpcard 1-100",
-            "查询用户最佳成绩中的第 *num 到 *num 个，但是以 Card 列表形式返回",
+            "以 Card 列表形式查询用户最佳成绩范围",
             "暂不支持查询他人");
 
     @Override

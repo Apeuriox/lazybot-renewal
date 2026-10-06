@@ -42,12 +42,12 @@ public class BpCommand implements LazybotSlashCommand
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,
-            "bp",
+            "Bp",
             List.of(),
-            "[playerName] [[#]num] [&]",
+            "[playerName] [#num] [&]",
             "/bp Aloic #10",
-            "查询指定用户的最佳成绩中的第*num个",
-            "不填索引则默认为#1，若存在&则会使用旧设计面板");
+            "指定查询指定用户的最佳成绩",
+            "无索引默认为1，存在&会用其他设计");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

@@ -1,7 +1,7 @@
 @import me.aloic.lazybot.graphics.help.HelpIndexPoster
 @param HelpIndexPoster poster
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="2016" height="${poster.height()}" viewBox="0 0 2016 ${poster.height()}" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="2000" height="${poster.height()}" viewBox="0 0 2000 ${poster.height()}" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect y="1" width="2000" height="${poster.height() - 1}" fill="#FCFCFC"/>
 @for(int row = 1; row * 200 < poster.height(); row++)
 <line y1="${row * 200 - 0.5}" x2="2000" y2="${row * 200 - 0.5}" stroke="black" stroke-opacity="0.08" stroke-width="3"/>
@@ -2522,7 +2522,7 @@
 <rect opacity="0.6" x="600" y="4001" width="200" height="200" fill="#F4F7F0"/>
 <rect x="85" y="4107" width="514" height="220" fill="#F7F5F0" stroke="#A0A297" stroke-width="2"/>
 <rect x="684" y="4107" width="1214" height="220" fill="#F7F5F0" stroke="#A0A297" stroke-width="2"/>
-<text fill="#3B3624" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="26" font-weight="500" letter-spacing="0em"><tspan x="730" y="4163.41">SPECIALS THANKS&#10;</tspan><tspan x="730" y="4194.4">&#x6d3b;&#x8dc3;&#x5f00;&#x53d1;&#x8005;: Aloic&#x2028;</tspan><tspan x="730" y="4225.4">&#x5168;&#x90e8;&#x5f00;&#x53d1;&#x8005;&#xff08;&#x5305;&#x62ec;&#x524d;&#x8eab;&#x548c;&#x73b0;&#x5728;&#xff09;: LazyChildren, Aloic, Marisaya, Ives-Natsume&#x2028;</tspan><tspan x="730" y="4256.4">&#x6280;&#x672f;&#x652f;&#x6301;: Zh_Jk, -Spring Night-, Atri1024&#x2028;</tspan><tspan x="730" y="4287.4">&#x56fe;&#x5f62;&#x8bbe;&#x8ba1;: Slayemus, Aloic</tspan></text>
+<text fill="#3B3624" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="26" font-weight="500" letter-spacing="0em"><tspan x="730" y="4163.41">SPECIALS THANKS&#10;</tspan><tspan x="730" y="4194.4">活跃开发者: Aloic</tspan><tspan x="730" y="4225.4">全部开发者（包括前身和现在）: LazyChildren, Aloic, Marisaya, Ives-Natsume</tspan><tspan x="730" y="4256.4">技术支持: Zh_Jk, -Spring Night-, Atri1024</tspan><tspan x="730" y="4287.4">图形设计: Slayemus, Aloic</tspan></text>
 <text opacity="0.6" fill="#363B24" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="44" font-weight="500" letter-spacing="0em"><tspan x="136" y="4245.07">STILL DEVELOPING</tspan></text>
 <rect opacity="0.5" x="54" y="4001" width="277" height="82" fill="#F6E68B"/>
 <path d="M79.5905 4071.58C77.9405 4071.58 76.5838 4071.05 75.5205 4069.98C74.4938 4068.96 73.9805 4067.62 73.9805 4065.97V4021.53C73.9805 4019.88 74.4938 4018.54 75.5205 4017.51C76.5838 4016.45 77.9405 4015.92 79.5905 4015.92H86.8505V4022.52H82.3955C81.4055 4022.52 80.9105 4023.07 80.9105 4024.17V4063.33C80.9105 4064.43 81.4055 4064.98 82.3955 4064.98H86.8505V4071.58H79.5905Z" fill="#363B24"/>

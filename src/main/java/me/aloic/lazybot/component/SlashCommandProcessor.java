@@ -30,6 +30,8 @@ public class SlashCommandProcessor
     private CommandMonitor commandMonitor;
     @Resource
     private CommandChainProcessor commandChainProcessor;
+    @Resource
+    private TestOutputTool testOutputTool;
 
     @Async("virtualThreadExecutor")
     public void processDiscord(SlashCommandInteractionEvent event)
@@ -66,15 +68,17 @@ public class SlashCommandProcessor
     @Async("virtualThreadExecutor")
     public CompletableFuture<Void> processTest(LazybotSlashCommandEvent event)
     {
+        if (event == null || event.getCommandType() == null) {
+            testOutputTool.writeStringToFile("[Lazybot] 指令解析失败");
+            return CompletableFuture.completedFuture(null);
+        }
         processCommand(new CommandExecution(
                 event.getCommandType(),
                 "TEST",
                 "TEST",
                 "TEST",
                 command -> commandChainProcessor.process(event, command),
-                (throwable, expected) -> {
-                    // The shared processor already records the classified error.
-                }));
+                (throwable, expected) -> testOutputTool.writeStringToFile("[Lazybot] " + safeMessage(throwable))));
         return CompletableFuture.completedFuture(null);
     }
 
@@ -83,6 +87,9 @@ public class SlashCommandProcessor
         try {
             LazybotSlashCommand command = registry.getCommand(execution.commandName());
             if (command == null) {
+                if ("TEST".equals(execution.source())) {
+                    testOutputTool.writeStringToFile("[Lazybot] 未找到指令: " + execution.commandName());
+                }
                 return;
             }
 

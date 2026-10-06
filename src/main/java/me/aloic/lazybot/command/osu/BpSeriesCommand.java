@@ -38,7 +38,7 @@ public class BpSeriesCommand implements LazybotSlashCommand
             CommandSummary.Category.OSU,
             "Bps",
             List.of("bs"),
-            "[playerName] [&]",
+            "[userName] [&]",
             "/bps Aloic",
             "查询指定用户的第 1 到第 21 的最佳成绩",
             "若存在 & 则会使用旧设计面板");
