@@ -48,7 +48,7 @@ public record HelpIndexPoster(
     {
         List<CommandSummary> source = summaries == null ? List.of() : summaries;
         List<Fragment> osu = new ArrayList<>();
-        double osuBottom = layTable(osu, of(source, CommandSummary.Category.OSU), OSU_START, true);
+        double osuBottom = layTable(osu, of(source, CommandSummary.Category.OSU), OSU_START, true, true);
         double osuGrowth = Math.max(0, osuBottom - OSU_LIMIT);
 
         List<Fragment> customize = new ArrayList<>();
@@ -58,9 +58,9 @@ public record HelpIndexPoster(
         double customizeBottom = layCustomize(customize, of(source, CommandSummary.Category.CUSTOMIZE));
         double customizeGrowth = Math.max(0, customizeBottom - CUSTOMIZE_RECT_BOTTOM);
         double preferenceBottom = layPreference(preference, of(source, CommandSummary.Category.PREFERENCE));
-        double funBottom = layTable(fun, of(source, CommandSummary.Category.FUN), 3298.41, false);
+        double funBottom = layTable(fun, of(source, CommandSummary.Category.FUN), 3298.41, false, false);
         double otherStart = Math.max(3520, funBottom + 80);
-        double otherBottom = layTable(others, of(source, CommandSummary.Category.OTHERS), otherStart, true);
+        double otherBottom = layTable(others, of(source, CommandSummary.Category.OTHERS), otherStart, true, false);
         double middleBottom = Math.max(customizeBottom, Math.max(preferenceBottom, Math.max(funBottom, otherBottom)));
         double middleGrowth = Math.max(0, middleBottom - MIDDLE_LIMIT);
         double contentShift = osuGrowth + middleGrowth;
@@ -83,10 +83,13 @@ public record HelpIndexPoster(
                 .toList();
     }
 
-    private static double layTable(List<Fragment> out, List<CommandSummary> rows, double start, boolean wide)
+    private static double layTable(List<Fragment> out, List<CommandSummary> rows, double start, boolean wide,
+                                   boolean alternate)
     {
         double y = start;
+        int index = 0;
         for (CommandSummary row : rows) {
+            String opacity = alternate && index % 2 == 1 ? "0.67" : "1";
             List<String> command = wrap(shown(row.command(), "\\"), wide ? 126 : 210);
             List<String> alias = wide ? wrap(aliases(row), 130) : List.of();
             List<String> parameter = wrap(shown(row.parameter(), "\\"), wide ? 250 : 280);
@@ -95,20 +98,21 @@ public record HelpIndexPoster(
             List<String> caution = wide ? wrap(shown(row.caution(), "\\"), 200) : List.of();
             int lines = Math.max(command.size(), Math.max(parameter.size(),
                     Math.max(example.size(), Math.max(description.size(), Math.max(alias.size(), caution.size())))));
-            addColumn(out, command, wide ? 214 : 212, y);
+            addColumn(out, command, wide ? 214 : 212, y, opacity);
             if (wide) {
-                addColumn(out, alias, 414, y);
-                addColumn(out, parameter, 658, y);
-                addColumn(out, example, 1000, y);
-                addColumn(out, description, 1330, y);
-                addColumn(out, caution, 1645, y);
+                addColumn(out, alias, 414, y, opacity);
+                addColumn(out, parameter, 658, y, opacity);
+                addColumn(out, example, 1000, y, opacity);
+                addColumn(out, description, 1330, y, opacity);
+                addColumn(out, caution, 1645, y, opacity);
             }
             else {
-                addColumn(out, parameter, 446, y);
-                addColumn(out, example, 758, y);
-                addColumn(out, description, 1073, y);
+                addColumn(out, parameter, 446, y, opacity);
+                addColumn(out, example, 758, y, opacity);
+                addColumn(out, description, 1073, y, opacity);
             }
             y += Math.max(0, lines - 1) * LINE + ROW_GAP;
+            index++;
         }
         return rows.isEmpty() ? start : y;
     }
@@ -189,11 +193,11 @@ public record HelpIndexPoster(
         }
     }
 
-    private static void addColumn(List<Fragment> out, List<String> lines, double x, double start)
+    private static void addColumn(List<Fragment> out, List<String> lines, double x, double start, String opacity)
     {
         double y = start;
         for (String line : lines) {
-            add(out, x, y, line, "1");
+            add(out, x, y, line, opacity);
             y += LINE;
         }
     }
