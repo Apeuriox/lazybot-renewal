@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -39,29 +38,40 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class PlayerStatisticsServiceImpl implements PlayerStatisticsService
 {
-    @Value("${lazybot.player-stats.threads:8}")
-    private int snapshotThreads;
-    @Value("${lazybot.player-stats.requests-per-minute:400}")
-    private int requestsPerMinute;
+    private final int snapshotThreads;
+    private final int requestsPerMinute;
 
-    @Resource
-    private PlayerStatsWatchMapper watchMapper;
-    @Resource
-    private PlayerStatisticsMapper playerStatisticsMapper;
-    @Resource
-    private PlayerStatsTableManager tableManager;
-    @Resource
-    private PlayerStatsWatchManager watchManager;
-    @Resource
-    private DataExtractor dataExtractor;
-    @Resource
-    private TokenMonitor tokenMonitor;
+    private final PlayerStatsWatchMapper watchMapper;
+    private final PlayerStatisticsMapper playerStatisticsMapper;
+    private final PlayerStatsTableManager tableManager;
+    private final PlayerStatsWatchManager watchManager;
+    private final DataExtractor dataExtractor;
+    private final TokenMonitor tokenMonitor;
 
 
     private static final int WRITE_BATCH_SIZE = 100;
     private final List<PlayerStatisticsPO> stats = new ArrayList<>();
     private final List<PlayerStatsWatchPO> watches = new ArrayList<>();
     private final Object writeLock = new Object();
+
+    public PlayerStatisticsServiceImpl(@Value("${lazybot.player-stats.threads:8}") int snapshotThreads,
+                                       @Value("${lazybot.player-stats.requests-per-minute:400}") int requestsPerMinute,
+                                       PlayerStatsWatchMapper watchMapper,
+                                       PlayerStatisticsMapper playerStatisticsMapper,
+                                       PlayerStatsTableManager tableManager,
+                                       PlayerStatsWatchManager watchManager,
+                                       DataExtractor dataExtractor,
+                                       TokenMonitor tokenMonitor)
+    {
+        this.snapshotThreads = snapshotThreads;
+        this.requestsPerMinute = requestsPerMinute;
+        this.watchMapper = watchMapper;
+        this.playerStatisticsMapper = playerStatisticsMapper;
+        this.tableManager = tableManager;
+        this.watchManager = watchManager;
+        this.dataExtractor = dataExtractor;
+        this.tokenMonitor = tokenMonitor;
+    }
 
     @Override
     public synchronized void runDailySnapshot()

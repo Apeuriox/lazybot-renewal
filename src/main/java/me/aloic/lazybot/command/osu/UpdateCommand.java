@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import lombok.NonNull;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -19,7 +18,6 @@ import me.aloic.lazybot.parameter.UpdateParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import me.aloic.lazybot.entity.CommandSummary;
 import java.util.List;
@@ -28,12 +26,18 @@ import java.util.List;
 @Component
 public class UpdateCommand implements LazybotSlashCommand
 {
-    @Resource
-    private ManageService manageService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final ManageService manageService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
+
+    public UpdateCommand(ManageService manageService,
+                         CommandDatabaseProxy proxy,
+                         TestOutputTool testOutputTool)
+    {
+        this.manageService = manageService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,

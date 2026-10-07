@@ -1,5 +1,4 @@
 package me.aloic.lazybot.discord;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.component.EventListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -13,13 +12,18 @@ import java.util.function.Supplier;
 @Component
 public class DiscordBotFactory
 {
-    @Value("${discord.bot.token}")
-    private String BOT_TOKEN;
+    private final String BOT_TOKEN;
 
     private JDA instance;
-    @Resource
-    private EventListener discordEventListener;
+    private final EventListener discordEventListener;
 
+
+    public DiscordBotFactory(@Value("${discord.bot.token}") String BOT_TOKEN,
+                             EventListener discordEventListener)
+    {
+        this.BOT_TOKEN = BOT_TOKEN;
+        this.discordEventListener = discordEventListener;
+    }
 
     public JDA createBotInstance() {
         Supplier<JDA> instanceSupplier = () -> {

@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
@@ -24,12 +23,19 @@ import java.util.Optional;
 @LazybotCommandMapping({"mp", "mpp", "mapplus"})
 @Component
 public class MapPerformanceAnalysisCommand implements LazybotSlashCommand {
-    @Resource
-    private PlayerService playerService;
-    @Resource
-    private RasterizationService rasterizationService;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final PlayerService playerService;
+    private final RasterizationService rasterizationService;
+    private final TestOutputTool testOutputTool;
+
+    public MapPerformanceAnalysisCommand(PlayerService playerService,
+                                         RasterizationService rasterizationService,
+                                         TestOutputTool testOutputTool)
+    {
+        this.playerService = playerService;
+        this.rasterizationService = rasterizationService;
+        this.testOutputTool = testOutputTool;
+    }
+
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,
             "MapPlus",

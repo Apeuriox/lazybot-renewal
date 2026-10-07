@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.SongGuessWithTime;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
@@ -45,19 +44,26 @@ import java.util.stream.Stream;
 @Service
 public class FunServiceImpl implements FunService
 {
-    @Resource
-    private TipsMapper tipsMapper;
+    private final TipsMapper tipsMapper;
     private static final Logger logger = LoggerFactory.getLogger(FunServiceImpl.class);
-    @Value("${lazybot.command.whatif_calc_max_count}")
-    private Integer MAX_CALC;
-    @Resource
-    private DataExtractor dataExtractor;
-    @Resource
-    private AssetDownloader assetDownloader;
+    private final Integer MAX_CALC;
+    private final DataExtractor dataExtractor;
+    private final AssetDownloader assetDownloader;
 
     private static final Integer MAX_RETRIES = 3;
 
 
+
+    public FunServiceImpl(TipsMapper tipsMapper,
+                          @Value("${lazybot.command.whatif_calc_max_count}") Integer MAX_CALC,
+                          DataExtractor dataExtractor,
+                          AssetDownloader assetDownloader)
+    {
+        this.tipsMapper = tipsMapper;
+        this.MAX_CALC = MAX_CALC;
+        this.dataExtractor = dataExtractor;
+        this.assetDownloader = assetDownloader;
+    }
 
     @Override
     public String tips(TipsParameter parameter)

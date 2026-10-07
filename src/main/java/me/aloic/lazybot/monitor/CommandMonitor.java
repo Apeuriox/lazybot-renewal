@@ -1,6 +1,5 @@
 package me.aloic.lazybot.monitor;
 
-import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.entity.CommandCallRecord;
@@ -26,13 +25,13 @@ import java.util.stream.IntStream;
 @Component
 public class CommandMonitor {
 
-    @Resource
-    private UsageMapper usageMapper;
+    private final UsageMapper usageMapper;
     private final ConcurrentMap<String, CommandStat> commandStats = new ConcurrentHashMap<>();
     private LocalDateTime startTime;
 
-    public CommandMonitor() {
-        this.startTime = LocalDateTime .now();
+    public CommandMonitor(UsageMapper usageMapper) {
+        this.usageMapper = usageMapper;
+        this.startTime = LocalDateTime.now();
     }
 
     public void record(String commandName, String userId, String channelId) {

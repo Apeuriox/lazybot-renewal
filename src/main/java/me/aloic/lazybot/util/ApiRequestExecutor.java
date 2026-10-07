@@ -6,7 +6,6 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.enums.HTTPTypeEnum;
 import me.aloic.lazybot.exception.LazybotNotFoundException;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
@@ -23,12 +22,16 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ApiRequestExecutor
 {
-    @Resource
-    private TokenMonitor tokenMonitor;
+    private final TokenMonitor tokenMonitor;
 
     private static final Logger logger = LoggerFactory.getLogger(ApiRequestExecutor.class);
 
     private final int MAX_RETRIES = 3;
+
+    public ApiRequestExecutor(TokenMonitor tokenMonitor)
+    {
+        this.tokenMonitor = tokenMonitor;
+    }
 
     public <T> T execute(String url,
                          HTTPTypeEnum type,

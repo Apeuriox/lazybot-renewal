@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.fun;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
@@ -25,10 +24,15 @@ import java.util.List;
 @Component
 public class ModCommand implements LazybotSlashCommand
 {
-    @Resource
-    private FunService funService;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final FunService funService;
+    private final TestOutputTool testOutputTool;
+    public ModCommand(FunService funService,
+                      TestOutputTool testOutputTool)
+    {
+        this.funService = funService;
+        this.testOutputTool = testOutputTool;
+    }
+
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,
             "ModInfo",

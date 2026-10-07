@@ -1,6 +1,5 @@
 package me.aloic.lazybot.service.Impl;
 
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.entity.message.LazybotMessageWithImage;
 import me.aloic.lazybot.entity.po.BadgeDefinitionPO;
@@ -26,14 +25,21 @@ import java.util.List;
 @Service
 public class BadgeServiceImpl implements BadgeService
 {
-    @Resource
-    private BadgeUserOwnedMapper badgeUserOwnedMapper;
-    @Resource
-    private BadgeDefinitionMapper badgeDefinitionMapper;
-    @Resource
-    private UserBindingMapper userBindingMapper;
-    @Resource
-    private BadgeShowcaseMapper showcaseMapper;
+    private final BadgeUserOwnedMapper badgeUserOwnedMapper;
+    private final BadgeDefinitionMapper badgeDefinitionMapper;
+    private final UserBindingMapper userBindingMapper;
+    private final BadgeShowcaseMapper showcaseMapper;
+
+    public BadgeServiceImpl(BadgeUserOwnedMapper badgeUserOwnedMapper,
+                            BadgeDefinitionMapper badgeDefinitionMapper,
+                            UserBindingMapper userBindingMapper,
+                            BadgeShowcaseMapper showcaseMapper)
+    {
+        this.badgeUserOwnedMapper = badgeUserOwnedMapper;
+        this.badgeDefinitionMapper = badgeDefinitionMapper;
+        this.userBindingMapper = userBindingMapper;
+        this.showcaseMapper = showcaseMapper;
+    }
 
     @Override
     public String addBadge(BadgeActionParameter params)

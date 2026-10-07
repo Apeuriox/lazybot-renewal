@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -21,12 +20,18 @@ import java.util.List;
 @Component
 public class WhatIfCommand implements LazybotSlashCommand
 {
-    @Resource
-    private FunService funService;
-    @Resource
-    private TestOutputTool testOutputTool;
-    @Resource
-    private CommandDatabaseProxy proxy;
+    private final FunService funService;
+    private final TestOutputTool testOutputTool;
+    private final CommandDatabaseProxy proxy;
+
+    public WhatIfCommand(FunService funService,
+                         TestOutputTool testOutputTool,
+                         CommandDatabaseProxy proxy)
+    {
+        this.funService = funService;
+        this.testOutputTool = testOutputTool;
+        this.proxy = proxy;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,

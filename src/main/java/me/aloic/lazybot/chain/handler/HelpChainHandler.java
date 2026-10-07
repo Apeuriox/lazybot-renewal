@@ -1,7 +1,6 @@
 package me.aloic.lazybot.chain.handler;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.chain.model.CommandHandlerChain;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
@@ -21,10 +20,15 @@ import java.util.List;
 public class HelpChainHandler implements CommandHandlerInterface {
     private static final Logger logger = LoggerFactory.getLogger(HelpChainHandler.class);
 
-    @Resource
-    private TestOutputTool testOutputTool;
-    @Resource
-    private RasterizationService rasterizationService;
+    private final TestOutputTool testOutputTool;
+    private final RasterizationService rasterizationService;
+
+    public HelpChainHandler(TestOutputTool testOutputTool,
+                            RasterizationService rasterizationService)
+    {
+        this.testOutputTool = testOutputTool;
+        this.rasterizationService = rasterizationService;
+    }
 
     @Override
     public void handle(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception {

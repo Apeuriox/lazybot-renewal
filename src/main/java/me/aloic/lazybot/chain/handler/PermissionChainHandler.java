@@ -1,7 +1,6 @@
 package me.aloic.lazybot.chain.handler;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.service.PermissionService;
 import me.aloic.lazybot.chain.model.CommandHandlerChain;
@@ -19,10 +18,14 @@ import java.util.List;
 @Order(0)
 public class PermissionChainHandler implements CommandHandlerInterface {
 
-    @Resource
-    private PermissionService permissionService;
+    private final PermissionService permissionService;
 
     private final List<Long> adminBypass = List.of(1524185356L);
+
+    public PermissionChainHandler(PermissionService permissionService)
+    {
+        this.permissionService = permissionService;
+    }
 
     @Override
     public void handle(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception

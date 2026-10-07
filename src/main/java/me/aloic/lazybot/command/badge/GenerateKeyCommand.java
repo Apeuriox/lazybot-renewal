@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.badge;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -24,16 +23,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class GenerateKeyCommand implements LazybotSlashCommand
 {
-    @Resource
-    private BadgeKeyService badgeKeyService;
+    private final BadgeKeyService badgeKeyService;
 
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final TestOutputTool testOutputTool;
 
-    @Value("${lazybot.test.identity}")
-    private Long identity;
-    @Value("${lazybot.test.enabled}")
-    private Boolean testEnabled;
+    private final Long identity;
+    private final Boolean testEnabled;
+
+    public GenerateKeyCommand(BadgeKeyService badgeKeyService,
+                              TestOutputTool testOutputTool,
+                              @Value("${lazybot.test.identity}") Long identity,
+                              @Value("${lazybot.test.enabled}") Boolean testEnabled)
+    {
+        this.badgeKeyService = badgeKeyService;
+        this.testOutputTool = testOutputTool;
+        this.identity = identity;
+        this.testEnabled = testEnabled;
+    }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

@@ -1,7 +1,6 @@
 package me.aloic.lazybot.util;
 
 import com.alibaba.fastjson2.TypeReference;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.enums.HTTPTypeEnum;
 import me.aloic.lazybot.exception.LazybotNotFoundException;
@@ -47,14 +46,10 @@ import java.util.Map;
 @Component
 public class DataExtractor
 {
-    @Resource
-    private ApiRequestExecutor apiRequestExecutor;
-    @Resource
-    private PlayerStatsWatchManager playerStatsWatchManager;
-    @Resource
-    private UserBindingMapper userBindingMapper;
-    @Resource
-    private AvatarCacheService avatarCacheService;
+    private final ApiRequestExecutor apiRequestExecutor;
+    private final PlayerStatsWatchManager playerStatsWatchManager;
+    private final UserBindingMapper userBindingMapper;
+    private final AvatarCacheService avatarCacheService;
 
     /**
      * 根据用户名和模式获取用户信息
@@ -62,6 +57,17 @@ public class DataExtractor
      * @param mode 模式字符
      * @return 玩家信息DTO对象
      */
+
+    public DataExtractor(ApiRequestExecutor apiRequestExecutor,
+                         PlayerStatsWatchManager playerStatsWatchManager,
+                         UserBindingMapper userBindingMapper,
+                         AvatarCacheService avatarCacheService)
+    {
+        this.apiRequestExecutor = apiRequestExecutor;
+        this.playerStatsWatchManager = playerStatsWatchManager;
+        this.userBindingMapper = userBindingMapper;
+        this.avatarCacheService = avatarCacheService;
+    }
 
     public PlayerInfoDTO extractPlayerInfoDTO(String playerName, String mode)
     {

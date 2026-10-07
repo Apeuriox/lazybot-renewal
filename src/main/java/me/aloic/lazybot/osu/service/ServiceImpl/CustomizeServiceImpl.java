@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
@@ -24,14 +23,18 @@ public class CustomizeServiceImpl implements CustomizeService
 {
     private static final String PROFILE_RELATIVE_PATH;
 
-    @Resource
-    private CustomizationMapper customizationMapper;
+    private final CustomizationMapper customizationMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(CustomizeServiceImpl.class);
 
     static{
         PROFILE_RELATIVE_PATH = "/osuFiles/playerCustomization/profile/";
     }
+    public CustomizeServiceImpl(CustomizationMapper customizationMapper)
+    {
+        this.customizationMapper = customizationMapper;
+    }
+
     @Override
     public String customize(CustomizationParameter params)
     {

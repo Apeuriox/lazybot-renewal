@@ -1,5 +1,4 @@
 package me.aloic.lazybot.service.Impl;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.service.PermissionService;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.entity.po.PermissionPO;
@@ -10,8 +9,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class PermissionServiceImpl implements PermissionService
 {
-    @Resource
-    private PermissionMapper permissionMapper;
+    private final PermissionMapper permissionMapper;
+
+    public PermissionServiceImpl(PermissionMapper permissionMapper)
+    {
+        this.permissionMapper = permissionMapper;
+    }
 
     @Override
     public void setPermission(String type, long id, LazybotSlashCommand command, int version) {

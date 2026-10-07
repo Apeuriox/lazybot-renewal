@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.CommandStat;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.CommandMonitor;
@@ -37,10 +36,8 @@ public class ManageServiceImpl implements ManageService
 {
 //    private static final Map<String, Function<UpdateParameter,String>> updateMap;
 
-    @Resource
-    private CommandMonitor commandMonitor;
-    @Resource
-    private OsuToolsUtil osuToolsUtil;
+    private final CommandMonitor commandMonitor;
+    private final OsuToolsUtil osuToolsUtil;
 
     static{
 //        updateMap = Map.of("avatar",ManageServiceImpl::updateAvatar,
@@ -49,16 +46,27 @@ public class ManageServiceImpl implements ManageService
 
     }
 
-    @Resource
-    private CustomizationMapper customizationMapper;
-    @Resource
-    private UsageMapper usageMapper;
-    @Resource
-    private TipsMapper tipsMapper;
+    private final CustomizationMapper customizationMapper;
+    private final UsageMapper usageMapper;
+    private final TipsMapper tipsMapper;
     private static final Logger logger = LoggerFactory.getLogger(ManageServiceImpl.class);
 
-    @Resource
-    private DataExtractor dataExtractor;
+    private final DataExtractor dataExtractor;
+
+    public ManageServiceImpl(CommandMonitor commandMonitor,
+                             OsuToolsUtil osuToolsUtil,
+                             CustomizationMapper customizationMapper,
+                             UsageMapper usageMapper,
+                             TipsMapper tipsMapper,
+                             DataExtractor dataExtractor)
+    {
+        this.commandMonitor = commandMonitor;
+        this.osuToolsUtil = osuToolsUtil;
+        this.customizationMapper = customizationMapper;
+        this.usageMapper = usageMapper;
+        this.tipsMapper = tipsMapper;
+        this.dataExtractor = dataExtractor;
+    }
 
     @Override
     public String update(UpdateParameter params)

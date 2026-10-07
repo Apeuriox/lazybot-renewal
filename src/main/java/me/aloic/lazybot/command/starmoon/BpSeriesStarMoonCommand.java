@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.starmoon;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -26,12 +25,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class BpSeriesStarMoonCommand implements LazybotSlashCommand
 {
-    @Resource
-    private PlayerService playerService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final PlayerService playerService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
+
+    public BpSeriesStarMoonCommand(PlayerService playerService,
+                                   CommandDatabaseProxy proxy,
+                                   TestOutputTool testOutputTool)
+    {
+        this.playerService = playerService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
+    }
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

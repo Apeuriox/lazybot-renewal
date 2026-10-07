@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -31,14 +30,21 @@ import java.util.List;
 @Component
 public class BpCommand implements LazybotSlashCommand
 {
-    @Resource
-    private PlayerService playerService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
-    @Resource
-    private TemplateRenderer templateRenderer;
+    private final PlayerService playerService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
+    private final TemplateRenderer templateRenderer;
+
+    public BpCommand(PlayerService playerService,
+                     CommandDatabaseProxy proxy,
+                     TestOutputTool testOutputTool,
+                     TemplateRenderer templateRenderer)
+    {
+        this.playerService = playerService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
+        this.templateRenderer = templateRenderer;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,

@@ -1,6 +1,5 @@
 package me.aloic.lazybot.config;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.monitor.TokenMonitor;
 import me.aloic.lazybot.osu.utils.PlayerStatsTableManager;
@@ -12,10 +11,15 @@ import org.springframework.stereotype.Component;
 public class InitializeConfig  implements ApplicationRunner
 {
 
-    @Resource
-    private TokenMonitor tokenMonitor;
-    @Resource
-    private PlayerStatsTableManager playerStatsTableManager;
+    private final TokenMonitor tokenMonitor;
+    private final PlayerStatsTableManager playerStatsTableManager;
+
+    public InitializeConfig(TokenMonitor tokenMonitor,
+                            PlayerStatsTableManager playerStatsTableManager)
+    {
+        this.tokenMonitor = tokenMonitor;
+        this.playerStatsTableManager = playerStatsTableManager;
+    }
 
     @Override
     public void run(ApplicationArguments args)

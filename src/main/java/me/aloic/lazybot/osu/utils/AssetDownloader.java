@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.utils;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.monitor.ResourceMonitor;
 import me.aloic.lazybot.osu.dao.entity.dto.sayobot.SayoData;
@@ -19,13 +18,17 @@ public class AssetDownloader
 {
     private static final Logger logger = LoggerFactory.getLogger(AssetDownloader.class);
 
-    @Resource
-    private DataExtractor dataExtractor;
+    private final DataExtractor dataExtractor;
 
     /**
      * 从Sayobot下载谱面背景.
      * @return true表示下载成功且文件有效, false表示需要fallback
      */
+    public AssetDownloader(DataExtractor dataExtractor)
+    {
+        this.dataExtractor = dataExtractor;
+    }
+
     private boolean downloadBeatmapBackgroundFromSayobot(int sid)
     {
         String desiredLocalPath = ResourceMonitor.getResourcePath().toAbsolutePath() + "/osuFiles/mapBG/" + sid + ".jpg";

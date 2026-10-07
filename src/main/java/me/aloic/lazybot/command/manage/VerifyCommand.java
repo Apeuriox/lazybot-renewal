@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.manage;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
@@ -17,12 +16,18 @@ import org.springframework.stereotype.Component;
 @LazybotCommandMapping({"verify"})
 public class VerifyCommand implements LazybotSlashCommand
 {
-    @Resource
-    private ManageService manageService;
-    @Value("${lazybot.test.identity}")
-    private Long identity;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final ManageService manageService;
+    private final Long identity;
+    private final TestOutputTool testOutputTool;
+
+    public VerifyCommand(ManageService manageService,
+                         @Value("${lazybot.test.identity}") Long identity,
+                         TestOutputTool testOutputTool)
+    {
+        this.manageService = manageService;
+        this.identity = identity;
+        this.testOutputTool = testOutputTool;
+    }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

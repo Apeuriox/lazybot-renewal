@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.command.PlayerScoreList;
 import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
@@ -22,10 +21,15 @@ import java.util.stream.Collectors;
 @Service
 public class AnalysisServiceImpl implements AnalysisService
 {
-    @Resource
-    private DataExtractor dataExtractor;
-    @Resource
-    private OsuToolsUtil osuToolsUtil;
+    private final DataExtractor dataExtractor;
+    private final OsuToolsUtil osuToolsUtil;
+
+    public AnalysisServiceImpl(DataExtractor dataExtractor,
+                               OsuToolsUtil osuToolsUtil)
+    {
+        this.dataExtractor = dataExtractor;
+        this.osuToolsUtil = osuToolsUtil;
+    }
 
     @Override
     public PlayerScoreList bpIf(BpifParameter params) throws IOException

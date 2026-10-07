@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -16,7 +15,6 @@ import me.aloic.lazybot.parameter.TopScoresParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -28,12 +26,18 @@ import java.util.List;
 @Component
 public class TopScoresCommand implements LazybotSlashCommand
 {
-    @Resource
-    private TrackService trackService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final TrackService trackService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
+
+    public TopScoresCommand(TrackService trackService,
+                            CommandDatabaseProxy proxy,
+                            TestOutputTool testOutputTool)
+    {
+        this.trackService = trackService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,

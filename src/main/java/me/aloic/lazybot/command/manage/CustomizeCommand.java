@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.manage;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -27,12 +26,18 @@ import java.util.List;
 @Component
 public class CustomizeCommand implements LazybotSlashCommand
 {
-    @Resource
-    private CustomizeService customizeService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final CustomizeService customizeService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
+
+    public CustomizeCommand(CustomizeService customizeService,
+                            CommandDatabaseProxy proxy,
+                            TestOutputTool testOutputTool)
+    {
+        this.customizeService = customizeService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
+    }
 
     private static final CommandSummary PROFILE_BG = new CommandSummary(
             CommandSummary.Category.CUSTOMIZE,

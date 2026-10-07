@@ -1,6 +1,5 @@
 package me.aloic.lazybot.controller;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.graphics.render.RendererDistributor;
 import me.aloic.lazybot.osu.service.PlayerService;
 import me.aloic.lazybot.parameter.CardMoelleuxParameter;
@@ -16,8 +15,12 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/lazybot")
 public class NetImageController
 {
-    @Resource
-    private PlayerService playerService;
+    private final PlayerService playerService;
+
+    public NetImageController(PlayerService playerService)
+    {
+        this.playerService = playerService;
+    }
 
     @GetMapping(value = "/card", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> renderMoelleuxCard(

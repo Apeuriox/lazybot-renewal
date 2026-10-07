@@ -1,7 +1,6 @@
 package me.aloic.lazybot.component;
 
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.mapper.UserBindingMapper;
@@ -17,16 +16,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommandDatabaseProxy
 {
-    @Resource
-    private UserBindingMapper userBindingMapper;
+    private final UserBindingMapper userBindingMapper;
 
-    @Value("${lazybot.test.identity}")
-    private Long testIdentity;
+    private final Long testIdentity;
 
-    @Value("${lazybot.test.enabled}")
-    private Boolean testEnabled;
+    private final Boolean testEnabled;
 
     private static final Logger logger = LoggerFactory.getLogger(CommandDatabaseProxy.class);
+
+    public CommandDatabaseProxy(UserBindingMapper userBindingMapper,
+                                @Value("${lazybot.test.identity}") Long testIdentity,
+                                @Value("${lazybot.test.enabled}") Boolean testEnabled)
+    {
+        this.userBindingMapper = userBindingMapper;
+        this.testIdentity = testIdentity;
+        this.testEnabled = testEnabled;
+    }
 
     public UserBindingPO getUserBinding(LazybotSlashCommandEvent event)
     {

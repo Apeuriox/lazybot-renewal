@@ -1,6 +1,5 @@
 package me.aloic.lazybot.discord.config;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.discord.DiscordBotFactory;
 import me.aloic.lazybot.discord.entity.CommandOption;
 import me.aloic.lazybot.discord.enums.CommandEnum;
@@ -22,17 +21,23 @@ import java.util.Optional;
 @Component
 public class DiscordBotRunner implements ApplicationRunner
 {
-    @Resource
-    private DiscordBotFactory discordBotFactory;
-    @Value("${discord.bot.id}")
-    private String botId;
+    private final DiscordBotFactory discordBotFactory;
+    private final String botId;
 
     private JDA botInstance;
 
-    @Value("${lazybot.global.discord.enabled}")
-    private Boolean enabled;
+    private final Boolean enabled;
 
     private static final Logger logger = LoggerFactory.getLogger(DiscordBotRunner.class);
+
+    public DiscordBotRunner(DiscordBotFactory discordBotFactory,
+                            @Value("${discord.bot.id}") String botId,
+                            @Value("${lazybot.global.discord.enabled}") Boolean enabled)
+    {
+        this.discordBotFactory = discordBotFactory;
+        this.botId = botId;
+        this.enabled = enabled;
+    }
 
     @Override
     public void run(ApplicationArguments args)

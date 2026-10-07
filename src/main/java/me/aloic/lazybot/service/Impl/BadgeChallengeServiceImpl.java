@@ -1,6 +1,5 @@
 package me.aloic.lazybot.service.Impl;
 
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.entity.message.LazybotMessageWithImage;
 import me.aloic.lazybot.entity.po.*;
@@ -28,20 +27,24 @@ import java.util.Optional;
 @Service
 public class BadgeChallengeServiceImpl implements BadgeChallengeService
 {
-    @Resource
-    private DataExtractor dataExtractor;
-    @Resource
-    private ChallengeMapMapper challengeMapMapper;
-    @Resource
-    private ChallengeSubmissionLogMapper challengeSubmissionLogMapper;
-    @Resource
-    private BadgeUserOwnedMapper badgeUserOwnedMapper;
-    @Resource
-    private BadgeChallengeMapper challengeMapper;
-    @Resource
-    private BadgeDefinitionMapper badgeDefinitionMapper;
-    @Resource
-    private UserBindingMapper userBindingMapper;
+    private final DataExtractor dataExtractor;
+    private final ChallengeMapMapper challengeMapMapper;
+    private final ChallengeSubmissionLogMapper challengeSubmissionLogMapper;
+    private final BadgeUserOwnedMapper badgeUserOwnedMapper;
+    private final BadgeChallengeMapper challengeMapper;
+    private final BadgeDefinitionMapper badgeDefinitionMapper;
+    private final UserBindingMapper userBindingMapper;
+
+    public BadgeChallengeServiceImpl(DataExtractor dataExtractor, ChallengeMapMapper challengeMapMapper, ChallengeSubmissionLogMapper challengeSubmissionLogMapper, BadgeUserOwnedMapper badgeUserOwnedMapper, BadgeChallengeMapper challengeMapper, BadgeDefinitionMapper badgeDefinitionMapper, UserBindingMapper userBindingMapper)
+    {
+        this.dataExtractor = dataExtractor;
+        this.challengeMapMapper = challengeMapMapper;
+        this.challengeSubmissionLogMapper = challengeSubmissionLogMapper;
+        this.badgeUserOwnedMapper = badgeUserOwnedMapper;
+        this.challengeMapper = challengeMapper;
+        this.badgeDefinitionMapper = badgeDefinitionMapper;
+        this.userBindingMapper = userBindingMapper;
+    }
 
     @Transactional
     @Override

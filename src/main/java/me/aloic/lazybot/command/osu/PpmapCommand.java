@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -25,12 +24,18 @@ import java.util.List;
 @LazybotCommandMapping({"ppmap"})
 public class PpmapCommand implements LazybotSlashCommand
 {
-    @Resource
-    private TrackService trackService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final TrackService trackService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
+
+    public PpmapCommand(TrackService trackService,
+                        CommandDatabaseProxy proxy,
+                        TestOutputTool testOutputTool)
+    {
+        this.trackService = trackService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,
@@ -40,6 +45,7 @@ public class PpmapCommand implements LazybotSlashCommand
             "/ppmap Aloic",
             "绘制指定用户的历史BP",
             "数据来源为 OsuTrack，此功能并不是绘制你 BP 100");
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

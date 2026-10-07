@@ -2,7 +2,6 @@ package me.aloic.lazybot.component;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.chain.CommandChainProcessor;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.command.registry.LazybotSlashCommandRegistry;
@@ -24,14 +23,22 @@ import java.util.concurrent.ExecutionException;
 public class SlashCommandProcessor
 {
     private static final Logger logger = LoggerFactory.getLogger(SlashCommandProcessor.class);
-    @Resource
-    private LazybotSlashCommandRegistry registry;
-    @Resource
-    private CommandMonitor commandMonitor;
-    @Resource
-    private CommandChainProcessor commandChainProcessor;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final LazybotSlashCommandRegistry registry;
+    private final CommandMonitor commandMonitor;
+    private final CommandChainProcessor commandChainProcessor;
+    private final TestOutputTool testOutputTool;
+
+
+    public SlashCommandProcessor(LazybotSlashCommandRegistry registry,
+                                 CommandMonitor commandMonitor,
+                                 CommandChainProcessor commandChainProcessor,
+                                 TestOutputTool testOutputTool)
+    {
+        this.registry = registry;
+        this.commandMonitor = commandMonitor;
+        this.commandChainProcessor = commandChainProcessor;
+        this.testOutputTool = testOutputTool;
+    }
 
     @Async("virtualThreadExecutor")
     public void processDiscord(SlashCommandInteractionEvent event)

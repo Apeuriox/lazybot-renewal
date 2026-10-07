@@ -35,6 +35,7 @@ public class NameGuessCommand implements LazybotSlashCommand
     private static final Duration TIMEOUT = Duration.ofMinutes(3);
 
 
+
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

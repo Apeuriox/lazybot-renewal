@@ -19,12 +19,17 @@ import java.util.List;
 @Component
 public class TestOutputTool
 {
-    @Value("${lazybot.test.enabled}")
-    private Boolean testEnabled;
-    @Value("${lazybot.test.path}")
-    private String testPath;
+    private final Boolean testEnabled;
+    private final String testPath;
     private static final Logger logger = LoggerFactory.getLogger(TestOutputTool.class);
 
+
+    public TestOutputTool(@Value("${lazybot.test.enabled}") Boolean testEnabled,
+                          @Value("${lazybot.test.path}") String testPath)
+    {
+        this.testEnabled = testEnabled;
+        this.testPath = testPath;
+    }
 
     public void saveImageToLocal(byte[] imageByteArray) {
         saveImageToLocal(imageByteArray, testPath, "lazybot-test-image.png");

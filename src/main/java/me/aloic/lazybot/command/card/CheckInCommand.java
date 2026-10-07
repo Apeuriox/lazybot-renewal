@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.card;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.service.CardService;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -18,12 +17,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class CheckInCommand implements LazybotSlashCommand
 {
-    @Resource
-    private CardService cardService;
-    @Resource
-    private TestOutputTool testOutputTool;
-    @Resource
-    private CommandDatabaseProxy proxy;
+    private final CardService cardService;
+    private final TestOutputTool testOutputTool;
+    private final CommandDatabaseProxy proxy;
+
+    public CheckInCommand(CardService cardService,
+                          TestOutputTool testOutputTool,
+                          CommandDatabaseProxy proxy)
+    {
+        this.cardService = cardService;
+        this.testOutputTool = testOutputTool;
+        this.proxy = proxy;
+    }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

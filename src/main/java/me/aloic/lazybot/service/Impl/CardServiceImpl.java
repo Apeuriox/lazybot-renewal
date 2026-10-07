@@ -1,6 +1,5 @@
 package me.aloic.lazybot.service.Impl;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.command.MoelleuxCard;
 import me.aloic.lazybot.service.CardService;
 import me.aloic.lazybot.entity.po.CardUserPointsLogPO;
@@ -28,13 +27,18 @@ import java.util.Random;
 @Service
 public class CardServiceImpl implements CardService
 {
-    @Resource
-    private CardPointsMapper cardPointsMapper;
-    @Resource
-    private CardPointsLogMapper cardPointsLogMapper;
-    @Resource
-    private PlayerService playerService;
+    private final CardPointsMapper cardPointsMapper;
+    private final CardPointsLogMapper cardPointsLogMapper;
+    private final PlayerService playerService;
 
+    public CardServiceImpl(CardPointsMapper cardPointsMapper,
+                           CardPointsLogMapper cardPointsLogMapper,
+                           PlayerService playerService)
+    {
+        this.cardPointsMapper = cardPointsMapper;
+        this.cardPointsLogMapper = cardPointsLogMapper;
+        this.playerService = playerService;
+    }
     @Transactional
     @Override
     public String checkIn(Integer playerId)

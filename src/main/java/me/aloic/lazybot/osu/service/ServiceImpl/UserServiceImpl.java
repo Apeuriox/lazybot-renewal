@@ -2,7 +2,6 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.discord.util.ErrorResultHandler;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
@@ -26,13 +25,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService
 {
-    @Resource
-    private UserIdentityService identityService;
+    private final UserIdentityService identityService;
 
-    @Resource
-    private DataExtractor dataExtractor;
-    @Resource
-    private OsuOAuthService oauthService;
+    private final DataExtractor dataExtractor;
+    private final OsuOAuthService oauthService;
+
+    public UserServiceImpl(UserIdentityService identityService,
+                           DataExtractor dataExtractor,
+                           OsuOAuthService oauthService)
+    {
+        this.identityService = identityService;
+        this.dataExtractor = dataExtractor;
+        this.oauthService = oauthService;
+    }
 
     @Override
     public void updateDefaultSubset(SlashCommandInteractionEvent event)

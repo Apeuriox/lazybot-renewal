@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.badge;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -21,17 +20,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedeemCommand implements LazybotSlashCommand
 {
-    @Resource
-    private BadgeKeyService badgeKeyService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final BadgeKeyService badgeKeyService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
 
     private static final String REGEX_KEY_FORMAT;
 
     static{
         REGEX_KEY_FORMAT = "^[A-Z0-9]{4}(-[A-Z0-9]{4}){4}$";
+    }
+
+    public RedeemCommand(BadgeKeyService badgeKeyService,
+                         CommandDatabaseProxy proxy,
+                         TestOutputTool testOutputTool)
+    {
+        this.badgeKeyService = badgeKeyService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
     }
 
     @Override

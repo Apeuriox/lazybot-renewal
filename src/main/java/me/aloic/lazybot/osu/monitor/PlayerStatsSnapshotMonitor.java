@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.monitor;
 
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.osu.service.PlayerStatisticsService;
 import me.aloic.lazybot.osu.utils.PlayerStatsTableManager;
@@ -15,10 +14,15 @@ import java.time.Year;
 @ConditionalOnProperty(name = "lazybot.player-stats.snapshot-enabled", matchIfMissing = true)
 public class PlayerStatsSnapshotMonitor
 {
-    @Resource
-    private PlayerStatisticsService playerStatisticsService;
-    @Resource
-    private PlayerStatsTableManager tableManager;
+    private final PlayerStatisticsService playerStatisticsService;
+    private final PlayerStatsTableManager tableManager;
+
+    public PlayerStatsSnapshotMonitor(PlayerStatisticsService playerStatisticsService,
+                                      PlayerStatsTableManager tableManager)
+    {
+        this.playerStatisticsService = playerStatisticsService;
+        this.tableManager = tableManager;
+    }
 
     @Scheduled(cron = "0 0 4 * * ?", zone = "Asia/Shanghai")
     public void snapshotDaily()

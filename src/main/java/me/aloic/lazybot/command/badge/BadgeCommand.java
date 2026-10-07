@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.badge;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -21,12 +20,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class BadgeCommand implements LazybotSlashCommand
 {
-    @Resource
-    private BadgeService badgeService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final BadgeService badgeService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
+
+    public BadgeCommand(BadgeService badgeService,
+                        CommandDatabaseProxy proxy,
+                        TestOutputTool testOutputTool)
+    {
+        this.badgeService = badgeService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
+    }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.action.response.GroupMemberInfoResp;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.annotation.LazybotRateLimit;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -30,10 +29,15 @@ import java.util.stream.Collectors;
 @Component
 public class ScoreRankCommand implements LazybotSlashCommand
 {
-    @Resource
-    private PlayerService playerService;
-    @Resource
-    private CommandDatabaseProxy proxy;
+    private final PlayerService playerService;
+    private final CommandDatabaseProxy proxy;
+
+    public ScoreRankCommand(PlayerService playerService,
+                            CommandDatabaseProxy proxy)
+    {
+        this.playerService = playerService;
+        this.proxy = proxy;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,

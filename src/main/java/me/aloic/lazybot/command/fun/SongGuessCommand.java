@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.fun;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
@@ -37,18 +36,25 @@ import java.util.List;
 @Component
 public class SongGuessCommand implements LazybotSlashCommand
 {
-    @Resource
-    private TestOutputTool testOutputTool;
-    @Resource
-    private FunService funService;
-    @Resource
-    private UserBindingMapper userBindingMapper;
-    @Resource
-    private AssetDownloader assetDownloader;
+    private final TestOutputTool testOutputTool;
+    private final FunService funService;
+    private final UserBindingMapper userBindingMapper;
+    private final AssetDownloader assetDownloader;
 
     private final ConcurrentHashMap<Long, SongGuessWithTime> existingGameMap = new ConcurrentHashMap<>();
 
     private static final Duration TIMEOUT = Duration.ofMinutes(5);
+
+    public SongGuessCommand(TestOutputTool testOutputTool,
+                            FunService funService,
+                            UserBindingMapper userBindingMapper,
+                            AssetDownloader assetDownloader)
+    {
+        this.testOutputTool = testOutputTool;
+        this.funService = funService;
+        this.userBindingMapper = userBindingMapper;
+        this.assetDownloader = assetDownloader;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.FUN,

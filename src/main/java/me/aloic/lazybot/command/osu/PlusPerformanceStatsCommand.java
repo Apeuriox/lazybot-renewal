@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.TestOutputTool;
@@ -21,10 +20,15 @@ import java.util.List;
 @Component
 public class PlusPerformanceStatsCommand implements LazybotSlashCommand
 {
-    @Resource
-    private ManageService manageService;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final ManageService manageService;
+    private final TestOutputTool testOutputTool;
+
+    public PlusPerformanceStatsCommand(ManageService manageService,
+                                       TestOutputTool testOutputTool)
+    {
+        this.manageService = manageService;
+        this.testOutputTool = testOutputTool;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,

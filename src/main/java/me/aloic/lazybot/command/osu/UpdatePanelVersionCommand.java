@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import lombok.NonNull;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -26,12 +25,18 @@ import java.util.List;
 @Component
 public class UpdatePanelVersionCommand implements LazybotSlashCommand
 {
-    @Resource
-    private UserService userService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final UserService userService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
+
+    public UpdatePanelVersionCommand(UserService userService,
+                                     CommandDatabaseProxy proxy,
+                                     TestOutputTool testOutputTool)
+    {
+        this.userService = userService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.PREFERENCE,

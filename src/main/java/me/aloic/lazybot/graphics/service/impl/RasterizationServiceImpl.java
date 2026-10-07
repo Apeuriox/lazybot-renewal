@@ -3,7 +3,6 @@ package me.aloic.lazybot.graphics.service.impl;
 import gg.jte.TemplateEngine;
 import gg.jte.TemplateOutput;
 import gg.jte.output.StringOutput;
-import jakarta.annotation.Resource;
 
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandSummary;
@@ -30,12 +29,18 @@ import java.util.Map;
 @Service
 public class RasterizationServiceImpl implements RasterizationService
 {
-    @Resource
-    private TemplateEngine templateEngine;
-    @Resource
-    private BitmapRenderCache bitmapRenderCache;
-    @Resource
-    private ObjectProvider<BuildProperties> buildProperties;
+    private final TemplateEngine templateEngine;
+    private final BitmapRenderCache bitmapRenderCache;
+    private final ObjectProvider<BuildProperties> buildProperties;
+
+    public RasterizationServiceImpl(TemplateEngine templateEngine,
+                                    BitmapRenderCache bitmapRenderCache,
+                                    ObjectProvider<BuildProperties> buildProperties)
+    {
+        this.templateEngine = templateEngine;
+        this.bitmapRenderCache = bitmapRenderCache;
+        this.buildProperties = buildProperties;
+    }
 
     @Override
     public byte[] renderToScoreDark(ScoreVO score, int hue, double saturationFactor) {

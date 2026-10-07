@@ -1,7 +1,6 @@
 package me.aloic.lazybot.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.entity.po.BadgeDefinitionPO;
 import me.aloic.lazybot.entity.po.BadgeKeyPO;
@@ -23,15 +22,22 @@ import java.util.List;
 @Service
 public class BadgeKeyServiceImpl implements BadgeKeyService
 {
-    @Resource
-    private BadgeUserOwnedMapper badgeUserOwnedMapper;
-    @Resource
-    private BadgeDefinitionMapper badgeDefinitionMapper;
-    @Resource
-    private KeyRedeemedLogMapper keyRedeemedLogMapper;
+    private final BadgeUserOwnedMapper badgeUserOwnedMapper;
+    private final BadgeDefinitionMapper badgeDefinitionMapper;
+    private final KeyRedeemedLogMapper keyRedeemedLogMapper;
 
-    @Resource
-    private BadgeKeyMapper badgeKeyMapper;
+    private final BadgeKeyMapper badgeKeyMapper;
+
+    public BadgeKeyServiceImpl(BadgeUserOwnedMapper badgeUserOwnedMapper,
+                               BadgeDefinitionMapper badgeDefinitionMapper,
+                               KeyRedeemedLogMapper keyRedeemedLogMapper,
+                               BadgeKeyMapper badgeKeyMapper)
+    {
+        this.badgeUserOwnedMapper = badgeUserOwnedMapper;
+        this.badgeDefinitionMapper = badgeDefinitionMapper;
+        this.keyRedeemedLogMapper = keyRedeemedLogMapper;
+        this.badgeKeyMapper = badgeKeyMapper;
+    }
 
     @Transactional
     @Override

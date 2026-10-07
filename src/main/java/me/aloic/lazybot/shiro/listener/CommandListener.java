@@ -4,7 +4,6 @@ import com.mikuac.shiro.annotation.GroupMessageHandler;
 import com.mikuac.shiro.annotation.common.Shiro;
 import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.shiro.utils.MessageDeduplicator;
 import me.aloic.lazybot.shiro.utils.MessageEventFactory;
@@ -16,15 +15,19 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("unused")
 public class CommandListener
 {
-    @Resource
-    private MessageDeduplicator messageDeduplicator;
+    private final MessageDeduplicator messageDeduplicator;
 
-    @Resource
-    private MessageEventFactory factory;
+    private final MessageEventFactory factory;
 
-    @GroupMessageHandler
     //we dont need it anymore cuz Shiro have a Async thread pool here (and it is virtual wow).
 //    @Async("virtualThreadExecutor")
+    public CommandListener(MessageDeduplicator messageDeduplicator, MessageEventFactory factory)
+    {
+        this.messageDeduplicator = messageDeduplicator;
+        this.factory = factory;
+    }
+
+    @GroupMessageHandler
     public void onSlashCommandInteraction(Bot bot, GroupMessageEvent event) {
         var nowTime = System.currentTimeMillis();
         if (event.getTime() < 1e10) {

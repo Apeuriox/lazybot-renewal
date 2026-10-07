@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.entity.CommandHelp;
@@ -17,8 +16,12 @@ import java.util.List;
 @Component
 public class SetmodeCommand implements LazybotSlashCommand
 {
-    @Resource
-    private UserService userService;
+    private final UserService userService;
+
+    public SetmodeCommand(UserService userService)
+    {
+        this.userService = userService;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.PREFERENCE,

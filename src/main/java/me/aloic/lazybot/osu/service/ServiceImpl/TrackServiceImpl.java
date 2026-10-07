@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.service.ServiceImpl;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.DiamondShape;
 import me.aloic.lazybot.graphics.mapping.documentMapper.ScoreListSVGMapper;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
@@ -49,10 +48,8 @@ public class TrackServiceImpl implements TrackService
     private static final Logger logger = LoggerFactory.getLogger(TrackServiceImpl.class);
     private static final Map<String, Color> rankColorMap;
     private static final Map<String,Shape> rankShapeMap;
-    @Resource
-    private DataExtractor dataExtractor;
-    @Resource
-    private OsuToolsUtil osuToolsUtil;
+    private final DataExtractor dataExtractor;
+    private final OsuToolsUtil osuToolsUtil;
 
 
     static{
@@ -81,6 +78,13 @@ public class TrackServiceImpl implements TrackService
                 "XH rank", new DiamondShape(18,18)
         );
     }
+    public TrackServiceImpl(DataExtractor dataExtractor,
+                            OsuToolsUtil osuToolsUtil)
+    {
+        this.dataExtractor = dataExtractor;
+        this.osuToolsUtil = osuToolsUtil;
+    }
+
     @Override
     public byte[] ppTimeMap(GeneralParameter params) throws Exception
     {

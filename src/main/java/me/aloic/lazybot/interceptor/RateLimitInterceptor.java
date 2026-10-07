@@ -16,14 +16,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RateLimitInterceptor implements HandlerInterceptor
 {
 
-    @Value("${rate-limit.enabled}")
-    private Boolean enabled;
-    @Value("${rate-limit.capacity}")
-    private Integer capacity;
-    @Value("${rate-limit.refill}")
-    private Integer refill;
+    private final Boolean enabled;
+    private final Integer capacity;
+    private final Integer refill;
 
     private final Map<String, Bucket> cache = new ConcurrentHashMap<>();
+
+    public RateLimitInterceptor(@Value("${rate-limit.enabled}") Boolean enabled,
+                                @Value("${rate-limit.capacity}") Integer capacity,
+                                @Value("${rate-limit.refill}") Integer refill)
+    {
+        this.enabled = enabled;
+        this.capacity = capacity;
+        this.refill = refill;
+    }
 
     private Bucket resolveBucket(String ip) {
         return cache.computeIfAbsent(ip, k -> Bucket.builder()

@@ -1,7 +1,6 @@
 package me.aloic.lazybot.chain.handler;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotRateLimit;
 import me.aloic.lazybot.chain.model.CommandHandlerChain;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -16,10 +15,15 @@ import org.springframework.stereotype.Component;
 @Order(2)
 public class RateLimitHandler implements CommandHandlerInterface {
 
-    @Resource
-    private LazybotCommandRateLimitManager rateLimitManager;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final LazybotCommandRateLimitManager rateLimitManager;
+    private final TestOutputTool testOutputTool;
+
+    public RateLimitHandler(LazybotCommandRateLimitManager rateLimitManager,
+                            TestOutputTool testOutputTool)
+    {
+        this.rateLimitManager = rateLimitManager;
+        this.testOutputTool = testOutputTool;
+    }
 
     @Override
     public void handle(LazybotSlashCommandEvent event, LazybotSlashCommand command, CommandHandlerChain chain) throws Exception {

@@ -1,6 +1,5 @@
 package me.aloic.lazybot.controller;
 
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.component.SlashCommandProcessor;
 import me.aloic.lazybot.entity.WebResult;
 import me.aloic.lazybot.shiro.utils.MessageEventFactory;
@@ -14,14 +13,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/test")
 public class TestCaseController
 {
-    @Resource
-    private SlashCommandProcessor slashCommandProcessor;
-    @Resource
-    private MessageEventFactory messageEventFactory;
-    @Value("${lazybot.test.identity}")
-    private Long identity;
-    @Value("${lazybot.test.enabled}")
-    private Boolean testEnabled;
+    private final SlashCommandProcessor slashCommandProcessor;
+    private final MessageEventFactory messageEventFactory;
+    private final Long identity;
+    private final Boolean testEnabled;
+
+    public TestCaseController(SlashCommandProcessor slashCommandProcessor,
+                              MessageEventFactory messageEventFactory,
+                              @Value("${lazybot.test.identity}") Long identity,
+                              @Value("${lazybot.test.enabled}") Boolean testEnabled)
+    {
+        this.slashCommandProcessor = slashCommandProcessor;
+        this.messageEventFactory = messageEventFactory;
+        this.identity = identity;
+        this.testEnabled = testEnabled;
+    }
 
     @GetMapping("/command")
     public WebResult testCommand(@RequestParam(value = "command", required = true) String command)

@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.manage;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -21,15 +20,22 @@ import org.springframework.beans.factory.annotation.Value;
 @Component
 public class AddTipsCommand implements LazybotSlashCommand
 {
-    @Resource
-    private ManageService manageService;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final ManageService manageService;
+    private final TestOutputTool testOutputTool;
 
-    @Value("${lazybot.test.identity}")
-    private Long identity;
-    @Value("${lazybot.test.enabled}")
-    private Boolean testEnabled;
+    private final Long identity;
+    private final Boolean testEnabled;
+
+    public AddTipsCommand(ManageService manageService,
+                          TestOutputTool testOutputTool,
+                          @Value("${lazybot.test.identity}") Long identity,
+                          @Value("${lazybot.test.enabled}") Boolean testEnabled)
+    {
+        this.manageService = manageService;
+        this.testOutputTool = testOutputTool;
+        this.identity = identity;
+        this.testEnabled = testEnabled;
+    }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

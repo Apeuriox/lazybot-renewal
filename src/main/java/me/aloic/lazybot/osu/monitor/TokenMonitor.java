@@ -23,25 +23,33 @@ import java.util.Map;
 @Component
 public class TokenMonitor
 {
-    @Value("${lazybot.client_id}")
-    private Integer clientId;
-    @Value("${lazybot.client_secret}")
-    private String clientSecret;
+    private final Integer clientId;
+    private final String clientSecret;
 
-    @Value("${lazybot.plus.client_id}")
-    private Integer lazybotClientId;
-    @Value("${lazybot.plus.client_password}")
-    private String lazybotClientPassword;
+    private final Integer lazybotClientId;
+    private final String lazybotClientPassword;
 
     private static final String TOKEN_URL = "https://osu.ppy.sh/oauth/token";
 
-    @Value("${lazybot.plus.base_url}")
-    private String PLUS_TOKEN_URL;
+    private final String PLUS_TOKEN_URL;
 
     private static volatile String lazybotToken;
     private static volatile String token;
 
     private static final Logger logger = LoggerFactory.getLogger(TokenMonitor.class);
+
+    public TokenMonitor(@Value("${lazybot.client_id}") Integer clientId,
+                        @Value("${lazybot.client_secret}") String clientSecret,
+                        @Value("${lazybot.plus.client_id}") Integer lazybotClientId,
+                        @Value("${lazybot.plus.client_password}") String lazybotClientPassword,
+                        @Value("${lazybot.plus.base_url}") String PLUS_TOKEN_URL)
+    {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.lazybotClientId = lazybotClientId;
+        this.lazybotClientPassword = lazybotClientPassword;
+        this.PLUS_TOKEN_URL = PLUS_TOKEN_URL;
+    }
 
     @Scheduled(cron = "0 0 0/12 * * ? ")
     public void refreshClientToken()

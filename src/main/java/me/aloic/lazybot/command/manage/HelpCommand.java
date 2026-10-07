@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.manage;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.annotation.SkipLazybotCommandPreprocessing;
 import me.aloic.lazybot.command.LazybotSlashCommand;
@@ -20,12 +19,18 @@ import java.util.Objects;
 @Component
 public class HelpCommand implements LazybotSlashCommand
 {
-    @Resource
-    private TestOutputTool testOutputTool;
-    @Resource
-    private LazybotSlashCommandRegistry commandRegistry;
-    @Resource
-    private RasterizationService rasterizationService;
+    private final TestOutputTool testOutputTool;
+    private final LazybotSlashCommandRegistry commandRegistry;
+    private final RasterizationService rasterizationService;
+
+    public HelpCommand(TestOutputTool testOutputTool,
+                       LazybotSlashCommandRegistry commandRegistry,
+                       RasterizationService rasterizationService)
+    {
+        this.testOutputTool = testOutputTool;
+        this.commandRegistry = commandRegistry;
+        this.rasterizationService = rasterizationService;
+    }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {

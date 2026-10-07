@@ -1014,7 +1014,7 @@
 
 <text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="32" letter-spacing="0em"><tspan x="822" y="99.96">VERSION</tspan></text>
 
-<text fill="black" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="32" letter-spacing="0em"><tspan x="918" y="152.96">${poster.version()}</tspan></text>
+<text fill="#3A3C2E" style="white-space: pre" xml:space="preserve" font-family="Rubik" font-size="32" letter-spacing="0em"><tspan x="918" y="152.96">${poster.version()}</tspan></text>
 
 <path d="M123.039 461H113.518L107.551 455.033V285.043L113.518 278.949H123.039L129.133 285.043V348.646L139.543 359.057H177.121L187.531 348.646V285.043L193.498 278.949H203.146L209.113 285.043V455.033L203.146 461H193.498L187.531 455.033V391.049L177.121 380.639H139.543L129.133 391.049V455.033L123.039 461Z" fill="#2E331A"/>
 

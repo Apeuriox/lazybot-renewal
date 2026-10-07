@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.entity.CommandHelp;
@@ -15,8 +14,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class LinkStarMoonCommand implements LazybotSlashCommand
 {
-    @Resource
-    private UserService userService;
+    private final UserService userService;
+
+    public LinkStarMoonCommand(UserService userService)
+    {
+        this.userService = userService;
+    }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {

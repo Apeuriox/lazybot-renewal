@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.osu;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -25,12 +24,18 @@ import java.util.List;
 @LazybotCommandMapping({"rd","recommenddifficulty"})
 public class RecommendDifficultyCommand implements LazybotSlashCommand
 {
-    @Resource
-    private AnalysisService analysisService;
-    @Resource
-    private CommandDatabaseProxy proxy;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final AnalysisService analysisService;
+    private final CommandDatabaseProxy proxy;
+    private final TestOutputTool testOutputTool;
+
+    public RecommendDifficultyCommand(AnalysisService analysisService,
+                                      CommandDatabaseProxy proxy,
+                                      TestOutputTool testOutputTool)
+    {
+        this.analysisService = analysisService;
+        this.proxy = proxy;
+        this.testOutputTool = testOutputTool;
+    }
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,

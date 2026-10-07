@@ -1,7 +1,6 @@
 package me.aloic.lazybot.command.badge;
 
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -18,11 +17,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChallengeCommand implements LazybotSlashCommand
 {
-    @Resource
-    private BadgeChallengeService badgeChallengeService;
-    @Resource
-    private TestOutputTool testOutputTool;
+    private final BadgeChallengeService badgeChallengeService;
+    private final TestOutputTool testOutputTool;
 
+
+    public ChallengeCommand(BadgeChallengeService badgeChallengeService,
+                            TestOutputTool testOutputTool)
+    {
+        this.badgeChallengeService = badgeChallengeService;
+        this.testOutputTool = testOutputTool;
+    }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

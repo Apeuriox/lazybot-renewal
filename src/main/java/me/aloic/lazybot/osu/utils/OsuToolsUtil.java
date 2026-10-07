@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.utils;
 
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.BeatmapDTO;
@@ -36,10 +35,14 @@ import java.util.stream.Stream;
 @Slf4j
 public class OsuToolsUtil
 {
-    @Resource
-    private AssetDownloader assetDownloader;
-    @Resource
-    private RosuPerformanceService rosuPerformanceService;
+    private final AssetDownloader assetDownloader;
+    private final RosuPerformanceService rosuPerformanceService;
+
+    public OsuToolsUtil(AssetDownloader assetDownloader, RosuPerformanceService rosuPerformanceService)
+    {
+        this.assetDownloader = assetDownloader;
+        this.rosuPerformanceService = rosuPerformanceService;
+    }
 
     public BeatmapVO setupBeatmapVO(BeatmapDTO beatmapDTO)
     {

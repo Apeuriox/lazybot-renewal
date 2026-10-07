@@ -2,7 +2,6 @@ package me.aloic.lazybot.command.manage;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.core.Bot;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.annotation.LazybotCommandMapping;
 import me.aloic.lazybot.command.LazybotSlashCommand;
 import me.aloic.lazybot.component.CommandDatabaseProxy;
@@ -21,14 +20,21 @@ import org.springframework.stereotype.Component;
 @LazybotCommandMapping({"li","linkinfo"})
 public class LinkInfoCommand implements LazybotSlashCommand
 {
-    @Resource
-    private ManageService manageService;
-    @Value("${lazybot.test.identity}")
-    private Long identity;
-    @Resource
-    private TestOutputTool testOutputTool;
-    @Resource
-    private CommandDatabaseProxy proxy;
+    private final ManageService manageService;
+    private final Long identity;
+    private final TestOutputTool testOutputTool;
+    private final CommandDatabaseProxy proxy;
+
+    public LinkInfoCommand(ManageService manageService,
+                           @Value("${lazybot.test.identity}") Long identity,
+                           TestOutputTool testOutputTool,
+                           CommandDatabaseProxy proxy)
+    {
+        this.manageService = manageService;
+        this.identity = identity;
+        this.testOutputTool = testOutputTool;
+        this.proxy = proxy;
+    }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception

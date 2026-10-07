@@ -1,6 +1,5 @@
 package me.aloic.lazybot.osu.utils;
 
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.player.Statistics;
@@ -17,8 +16,12 @@ import java.util.List;
 @Component
 public class PlayerStatsWatchManager
 {
-    @Resource
-    private PlayerStatsWatchMapper watchMapper;
+    private final PlayerStatsWatchMapper watchMapper;
+
+    public PlayerStatsWatchManager(PlayerStatsWatchMapper watchMapper)
+    {
+        this.watchMapper = watchMapper;
+    }
 
     public static boolean isActiveUser(Statistics stats) {
         return stats != null && stats.getGlobal_rank() != null;

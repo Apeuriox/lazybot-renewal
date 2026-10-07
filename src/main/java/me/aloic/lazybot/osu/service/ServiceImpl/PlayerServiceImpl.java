@@ -2,7 +2,6 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import com.alibaba.fastjson2.JSON;
 import desu.life.RosuFFI;
-import jakarta.annotation.Resource;
 import me.aloic.lazybot.entity.command.*;
 import me.aloic.lazybot.entity.po.BadgeUserShowcasePO;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
@@ -58,25 +57,35 @@ import java.util.stream.Collectors;
 public class PlayerServiceImpl implements PlayerService
 {
     private static final Logger logger = LoggerFactory.getLogger(PlayerServiceImpl.class);
-    @Resource
-    private DataExtractor dataExtractor;
-    @Resource
-    private CustomizationMapper customizationMapper;
-    @Resource
-    private BadgeShowcaseMapper badgeMapper;
-    @Resource
-    private UserBindingMapper userBindingMapper;
-    @Resource
-    private OsuToolsUtil osuToolsUtil;
-    @Resource
-    private AssetDownloader assetDownloader;
-    @Resource
-    private RosuPerformanceService rosuPerformanceService;
+    private final DataExtractor dataExtractor;
+    private final CustomizationMapper customizationMapper;
+    private final BadgeShowcaseMapper badgeMapper;
+    private final UserBindingMapper userBindingMapper;
+    private final OsuToolsUtil osuToolsUtil;
+    private final AssetDownloader assetDownloader;
+    private final RosuPerformanceService rosuPerformanceService;
 
     private static final PPPlusPerformance EMPTY_PPPLUS_STATS;
 
     static{
         EMPTY_PPPLUS_STATS=PPPlusPerformance.initializeAsNumber(1D);
+    }
+
+    public PlayerServiceImpl(DataExtractor dataExtractor,
+                             CustomizationMapper customizationMapper,
+                             BadgeShowcaseMapper badgeMapper,
+                             UserBindingMapper userBindingMapper,
+                             OsuToolsUtil osuToolsUtil,
+                             AssetDownloader assetDownloader,
+                             RosuPerformanceService rosuPerformanceService)
+    {
+        this.dataExtractor = dataExtractor;
+        this.customizationMapper = customizationMapper;
+        this.badgeMapper = badgeMapper;
+        this.userBindingMapper = userBindingMapper;
+        this.osuToolsUtil = osuToolsUtil;
+        this.assetDownloader = assetDownloader;
+        this.rosuPerformanceService = rosuPerformanceService;
     }
 
     private void logRecalculationAlgorithm(String command, LazybotCommandParameter params)
