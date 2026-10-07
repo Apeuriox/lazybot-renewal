@@ -21,6 +21,8 @@ import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
 import me.aloic.lazybot.osu.dao.entity.vo.MapPpAnalysisView;
 import me.aloic.lazybot.osu.theme.preset.CardInfoColorPalette;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -32,6 +34,8 @@ public class RasterizationServiceImpl implements RasterizationService
     private TemplateEngine templateEngine;
     @Resource
     private BitmapRenderCache bitmapRenderCache;
+    @Resource
+    private ObjectProvider<BuildProperties> buildProperties;
 
     @Override
     public byte[] renderToScoreDark(ScoreVO score, int hue, double saturationFactor) {
@@ -89,7 +93,13 @@ public class RasterizationServiceImpl implements RasterizationService
     {
         TemplateOutput output = new StringOutput();
         templateEngine.render("help_index_svg.jte",
-                Map.of("poster", HelpIndexPoster.from(summaries)), output);
+                Map.of("poster", HelpIndexPoster.from(summaries, projectVersion())), output);
         return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+    }
+
+    private String projectVersion()
+    {
+        BuildProperties properties = buildProperties.getIfAvailable();
+        return properties == null ? "" : properties.getVersion();
     }
 }

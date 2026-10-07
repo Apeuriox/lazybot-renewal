@@ -23,7 +23,8 @@ public record HelpIndexPoster(
         double customizeGrowth,
         double preferenceGrowth,
         double funGrowth,
-        double contentShift)
+        double contentShift,
+        String version)
 {
     public record Fragment(String x, String y, String text, String fontFamily, String size, String opacity,
                            String transform)
@@ -43,7 +44,7 @@ public record HelpIndexPoster(
     private static final double ROW_GAP = 42;
     private static final String CJK_FONT = "Noto Sans SC";
 
-    public static HelpIndexPoster from(List<CommandSummary> summaries)
+    public static HelpIndexPoster from(List<CommandSummary> summaries, String version)
     {
         List<CommandSummary> source = summaries == null ? List.of() : summaries;
         List<Fragment> osu = new ArrayList<>();
@@ -68,7 +69,8 @@ public record HelpIndexPoster(
                 customizeGrowth,
                 Math.max(0, preferenceBottom - 2989),
                 Math.max(0, funBottom - 3463),
-                contentShift);
+                contentShift,
+                versionLabel(version));
     }
 
     private static List<CommandSummary> of(List<CommandSummary> summaries, CommandSummary.Category category)
@@ -289,6 +291,15 @@ public record HelpIndexPoster(
                 || script == Character.UnicodeScript.HIRAGANA
                 || script == Character.UnicodeScript.KATAKANA
                 || script == Character.UnicodeScript.HANGUL;
+    }
+
+    private static String versionLabel(String version)
+    {
+        if (version == null || version.isBlank()) {
+            return "dev";
+        }
+        String trimmed = version.trim();
+        return trimmed.startsWith("v") ? trimmed : "v" + trimmed;
     }
 
     private static String num(double value)
