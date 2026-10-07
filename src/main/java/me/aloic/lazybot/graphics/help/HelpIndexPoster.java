@@ -25,7 +25,8 @@ public record HelpIndexPoster(
         double funGrowth,
         double contentShift)
 {
-    public record Fragment(String x, String y, String text, String fontFamily, String size, String opacity)
+    public record Fragment(String x, String y, String text, String fontFamily, String size, String opacity,
+                           String transform)
     {
     }
 
@@ -34,6 +35,9 @@ public record HelpIndexPoster(
     private static final double OSU_START = 1191.41;
     private static final double OSU_LIMIT = 2240;
     private static final double MIDDLE_LIMIT = 4001;
+    private static final double CUSTOMIZE_RECT_BOTTOM = 2989;
+    /** Pads the example baseline so the current two entries fill the 563px panel exactly. */
+    private static final double CUSTOMIZE_EXAMPLE_PAD = 47.59;
     private static final double BODY = 24;
     private static final double LINE = 31;
     private static final double ROW_GAP = 42;
@@ -51,6 +55,7 @@ public record HelpIndexPoster(
         List<Fragment> fun = new ArrayList<>();
         List<Fragment> others = new ArrayList<>();
         double customizeBottom = layCustomize(customize, of(source, CommandSummary.Category.CUSTOMIZE));
+        double customizeGrowth = Math.max(0, customizeBottom - CUSTOMIZE_RECT_BOTTOM);
         double preferenceBottom = layPreference(preference, of(source, CommandSummary.Category.PREFERENCE));
         double funBottom = layTable(fun, of(source, CommandSummary.Category.FUN), 3298.41, false);
         double otherStart = Math.max(3520, funBottom + 80);
@@ -60,7 +65,7 @@ public record HelpIndexPoster(
         double contentShift = osuGrowth + middleGrowth;
         return new HelpIndexPoster(List.copyOf(osu), List.copyOf(customize), List.copyOf(preference),
                 List.copyOf(fun), List.copyOf(others), BASE_HEIGHT + snap(contentShift), osuGrowth,
-                Math.max(0, customizeBottom - 2989),
+                customizeGrowth,
                 Math.max(0, preferenceBottom - 2989),
                 Math.max(0, funBottom - 3463),
                 contentShift);
@@ -109,13 +114,23 @@ public record HelpIndexPoster(
     private static double layCustomize(List<Fragment> out, List<CommandSummary> rows)
     {
         double y = 2618.41;
+        double titleSize = 26;
         for (CommandSummary row : rows) {
-            String title = row.subcommand() == null || row.subcommand().isBlank()
+            String name = row.subcommand() == null || row.subcommand().isBlank()
                     ? shown(row.command(), "")
-                    : row.subcommand() + " " + shown(row.parameter(), "");
-            add(out, 116, y, title.trim(), "1");
+                    : row.subcommand().trim();
+            String parameter = shown(row.parameter(), "");
+            double x = 116;
+            add(out, x, y, name, "1", titleSize);
+            x += textWidth(name, titleSize);
+            if (!parameter.isEmpty()) {
+                String bridge = " WITH PARAMETER OF ";
+                add(out, x, y, bridge, "0.1", titleSize);
+                x += textWidth(bridge, titleSize);
+                add(out, x, y, parameter, "1", titleSize);
+            }
             y += 66;
-            for (String line : wrap(shown(row.description(), ""), 860)) {
+            for (String line : wrap(joinNote(shown(row.description(), ""), shown(row.caution(), "")), 860)) {
                 add(out, 116, y, line, "0.7");
                 y += LINE;
             }
@@ -123,7 +138,18 @@ public record HelpIndexPoster(
             add(out, 116, y, shown(row.example(), ""), "0.9");
             y += 76;
         }
-        return rows.isEmpty() ? y : y;
+        if (rows.isEmpty()) {
+            return y;
+        }
+        return y - 76 + CUSTOMIZE_EXAMPLE_PAD;
+    }
+
+    private static String joinNote(String description, String caution)
+    {
+        if (!description.isEmpty() && !caution.isEmpty()) {
+            return description + ", " + caution;
+        }
+        return description.isEmpty() ? caution : description;
     }
 
     private static double layPreference(List<Fragment> out, List<CommandSummary> rows)
@@ -131,33 +157,34 @@ public record HelpIndexPoster(
         if (rows.isEmpty()) {
             return 2541;
         }
-        double[] columns = {1122, 1411, 1703};
-        double bottom = 2541;
-        for (int offset = 0; offset < rows.size(); offset += columns.length) {
-            double rowBottom = 2541;
-            int count = Math.min(columns.length, rows.size() - offset);
-            for (int column = 0; column < count; column++) {
-                CommandSummary row = rows.get(offset + column);
-                double x = columns[column];
-                double y = 2541 + (offset / columns.length) * 620.0;
-                add(out, x, y, shown(row.command(), ""), "1");
-                y += 85;
-                for (String line : wrap(shown(row.description(), ""), 250)) {
-                    add(out, x, y, line, "1");
-                    y += 28;
-                }
-                y += 24;
-                for (String line : wrap(shown(row.parameter(), ""), 250)) {
-                    add(out, x, y, line, "1");
-                    y += 28;
-                }
-                y += 36;
-                add(out, x, y, shown(row.example(), ""), "1");
-                rowBottom = Math.max(rowBottom, y + 40);
-            }
-            bottom = rowBottom;
+        double top = 2541.41;
+        double bottomY = 2945.41;
+        double step = (bottomY - top) / 3.0;
+        double[] columns = {1120, 1405, 1690};
+        double[] arrowX = {1206, 1501, 1797};
+        int count = Math.min(rows.size(), columns.length);
+        for (int column = 0; column < count; column++) {
+            CommandSummary row = rows.get(column);
+            double x = columns[column];
+            double[] starts = {top, top + step, top + 2 * step, bottomY};
+            addWrapped(out, x, starts[0], shown(row.command(), ""), 170);
+            addWrapped(out, x, starts[1], shown(row.description(), ""), 170);
+            addWrapped(out, x, starts[2], shown(row.caution(), ""), 170);
+            addWrapped(out, x, starts[3], shown(row.example(), ""), 200);
+            double arrowY = starts[column] + step / 2.0 - 16;
+            out.add(new Fragment("0", "32.520", "→", CJK_FONT, "30", "1",
+                    "matrix(0 1 -1 0 " + num(arrowX[column]) + " " + num(arrowY) + ")"));
         }
-        return bottom;
+        return bottomY + 40;
+    }
+
+    private static void addWrapped(List<Fragment> out, double x, double start, String text, double width)
+    {
+        double y = start;
+        for (String line : wrap(text, width)) {
+            add(out, x, y, line, "1");
+            y += LINE;
+        }
     }
 
     private static void addColumn(List<Fragment> out, List<String> lines, double x, double start)
@@ -171,10 +198,27 @@ public record HelpIndexPoster(
 
     private static void add(List<Fragment> out, double x, double y, String text, String opacity)
     {
+        add(out, x, y, text, opacity, BODY);
+    }
+
+    private static void add(List<Fragment> out, double x, double y, String text, String opacity, double size)
+    {
         if (text == null || text.isBlank()) {
             return;
         }
-        out.add(new Fragment(num(x), num(y), text, fontFor(text), num(BODY), opacity));
+        out.add(new Fragment(num(x), num(y), text, fontFor(text), num(size), opacity, ""));
+    }
+
+    private static double textWidth(String text, double fontSize)
+    {
+        double width = 0;
+        int index = 0;
+        while (index < text.length()) {
+            int codePoint = text.codePointAt(index);
+            width += codePoint > 0xFF ? fontSize : fontSize * 0.56;
+            index += Character.charCount(codePoint);
+        }
+        return width;
     }
 
     private static String aliases(CommandSummary row)

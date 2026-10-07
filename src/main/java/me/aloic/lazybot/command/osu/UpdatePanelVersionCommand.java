@@ -40,7 +40,7 @@ public class UpdatePanelVersionCommand implements LazybotSlashCommand
             "{*num或名称}",
             "/sp 2",
             "设置用户的默认成绩面板",
-            "");
+            "接受1到5的数字，一共5套面板");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

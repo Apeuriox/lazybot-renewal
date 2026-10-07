@@ -42,7 +42,7 @@ public class CustomizeCommand implements LazybotSlashCommand
             "/customize profilebg https://this.is.link",
             "更改 /profile 的背景图片，URL为图片链接，提交后需要等待验证",
             "图片需要为 1900x1000，超出的部分会被裁剪",
-            "profileBG");
+            "ProfileBG");
 
     private static final CommandSummary PROFILE_THEME = new CommandSummary(
             CommandSummary.Category.CUSTOMIZE,
@@ -52,7 +52,7 @@ public class CustomizeCommand implements LazybotSlashCommand
             "/customize profileTheme Light",
             "更改 /profile 的颜色预设",
             "",
-            "profileTheme");
+            "ProfileTheme");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
