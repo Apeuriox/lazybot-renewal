@@ -35,7 +35,7 @@ public class WhatIfCommand implements LazybotSlashCommand
             "{pp}[*][count]",
             "/whatif 300*10 400*5",
             "假设你多刷了这么多 pp 后的总 pp 变化",
-            "支持多项添加，数值不允许大于 5000");
+            "可多项添加，数值不能大于 5000");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

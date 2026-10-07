@@ -34,8 +34,8 @@ public class TipsCommand implements LazybotSlashCommand
             List.of(),
             "[id]",
             "/tips 38",
-            "返回一个随机的 Aloic 小提示，输入 ID 可明确指定",
-            "");
+            "返回一个随机的 Aloic 小提示",
+            "输入 ID 可明确指定");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

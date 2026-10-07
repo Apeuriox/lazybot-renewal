@@ -36,7 +36,7 @@ public class AddScoreCommand implements LazybotSlashCommand
             "Add",
             List.of("addScore"),
             "[userName] {bid}",
-            "/add Aloic 668662",
+            "/add 668662",
             "以 bid 申请 pp+ 重算，取最大结果",
             "仅支持standard");
 

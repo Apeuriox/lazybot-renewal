@@ -9,8 +9,8 @@ import java.util.Locale;
 
 /**
  * Row positions for {@code help_index_svg.jte}.
- * The osu table grows downward. Later sections keep the design and move by
- * {@code middleShift}; the thanks block moves by {@code footerShift}.
+ * The page height stays on the 200px grid. Section panels grow by the exact
+ * text overflow, because those rectangles are not on the grid.
  */
 public record HelpIndexPoster(
         List<Fragment> osuRows,
@@ -19,8 +19,11 @@ public record HelpIndexPoster(
         List<Fragment> funRows,
         List<Fragment> otherRows,
         int height,
-        int middleShift,
-        int footerShift)
+        double osuGrowth,
+        double customizeGrowth,
+        double preferenceGrowth,
+        double funGrowth,
+        double contentShift)
 {
     public record Fragment(String x, String y, String text, String fontFamily, String size, String opacity)
     {
@@ -41,7 +44,7 @@ public record HelpIndexPoster(
         List<CommandSummary> source = summaries == null ? List.of() : summaries;
         List<Fragment> osu = new ArrayList<>();
         double osuBottom = layTable(osu, of(source, CommandSummary.Category.OSU), OSU_START, true);
-        int osuShift = snap(osuBottom - OSU_LIMIT);
+        double osuGrowth = Math.max(0, osuBottom - OSU_LIMIT);
 
         List<Fragment> customize = new ArrayList<>();
         List<Fragment> preference = new ArrayList<>();
@@ -53,10 +56,14 @@ public record HelpIndexPoster(
         double otherStart = Math.max(3520, funBottom + 80);
         double otherBottom = layTable(others, of(source, CommandSummary.Category.OTHERS), otherStart, true);
         double middleBottom = Math.max(customizeBottom, Math.max(preferenceBottom, Math.max(funBottom, otherBottom)));
-        int middleShift = snap(middleBottom - MIDDLE_LIMIT);
-        int footerShift = osuShift + middleShift;
+        double middleGrowth = Math.max(0, middleBottom - MIDDLE_LIMIT);
+        double contentShift = osuGrowth + middleGrowth;
         return new HelpIndexPoster(List.copyOf(osu), List.copyOf(customize), List.copyOf(preference),
-                List.copyOf(fun), List.copyOf(others), BASE_HEIGHT + footerShift, osuShift, footerShift);
+                List.copyOf(fun), List.copyOf(others), BASE_HEIGHT + snap(contentShift), osuGrowth,
+                Math.max(0, customizeBottom - 2989),
+                Math.max(0, preferenceBottom - 2989),
+                Math.max(0, funBottom - 3463),
+                contentShift);
     }
 
     private static List<CommandSummary> of(List<CommandSummary> summaries, CommandSummary.Category category)

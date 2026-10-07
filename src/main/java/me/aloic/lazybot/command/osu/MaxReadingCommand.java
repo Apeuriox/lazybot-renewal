@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@LazybotCommandMapping({"maxreading","mr"})
+@LazybotCommandMapping({"maxread","mr","maxreading"})
 @Component
 public class MaxReadingCommand implements LazybotSlashCommand
 {
@@ -35,7 +35,7 @@ public class MaxReadingCommand implements LazybotSlashCommand
     private TestOutputTool testOutputTool;
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,
-            "MaxReading",
+            "MaxRead",
             List.of("mr"),
             "[userName]",
             "/mr Aloic",

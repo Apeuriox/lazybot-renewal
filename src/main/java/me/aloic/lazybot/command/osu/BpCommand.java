@@ -47,7 +47,7 @@ public class BpCommand implements LazybotSlashCommand
             "[playerName] [#num] [&]",
             "/bp Aloic #10",
             "指定查询指定用户的最佳成绩",
-            "无索引默认为1，存在&会用其他设计");
+            "无索引默认为1，有&会用其他设计");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {

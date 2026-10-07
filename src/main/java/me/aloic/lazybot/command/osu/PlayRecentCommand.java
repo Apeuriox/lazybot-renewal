@@ -26,7 +26,7 @@ import java.io.IOException;
 import me.aloic.lazybot.entity.CommandSummary;
 import java.util.List;
 
-@LazybotCommandMapping({"pr","rp","playrecent","re","recent","p","r","ppr","pre"})
+@LazybotCommandMapping({"pr","rp","playrecent","pass","re","recent","p","r","ppr","pre"})
 @Component
 public class PlayRecentCommand implements LazybotSlashCommand
 {
@@ -39,20 +39,20 @@ public class PlayRecentCommand implements LazybotSlashCommand
 
     private static final CommandSummary RECENT_PASS = new CommandSummary(
             CommandSummary.Category.OSU,
-            "RecentPass",
+            "Pass",
             List.of("rp", "pr"),
             "[userName] [#*num] [&]",
             "/pr Aloic #1 &",
-            "查询指定用户的最近 Pass 成绩中的第 *num 个",
-            "不填索引则默认为 #1，若存在 & 则会使用旧设计面板");
+            "查询用户的最近 Pass 成绩",
+            "不填索引则默认为1，有&则用旧设计面板");
     private static final CommandSummary RECENT = new CommandSummary(
             CommandSummary.Category.OSU,
             "Recent",
             List.of("re"),
             "[userName] [#*num] [&]",
             "/re Aloic",
-            "查询指定用户的最近游玩成绩中的第 *num 个",
-            "不填索引则默认为 #1，若存在 & 则会使用旧设计面板");
+            "查询用户的最近游玩成绩",
+            "不填索引则默认为1，有&则用旧设计面板");
 
     @Override
     public void execute(SlashCommandInteractionEvent event) throws IOException, RosuFFI.FFIException

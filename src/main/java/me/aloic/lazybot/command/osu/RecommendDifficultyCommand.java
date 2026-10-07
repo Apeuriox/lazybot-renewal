@@ -34,8 +34,8 @@ public class RecommendDifficultyCommand implements LazybotSlashCommand
 
     private static final CommandSummary SUMMARY = new CommandSummary(
             CommandSummary.Category.OSU,
-            "RecommendDifficulty",
-            List.of("rd"),
+            "Rd",
+            List.of(),
             "[userName]",
             "/rd Aloic",
             "查询指定用户的推荐星级",

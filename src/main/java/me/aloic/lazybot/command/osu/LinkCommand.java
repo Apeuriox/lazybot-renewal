@@ -26,7 +26,7 @@ public class LinkCommand implements LazybotSlashCommand
             "{userName}",
             "/Link Aloic",
             "绑定用户名",
-            "解绑请用 /unlink");
+            "解绑请用/unlink");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
         userService.linkUser(event);

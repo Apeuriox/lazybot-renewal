@@ -40,7 +40,7 @@ public class AllScoreCommand implements LazybotSlashCommand
             "AllScores",
             List.of("as"),
             "[userName] {bid}",
-            "/as Aloic 668662",
+            "/as 668662",
             "查询对应玩家在对应地图下的全部成绩",
             "最大渲染 30 个");
 
