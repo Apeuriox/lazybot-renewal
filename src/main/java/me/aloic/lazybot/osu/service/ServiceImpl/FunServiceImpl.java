@@ -32,8 +32,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +53,8 @@ public class FunServiceImpl implements FunService
     private final AssetDownloader assetDownloader;
 
     private static final Integer MAX_RETRIES = 3;
+    private static final int TIP_LIST_LIMIT = 8;
+    private static final int TIP_PREVIEW_LENGTH = 24;
 
 
 
@@ -68,17 +72,96 @@ public class FunServiceImpl implements FunService
     @Override
     public String tips(TipsParameter parameter)
     {
-        if (parameter.getId() == null || parameter.getId() == 0) {
-            return Optional.ofNullable(tipsMapper.selectRandom())
+        if (parameter.getId() != null && parameter.getId() > 0) {
+            return Optional.ofNullable(tipsMapper.selectById(parameter.getId()))
                     .map(TipsPO::builderContent)
-                    .orElseThrow(() -> new LazybotRuntimeException("数据库查询出错"));
+                    .orElseThrow(() -> new LazybotRuntimeException("要么你参数输入错误，要么这个ID对应的tip不存在"));
         }
-        else {
-          return Optional.ofNullable(tipsMapper.selectById(parameter.getId()))
-                  .map(TipsPO::builderContent)
-                  .orElseThrow(() -> new LazybotRuntimeException("要么你参数输入错误，要么这个ID对应的tip不存在"));
+        if (parameter.getQuery() != null) {
+            return searchTipsByContent(parameter.getQuery());
         }
+        return Optional.ofNullable(tipsMapper.selectRandom())
+                .map(TipsPO::builderContent)
+                .orElseThrow(() -> new LazybotRuntimeException("数据库查询出错"));
     }
+
+    private String searchTipsByContent(String query)
+    {
+        //replace all your spaces
+        String normalizedQuery = query.trim().replaceAll("\\s+", " ");
+        List<String> keywords = Arrays.stream(normalizedQuery.split(" "))
+                .map(FunServiceImpl::escapeLike)
+                .toList();
+        List<TipsPO> matches = tipsMapper.selectByKeywords(keywords);
+        if (matches == null || matches.isEmpty()) {
+            throw new LazybotRuntimeException("没有找到符合的tip");
+        }
+        String foldedQuery = normalizedQuery.toLowerCase(Locale.ROOT);
+        List<TipsPO> ranked = matches.stream()
+                .sorted(Comparator
+                        .comparingInt((TipsPO tip) -> calculateMatchScore(tip.getContent(), foldedQuery))
+                        .thenComparingInt(tip -> normalizeYourSpaces(tip.getContent()).length())
+                        .thenComparing(TipsPO::getId, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+        long exactCount = ranked.stream().filter(tip -> calculateMatchScore(tip.getContent(), foldedQuery) == 0).count();
+        if (exactCount == 1 || ranked.size() == 1) {
+            return ranked.getFirst().builderContent();
+        }
+        return setupSearchedTipsList(ranked);
+    }
+
+    private static String setupSearchedTipsList(List<TipsPO> ranked)
+    {
+        int shown = Math.min(TIP_LIST_LIMIT, ranked.size());
+        StringBuilder builder = new StringBuilder();
+        builder.append("[Lazybot] 找到 ").append(ranked.size()).append(" 条");
+        if (ranked.size() > shown) {
+            builder.append("，显示前 ").append(shown).append(" 条");
+        }
+        builder.append(':');
+        for (int i = 0; i < shown; i++) {
+            TipsPO tip = ranked.get(i);
+            builder.append('\n')
+                    .append("No.")
+                    .append(tip.getId())
+                    .append(": ")
+                    .append(preview(tip.getContent()));
+        }
+        return builder.toString();
+    }
+
+    private static int calculateMatchScore(String content, String foldedQuery)
+    {
+        String folded = normalizeYourSpaces(content);
+        if (folded.equals(foldedQuery)) {
+            return 0;
+        }
+        if (folded.contains(foldedQuery)) {
+            return 1;
+        }
+        return 2;
+    }
+
+    private static String normalizeYourSpaces(String content)
+    {
+        if (content == null) {
+            return "";
+        }
+        return content.trim().replaceAll("\\s+", " ").toLowerCase(Locale.ROOT);
+    }
+
+    private static String preview(String content)
+    {
+        String singleLine = content == null ? "" : content.trim().replaceAll("\\s+", " ");
+        int count = singleLine.codePointCount(0, singleLine.length());
+        if (count <= TIP_PREVIEW_LENGTH) {
+            return singleLine;
+        }
+        int end = singleLine.offsetByCodePoints(0, TIP_PREVIEW_LENGTH);
+        return singleLine.substring(0, end) + "...";
+    }
+
+
     @Override
     public Path modInfo(GeneralParameter parameter)
     {
@@ -288,5 +371,12 @@ public class FunServiceImpl implements FunService
                 .sum();
 
 
+    }
+
+    private static String escapeLike(String token)
+    {
+        return token.replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_");
     }
 }

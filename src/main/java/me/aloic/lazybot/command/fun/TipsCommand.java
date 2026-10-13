@@ -36,15 +36,19 @@ public class TipsCommand implements LazybotSlashCommand
             CommandSummary.Category.OSU,
             "Tips",
             List.of(),
-            "[id]",
+            "[id|关键词]",
             "/tips 38",
-            "返回一个随机的 Aloic 小提示",
-            "输入 ID 可明确指定");
+            "返回一个随机的 Aloic 小提示，也可按内容搜索",
+            "纯数字为 ID，其余按内容搜索");
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception
     {
         event.deferReply().queue();
         TipsParameter params=new TipsParameter(OptionMappingTool.getOptionOrDefault(event.getOption("id"),0));
+        String query = OptionMappingTool.getOptionOrDefault(event.getOption("query"), "");
+        if (!query.isBlank()) {
+            params.setQuery(query);
+        }
         params.validateParams();
         event.getHook().sendMessage(funService.tips(params)).queue();
     }
@@ -52,7 +56,7 @@ public class TipsCommand implements LazybotSlashCommand
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event) throws Exception
     {
-        TipsParameter params=TipsParameter.analyzeParameter(event.getCommandParameters());
+        TipsParameter params=TipsParameter.analyzeTipsParameter(event.getCommandParameters());
         params.validateParams();
         bot.sendGroupMsg(event.getMessageEvent().getGroupId(), MsgUtils.builder().text(funService.tips(params)).build(),false);
     }
@@ -60,7 +64,7 @@ public class TipsCommand implements LazybotSlashCommand
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        TipsParameter params=TipsParameter.analyzeParameter(event.getCommandParameters());
+        TipsParameter params=TipsParameter.analyzeTipsParameter(event.getCommandParameters());
         params.validateParams();
         testOutputTool.writeStringToFile(funService.tips(params));
     }
@@ -69,13 +73,15 @@ public class TipsCommand implements LazybotSlashCommand
     public CommandHelp commandHelp()
     {
         return new CommandHelp("Tips","tips",
-                "返回一个随机的Aloic小提示，输入ID可明确指定，ID输入为空或者不合法会随机返回一个结果",
+                "返回一个随机的Aloic小提示。纯数字按ID查询，其余文本按内容搜索，多个词都要命中。没有命中时直接提示，不会退回随机结果",
                 "Aloic", null, "2025-01-20")
                 .code("CM-019")
                 .headline("Random Bullshit")
                 .availability("ALL MODE")
                 .addExample("/Tips 38")
                 .addExample("/Tips")
-                .addOption(new CommandParameter("ID","Integer","指定查询Tips的ID", CommandParameter.ParameterType.OPTIONAL));
+                .addExample("/Tips pp 倍率")
+                .addOption(new CommandParameter("ID","Integer","指定查询Tips的ID。与关键词同时传入时按ID查询", CommandParameter.ParameterType.OPTIONAL))
+                .addOption(new CommandParameter("Query","String","按内容搜索Tips", CommandParameter.ParameterType.OPTIONAL));
     }
 }

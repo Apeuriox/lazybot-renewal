@@ -24,6 +24,14 @@
         from tips
        where id=#{id}
     </select>
+    <select id="selectByKeywords" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from tips
+        where
+        <foreach collection="keywords" item="keyword" separator=" AND ">
+            content LIKE CONCAT('%', #{keyword}, '%') ESCAPE '\\'
+        </foreach>
+    </select>
 
 
     <update id="updateTips" parameterType="me.aloic.lazybot.osu.dao.entity.po.TipsPO">
