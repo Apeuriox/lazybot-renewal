@@ -244,7 +244,7 @@ create table profile_customization
     last_updated   datetime      null
 );
 
-create definer = root@`183.230.242.186` trigger `update _timestamp`
+create definer = root@`localhost` trigger `update _timestamp`
     before update
     on profile_customization
     for each row

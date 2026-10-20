@@ -108,7 +108,7 @@ using the standard Maven repository layout. The repository is declared in
    platform credentials you intend to use. The generated
    `application.yaml` is ignored by Git and must not be committed.
 
-3. Create the database schema using [`script.sql`](script.sql).
+3. Create the database schema using [`script.sql`](src/main/resources/sql/script.sql).
 
 4. Start the application:
 

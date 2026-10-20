@@ -35,23 +35,23 @@ public class HelpCommand implements LazybotSlashCommand
     @Override
     public void execute(SlashCommandInteractionEvent event) throws Exception {
         event.deferReply().queue();
-        CommandResultHandler.uploadImageToDiscord(event, render());
+        CommandResultHandler.uploadImageToDiscord(event, getRenderedResult());
     }
 
     @Override
     public void execute(Bot bot, LazybotSlashCommandEvent event)
     {
-        CommandResultHandler.sendMessageWithImageToGroupOnebot(bot, event, render(),
+        CommandResultHandler.sendMessageWithImageToGroupOnebot(bot, event, getRenderedResult(),
                 "[Lazybot] 输入 /指令名 *h 查看单条帮助，例如 /card *h");
     }
 
     @Override
     public void execute(LazybotSlashCommandEvent event) throws Exception
     {
-        testOutputTool.saveImageToLocal(render());
+        testOutputTool.saveImageToLocal(getRenderedResult());
     }
 
-    private byte[] render()
+    private byte[] getRenderedResult()
     {
         return rasterizationService.renderHelpIndex(commandRegistry.commands().stream()
                 .flatMap(command -> command.getCommandSummaries().stream())
