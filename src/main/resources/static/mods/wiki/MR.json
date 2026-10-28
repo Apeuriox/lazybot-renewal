@@ -1,0 +1,50 @@
+{
+  "name": "Mirror (MR)",
+  "abbreviation": "MR",
+  "compatible_mode": [
+    0,
+    2,
+    3
+  ],
+  "unranked_mode": [
+    0,
+    2
+  ],
+  "ranked": 1,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "你可以选择水平、垂直或者二者同时地翻转整个地图，仅限Lazer"
+    },
+    {
+      "mode": [
+        2
+      ],
+      "description": "水平翻转水果"
+    },
+    {
+      "mode": [
+        3
+      ],
+      "description": "水平翻转音符"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Hard Rock (HR)* 仅osu!"
+    }
+  ],
+  "additional_info": "注意, 在std中，翻转地图并不会改变stack的方向"
+}

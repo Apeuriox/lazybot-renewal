@@ -3,6 +3,7 @@ package me.aloic.lazybot.osu.service;
 import desu.life.RosuFFI;
 import me.aloic.lazybot.entity.command.*;
 import me.aloic.lazybot.entity.vo.ThumbnailClassicalVO;
+import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.parameter.*;
 

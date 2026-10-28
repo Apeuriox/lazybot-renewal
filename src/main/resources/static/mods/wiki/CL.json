@@ -1,0 +1,46 @@
+{
+  "name": "Classic (CL)",
+  "abbreviation": "CL",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M32.0034 44.9968C32.7559 51.7237 35.9545 57.9394 40.9908 62.4618C46.0272 66.9842 52.5501 69.4978 59.3189 69.5246C66.0877 69.5515 72.6303 67.0896 77.7023 62.6072C82.7744 58.1249 86.0221 51.9347 86.8279 45.214C87.6336 38.4932 85.9412 31.7108 82.0725 26.1565C78.2037 20.6022 72.4285 16.6635 65.8452 15.0895C59.2619 13.5155 52.3298 14.416 46.3671 17.6197C40.4044 20.8234 35.8271 26.1068 33.5058 32.4652\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path d=\"M31.8194 17.4043V32.7354H47.1504\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path d=\"M59.5137 30.9023V43.7637L69.5041 49.5317\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n",
+    "transform": ""
+  },
+  "compatible_mode": [
+    0,
+    1
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "0.985x / 0.96x (No Notelock)",
+      "type": 2,
+      "mode": [0]
+    },
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [1,2,3]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1
+      ],
+      "description": "将部分Stable中的机制重新在Lazer启用；注意，此模组不会也不可能完美复刻Stable的体验，诸如判定区间边缘判定，计分系统计算方式，评价系统的区别等都无法实现。但是你们最爱的Notelock可以"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Strict Tracking (ST)"
+    }
+  ],
+  "additional_info": "所有在Stable中上传的成绩在Lazer中均会被标记此模组"
+}

@@ -1,0 +1,65 @@
+{
+  "name": "Wind Up (WU)",
+  "abbreviation": "WU",
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "0.50x",
+      "type": 2,
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "此模组会从原速（地图开头）逐渐加速至DT的效果（地图结尾）"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "reduce",
+      "name": "Half Time (HT)"
+    },
+    {
+      "type": "reduce",
+      "name": "Daycore (DC)"
+    },
+    {
+      "type": "increase",
+      "name": "Double Time (DT)"
+    },
+    {
+      "type": "increase",
+      "name": "Nightcore (NC)"
+    },
+    {
+      "type": "fun",
+      "name": "Wind Down (WD)"
+    },
+    {
+      "type": "fun",
+      "name": "Adaptive Speed (AS)"
+    }
+  ],
+  "additional_info": "和DT一样，可以设置终端的速度 (1.01 - 2.00)，同时也可以设置音高调整效果"
+}

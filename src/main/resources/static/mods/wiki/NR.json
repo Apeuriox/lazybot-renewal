@@ -1,0 +1,36 @@
+{
+  "name": "No Release (NR)",
+  "abbreviation": "NR",
+  "compatible_mode": [
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "降低难度",
+  "score_multiplier": [
+    {
+      "multiplier": "0.90x",
+      "type": 2,
+      "mode": [
+        3
+      ]
+    }
+  ],
+  "default_key": "T",
+  "effect": [
+    {
+      "mode": [
+        3
+      ],
+      "description": "取消长条的尾判"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "conversion",
+      "name": "Hold Off (HO)"
+    }
+  ],
+  "additional_info": null
+}

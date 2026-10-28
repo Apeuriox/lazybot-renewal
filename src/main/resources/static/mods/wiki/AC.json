@@ -1,0 +1,51 @@
+{
+  "name": "Accuracy Challenge (AC)",
+  "abbreviation": "AC",
+  "compatible_mode": [0, 1, 2, 3],
+  "unranked_mode": null,
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M39.147 36.5415H34.2M64.5065 36.5415H59.5592M39.147 49.6538H34.2M64.5065 49.6538H59.5592M39.147 63.9663H34.2M64.5065 63.9663H59.5592M45.1106 44.854V39.9069M70.4701 44.854V39.9069M45.1106 57.9663V53.0192M70.4701 57.9663V53.0192M28.2 44.854V39.9069M94.616 33.2637V18.835M49.7999 23.7827V18.8356M71.4 23.7827V18.8356M28.2 23.7827V18.8356M39 23.7827V18.8356M60.5999 23.7827V18.8356M82.1999 23.7827V18.8356M53.5592 44.854V39.9069M28.2 57.9663V53.0192M53.5592 57.9663V53.0192M79.6272 65.929L93.159 50.5728M79.7213 50.9321L79.4345 50.6453M92.5692 65.3447L92.2823 65.0579\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" fill=\"none\"/>",
+    "transform": ""
+  },
+  "ranked": 0,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "当你的准确度低于你设置的值时Fail"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "reduce",
+      "name": "Easy (EZ)* (not taiko)"
+    },
+    {
+      "type": "reduce",
+      "name": "No Fail (NF)"
+    },
+    {
+      "type": "increase",
+      "name": "Perfect (PF)"
+    },
+    {
+      "type": "automation",
+      "name": "Cinema (CN)"
+    }
+  ],
+  "additional_info": "设置的最低精准度范围为 60% 到 99%，同时有一个选项可以让你在Fail时会自动Retry"
+}

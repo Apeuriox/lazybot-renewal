@@ -1,6 +1,8 @@
-package me.aloic.lazybot.osu.dao.entity.vo;
+package me.aloic.lazybot.osu.dao.entity.view;
 
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
+import me.aloic.lazybot.osu.dao.entity.vo.BeatmapPerformance;
+import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
 import me.aloic.lazybot.osu.utils.ColorUtil;
 
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import java.util.List;
 import java.util.Locale;
 
 /** Precomputed coordinates and labels consumed by the JTE SVG template. */
-public record MapPpAnalysisView(
+public record MapPerformanceAnalysisView(
         int width,
         int height,
         MapPerformanceAnalysis analysis,
@@ -30,7 +32,7 @@ public record MapPpAnalysisView(
     public static final int WIDTH = 1400;
     public static final int HEIGHT = 1520;
 
-    public static MapPpAnalysisView from(MapPerformanceAnalysis analysis) {
+    public static MapPerformanceAnalysisView from(MapPerformanceAnalysis analysis) {
         BeatmapPerformance beatmap = analysis.context().getBeatmap();
         String title = beatmap.getArtist() + " — " + beatmap.getTitle()
                 + " [" + beatmap.getVersion() + "]";
@@ -70,7 +72,7 @@ public record MapPpAnalysisView(
         String largestChange = String.format(
                 Locale.ROOT, "%s: %+.1f", largest.algorithm(), largest.absoluteChange());
 
-        return new MapPpAnalysisView(
+        return new MapPerformanceAnalysisView(
                 WIDTH, HEIGHT, analysis, title, scenario, generatedAt,
                 status, starBackgroundColor, starTextColor,
                 historyBars, breakdownRows, missChart, accuracyChart,

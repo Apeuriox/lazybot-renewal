@@ -2,7 +2,9 @@ package me.aloic.lazybot.osu.service.ServiceImpl;
 
 import me.aloic.lazybot.entity.SongGuessWithTime;
 import me.aloic.lazybot.exception.LazybotRuntimeException;
+import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.monitor.ResourceMonitor;
+import me.aloic.lazybot.osu.wiki.ModWikiCatalog;
 import me.aloic.lazybot.osu.dao.entity.dto.beatmap.ScoreLazerDTO;
 import me.aloic.lazybot.osu.dao.entity.dto.lazybot.LazybotSongGuessData;
 import me.aloic.lazybot.osu.dao.entity.dto.player.PlayerInfoDTO;
@@ -30,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -51,6 +54,8 @@ public class FunServiceImpl implements FunService
     private final Integer MAX_CALC;
     private final DataExtractor dataExtractor;
     private final AssetDownloader assetDownloader;
+    private final ModWikiCatalog modWikiCatalog;
+    private final RasterizationService rasterizationService;
 
     private static final Integer MAX_RETRIES = 3;
     private static final int TIP_LIST_LIMIT = 8;
@@ -61,12 +66,16 @@ public class FunServiceImpl implements FunService
     public FunServiceImpl(TipsMapper tipsMapper,
                           @Value("${lazybot.command.whatif_calc_max_count}") Integer MAX_CALC,
                           DataExtractor dataExtractor,
-                          AssetDownloader assetDownloader)
+                          AssetDownloader assetDownloader,
+                          ModWikiCatalog modWikiCatalog,
+                          RasterizationService rasterizationService)
     {
         this.tipsMapper = tipsMapper;
         this.MAX_CALC = MAX_CALC;
         this.dataExtractor = dataExtractor;
         this.assetDownloader = assetDownloader;
+        this.modWikiCatalog = modWikiCatalog;
+        this.rasterizationService = rasterizationService;
     }
 
     @Override
@@ -163,18 +172,28 @@ public class FunServiceImpl implements FunService
 
 
     @Override
-    public Path modInfo(GeneralParameter parameter)
+    public byte[] modInfo(GeneralParameter parameter)
     {
-        if (parameter.getPlayerName() == null || parameter.getPlayerName().length() < 2) throw new LazybotRuntimeException("参数输入错误或为空");
-        else {
-            try{
-                return ResourceMonitor.getResourcePath().resolve("static/modifier/"+ OsuMod.findAcronym(parameter.getPlayerName()) +".png");
+        if (parameter.getPlayerName() == null || parameter.getPlayerName().length() < 2) {
+            throw new LazybotRuntimeException("参数输入错误或为空");
+        }
+        String acronym = OsuMod.findAcronym(parameter.getPlayerName());
+        if (acronym == null) {
+            throw new LazybotRuntimeException("要么你输入的Mod名有问题，要么此Mod的页面还未创建");
+        }
+        if (modWikiCatalog.contains(acronym)) {
+            return rasterizationService.renderModWiki(acronym);
+        }
+        Path legacy = ResourceMonitor.getResourcePath().resolve("static/modifier/" + acronym + ".png");
+        if (Files.exists(legacy)) {
+            try {
+                return Files.readAllBytes(legacy);
             }
-            catch (Exception e){
-                logger.warn(e.getMessage());
-                throw new LazybotRuntimeException("路径处理时出错");
+            catch (IOException e) {
+                throw new LazybotRuntimeException("读取Mod页面失败");
             }
         }
+        throw new LazybotRuntimeException("要么你输入的Mod名有问题，要么此Mod的页面还未创建");
     }
 
 
@@ -359,8 +378,6 @@ public class FunServiceImpl implements FunService
         ImageIO.write(image, format, baos);
         return baos.toByteArray();
     }
-
-
 
 
 

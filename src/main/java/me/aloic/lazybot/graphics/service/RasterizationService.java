@@ -21,4 +21,6 @@ public interface RasterizationService
     byte[] renderCommandHelp(CommandHelp help);
 
     byte[] renderHelpIndex(List<CommandSummary> summaries);
+
+    byte[] renderModWiki(String acronym);
 }

@@ -1,0 +1,41 @@
+{
+  "name": "Blind (BL)",
+  "abbreviation": "BL",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<rect x=\"27.6401\" y=\"23.3911\" width=\"64.6755\" height=\"36.8819\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linejoin=\"round\"/>\n<rect x=\"49.7332\" y=\"23.3911\" width=\"20.4896\" height=\"36.8819\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linejoin=\"round\"/>\n<rect x=\"38.824\" y=\"23.3911\" width=\"42.3082\" height=\"36.8819\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linejoin=\"round\"/>\n<rect x=\"27.6401\" y=\"34.6846\" width=\"21.7327\" height=\"14.2952\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linejoin=\"round\"/>\n<rect x=\"70.2882\" y=\"34.6846\" width=\"22.0271\" height=\"14.2952\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linejoin=\"round\"/>",
+    "transform": ""
+  },
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.24x",
+      "type": 0
+    }
+  ],
+  "default_key": "K",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "类似于FL的视野遮挡mod，表现形式类似于一个窗帘将整个屏幕遮蔽，你将不能看见Note，有且仅能看到自己的光标"
+    }
+  ],
+  "gameplay": {
+    "src": "mods/BL_GP.png",
+    "description": "左为开启BL，右为Nomod"
+  },
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Flashlight (FL)"
+    }
+  ],
+  "additional_info": "BL的屏障是跟随HP开合的，所以其奖励PP也会跟随HP变化\n同时开启BL的同时开始HD或者TC，分数倍率保持不变"
+}

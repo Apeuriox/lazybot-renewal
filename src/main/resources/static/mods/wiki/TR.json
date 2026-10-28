@@ -1,0 +1,52 @@
+{
+  "name": "Transform (TR)",
+  "abbreviation": "TR",
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "此Mod会使得所有物件在出现之前有一个侧面旋转切入的效果"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "fun",
+      "name": "Depth (DP)"
+    },
+    {
+      "type": "fun",
+      "name": "Freeze Frame (FR)"
+    },
+    {
+      "type": "fun",
+      "name": "Magnetised (MG)"
+    },
+    {
+      "type": "fun",
+      "name": "Repel (RP)"
+    },
+    {
+      "type": "fun",
+      "name": "Wiggle (WG)"
+    }
+  ],
+  "additional_info": null
+}

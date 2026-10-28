@@ -1,0 +1,90 @@
+{
+  "name": "Hidden (HD)",
+  "abbreviation": "HD",
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.06x",
+      "type": 0,
+      "mode": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        3
+      ]
+    }
+  ],
+  "default_key": "H / J (mania)",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "没有缩圈，滑条和Note均会逐渐消失"
+    },
+    {
+      "mode": [
+        1
+      ],
+      "description": "kat 和 don 会逐渐消失"
+    },
+    {
+      "mode": [
+        2
+      ],
+      "description": "水果会逐渐消失"
+    },
+    {
+      "mode": [
+        3
+      ],
+      "description": "Note会逐渐消失"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Fade In (FI)"
+    },
+    {
+      "type": "increase",
+      "name": "Cover (CO)"
+    },
+    {
+      "type": "increase",
+      "name": "Flashlight (FL)* (仅mania)"
+    },
+    {
+      "type": "fun",
+      "name": "Spin In (SI)"
+    },
+    {
+      "type": "fun",
+      "name": "Traceable (TC)"
+    },
+    {
+      "type": "fun",
+      "name": "Approach Different (AD)"
+    },
+    {
+      "type": "fun",
+      "name": "Depth (DP)"
+    }
+  ],
+  "additional_info": "在std中，HD的pp加成是固定的，实际计算为Aim和Spd: 额外（12 - AR）*4%的加成，Acc：固定8%加成"
+}

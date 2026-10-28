@@ -1,0 +1,39 @@
+{
+  "name": "Invert (IN)",
+  "abbreviation": "IN",
+  "compatible_mode": [
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        3
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        3
+      ],
+      "description": "将所有音符转化成长条"
+    }
+  ],
+  "gameplay": {
+    "src": "mods/IN_GP.png",
+    "description": "左为开启IN，右为Nomod"
+  },
+  "incompatible_mod": [
+    {
+      "type": "conversion",
+      "name": "Hold Off (HO)"
+    }
+  ],
+  "additional_info": null
+}

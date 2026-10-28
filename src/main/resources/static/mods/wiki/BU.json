@@ -1,0 +1,42 @@
+{
+  "name": "Bubble (BU)",
+  "abbreviation": "BU",
+  "compatible_mode": [0],
+  "unranked_mode": null,
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<circle cx=\"59.7797\" cy=\"42.0856\" r=\"31.8\" fill=\"none\" stroke=\"black\" stroke-width=\"6\"/>\n<path d=\"M75.2777 57.3457C78.8491 53.7186 81.0352 48.9538 81.4554 43.881C81.8756 38.8081 80.5032 33.7485 77.5773 29.5833L77.3567 29.7382C80.2464 33.8518 81.6018 38.8487 81.1868 43.8587C80.7718 48.8687 78.6128 53.5745 75.0856 57.1566L75.2777 57.3457Z\" fill=\"none\"  stroke=\"black\" stroke-width=\"6\" stroke-linejoin=\"round\"/>\n<path d=\"M62.1404 63.7073C63.9517 63.5096 65.7308 63.085 67.4362 62.4436L67.3413 62.1914C65.6571 62.8248 63.9 63.2441 62.1112 63.4394L62.1404 63.7073Z\" fill=\"none\"  stroke=\"black\" stroke-width=\"6\" stroke-linejoin=\"round\"/>\n",
+    "transform": ""
+  },
+  "ranked": 2,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [0],
+      "description": "使每个Note在淡出后转变为一个不透明的气泡。对于滑条而言，这包括滑条头、滑条Tick、折返箭头和滑条尾。如果玩家成功击中这些物件，生成的气泡将呈现出与该物件所属combo相同的颜色；若未击中，气泡则为黑色。气泡会逐渐变大，直到破裂并消失。这一过程持续的时间取决于所选谱面的AR"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "fun",
+      "name": "Barrel Roll (BR)"
+    },
+    {
+      "type": "fun",
+      "name": "Magnetised (MG)"
+    },
+    {
+      "type": "fun",
+      "name": "Repel (RP)"
+    }
+  ],
+  "additional_info": null
+}

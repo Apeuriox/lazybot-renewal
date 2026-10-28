@@ -1,0 +1,57 @@
+{
+  "name": "No Fail (NF)",
+  "abbreviation": "NF",
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "降低难度",
+  "score_multiplier": [
+    {
+      "multiplier": "0.50x",
+      "type": 2,
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "default_key": "W",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "你不会Fail"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Accuracy Challenge (AC)"
+    },
+    {
+      "type": "increase",
+      "name": "Perfect (PF)"
+    },
+    {
+      "type": "increase",
+      "name": "Sudden Death (SD)"
+    },
+    {
+      "type": "automation",
+      "name": "Cinema (CN)"
+    }
+  ],
+  "additional_info": "在std中，No Fail在有Miss的情况下会额外削减pp，每一个Miss额外扣除2%，上限10%"
+}

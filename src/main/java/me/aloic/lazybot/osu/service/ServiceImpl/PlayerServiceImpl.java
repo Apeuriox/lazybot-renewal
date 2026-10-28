@@ -20,6 +20,7 @@ import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.Mod;
 import me.aloic.lazybot.osu.dao.entity.optionalattributes.beatmap.ModSetting;
 import me.aloic.lazybot.osu.dao.entity.po.UserBindingPO;
 import me.aloic.lazybot.osu.dao.entity.po.ProfileCustomizationPO;
+import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
 import me.aloic.lazybot.osu.dao.entity.vo.*;
 import me.aloic.lazybot.osu.dao.mapper.*;
 import me.aloic.lazybot.osu.enums.OsuMode;

@@ -1,0 +1,36 @@
+{
+  "name": "Swap (SW)",
+  "abbreviation": "SW",
+  "compatible_mode": [
+    1
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        1
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        1
+      ],
+      "description": "Don和Kat互换"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "conversion",
+      "name": "Random (RD)"
+    }
+  ],
+  "additional_info": null
+}

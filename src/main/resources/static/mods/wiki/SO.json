@@ -1,0 +1,44 @@
+{
+  "name": "Spun Out (SO)",
+  "abbreviation": "SO",
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "自动",
+  "score_multiplier": [
+    {
+      "multiplier": "0.90x",
+      "type": 2,
+      "mode": [
+        0
+      ]
+    }
+  ],
+  "default_key": "B",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "转盘会自动完成"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "automation",
+      "name": "Autoplay (AT)"
+    },
+    {
+      "type": "automation",
+      "name": "Cinema (CN)"
+    },
+    {
+      "type": "conversion",
+      "name": "Target Practice (TP)"
+    }
+  ],
+  "additional_info": "注意，虽然此模组属于Automation类型，但是当你启用它时，是不会触发Pass/FC成就的，即使地图本身没有任何转盘"
+}

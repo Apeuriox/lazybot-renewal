@@ -14,11 +14,9 @@ import me.aloic.lazybot.parameter.BeatmapStatisticsParameter;
 import me.aloic.lazybot.shiro.event.LazybotSlashCommandEvent;
 import me.aloic.lazybot.util.CommandResultHandler;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @LazybotCommandMapping({"mp", "mpp", "mapplus"})
 @Component

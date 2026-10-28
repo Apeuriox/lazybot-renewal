@@ -1,0 +1,47 @@
+{
+  "name": "Fade In (FI)",
+  "abbreviation": "FI",
+  "compatible_mode": [
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        3
+      ]
+    }
+  ],
+  "default_key": "H",
+  "effect": [
+    {
+      "mode": [
+        3
+      ],
+      "description": "类似于Hidden，但是音符是逐渐从不可见转变为可见，开始音符会在80%游戏区域逐渐显现，渐显的速度取决于连击数，在500连击时只能看到30%的游玩区域，如果Miss则会重复这个过程"
+    }
+  ],
+  "gameplay": {
+    "src": "mods/FI_GP.png",
+    "description": "左为开启FI，右为Nomod"
+  },
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Hidden (HD)"
+    },
+    {
+      "type": "increase",
+      "name": "Cover (CO)"
+    },
+    {
+      "type": "increase",
+      "name": "Flashlight (FL)"
+    }
+  ],
+  "additional_info": null
+}

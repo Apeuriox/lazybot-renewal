@@ -1,4 +1,4 @@
-package me.aloic.lazybot.graphics.help;
+package me.aloic.lazybot.osu.dao.entity.view;
 
 import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandParameter;

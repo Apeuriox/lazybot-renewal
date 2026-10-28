@@ -1,0 +1,40 @@
+{
+  "name": "ScoreV2 (SV2)",
+  "abbreviation": "SV2",
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "系统",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "标准化得分，在得分倍率为1.00x下，不含转盘奖励分，SS的分数为100万。算法为 ((700000 * 连击奖励 / 满连击奖励) + (300000 * ((准确度 / 100) ^ 10) * 已经游玩的物件量 / 总物件量) + 转盘奖励) * 模组倍率"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": null,
+  "additional_info": "Lazer中无法主动启用ScoreV2"
+}

@@ -1,0 +1,48 @@
+{
+  "name": "Wiggle (WG)",
+  "abbreviation": "WG",
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "此Mod会使得所有物件持续的四周摆动"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "fun",
+      "name": "Transform (TR)"
+    },
+    {
+      "type": "fun",
+      "name": "Magnetised (MG)"
+    },
+    {
+      "type": "fun",
+      "name": "Repel (RP)"
+    },
+    {
+      "type": "fun",
+      "name": "Depth (DP)"
+    }
+  ],
+  "additional_info": null
+}

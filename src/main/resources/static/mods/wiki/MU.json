@@ -1,0 +1,40 @@
+{
+  "name": "Muted (MU)",
+  "abbreviation": "MU",
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "按照设定的Combo上限逐渐减小音乐音量。超过该数字后只能听到节拍器。如果Miss，此过程会重复"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": null,
+  "additional_info": "可以设定达到指定的Combo，同时，该Mod默认关闭打击音效，但是可以重新启用"
+}

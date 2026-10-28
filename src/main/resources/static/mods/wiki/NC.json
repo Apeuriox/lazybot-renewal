@@ -1,0 +1,77 @@
+{
+  "name": "Nightcore (NC)",
+  "abbreviation": "NC",
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.12x (Stable) / 1.10x (Lazer)",
+      "type": 0,
+      "mode": [
+        0,
+        1
+      ]
+    },
+    {
+      "multiplier": "1.06x (Stable) / 1.10x (Lazer)",
+      "type": 0,
+      "mode": [
+        2
+      ]
+    },
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        3
+      ]
+    }
+  ],
+  "default_key": "G",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "加速整个游戏至1.5倍速，自带调整音高"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "reduce",
+      "name": "Half Time (HT)"
+    },
+    {
+      "type": "reduce",
+      "name": "Daycore (DC)"
+    },
+    {
+      "type": "increase",
+      "name": "Double Time (DT)"
+    },
+    {
+      "type": "fun",
+      "name": "Adaptive Speed (AS)"
+    },
+    {
+      "type": "fun",
+      "name": "Wind Up (WU)"
+    },
+    {
+      "type": "fun",
+      "name": "Wind Down (WD)"
+    }
+  ],
+  "additional_info": null
+}

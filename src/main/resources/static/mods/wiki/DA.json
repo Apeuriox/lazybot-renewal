@@ -1,0 +1,52 @@
+{
+  "name": "Difficulty Adjust (DA)",
+  "abbreviation": "DA",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M30.7659 42.2334H88.6189\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M30.7659 25.8042H88.6189\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M30.7659 58.6631H88.6189\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M40.661 58.6631H44.2034\" fill=\"none\" stroke=\"black\" stroke-width=\"14.4\" stroke-linecap=\"round\"/>\n<path d=\"M74.9497 42.2334H78.4922\" fill=\"none\" stroke=\"black\" stroke-width=\"14.4\" stroke-linecap=\"round\"/>\n<path d=\"M52.0133 25.8042H55.5558\" fill=\"none\" stroke=\"black\" stroke-width=\"14.4\" stroke-linecap=\"round\"/>",
+    "transform": ""
+  },
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "0.10x - 1.00x (1.00x)",
+      "type": 1
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "允许你自由设置地图的四维 (AR、OD、HP、CS)"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "reduce",
+      "name": "Easy (EZ)"
+    },
+    {
+      "type": "increase",
+      "name": "Hard Rock (HR)"
+    },
+    {
+      "type": "increase",
+      "name": "Target Practice (TP)"
+    }
+  ],
+  "additional_info": "允许超出Nomod下的最大限制，如在std中AR可以调整的范围为: AR 11 至 AR -10，分数倍率随调整项的变化而定，每0.1变化量降低0.05x，到最小0.10x"
+}

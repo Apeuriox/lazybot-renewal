@@ -1,0 +1,67 @@
+{
+  "name": "Relax (RX)",
+  "abbreviation": "RX",
+  "compatible_mode": [
+    0,
+    1,
+    2
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "自动",
+  "score_multiplier": [
+    {
+      "multiplier": "0.00x (Stable) / 0.10x (Lazer)",
+      "type": 1
+    }
+  ],
+  "default_key": "C",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "你不需要点击，osu!会自动提前点击"
+    },
+    {
+      "mode": [
+        1
+      ],
+      "description": "不再区分don和kat"
+    },
+    {
+      "mode": [
+        2
+      ],
+      "description": "使用鼠标控制小人"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "automation",
+      "name": "Autoplay (AT)"
+    },
+    {
+      "type": "automation",
+      "name": "Cinema (CN)"
+    },
+    {
+      "type": "automation",
+      "name": "Autopilot (AP)"
+    },
+    {
+      "type": "conversion",
+      "name": "Alternate (AL)"
+    },
+    {
+      "type": "conversion",
+      "name": "Single Tap (SG)"
+    },
+    {
+      "type": "conversion",
+      "name": "Magnetised (MG)"
+    }
+  ],
+  "additional_info": null
+}

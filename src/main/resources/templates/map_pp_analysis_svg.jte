@@ -1,5 +1,5 @@
-@import me.aloic.lazybot.osu.dao.entity.vo.MapPpAnalysisView
-@param MapPpAnalysisView model
+@import me.aloic.lazybot.osu.dao.entity.view.MapPerformanceAnalysisView
+@param MapPerformanceAnalysisView model
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
      width="${model.width()}" height="${model.height()}"
@@ -116,8 +116,8 @@
       !{int offset = index == 1 ? 0 : index == 5 ? 189 : index == 10 ? 378 : 567;}
       <line x1="${26 + offset}" y1="1094" x2="${26 + offset}" y2="1138" class="rule"/>
       <text x="${37 + offset}" y="1106" class="micro">${index} MISS</text>
-      <text x="${37 + offset}" y="1123" class="heading" font-size="11">${MapPpAnalysisView.formatPp(model.analysis().missCurve().get(index).pp())}</text>
-      <text x="${37 + offset}" y="1135" class="muted" font-size="8">${MapPpAnalysisView.signed(-model.analysis().missCurve().get(index).absoluteLoss())}pp / ${MapPpAnalysisView.signed(-model.analysis().missCurve().get(index).relativeLoss())}%</text>
+      <text x="${37 + offset}" y="1123" class="heading" font-size="11">${MapPerformanceAnalysisView.formatPp(model.analysis().missCurve().get(index).pp())}</text>
+      <text x="${37 + offset}" y="1135" class="muted" font-size="8">${MapPerformanceAnalysisView.signed(-model.analysis().missCurve().get(index).absoluteLoss())}pp / ${MapPerformanceAnalysisView.signed(-model.analysis().missCurve().get(index).relativeLoss())}%</text>
     @endfor
     @for (var tick : model.missChart().yTicks())
       <line x1="${model.missChart().x()}" y1="${tick.y()}" x2="${model.missChart().x() + model.missChart().width()}" y2="${tick.y()}" class="grid"/>
@@ -145,8 +145,8 @@
       !{int offset = index == 2 ? 0 : index == 4 ? 189 : index == 10 ? 378 : 567;}
       <line x1="${738 + offset}" y1="1094" x2="${738 + offset}" y2="1138" class="rule"/>
       <text x="${749 + offset}" y="1106" class="micro">${String.format(java.util.Locale.ROOT, "%.0f%%", model.analysis().accuracyCurve().get(index).input())}</text>
-      <text x="${749 + offset}" y="1123" class="heading" font-size="11">${MapPpAnalysisView.formatPp(model.analysis().accuracyCurve().get(index).pp())}</text>
-      <text x="${749 + offset}" y="1135" class="muted" font-size="8">${MapPpAnalysisView.signed(-model.analysis().accuracyCurve().get(index).absoluteLoss())}pp / ${MapPpAnalysisView.signed(-model.analysis().accuracyCurve().get(index).relativeLoss())}%</text>
+      <text x="${749 + offset}" y="1123" class="heading" font-size="11">${MapPerformanceAnalysisView.formatPp(model.analysis().accuracyCurve().get(index).pp())}</text>
+      <text x="${749 + offset}" y="1135" class="muted" font-size="8">${MapPerformanceAnalysisView.signed(-model.analysis().accuracyCurve().get(index).absoluteLoss())}pp / ${MapPerformanceAnalysisView.signed(-model.analysis().accuracyCurve().get(index).relativeLoss())}%</text>
     @endfor
     @for (var tick : model.accuracyChart().yTicks())
       <line x1="${model.accuracyChart().x()}" y1="${tick.y()}" x2="${model.accuracyChart().x() + model.accuracyChart().width()}" y2="${tick.y()}" class="grid"/>
@@ -169,7 +169,7 @@
   <text fill="#0D0D0D" font-family="Outfit" font-size="20"><tspan x="15" y="1496.42">BPM</tspan></text>
   <text fill="#0D0D0D" font-family="Outfit" font-size="20"><tspan x="67" y="1496.42">${String.format(java.util.Locale.ROOT, "%.2f", model.analysis().context().getBeatmap().getAttributes().getBpm())}</tspan></text>
   <text fill="#0D0D0D" font-family="Outfit" font-size="20"><tspan x="200" y="1496.42">Length</tspan></text>
-  <text fill="#0D0D0D" font-family="Outfit" font-size="20"><tspan x="273" y="1496.42">${MapPpAnalysisView.formatDuration(model.analysis().context().getBeatmap().getAttributes().getLength())}</tspan></text>
+  <text fill="#0D0D0D" font-family="Outfit" font-size="20"><tspan x="273" y="1496.42">${MapPerformanceAnalysisView.formatDuration(model.analysis().context().getBeatmap().getAttributes().getLength())}</tspan></text>
   <path d="M380.143 1470V1510" stroke="black"/>
   <text fill="#0D0D0D" font-family="Outfit" font-size="20"><tspan x="410" y="1496.42">AR</tspan></text>
   <text fill="#0D0D0D" font-family="Outfit" font-size="20"><tspan x="450" y="1496.42">${String.format(java.util.Locale.ROOT, "%.1f", model.analysis().context().getBeatmap().getAttributes().getAr())}</tspan></text>

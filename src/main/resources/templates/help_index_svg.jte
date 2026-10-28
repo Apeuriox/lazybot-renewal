@@ -1,4 +1,4 @@
-@import me.aloic.lazybot.graphics.help.HelpIndexPoster
+@import me.aloic.lazybot.osu.dao.entity.view.HelpIndexPoster
 @param HelpIndexPoster poster
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="2000" height="${poster.height()}" viewBox="0 0 2000 ${poster.height()}" fill="none" xmlns="http://www.w3.org/2000/svg">

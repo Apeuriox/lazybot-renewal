@@ -1,0 +1,65 @@
+{
+  "name": "Half Time (HT)",
+  "abbreviation": "HT",
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "降低难度",
+  "score_multiplier": [
+    {
+      "multiplier": "0.30x",
+      "type": 2,
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "default_key": "E",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "减慢整个游戏至0.75倍速，在Lazer中可以修改为 0.50 至 0.99 的任意值"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "reduce",
+      "name": "Daycore (DC)"
+    },
+    {
+      "type": "increase",
+      "name": "Double Time (DT)"
+    },
+    {
+      "type": "increase",
+      "name": "Nightcore (NC)"
+    },
+    {
+      "type": "fun",
+      "name": "Adaptive Speed (AS)"
+    },
+    {
+      "type": "fun",
+      "name": "Wind Up (WU)"
+    },
+    {
+      "type": "fun",
+      "name": "Wind Down (WD)"
+    }
+  ],
+  "additional_info": "Lazer中可以调整音高，使其产生和Nightcore一样的效果"
+}

@@ -1,0 +1,52 @@
+{
+  "name": "Sudden Death (SD)",
+  "abbreviation": "SD",
+  "compatible_mode": [0, 1, 2, 3],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "default_key": "S",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "Miss以及断Combo时会直接Fail"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "reduce",
+      "name": "No Fail (NF)"
+    },
+    {
+      "type": "increase",
+      "name": "Perfect (PF)"
+    },
+    {
+      "type": "automation",
+      "name": "Cinema (CN)"
+    },
+    {
+      "type": "conversion",
+      "name": "Target Practice (TP)"
+    }
+  ],
+  "additional_info": "在Std中漏滑条尾不会触发Fail，同时在Lazer中可以设置使其可以像PF一样在失败时自动重试"
+}

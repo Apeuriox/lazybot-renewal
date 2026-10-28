@@ -1,0 +1,52 @@
+{
+  "name": "Cover (CO)",
+  "abbreviation": "CO",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M90.6141 23.6348L68.7935 47.6926\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M49.4041 18.3828L29.671 40.1389\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M80.9605 17.4819L53.5588 47.693\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M65.433 18.3828L38.8485 47.6928\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M28.8 65.4121H91.3238\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M84.695 47.6929L91.324 40.3843\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M30.4187 23.2363L34.821 18.3827\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>",
+    "transform": ""
+  },
+  "compatible_mode": [
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        3
+      ]
+    }
+  ],
+  "default_key": "K",
+  "effect": [
+    {
+      "mode": [
+        3
+      ],
+      "description": "可以设置为FI或HD的视野遮挡类型，Along Scroll为FI效果，Against Scroll为HD效果，遮挡的区域范围为0.2到0.8，默认为0.5"
+    }
+  ],
+  "gameplay": {
+    "src": "mods/CO_GP.png",
+    "description": "左为开启CO（Along Scroll, 0.5），右为Nomod"
+  },
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Hidden (HD)"
+    },
+    {
+      "type": "increase",
+      "name": "Fade In (FI)"
+    },
+    {
+      "type": "increase",
+      "name": "Flashlight (FL)"
+    }
+  ],
+  "additional_info": null
+}

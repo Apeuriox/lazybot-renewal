@@ -31,11 +31,13 @@ public class CardInfoColorPalette
         double s = ok[1];
         double l = ok[2];
         boolean lowContrast = s < 0.21 || l < 0.12 || l > 0.88;
+
+        //disabling lowContrastLight cuz Im not satisfied with the colors
+        double lift = 7.0 * clamp01((l - 0.50) / (0.88 - 0.50));
         if (!lowContrast) {
-            double lift = 7.0 * clamp01((l - 0.50) / (0.88 - 0.50));
             return vivid(hue, lift);
         }
-        return l > 0.50 ? lowLight(hue) : lowDark(hue);
+        return l > 0.50 ? vivid(hue, lift) : lowDark(hue);
     }
 
     private static CardInfoColorPalette vivid(int hue, double lift)

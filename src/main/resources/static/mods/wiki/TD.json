@@ -1,0 +1,48 @@
+{
+  "name": "Touch Device (TD)",
+  "abbreviation": "TD",
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "系统",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "此模组意在标识此成绩在游玩过程中（不包括休息段）使用过触控输入。此模组会影响pp算法"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "automation",
+      "name": "Autoplay (AT)"
+    },
+    {
+      "type": "automation",
+      "name": "Cinema (CN)"
+    },
+    {
+      "type": "automation",
+      "name": "Autopilot (AP)"
+    },
+    {
+      "type": "fun",
+      "name": "Bloom (BM)"
+    }
+  ],
+  "additional_info": "此模组无法由用户手动选择，条件满足时系统会自动启用"
+}

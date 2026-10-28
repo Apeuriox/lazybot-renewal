@@ -8,17 +8,22 @@ import me.aloic.lazybot.entity.CommandHelp;
 import me.aloic.lazybot.entity.CommandSummary;
 import me.aloic.lazybot.graphics.cache.BitmapRenderCache;
 import me.aloic.lazybot.graphics.cache.RenderFingerprint;
-import me.aloic.lazybot.graphics.help.CommandHelpPoster;
-import me.aloic.lazybot.graphics.help.HelpIndexPoster;
+import me.aloic.lazybot.osu.dao.entity.view.CommandHelpPoster;
+import me.aloic.lazybot.osu.dao.entity.view.HelpIndexPoster;
+import me.aloic.lazybot.osu.dao.entity.view.ModWikiPoster;
+import me.aloic.lazybot.osu.wiki.ModWikiCatalog;
+import me.aloic.lazybot.osu.wiki.ModWikiDocument;
+import me.aloic.lazybot.osu.wiki.ModModeSymbols;
 import me.aloic.lazybot.graphics.render.SVGRenderer;
 
 import java.util.List;
+import java.util.Locale;
 import me.aloic.lazybot.graphics.service.RasterizationService;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerDailyDelta;
 import me.aloic.lazybot.osu.dao.entity.vo.PlayerInfoVO;
 import me.aloic.lazybot.osu.dao.entity.vo.ScoreVO;
 import me.aloic.lazybot.osu.dao.entity.vo.MapPerformanceAnalysis;
-import me.aloic.lazybot.osu.dao.entity.vo.MapPpAnalysisView;
+import me.aloic.lazybot.osu.dao.entity.view.MapPerformanceAnalysisView;
 import me.aloic.lazybot.osu.theme.preset.CardInfoColorPalette;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.info.BuildProperties;
@@ -32,14 +37,20 @@ public class RasterizationServiceImpl implements RasterizationService
     private final TemplateEngine templateEngine;
     private final BitmapRenderCache bitmapRenderCache;
     private final ObjectProvider<BuildProperties> buildProperties;
+    private final ModWikiCatalog modWikiCatalog;
+    private final ModModeSymbols modModeSymbols;
 
     public RasterizationServiceImpl(TemplateEngine templateEngine,
                                     BitmapRenderCache bitmapRenderCache,
-                                    ObjectProvider<BuildProperties> buildProperties)
+                                    ObjectProvider<BuildProperties> buildProperties,
+                                    ModWikiCatalog modWikiCatalog,
+                                    ModModeSymbols modModeSymbols)
     {
         this.templateEngine = templateEngine;
         this.bitmapRenderCache = bitmapRenderCache;
         this.buildProperties = buildProperties;
+        this.modWikiCatalog = modWikiCatalog;
+        this.modModeSymbols = modModeSymbols;
     }
 
     @Override
@@ -78,7 +89,7 @@ public class RasterizationServiceImpl implements RasterizationService
                 () -> {
                     TemplateOutput output = new StringOutput();
                     Map<String, Object> params = Map.of(
-                            "model", MapPpAnalysisView.from(analysis));
+                            "model", MapPerformanceAnalysisView.from(analysis));
                     templateEngine.render("map_pp_analysis_svg.jte", params, output);
                     return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
                 });
@@ -100,6 +111,20 @@ public class RasterizationServiceImpl implements RasterizationService
         templateEngine.render("help_index_svg.jte",
                 Map.of("poster", HelpIndexPoster.from(summaries, projectVersion())), output);
         return SVGRenderer.renderSVGDocumentToByteArray(output.toString());
+    }
+
+    @Override
+    public byte[] renderModWiki(String acronym)
+    {
+        String key = acronym.trim().toUpperCase(Locale.ROOT);
+        return bitmapRenderCache.getOrCompute("mod-wiki:" + key, () -> {
+            ModWikiDocument page = modWikiCatalog.require(key);
+            TemplateOutput output = new StringOutput();
+            templateEngine.render("mod_wiki_svg.jte", Map.of(
+                    "poster", ModWikiPoster.from(page),
+                    "modes", modModeSymbols.markup()), output);
+            return SVGRenderer.renderSVGDocumentToByteArrayPNG(output.toString());
+        });
     }
 
     private String projectVersion()

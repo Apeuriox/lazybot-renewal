@@ -1,0 +1,44 @@
+{
+  "name": "No Scope (NS)",
+  "abbreviation": "NS",
+  "compatible_mode": [
+    0,
+    2
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0,
+        2
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "按照设定的Combo上限逐渐降低鼠标指针的透明度。超过该数字后无法看到鼠标指针。如果Miss，此过程会重复"
+    },
+    {
+      "mode": [
+        2
+      ],
+      "description": "按照设定的Combo上限逐渐降低小人的透明度。超过该数字后无法看到小人。如果Miss，此过程会重复"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "fun",
+      "name": "Bloom (BM)"
+    }
+  ],
+  "additional_info": "有一个设置值Hidden at combo (0–50, 默认为 10)，如果设置为0，将只会在休息段看得到光标/小人"
+}

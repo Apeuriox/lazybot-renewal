@@ -1,0 +1,52 @@
+{
+  "name": "Single Tap (SG)",
+  "abbreviation": "SG",
+  "compatible_mode": [
+    0,
+    1
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "连续输入下只接受同一个键的输入"
+    },
+    {
+      "mode": [
+        1
+      ],
+      "description": "don和kat只允许一个键输入"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "automation",
+      "name": "Autoplay (AT)"
+    },
+    {
+      "type": "automation",
+      "name": "Cinema (CN)"
+    },
+    {
+      "type": "automation",
+      "name": "Relax (RX)"
+    },
+    {
+      "type": "conversion",
+      "name": "Alternate (AL)"
+    }
+  ],
+  "additional_info": "一段时间没有任何输入后，可以换指"
+}

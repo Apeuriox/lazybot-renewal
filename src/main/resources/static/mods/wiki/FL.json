@@ -1,0 +1,78 @@
+{
+  "name": "Flashlight (FL)",
+  "abbreviation": "FL",
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.12x",
+      "type": 0,
+      "mode": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        3
+      ]
+    }
+  ],
+  "default_key": "J / L (mania)",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "你只能看到光标周围的一小块区域，拉滑条时整个屏幕会变暗"
+    },
+    {
+      "mode": [
+        1
+      ],
+      "description": "你只能看见判定区周围一小块区域，配合HD时所有音符等效于变为全隐"
+    },
+    {
+      "mode": [
+        2
+      ],
+      "description": "你只能看到小人周围的区域，配合HD时候能看到一小部分水果，但是当100连击缩小区域时，所有水果等效于变为全隐"
+    },
+    {
+      "mode": [
+        3
+      ],
+      "description": "你只能看到整个屏幕中间的区域，与HD, FI, CO冲突，可见区域不会变化"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Hidden (HD)* (仅mania)"
+    },
+    {
+      "type": "increase",
+      "name": "Fade In (FI)"
+    },
+    {
+      "type": "increase",
+      "name": "Cover (CO)"
+    },
+    {
+      "type": "increase",
+      "name": "Blinds (BL)"
+    }
+  ],
+  "additional_info": "根据玩家现在的Combo，可见区域会在 100 连击和 200 连击时分别进一步缩小"
+}

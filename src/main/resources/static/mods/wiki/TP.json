@@ -1,0 +1,59 @@
+{
+  "name": "Target Practice (TP)",
+  "abbreviation": "TP",
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x (Stable) / 0.10x (Lazer)",
+      "type": 2,
+      "mode": [
+        0
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "该模组会把所有物件替换成标靶, 标靶能看作一类没有连击数的特殊圆圈。分数和准确率由点击位置和时间偏差决定：越准确分数越高，理论最高是250分。在游玩区域中，标靶按组放置，每两小节开始新的一组。同一组标靶的间距相等，并且新的一组会略微增加间距"
+    }
+  ],
+  "gameplay": {
+    "src": "mods/TP_GP.png",
+    "description": "此为开启TP的游玩画面"
+  },
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Sudden Death (SD)"
+    },
+    {
+      "type": "increase",
+      "name": "Strict Tracking (ST)"
+    },
+    {
+      "type": "conversion",
+      "name": "Random (RD)"
+    },
+    {
+      "type": "fun",
+      "name": "Traceable (TC)"
+    },
+    {
+      "type": "fun",
+      "name": "Approach Different (AD)"
+    },
+    {
+      "type": "fun",
+      "name": "Depth (DP)"
+    }
+  ],
+  "additional_info": "Stable中只能在Cutting Edge版本中启用"
+}

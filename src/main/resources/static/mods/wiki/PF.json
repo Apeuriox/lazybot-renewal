@@ -1,0 +1,57 @@
+{
+  "name": "Perfect (PF)",
+  "abbreviation": "PF",
+  "compatible_mode": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "default_key": "D",
+  "effect": [
+    {
+      "mode": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "description": "在准确度低于100%时会自动重试"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "reduce",
+      "name": "No Fail (NF)"
+    },
+    {
+      "type": "increase",
+      "name": "Sudden Death (SD)"
+    },
+    {
+      "type": "increase",
+      "name": "Accuracy Challenge (AC) "
+    },
+    {
+      "type": "automation",
+      "name": "Cinema (CN)"
+    }
+  ],
+  "additional_info": null
+}

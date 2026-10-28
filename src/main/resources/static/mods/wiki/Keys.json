@@ -1,0 +1,31 @@
+{
+  "name": "Key mods (1K, 2K, 3K, 4K, 5K, 6K, 7K, 8K, 9K, 10K)",
+  "abbreviation": "Keys",
+  "compatible_mode": [
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 1,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "0.66x – 1.00x (Stable) / 1.00x (Lazer)",
+      "type": 2,
+      "mode": [
+        3
+      ]
+    }
+  ],
+  "default_key": "Z",
+  "effect": [
+    {
+      "mode": [
+        3
+      ],
+      "description": "让所有 osu!mania 的转谱强制使用选择的按键设置。它们会根据所选模组忽略谱面原有的按键设置，但会导致得分系数下降。其中4K - 9K为Ranked"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": null,
+  "additional_info": "分数倍率算法为，如果设置的Key数与地图本身一致，则为1.00x，不同则为0.90x；同时若设置值低于地图值，则每低1k降低分数倍率0.04x，高于则固定为0.90x"
+}

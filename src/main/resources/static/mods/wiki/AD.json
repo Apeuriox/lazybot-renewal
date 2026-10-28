@@ -1,0 +1,61 @@
+{
+  "name": "Approach Different (AD)",
+  "abbreviation": "AD",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M84.3329 39.6889C84.3329 26.2014 73.399 15.2675 59.9115 15.2675C46.4239 15.2675 35.4901 26.2014 35.4901 39.6889C35.4901 53.1765 46.4239 64.1103 59.9115 64.1103V69.746C43.3114 69.746 29.8544 56.289 29.8544 39.6889C29.8544 23.0889 43.3114 9.63184 59.9115 9.63184C76.5115 9.63184 89.9686 23.0889 89.9686 39.6889C89.9686 56.289 76.5115 69.746 59.9115 69.746V64.1103C73.399 64.1103 84.3329 53.1765 84.3329 39.6889Z\" fill=\"black\"/>\n<circle cx=\"40.3852\" cy=\"63.4504\" r=\"11.4079\" fill=\"black\"/>",
+    "transform": ""
+  },
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "0.70x",
+      "type": 1,
+      "mode": [
+        0
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "允许用户设置缩圈如何缩圈到Note上"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Hidden (HD)"
+    },
+    {
+      "type": "conversion",
+      "name": "Target Practice (TP)"
+    },
+    {
+      "type": "fun",
+      "name": "Spin In (SI)"
+    },
+    {
+      "type": "fun",
+      "name": "Grow (GR)"
+    },
+    {
+      "type": "fun",
+      "name": "Deflate (DF)"
+    },
+    {
+      "type": "fun",
+      "name": "Freeze Frame (FR)"
+    }
+  ],
+  "additional_info": "以缓动函数（easing functions）改变缩圈动画，允许调整缩圈初始大小（1.5–10，默认值：4.0），以及动画样式，动画样式包括\n1.线性 (Linear)： 常规缩圈动画\n2.重力 (Gravity)： 缩圈先向外移动一段距离，随后迅速坠落到Note (easeInBack) \n3.InOut1： 缩圈迅速向Note移动，并在完美判定前在Note处“暂停”一段时间 (easeInOutCubic)\n4.InOut2： InOut1 的增强版本 (easeInOutQuint)\n5. 加速1 (Accelerate1)： 缩圈起初移动缓慢，在靠近打击圈时逐渐加速（使用 easeInQuad 缓动函数）。\n6.加速2 (Accelerate2)： Accelerate2 的增强版本 (easeInCubic)\n7.加速3 (Accelerate3)：Accelerate2 的增强版本 (easeInQuint)\n8.减速1 (Decelerate1)：缩圈起初迅速缩放，在靠近Note时逐渐减速 (easeOutQuad)\n9.减速2 (Decelerate2)： Decelerate1 的增强版本(easeOutCubic)\n10.减速3 (Decelerate3)： Decelerate2 的增强版本 (easeOutQuint)\n默认Gravity）"
+}

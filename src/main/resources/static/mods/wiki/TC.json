@@ -1,0 +1,55 @@
+{
+  "name": "Traceable (TC)",
+  "abbreviation": "TC",
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 0,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "只有缩圈，滑条保留滑条体"
+    }
+  ],
+  "gameplay": {
+    "src": "mods/TC_GP.png",
+    "description": "左为开启TC，右为Nomod"
+  },
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Hidden (HD)"
+    },
+    {
+      "type": "conversion",
+      "name": "Target Practice (TP)"
+    },
+    {
+      "type": "fun",
+      "name": "Spin In (SI)"
+    },
+    {
+      "type": "fun",
+      "name": "Grow (GR)"
+    },
+    {
+      "type": "fun",
+      "name": "Deflate (DF)"
+    }
+  ],
+  "additional_info": "TC有pp加成，现阶段的加成和HD一致"
+}

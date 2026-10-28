@@ -1,0 +1,37 @@
+{
+  "name": "Strict Tracking (ST)",
+  "abbreviation": "ST",
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "提升难度",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1
+    }
+  ],
+  "default_key": "L",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "当拉滑条中脱离滑条将会判定Miss"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "conversion",
+      "name": "Target Practice (TP)"
+    },
+    {
+      "type": "conversion",
+      "name": "Classic (CL)"
+    }
+  ],
+  "additional_info": null
+}

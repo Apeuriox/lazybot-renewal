@@ -1,0 +1,43 @@
+{
+  "name": "Hold Off (HO)",
+  "abbreviation": "HO",
+  "compatible_mode": [
+    3
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "0.90x",
+      "type": 2,
+      "mode": [
+        3
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        3
+      ],
+      "description": "将所有长条转化为单音符"
+    }
+  ],
+  "gameplay": {
+    "src": "mods/HO_GP.png",
+    "description": "左为开启HO，右为Nomod"
+  },
+  "incompatible_mod": [
+    {
+      "type": "reduce",
+      "name": "No Release (NR)"
+    },
+    {
+      "type": "conversion",
+      "name": "Invert (IN)"
+    }
+  ],
+  "additional_info": null
+}
