@@ -1,0 +1,47 @@
+{
+  "name": "Freeze Frame (FR)",
+  "abbreviation": "FR",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M60.0341 10.8857V73.2857M33.5457 26.4857L86.6604 57.6857M33.5381 57.6499L86.5301 26.5216M41.6341 20.2457L46.2341 34.2857L32.4341 37.4057M32.4341 46.7657L46.2341 49.8857L41.6341 63.9257M78.4341 20.2457L73.8341 34.2857L87.6341 37.4057M87.6341 46.7657L73.8341 49.8857L78.4341 63.9257M50.8341 15.5657L60.0341 24.9257L69.2341 15.5657M50.8341 68.6057L60.0341 59.2457L69.2341 68.6057\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n",
+    "transform": ""
+  },
+  "compatible_mode": [0],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [0]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [2],
+      "description": "一次性出现一堆物件"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Hidden (HD)"
+    },
+    {
+      "type": "fun",
+      "name": "Transform (TR)"
+    },
+    {
+      "type": "fun",
+      "name": "Approach Different (AD)"
+    },
+    {
+      "type": "fun",
+      "name": "Depth (DP)"
+    }
+  ],
+  "additional_info": null
+}

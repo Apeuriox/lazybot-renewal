@@ -44,7 +44,7 @@
       "name": "Hard Rock (HR)"
     },
     {
-      "type": "increase",
+      "type": "conversion",
       "name": "Target Practice (TP)"
     }
   ],

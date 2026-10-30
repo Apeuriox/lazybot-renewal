@@ -12,7 +12,7 @@
   "type": "降低难度",
   "score_multiplier": [
     {
-      "multiplier": "0.20x - 0.83x (默认0.55x)",
+      "multiplier": "0.20x - 0.83x (0.55x)",
       "type": 2,
       "mode": [0, 1, 2, 3]
     }

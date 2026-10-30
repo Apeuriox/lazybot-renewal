@@ -1,0 +1,61 @@
+{
+  "name": "Spin In (SI)",
+  "abbreviation": "SI",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M63.5449 42.1568C66.989 39.155 66.2199 33.7211 63.1869 30.7943C58.7369 26.4956 51.532 27.7528 47.6812 32.2858C42.5483 38.3153 44.1674 47.5277 50.037 52.3178C57.4246 58.3515 68.4342 56.1737 74.1217 48.7377C81.0077 39.7309 78.4934 26.6466 69.7623 20.0308C59.473 12.2385 44.6028 15.3516 37.1043 25.7049C28.4443 37.6573 31.8633 54.6606 43.4606 63.0848C56.6436 72.6521 75.3952 68.5945 84.6986 55.3187\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n",
+    "transform": ""
+  },
+  "compatible_mode": [
+    0
+  ],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [
+        0
+      ]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [
+        0
+      ],
+      "description": "使所有的Note和滑条起点在出现时比正常尺寸更小，并在玩家需要进行打击之前逐渐放大至正常大小。此外，打击圈和滑条起点在屏幕上显示时，会完整旋转 360 度，注意没有缩圈"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Traceable (TC)"
+    },
+    {
+      "type": "increase",
+      "name": "Hidden (TC)"
+    },
+    {
+      "type": "fun",
+      "name": "Grow (GR)"
+    },
+    {
+      "type": "fun",
+      "name": "Deflate (DF)"
+    },
+    {
+      "type": "fun",
+      "name": "Approach Different (AD)"
+    },
+    {
+      "type": "fun",
+      "name": "Depth (DP)"
+    }
+  ],
+  "additional_info": null
+}

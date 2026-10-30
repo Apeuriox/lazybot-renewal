@@ -1,6 +1,11 @@
 {
   "name": "Wind Down (WD)",
   "abbreviation": "WD",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M75.1616 45.458C85.9529 45.458 85.9529 29.858 75.1616 29.858H36.4551\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path d=\"M58.1527 55.0581C69.2225 55.0581 69.2225 39.4581 58.1527 39.4581H36.4551\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path d=\"M42.4435 51.458C53.6589 51.458 53.6589 39.458 42.4435 39.458H36.4551\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n",
+    "transform": ""
+  },
   "compatible_mode": [
     0,
     1,
@@ -12,10 +17,14 @@
   "type": "乐趣",
   "score_multiplier": [
     {
+      "multiplier": "0.20x - 1.42x (0.64x)",
+      "type": 2,
+      "mode": [0]
+    },
+    {
       "multiplier": "0.50x",
       "type": 2,
       "mode": [
-        0,
         1,
         2,
         3
@@ -31,7 +40,7 @@
         2,
         3
       ],
-      "description": "此模组会从原速（地图开头）逐渐减速至HT的效果（地图结尾）"
+      "description": "此模组会从原速（地图开头）逐渐减速至HT (可设置) 的效果（地图结尾）"
     }
   ],
   "gameplay": null,
@@ -61,5 +70,5 @@
       "name": "Adaptive Speed (AS)"
     }
   ],
-  "additional_info": "和HT一样，可以设置终端的速度 (0.50 - 0.99)，同时也可以设置音高调整效果"
+  "additional_info": "和HT一样，可以设置终端的速度 (0.50 - 1.99)，同时也可以设置音高调整效果，分数倍率计算有点复杂，若初始倍率（地图开始）小于 1.00x，则按照 HT 计算初始分数倍率；若大于 1.00x，则改用 DT 进行计算；若初始倍率恰好为 1.00x，则取 初始倍率为 1.00x，重复上述步骤，计算最终分数倍率，最终的分数倍率即为：0.8 * 初始倍率 + 0.2 * 最终倍率"
 }

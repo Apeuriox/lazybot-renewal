@@ -1,6 +1,11 @@
 {
   "name": "Swap (SW)",
   "abbreviation": "SW",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M61.1781 16.4443C57.7112 16.4443 54.2782 17.1272 51.0752 18.4539C47.8722 19.7806 44.9619 21.7253 42.5105 24.1767C40.059 26.6282 38.1144 29.5385 36.7877 32.7415C35.4609 35.9445 34.7781 39.3774 34.7781 42.8443\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-miterlimit=\"3.99393\" stroke-linecap=\"round\"/>\n<path d=\"M61.178 69.2441C64.6449 69.2441 68.0778 68.5613 71.2808 67.2346C74.4838 65.9078 77.3942 63.9632 79.8456 61.5118C82.2971 59.0603 84.2417 56.15 85.5684 52.947C86.8951 49.744 87.578 46.311 87.578 42.8441\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-miterlimit=\"3.99393\" stroke-linecap=\"round\"/>\n<path d=\"M34.4087 48.1982L26.3779 40.1675\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M86.7472 40.167L94.778 48.1978\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M34.4087 48.1982L42.4395 40.1675\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M86.7472 40.167L78.7164 48.1978\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<circle cx=\"44.3781\" cy=\"62.0443\" r=\"6.6\" fill=\"none\" stroke=\"black\" stroke-width=\"6\"/>\n<circle cx=\"81.578\" cy=\"22.4442\" r=\"6.6\" fill=\"black\" stroke=\"black\" stroke-width=\"6\"/>",
+    "transform": ""
+  },
   "compatible_mode": [
     1
   ],

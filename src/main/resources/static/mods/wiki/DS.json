@@ -1,0 +1,29 @@
+{
+  "name": "Dual Stages (DS)",
+  "abbreviation": "DS",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<line x1=\"61.9807\" y1=\"23.1855\" x2=\"62.2785\" y2=\"60.6247\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"78.2716\" y1=\"23.2095\" x2=\"78.2716\" y2=\"40.4541\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"47.2494\" y1=\"23.2095\" x2=\"47.2494\" y2=\"40.4541\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"78.2716\" y1=\"52.6836\" x2=\"78.2716\" y2=\"53.3293\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"47.2494\" y1=\"52.6836\" x2=\"47.2494\" y2=\"53.3293\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>",
+    "transform": ""
+  },
+  "compatible_mode": [3],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "转化",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [3],
+      "description": "激情双人mania"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [],
+  "additional_info": "只能对转换图生效"
+}

@@ -1,6 +1,11 @@
 {
   "name": "Wind Up (WU)",
   "abbreviation": "WU",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M75.5779 39.458C86.3693 39.458 86.3693 55.058 75.5779 55.058H36.8715\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path d=\"M58.5691 29.8584C69.6389 29.8584 69.6389 45.4584 58.5691 45.4584H36.8715\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path d=\"M42.8599 33.458C54.0753 33.458 54.0753 45.458 42.8599 45.458H36.8715\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n",
+    "transform": ""
+  },
   "compatible_mode": [
     0,
     1,
@@ -12,10 +17,14 @@
   "type": "乐趣",
   "score_multiplier": [
     {
+      "multiplier": "0.20x - 1.42x (1.05x)",
+      "type": 0,
+      "mode": [0]
+    },
+    {
       "multiplier": "0.50x",
       "type": 2,
       "mode": [
-        0,
         1,
         2,
         3
@@ -31,7 +40,7 @@
         2,
         3
       ],
-      "description": "此模组会从原速（地图开头）逐渐加速至DT的效果（地图结尾）"
+      "description": "此模组会从原速（地图开头）逐渐加速至 DT（可设置）的效果（地图结尾）"
     }
   ],
   "gameplay": null,
@@ -61,5 +70,5 @@
       "name": "Adaptive Speed (AS)"
     }
   ],
-  "additional_info": "和DT一样，可以设置终端的速度 (1.01 - 2.00)，同时也可以设置音高调整效果"
+  "additional_info": "和DT一样，可以设置终端的速度 (0.50 - 2.00)，同时也可以设置音高调整效果，具体分数倍率计算方式参考 WD"
 }

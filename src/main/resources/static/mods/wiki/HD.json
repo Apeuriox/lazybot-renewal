@@ -1,6 +1,11 @@
 {
   "name": "Hidden (HD)",
   "abbreviation": "HD",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M85.5517 15.8711L34.4473 66.9755\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M62.8837 5.69434L24.2704 44.3076\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M42.1893 9.96631L28.5425 23.6132\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M75.867 9.13281L27.7093 57.2906\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M57.1156 77.1528L95.7289 38.5396\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M77.8098 72.8809L91.4567 59.234\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M44.1321 73.7139L92.2899 25.5561\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>",
+    "transform": ""
+  },
   "compatible_mode": [
     0,
     1,
@@ -12,13 +17,14 @@
   "type": "提升难度",
   "score_multiplier": [
     {
+      "multiplier": "1.06x (Stable) / 1.04x (Lazer)",
+      "type": 0,
+      "mode": [0]
+    },
+    {
       "multiplier": "1.06x",
       "type": 0,
-      "mode": [
-        0,
-        1,
-        2
-      ]
+      "mode": [1, 2]
     },
     {
       "multiplier": "1.00x",
@@ -67,7 +73,7 @@
     },
     {
       "type": "increase",
-      "name": "Flashlight (FL)* (仅mania)"
+      "name": "Flashlight (FL)* (not mania)"
     },
     {
       "type": "fun",
@@ -86,5 +92,5 @@
       "name": "Depth (DP)"
     }
   ],
-  "additional_info": "在std中，HD的pp加成是固定的，实际计算为Aim和Spd: 额外（12 - AR）*4%的加成，Acc：固定8%加成"
+  "additional_info": "在lazer中，启用只隐藏缩圈会降低分数倍率至1.02x，若开启Wiggle (WG), Grow (GR), Deflate (DF) 或者 Repel (RP)，会降低0.02x倍率，开启 Blinds (BL) 则会让其只有1.00x倍率"
 }

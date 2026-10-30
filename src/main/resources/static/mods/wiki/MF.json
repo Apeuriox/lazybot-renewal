@@ -1,0 +1,43 @@
+{
+  "name": "Moving Fast (MF)",
+  "abbreviation": "MF",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<path d=\"M55.2 37.2002L60.3584 46.1871C61.4282 48.0509 63.4131 49.2002 65.5621 49.2002H89.2378C91.3867 49.2002 93.3716 48.0509 94.4414 46.1871L99.6 37.2002\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M37.2 37.2002L42.0903 46.0917C43.1448 48.009 45.1594 49.2002 47.3476 49.2002H50.4\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<path d=\"M24 37.2002L31.2 49.2002\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>",
+    "transform": ""
+  },
+  "compatible_mode": [2],
+  "unranked_mode": null,
+  "ranked": 2,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1,
+      "mode": [2]
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [2],
+      "description": "反转玩家的冲刺按键，这意味着玩家默认冲刺，按住冲刺键，角色则会以正常速度移动。"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "automation",
+      "name": "Autoplay (AT)"
+    },
+    {
+      "type": "automation",
+      "name": "Cinema (CN)"
+    },
+    {
+      "type": "automation",
+      "name": "Relax (RX)"
+    }
+  ],
+  "additional_info": "有一个设置值Hidden at combo (0–50, 默认为 10)，如果设置为0，将只会在休息段看得到光标/小人"
+}

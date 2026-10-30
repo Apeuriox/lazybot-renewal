@@ -1,6 +1,11 @@
 {
   "name": "Strict Tracking (ST)",
   "abbreviation": "ST",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<line x1=\"35.9669\" y1=\"16.4038\" x2=\"85.1792\" y2=\"16.4038\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<line x1=\"35.9669\" y1=\"62.2988\" x2=\"85.1792\" y2=\"62.2988\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<circle cx=\"60.5732\" cy=\"39.2865\" r=\"12.0824\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>",
+    "transform": ""
+  },
   "compatible_mode": [
     0
   ],

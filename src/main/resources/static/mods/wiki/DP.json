@@ -1,0 +1,82 @@
+{
+  "name": "Depth (DP)",
+  "abbreviation": "DP",
+  "compatible_mode": [0],
+  "unranked_mode": null,
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<rect x=\"46.272\" y=\"35.7637\" width=\"27.3573\" height=\"20.1871\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linejoin=\"round\"/>\n<rect x=\"34.8733\" y=\"17.1948\" width=\"50.1551\" height=\"50.1551\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linejoin=\"round\"/>\n<line x1=\"45.9244\" y1=\"34.7316\" x2=\"37.0379\" y2=\"19.8953\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"36.9785\" y1=\"64.2151\" x2=\"45.8081\" y2=\"56.5715\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"74.4838\" y1=\"57.042\" x2=\"82.7667\" y2=\"63.1551\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"74.3966\" y1=\"34.347\" x2=\"82.1718\" y2=\"20.2501\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>",
+    "transform": ""
+  },
+  "ranked": 2,
+  "type": "乐趣",
+  "score_multiplier": [
+    {
+      "multiplier": "1.00x",
+      "type": 1
+    }
+  ],
+  "default_key": "无",
+  "effect": [
+    {
+      "mode": [0],
+      "description": "使所有的Note和滑条在初始状态下显得更小，且更靠近游玩区域的中心，从而营造出一种它们位于远处的视觉效果。随后，这些元素会逐渐变大并移动至其各自的实际位置，呈现出一种 3D 效果"
+    }
+  ],
+  "gameplay": null,
+  "incompatible_mod": [
+    {
+      "type": "increase",
+      "name": "Hidden (HD)"
+    },
+    {
+      "type": "increase",
+      "name": "Traceable (TC)"
+    },
+    {
+      "type": "automation",
+      "name": "Autoplay (AT)"
+    },
+    {
+      "type": "conversion",
+      "name": "Target Practice (TP)"
+    },
+    {
+      "type": "fun",
+      "name": "Transform (TR)"
+    },
+    {
+      "type": "fun",
+      "name": "Spin In (SI)"
+    },
+    {
+      "type": "fun",
+      "name": "Wiggle (WR)"
+    },
+    {
+      "type": "fun",
+      "name": "Grow (GR)"
+    },
+    {
+      "type": "fun",
+      "name": "Approach Different (AD)"
+    },
+    {
+      "type": "fun",
+      "name": "Deflate (DF)"
+    },
+    {
+      "type": "fun",
+      "name": "Magnetised (MG)"
+    },
+    {
+      "type": "fun",
+      "name": "Repel (RP)"
+    },
+    {
+      "type": "fun",
+      "name": "Freeze Frame (FR)"
+    }
+  ],
+  "additional_info": "可以设置最大深度 (50 - 200，默认100)，以及是否开启缩圈，另外，虽然本mod和HD不兼容，但是如果你以技术手段同时启用二者，HD的分数倍率会降低0.02x"
+}

@@ -1,6 +1,11 @@
 {
   "name": "Hold Off (HO)",
   "abbreviation": "HO",
+  "icon": {
+    "viewBox": "0 0 120 84",
+    "markup": "<line x1=\"69.0349\" y1=\"68.708\" x2=\"51.7903\" y2=\"68.708\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"69.0349\" y1=\"56.708\" x2=\"51.7903\" y2=\"56.708\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"69.0349\" y1=\"44.708\" x2=\"51.7903\" y2=\"44.708\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"69.0349\" y1=\"32.708\" x2=\"51.7903\" y2=\"32.708\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<line x1=\"69.0349\" y1=\"20.708\" x2=\"51.7903\" y2=\"20.708\" fill=\"none\" stroke=\"black\" stroke-width=\"6\" stroke-linecap=\"round\"/>",
+    "transform": ""
+  },
   "compatible_mode": [
     3
   ],
