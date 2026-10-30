@@ -184,15 +184,6 @@ public class FunServiceImpl implements FunService
         if (modWikiCatalog.contains(acronym)) {
             return rasterizationService.renderModWiki(acronym);
         }
-        Path legacy = ResourceMonitor.getResourcePath().resolve("static/modifier/" + acronym + ".png");
-        if (Files.exists(legacy)) {
-            try {
-                return Files.readAllBytes(legacy);
-            }
-            catch (IOException e) {
-                throw new LazybotRuntimeException("读取Mod页面失败");
-            }
-        }
         throw new LazybotRuntimeException("要么你输入的Mod名有问题，要么此Mod的页面还未创建");
     }
 

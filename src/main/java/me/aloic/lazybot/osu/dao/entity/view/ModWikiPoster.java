@@ -301,7 +301,7 @@ public record ModWikiPoster(
 
     public String incompatibleNoneX()
     {
-        return num(valueX(INCOMPATIBLE));
+        return num(valueX(INCOMPATIBLE) + 10);
     }
 
     public boolean iconPresent()
