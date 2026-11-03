@@ -9,17 +9,26 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import java.io.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SVGRenderer
 {
     private static final ResvgJNI.RenderOptions options;
     private static final ResvgJNI.Renderer renderer;
     private static final Logger logger = LoggerFactory.getLogger(SVGRenderer.class);
+    // JNI 会把虚拟线程钉在载体上。渲染改到固定数量的平台线程，命令线程只等待。
+    private static final ExecutorService RENDER_POOL = Executors.newFixedThreadPool(
+            Math.max(1, Runtime.getRuntime().availableProcessors()),
+            Thread.ofPlatform().name("lazybot-render-", 0).factory());
 
     static{
         options = new ResvgJNI.RenderOptions(ResourceMonitor.getResourcePath().toAbsolutePath()+"/static");
         options.LoadFontsDir(ResourceMonitor.getResourcePath().toAbsolutePath()+"/static/fonts");
         renderer = new ResvgJNI.Renderer(options);
+        Runtime.getRuntime().addShutdownHook(new Thread(RENDER_POOL::shutdown, "lazybot-render-shutdown"));
     }
 
 
@@ -46,7 +55,7 @@ public class SVGRenderer
         long startingTime = System.currentTimeMillis();
         byte[] result;
         try{
-            result = renderer.RenderJpg(SvgUtil.documentToString(document),scale);
+            result = renderJpg(SvgUtil.documentToString(document), scale);
         }
         catch (Exception e){
             logger.error(e.getMessage());
@@ -78,7 +87,7 @@ public class SVGRenderer
         long startingTime = System.currentTimeMillis();
         byte[] result;
         try{
-            result = renderer.RenderJpg(document,scale);
+            result = renderJpg(document, scale);
         }
         catch (Exception e){
             logger.error(e.getMessage());
@@ -100,7 +109,7 @@ public class SVGRenderer
         long startingTime = System.currentTimeMillis();
         byte[] result;
         try{
-            result = renderer.RenderPng(document,scale);
+            result = renderPng(document, scale);
         }
         catch (Exception e){
             logger.error(e.getMessage());
@@ -116,7 +125,7 @@ public class SVGRenderer
         long startingTime = System.currentTimeMillis();
         byte[] result;
         try{
-            result = renderer.RenderPng(SvgUtil.documentToString(document),scale);
+            result = renderPng(SvgUtil.documentToString(document), scale);
         }
         catch (Exception e){
             logger.error(e.getMessage());
@@ -134,6 +143,34 @@ public class SVGRenderer
 
         return result;
     }
+    private static byte[] renderJpg(String svg, float scale)
+    {
+        return renderOnPool(() -> renderer.RenderJpg(svg, scale));
+    }
+
+    private static byte[] renderPng(String svg, float scale)
+    {
+        return renderOnPool(() -> renderer.RenderPng(svg, scale));
+    }
+
+    private static byte[] renderOnPool(Callable<byte[]> task)
+    {
+        try {
+            return RENDER_POOL.submit(task).get();
+        }
+        catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new LazybotRuntimeException("渲染成绩图时出错: interrupted");
+        }
+        catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException runtime) {
+                throw runtime;
+            }
+            throw new LazybotRuntimeException(cause == null ? e.getMessage() : cause.getMessage());
+        }
+    }
+
     private static OutputStream convertByteArrayToOutputStream(byte[] byteArray) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try{
